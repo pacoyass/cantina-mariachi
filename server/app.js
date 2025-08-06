@@ -4,9 +4,8 @@ import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import apiRoutes from "./routes/index.routes.js";
-import dotenv from 'dotenv';
 import { registerCronJobs } from "./cron/index.js";
-dotenv.config();
+
 
 
 export const app = express();

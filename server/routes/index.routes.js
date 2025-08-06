@@ -1,11 +1,12 @@
 import express from "express";
 import { createResponse, createError } from '../utils/response.js';
 import testRoutes from "./test.routes.js";
-
+import authRoutes from "./auth.routes.js";
 const router = express.Router();
 
 // Group all API routes
 router.use( "/test", testRoutes );
+router.use( "/auth", authRoutes );
 
 
 router.use((req, res, next) => {

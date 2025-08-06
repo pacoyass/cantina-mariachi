@@ -1,1 +1,1 @@
-INVALID
+INVALID{"timestamp":"2025-08-06T19:25:00.136Z","model":"cronRun","data":{"id":"da98d621-fa3a-49eb-aac3-143df4682259","taskName":"lockCleanup","status":"SUCCESS","details":{"count":0,"timestamp":"2025-08-06T19:20:12.688Z"},"lastRunAt":"2025-08-06T19:20:12.733Z"},"error":"\nInvalid `prisma.cronRun.create()` invocation:\n\n\nUnique constraint failed on the fields: (`taskName`)"}
