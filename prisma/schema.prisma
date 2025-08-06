@@ -1,0 +1,448 @@
+// Prisma schema for Cantina App with enhanced features
+// Optimized for cash-on-delivery, delivery-focused restaurant app with admin dashboard support
+
+// GENERATOR & DATASOURCE
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// USER & AUTH
+model User {
+  id        String    @id @default(uuid())
+  name      String?
+  email     String    @unique
+  password  String
+  phone     String?
+  role      UserRole  @default(CUSTOMER) // Controls dashboard access
+  isActive  Boolean   @default(true) // Enable/disable staff accounts
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  refreshTokens   RefreshToken[]
+  auditLogs       AuditLog[]
+  notifications   Notification[]
+  preferences     UserPreference?
+  reservations    Reservation[]
+  orders          Order[]
+  driver          Driver?           @relation("UserToDriver")
+  ActivityLog     ActivityLog[]
+  LoginLog        LoginLog[]
+  NotificationLog NotificationLog[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@map("refresh_tokens")
+}
+
+model BlacklistedToken {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("blacklisted_tokens")
+}
+
+// DRIVER
+model Driver {
+  id                   String            @id @default(uuid())
+  userId               String?           @unique // Links to User (optional, for drivers with login)
+  user                 User?             @relation("UserToDriver", fields: [userId], references: [id])
+  name                 String
+  phone                String
+  active               Boolean           @default(true)
+  deliveryZone         String? // Zone or area driver covers
+  vehicleDetails       String? // Vehicle info for logistics
+  currentStatus        String? // e.g., "Available", "On Delivery", "Offline"
+  availabilitySchedule Json? // e.g., { "monday": "9AM-5PM" }
+  orders               Order[]
+  cashTransactions     CashTransaction[]
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  CashSummary          CashSummary[]
+
+  @@index([active, deliveryZone])
+  @@index([currentStatus])
+  @@map("drivers") // Ensure table name is 'drivers'
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  type      String // e.g., "VIEW_PAGE", "CLICK_BUTTON", "NAVIGATION", "EXPORT"
+  message   String
+  metadata  Json? // Optional structured data
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@map("activity_logs")
+}
+
+model LoginLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  status    String // "SUCCESS" | "FAILURE"
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@map("login_logs")
+}
+
+model ErrorLog {
+  id        String   @id @default(uuid())
+  message   String
+  stack     String?
+  context   Json? // e.g., request details, userId
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("error_logs")
+}
+
+model NotificationLog {
+  id           String   @id @default(uuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  type         String // e.g., "EMAIL", "SMS", "PUSH"
+  target       String // phone, email, deviceId
+  content      String
+  status       String // "SENT", "FAILED", "DELIVERED"
+  provider     String? // e.g., "Twilio", "SendGrid"
+  errorMessage String?
+  createdAt    DateTime @default(now())
+
+  @@index([type, status, createdAt])
+  @@map("notification_logs")
+}
+
+model SystemLog {
+  id        String   @id @default(uuid())
+  source    String // e.g., "cron", "server", "db"
+  event     String // e.g., "server_restart", "lock_cleanup", "deployment"
+  message   String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([source, event, createdAt])
+  @@map("system_logs")
+}
+
+// CASH TRANSACTION
+model CashTransaction {
+  id                String    @id @default(uuid())
+  orderId           String    @unique
+  driverId          String
+  amount            Decimal   @db.Decimal(10, 2) // Must match Order.total
+  confirmed         Boolean   @default(false)
+  adminVerified     Boolean   @default(false) // Admin verification of cash payment
+  discrepancyAmount Decimal?  @db.Decimal(10, 2) // Amount paid if different from Order.total
+  paymentTimestamp  DateTime?
+  customerNotes     String? // e.g., "Exact change provided"
+  discrepancyNotes  String? // e.g., "Customer paid $20, owed $2"
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driver Driver @relation(fields: [driverId], references: [id])
+
+  @@index([driverId, createdAt])
+  @@index([orderId])
+  @@map("cash_transactions")
+}
+
+// CASH SUMMARY
+model CashSummary {
+  id               String   @id @default(uuid())
+  driverId         String?
+  date             DateTime // Date of summary (e.g., 2025-07-30)
+  totalAmount      Decimal  @db.Decimal(10, 2) // Total cash collected
+  unconfirmedCount Int // Number of unconfirmed transactions
+  discrepancyTotal Decimal? @db.Decimal(10, 2) // Sum of discrepancies
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  driver Driver? @relation(fields: [driverId], references: [id])
+
+  @@index([driverId, date])
+  @@index([date])
+  @@map("cash_summary")
+}
+
+// APP CONFIG
+model AppConfig {
+  id             String   @id @default(uuid())
+  restaurantName String? // e.g., "Cantina Cafe"
+  operatingHours Json? // e.g., { "monday": "9AM-9PM" }
+  taxRate        Decimal? @db.Decimal(5, 2) // e.g., 0.08 for 8% tax
+  deliveryRadius Float? // e.g., 5.0 miles
+  minOrderAmount Decimal? @db.Decimal(10, 2) // e.g., 10.00
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("app_config")
+}
+
+// AUDIT
+model AuditLog {
+  id        String    @id @default(uuid())
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
+  action    String
+  targetId  String?
+  details   Json? // e.g., { "transactionId": "uuid", "discrepancy": "Paid $20, owed $2" }
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
+
+// NOTIFICATIONS
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  content    String
+  read       Boolean  @default(false)
+  pushConfig Json? // e.g., { "type": "SMS", "phone": "1234567890" }
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+// CRON
+model CronLock {
+  id         String   @id @default(uuid())
+  taskName   String   @unique
+  instanceId String
+  lockedAt   DateTime
+
+  @@index([lockedAt])
+  @@map("cron_locks")
+}
+
+model CronRun {
+  id        String   @id @default(uuid())
+  taskName  String   @unique
+  lastRunAt DateTime
+  status    String
+  details   Json? // e.g., { "totalCash": 500.00, "unconfirmed": 2 }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([taskName, lastRunAt])
+  @@map("cron_runs")
+}
+
+// WEBHOOKS
+model Webhook {
+  id            String       @id @default(uuid())
+  url           String
+  status        String
+  lastSync      DateTime?
+  integrationId String?
+  integration   Integration? @relation(fields: [integrationId], references: [id], onDelete: SetNull, name: "WebhookToIntegration")
+  details       Json // e.g., { "provider": "Stripe", "event": "payment_confirmed" }
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+
+  @@map("webhooks")
+}
+
+model Integration {
+  id        String    @id @default(uuid())
+  name      String
+  config    Json // e.g., { "apiKey": "key", "provider": "PayPal" }
+  webhooks  Webhook[] @relation("WebhookToIntegration")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("integrations")
+}
+
+// PREFERENCES
+model UserPreference {
+  id                     String    @id @default(uuid())
+  userId                 String    @unique
+  user                   User      @relation(fields: [userId], references: [id])
+  theme                  String?
+  shortcuts              Json?
+  accessibility          Json?
+  defaultAddress         String? // Default delivery address for registered users
+  preferredContactMethod String? // e.g., "SMS", "Email", "Push"
+  deletedAt              DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@map("user_preferences")
+}
+
+// LOCALIZATION
+model Localization {
+  id           String    @id @default(uuid())
+  language     String
+  translations Json
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("localizations")
+}
+
+// CATEGORY + MENU + ORDER + RESERVATION
+model Category {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  order       Int     @default(0)
+
+  menuItems MenuItem[]
+
+  @@map("categories")
+}
+
+model MenuItem {
+  id           String  @id @default(cuid())
+  name         String
+  description  String
+  price        Decimal @db.Decimal(10, 2)
+  image        String?
+  isVegetarian Boolean @default(false)
+  isVegan      Boolean @default(false)
+  isAvailable  Boolean @default(true)
+  isSpecial    Boolean @default(false)
+  categoryId   String
+
+  category   Category    @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("menu_items")
+}
+
+model Order {
+  id                   String      @id @default(cuid())
+  orderNumber          String      @unique
+  userId               String?
+  customerName         String
+  customerEmail        String
+  customerPhone        String
+  type                 OrderType
+  status               OrderStatus @default(PENDING)
+  subtotal             Decimal     @db.Decimal(10, 2)
+  tax                  Decimal     @db.Decimal(10, 2)
+  total                Decimal     @db.Decimal(10, 2)
+  notes                String?
+  deliveryAddress      String? // Required for DELIVERY orders via app logic
+  deliveryInstructions String? // e.g., "Leave at gate"
+  deliveryTimeEstimate DateTime?
+  driverId             String?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  user            User?            @relation(fields: [userId], references: [id])
+  driver          Driver?          @relation(fields: [driverId], references: [id])
+  orderItems      OrderItem[]
+  cashTransaction CashTransaction?
+
+  @@index([status, createdAt])
+  @@index([driverId])
+  @@index([customerPhone])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  menuItemId String
+  quantity   Int
+  price      Decimal @db.Decimal(10, 2)
+  notes      String?
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  @@map("order_items")
+}
+
+model Reservation {
+  id            String            @id @default(cuid())
+  userId        String?
+  customerName  String
+  customerEmail String
+  customerPhone String
+  date          DateTime
+  time          String
+  partySize     Int
+  status        ReservationStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("reservations")
+}
+
+// ENUMS
+enum OrderType {
+  TAKEOUT
+  DELIVERY
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  AWAITING_PAYMENT
+  PAYMENT_DISPUTED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  SEATED
+  COMPLETED
+  CANCELLED
+}
+
+enum UserRole {
+  CUSTOMER
+  OWNER
+  ADMIN
+  COOK
+  WAITER
+  CASHIER
+}
