@@ -3,53 +3,154 @@ import { LoggerService } from '../utils/logger.js';
 
 class CacheService {
   #client;
+  #isConnected = false;
 
   constructor() {
     this.#client = createClient({
       url: process.env.REDIS_URL || 'redis://localhost:6379',
     });
+
     this.#client.on('error', async (err) => {
-      await LoggerService.logError(err.message, err.stack, { service: 'CacheService' });
+      this.#isConnected = false;
+      const errorMessage = typeof err === 'string' ? err : err.message || err.code || 'Unknown Redis error';
+      const errorStack = err.stack || 'No stack trace';
+      try {
+        await LoggerService.logError(errorMessage, errorStack, { service: 'CacheService', errorCode: err.code || null });
+      } catch (logError) {
+        console.error('Failed to log Redis error:', logError.message, logError);
+      }
     });
-    this.#client.connect();
+
+    this.#client.on('connect', () => {
+      this.#isConnected = true;
+      console.log('Redis connected');
+    });
+
+    this.#client.connect().catch((err) => {
+      const errorMessage = typeof err === 'string' ? err : err.message || err.code || 'Unknown error';
+      console.error('Redis connection failed:', errorMessage);
+    });
   }
 
-  async getCache(key) {
+  async get(key) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, returning null');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return null;
+    }
     try {
       const data = await this.#client.get(key);
-      if (data) {
-        await LoggerService.logSystemEvent('CacheService', 'CACHE_HIT', { key });
-        return JSON.parse(data);
-      }
-      await LoggerService.logSystemEvent('CacheService', 'CACHE_MISS', { key });
-      return null;
+      await LoggerService.logSystemEvent('CacheService', data ? 'CACHE_HIT' : 'CACHE_MISS', { key });
+      return data ? parseInt(data, 10) : null;
     } catch (error) {
-      await LoggerService.logError(error.message, error.stack, { method: 'getCache', key });
+      const errorMessage = typeof error === 'string' ? error : error.message || error.code || 'Unknown get error';
+      const errorStack = error.stack || 'No stack trace';
+      try {
+        await LoggerService.logError(errorMessage, errorStack, { method: 'get', key, errorCode: error.code || null });
+      } catch (logError) {
+        console.error('Failed to log cache error:', logError.message);
+      }
       throw error;
     }
   }
 
-  async setCache(key, value, ttl = 300) {
+  async set(key, value, options = {}) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, skipping set');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return;
+    }
     try {
-      await this.#client.setEx(key, ttl, JSON.stringify(value));
-      await LoggerService.logSystemEvent('CacheService', 'CACHE_SET', { key, ttl });
+      await this.#client.set(key, value, options);
+      await LoggerService.logSystemEvent('CacheService', 'CACHE_SET', { key, ttl: options.EX });
     } catch (error) {
-      await LoggerService.logError(error.message, error.stack, { method: 'setCache', key, ttl });
+      console.error(error)
+
+      const errorMessage = typeof error === 'string' ? error : error.message || error.code || 'Unknown set error';
+      const errorStack = error.stack || 'No stack trace';
+      try {
+        await LoggerService.logError(errorMessage, errorStack, { method: 'set', key, ttl: options.EX, errorCode: error.code || null });
+      } catch (logError) {
+        console.error('Failed to log cache error:', logError.message);
+      }
+      throw error;
+    }
+  }
+
+  async increment(key, options = {}) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, skipping increment');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return 0;
+    }
+    try {
+      const value = await this.#client.incr(key);
+      if (options.EX) await this.#client.expire(key, options.EX);
+      await LoggerService.logSystemEvent('CacheService', 'CACHE_INCREMENT', { key, value });
+      return value;
+    } catch (error) {
+      console.error(error)
+
+      const errorMessage = typeof error === 'string' ? error : error.message || error.code || 'Unknown increment error';
+      const errorStack = error.stack || 'No stack trace';
+      try {
+        await LoggerService.logError(errorMessage, errorStack, { method: 'increment', key, errorCode: error.code || null });
+      } catch (logError) {
+        console.error('Failed to log cache error:', logError.message);
+      }
       throw error;
     }
   }
 
   async invalidateCache(key) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, skipping invalidate');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return;
+    }
     try {
       await this.#client.del(key);
       await LoggerService.logSystemEvent('CacheService', 'CACHE_INVALIDATE', { key });
     } catch (error) {
-      await LoggerService.logError(error.message, error.stack, { method: 'invalidateCache', key });
+      console.error(error)
+
+      const errorMessage = typeof error === 'string' ? error : error.message || error.code || 'Unknown invalidate error';
+      const errorStack = error.stack || 'No stack trace';
+      try {
+        await LoggerService.logError(errorMessage, errorStack, { method: 'invalidateCache', key, errorCode: error.code || null });
+      } catch (logError) {
+        console.error('Failed to log cache error:', logError.message);
+      }
       throw error;
     }
   }
 
   async invalidateByPrefix(prefix) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, skipping invalidateByPrefix');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { prefix });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return;
+    }
     try {
       const keys = await this.#client.keys(`${prefix}:*`);
       if (keys.length) {
@@ -57,15 +158,104 @@ class CacheService {
         await LoggerService.logSystemEvent('CacheService', 'CACHE_INVALIDATE_PREFIX', { prefix, count: keys.length });
       }
     } catch (error) {
-      await LoggerService.logError(error.message, error.stack, { method: 'invalidateByPrefix', prefix });
+      console.error(error)
+
+      const errorMessage = typeof error === 'string' ? error : error.message || error.code || 'Unknown invalidateByPrefix error';
+      const errorStack = error.stack || 'No stack trace';
+      try {
+        await LoggerService.logError(errorMessage, errorStack, { method: 'invalidateByPrefix', prefix, errorCode: error.code || null });
+      } catch (logError) {
+        console.error('Failed to log cache error:', logError.message);
+      }
       throw error;
     }
   }
 
   async disconnect() {
-    await this.#client.quit();
-    await LoggerService.logSystemEvent('CacheService', 'DISCONNECT_REDIS', {});
+    if (this.#isConnected) {
+      await this.#client.quit();
+      this.#isConnected = false;
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'DISCONNECT_REDIS', {});
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+    }
   }
 }
 
 export default new CacheService();
+
+
+
+// import { createClient } from 'redis';
+// import { LoggerService } from '../utils/logger.js';
+
+// class CacheService {
+//   #client;
+
+//   constructor() {
+//     this.#client = createClient({
+//       url: process.env.REDIS_URL || 'redis://localhost:6379',
+//     });
+//     this.#client.on('error', async (err) => {
+//       await LoggerService.logError(err.message, err.stack, { service: 'CacheService' });
+//     });
+//     this.#client.connect();
+//   }
+
+//   async getCache(key) {
+//     try {
+//       const data = await this.#client.get(key);
+//       if (data) {
+//         await LoggerService.logSystemEvent('CacheService', 'CACHE_HIT', { key });
+//         return JSON.parse(data);
+//       }
+//       await LoggerService.logSystemEvent('CacheService', 'CACHE_MISS', { key });
+//       return null;
+//     } catch (error) {
+//       await LoggerService.logError(error.message, error.stack, { method: 'getCache', key });
+//       throw error;
+//     }
+//   }
+
+//   async setCache(key, value, ttl = 300) {
+//     try {
+//       await this.#client.setEx(key, ttl, JSON.stringify(value));
+//       await LoggerService.logSystemEvent('CacheService', 'CACHE_SET', { key, ttl });
+//     } catch (error) {
+//       await LoggerService.logError(error.message, error.stack, { method: 'setCache', key, ttl });
+//       throw error;
+//     }
+//   }
+
+//   async invalidateCache(key) {
+//     try {
+//       await this.#client.del(key);
+//       await LoggerService.logSystemEvent('CacheService', 'CACHE_INVALIDATE', { key });
+//     } catch (error) {
+//       await LoggerService.logError(error.message, error.stack, { method: 'invalidateCache', key });
+//       throw error;
+//     }
+//   }
+
+//   async invalidateByPrefix(prefix) {
+//     try {
+//       const keys = await this.#client.keys(`${prefix}:*`);
+//       if (keys.length) {
+//         await this.#client.del(keys);
+//         await LoggerService.logSystemEvent('CacheService', 'CACHE_INVALIDATE_PREFIX', { prefix, count: keys.length });
+//       }
+//     } catch (error) {
+//       await LoggerService.logError(error.message, error.stack, { method: 'invalidateByPrefix', prefix });
+//       throw error;
+//     }
+//   }
+
+//   async disconnect() {
+//     await this.#client.quit();
+//     await LoggerService.logSystemEvent('CacheService', 'DISCONNECT_REDIS', {});
+//   }
+// }
+
+// export default new CacheService();

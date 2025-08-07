@@ -1,37 +1,20 @@
-export const registerSchema = {
-    body: {
-      type: 'object',
-      required: ['email', 'password', 'role'],
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string', minLength: 6 },
-        role: { type: 'string', enum: ['CUSTOMER', 'OWNER', 'ADMIN', 'COOK', 'WAITER', 'CASHIER'] },
-        name: { type: 'string', minLength: 1, nullable: true },
-        phone: { type: 'string', minLength: 1, nullable: true },
-      },
-      additionalProperties: false,
-    },
-  };
-  
-  export const loginSchema = {
-    body: {
-      type: 'object',
-      required: ['email', 'password'],
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string', minLength: 6 },
-      },
-      additionalProperties: false,
-    },
-  };
-  
-  export const refreshTokenSchema = {
-    body: {
-      type: 'object',
-      required: ['refreshToken'],
-      properties: {
-        refreshToken: { type: 'string', minLength: 1 },
-      },
-      additionalProperties: false,
-    },
-  };
+import { z } from 'zod';
+
+// Registration Schema
+export const registerSchema = z.object({
+  email: z.string().trim().toLowerCase().email({ message: 'Invalid email format' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' })
+    .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
+    .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
+    .regex(/\d/, { message: 'Password must contain at least one number' })
+    .regex(/[@#$%^&*!]/, { message: 'Password must contain at least one special character (@#$%^&*!)' }),
+  name: z.string().trim().min(2, { message: 'Name must be at least 2 characters' }),
+});
+
+// Login Schema
+export const loginSchema = z.object({
+  email: z.string().trim().toLowerCase().email({ message: 'Invalid email format' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+});
