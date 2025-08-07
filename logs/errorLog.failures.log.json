@@ -1,0 +1,1 @@
+{"timestamp":"2025-08-06T22:59:12.305Z","message":"","stack":"AggregateError: \n    at internalConnectMultiple (node:net:1139:18)\n    at afterConnectMultiple (node:net:1712:7)","context":{"service":"CacheService"},"error":"Missing required field: message"}

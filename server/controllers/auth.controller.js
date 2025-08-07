@@ -1,13 +1,15 @@
-import { authService } from '../services/authService.js';
-import { LoggerService } from '../utils/logger.js';
-import { createResponse, createError } from '../utils/response.js';
+import { authService, generateToken, hashToken } from '../services/authService.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
+import {createError,createResponse}  from '../utils/response.js';
 import { toZonedTime } from 'date-fns-tz';
 import { subDays } from 'date-fns';
+import {sendWebhook} from '../controllers/webhook.controller.js'
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import prisma from '../config/database.js';
-import  sendWebhook  from './webhook.controller.js';
+import { LoggerService } from '../utils/logger.js';
+import cacheService from '../services/cacheService.js';
+import { databaseService } from '../services/databaseService.js';
 
 // Cleanup expired authentication data (refresh tokens, blacklisted tokens)
 export const cleanupExpiredAuthData = async () => {
@@ -116,36 +118,143 @@ export const register = async (req, res) => {
 
 // POST /api/auth/login - User login
 export const login = async (req, res) => {
+  console.debug('Login request received:', { email: req.body.email, ip: req.ip, userAgent: req.get('User-Agent') });
   try {
     const { email, password } = req.body;
-    const user = await prisma.users.findUnique({
-      where: { email, isActive: true },
-      select: { id: true, email: true, password: true, role: true, name: true, phone: true },
-    });
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      await LoggerService.logLogin(null, 'FAILURE', req.ip, req.get('User-Agent'));
-      return createError(res, 401, 'Invalid email or password', 'UNAUTHORIZED', { suggestion: 'Check your credentials or register' });
+    if (!email || !password) {
+      try {
+        await LoggerService.logLogin(null, 'FAILURE', req.ip, req.get('User-Agent'));
+      } catch (logError) {
+        console.error('Failed to log invalid input:', logError.message);
+      }
+      return createError(res, 400, 'Email and password are required', 'BAD_REQUEST');
     }
 
-    const { accessToken, refreshToken } = await authService.login(email, password);
+    // Check rate-limiting
+    let attempts = 0;
+    try {
+      attempts = (await cacheService.get(`login-attempts:${email}`)) || 0;
+      if (attempts >= 5) {
+        try {
+          await LoggerService.logLogin(null, 'FAILURE', req.ip, req.get('User-Agent'));
+        } catch (logError) {
+          console.error('Failed to log rate-limit failure:', logError.message);
+        }
+        return createError(res, 429, 'Too many login attempts', 'RATE_LIMIT_EXCEEDED', { suggestion: 'Try again in a minute' });
+      }
+    } catch (cacheError) {
+      const errorMessage = typeof cacheError === 'string' ? cacheError : cacheError.message || cacheError.code || 'Unknown cache error';
+      const errorStack = cacheError.stack || 'No stack trace';
+      try {
+        await LoggerService.logError('Cache service error', errorStack, { email, error: errorMessage, errorCode: cacheError.code || null });
+      } catch (logError) {
+        console.error('Cache error details:', cacheError);
+        console.error('Failed to log cache error:', logError.message);
+      }
+      console.warn('Cache service unavailable, skipping rate-limiting');
+    }
+
+    // Fetch user
+    let user;
+    try {
+      user = await databaseService.getUserByEmail(email, { isActive: true });
+      console.log("test",user);
+      
+    } catch (dbError) {
+      console.error("db",dbError);
+      
+      const errorMessage = typeof dbError === 'string' ? dbError : dbError.message || dbError.code || 'Unknown database error';
+      const errorStack = dbError.stack || 'No stack trace';
+      try {
+        await LoggerService.logError('Database error during user lookup', errorStack, { email, error: errorMessage, errorCode: dbError.code || null });
+      } catch (logError) {
+        console.error('Database error details:', dbError);
+        console.error('Failed to log database error:', logError.message);
+      }
+      if (errorMessage === 'User not found') {
+        try {
+          await cacheService.increment(`login-attempts:${email}`, { EX: 60 });
+          await LoggerService.logLogin(null, 'FAILURE', req.ip, req.get('User-Agent'));
+        } catch (error) {
+          console.error('Failed to log user not found:', error.message);
+        }
+        return createError(res, 401, 'Invalid email or password', 'UNAUTHORIZED', { message: 'User not found', suggestion: 'Check your credentials or register' });
+      }
+      return createError(res, 500, 'Failed to access database', 'DATABASE_ERROR', { message: errorMessage, errorCode: dbError.code || null });
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      try {
+        await cacheService.increment(`login-attempts:${email}`, { EX: 60 });
+      } catch (cacheError) {
+        const errorMessage = typeof cacheError === 'string' ? cacheError : cacheError.message || cacheError.code || 'Unknown cache error';
+        const errorStack = cacheError.stack || 'No stack trace';
+        try {
+          await LoggerService.logError('Failed to increment login attempts', errorStack, { email, error: errorMessage, errorCode: cacheError.code || null });
+        } catch (logError) {
+          console.error('Failed to log cache error:', logError.message);
+        }
+      }
+      try {
+        await LoggerService.logLogin(null, 'FAILURE', req.ip, req.get('User-Agent'));
+      } catch (logError) {
+        console.error('Failed to log login failure:', logError.message);
+      }
+      return createError(res, 401, 'Invalid email or password', 'UNAUTHORIZED', { suggestion: 'Check your credentials or register' });
+    }
+    const sanitizedName = user.name ? user.name.replace(/[<>]/g, '') : null;
+    
+    // Generate tokens
+    let accessToken, refreshToken, accessExp, refreshExp, hashedRefreshToken;
+    try {
+      const payload = {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        name: sanitizedName,
+        active: user.isActive,
+        phone: user.phone,
+      };
+    
+      ({ token: accessToken, exp: accessExp } = await generateToken(payload, process.env.TOKEN_EXPIRATION || '15m'));
+      ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || '7d'));
+    
+      hashedRefreshToken = await hashToken(refreshToken);
+    
+      // Use databaseService methods
+      await prisma.$transaction(async () => {
+        await databaseService.clearOldRefreshTokens(user.id);
+        await databaseService.storeRefreshToken(user.id, hashedRefreshToken, new Date(refreshExp));
+      });
+    } catch (authError) {
+      const errorMessage = typeof authError === 'string' ? authError : authError.message || authError.code || 'Unknown auth error';
+      const errorStack = authError.stack || 'No stack trace';
+      try {
+        await LoggerService.logError('Auth service error during login', errorStack, { email, error: errorMessage, errorCode: authError.code || null });
+      } catch (logError) {
+        console.error('Failed to log auth error:', logError.message);
+      }
+      return createError(res, 500, 'Failed to generate tokens', 'AUTH_ERROR', { message: errorMessage, errorCode: authError.code || null });
+    }
+    
+
+   
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 15 * 60 * 1000,
       path: '/',
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });
 
-    const sanitizedName = user.name ? user.name.replace(/[<>]/g, '') : null;
     const getGreetingMessage = (name) => {
       const hour = new Date().getHours();
       const timeGreeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -172,18 +281,38 @@ export const login = async (req, res) => {
     };
 
     const generateLoginMessage = getGreetingMessage(sanitizedName);
-    await LoggerService.logLogin(user.id, 'SUCCESS', req.ip, req.get('User-Agent'));
-    await LoggerService.logAudit(user.id, 'USER_LOGIN', user.id, { email, role: user.role, phone: user.phone });
-    await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_login', `User ${email} logged in`, 'SENT');
-    await sendWebhook('USER_LOGIN', { userId: user.id, email, role: user.role, phone: user.phone, loginTime: new Date().toISOString() });
-    return createResponse(res, 200, generateLoginMessage(), { user: { id: user.id, email, role: user.role, name: sanitizedName, phone: user.phone }, accessToken });
+    try {
+      await cacheService.set(`login-attempts:${email}`, 0);
+      await LoggerService.logLogin(user.id, 'SUCCESS', req.ip, req.get('User-Agent'));
+      await LoggerService.logAudit(user.id, 'USER_LOGIN', user.id, { email, role: user.role, phone: user.phone });
+      await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_login', `User ${email} logged in`, 'SENT');
+      await sendWebhook('USER_LOGIN', { userId: user.id, email, role: user.role, phone: user.phone, loginTime: new Date().toISOString() });
+    } catch (postLoginError) {
+      const errorMessage = typeof postLoginError === 'string' ? postLoginError : postLoginError.message || postLoginError.code || 'Unknown post-login error';
+      const errorStack = postLoginError.stack || 'No stack trace';
+      try {
+        await LoggerService.logError('Post-login error (logging/webhook)', errorStack, { email, error: errorMessage, errorCode: postLoginError.code || null });
+      } catch (logError) {
+        console.error('Failed to log post-login error:', logError.message);
+      }
+    }
+
+    return createResponse(res, 200, generateLoginMessage(), {
+      user: { id: user.id, email, role: user.role, name: sanitizedName, phone: user.phone },
+      accessToken,
+    });
   } catch (error) {
-    await LoggerService.logError('Login failed', error.stack, { email: req.body.email });
-    await LoggerService.logAudit(null, 'USER_LOGIN_FAILED', null, { reason: error.message, email: req.body.email });
-    return createError(res, 500, 'Failed to log in', 'SERVER_ERROR', { errorId: Date.now().toString() });
+    const errorMessage = typeof error === 'string' ? error : error.message || error.code || 'Unknown login error';
+    const errorStack = error.stack || 'No stack trace';
+    console.error('Login error details:', { error: error.toString(), errorMessage, errorStack, errorCode: error.code || null });
+    try {
+      await LoggerService.logError('Login failed', errorStack, { email: req.body.email || 'unknown', error: errorMessage, errorCode: error.code || null });
+    } catch (logError) {
+      console.error('Failed to log login error:', logError.message, { logErrorStack: logError.stack || 'No stack trace' });
+    }
+    return createError(res, 500, 'Failed to log in', 'SERVER_ERROR', { errorId: Date.now().toString(), message: errorMessage, errorCode: error.code || null });
   }
 };
-
 // POST /api/auth/refresh - Refresh access token
 export const refreshToken = async (req, res) => {
   try {

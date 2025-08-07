@@ -7,20 +7,22 @@ const validateWithSchema = (schema, dataSource) => (req, res, next) => {
     console.log(`[validate middleware] ${dataSource.name} =`, data);
   }
   if (!data) {
-    return createError(res, 400, 'Request data is required');
+    return createError(res, 400, 'Request data is required', null, {});
   }
   try {
     schema.parse(data);
     next();
   } catch (error) {
+    console.error(error.message);
+    //testy
     if (error instanceof z.ZodError) {
       const errorDetails = error.errors.map((err) => ({
         path: err.path.join('.'),
         message: err.message,
       }));
-      return createError(res, 400, 'Validation error', errorDetails);
+      return createError(res, 400, 'Validation error', null, errorDetails);
     }
-    return createError(res, 500, 'Internal server error');
+    return createError(res, 500, 'Internal server error', "validate_Error", error.message);
   }
 };
 
