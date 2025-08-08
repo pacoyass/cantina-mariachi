@@ -1,8 +1,8 @@
 import { verifyToken, isTokenBlacklisted, blacklistToken } from '../services/authService.js';
 import { LoggerService } from '../utils/logger.js';
 import { createError } from '../utils/response.js';
-import prisma from '../config/database.js';
 import webhookController from '../controllers/webhook.controller.js';
+import { databaseService } from '../services/databaseService.js';
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -52,15 +52,11 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const payload = await verifyToken(token);
+    const user = await databaseService.getUserById(payload.userId, { id: true,
+      email: true,
+      role: true,});
 
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-      select: {
-        id: true,
-        email: true,
-        role: true,
-      },
-    });
+   
 
     if (!user) {
       await LoggerService.logError('User not found', null, {

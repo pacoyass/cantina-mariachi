@@ -5,6 +5,8 @@ import { cleanupOrphanedAssignments } from './cleanupOrphans.js';
 import { flushLogs } from './flushLogs.js';
 import { retryFailedLogs } from './retryFailedLogs.js';
 import { toZonedTime } from 'date-fns-tz';
+import { cleanupExpiredAuthData } from '../controllers/auth.controller.js';
+import { cleanupExpiredWebhooks } from '../controllers/webhook.controller.js';
 
 const runningJobs = new Set();
 
@@ -84,7 +86,25 @@ export const registerCronJobs = () => {
     scheduled: true,
     timezone: 'Europe/London',
   });
+    // Cleanup expired auth data at 3:20 AM
+    cron.schedule('20 3 * * *', async () => {
+      await runJobSafely('cleanupExpiredAuthData', async () => {
+        await cleanupExpiredAuthData();
+      });
+    }, {
+      scheduled: true,
+      timezone: 'Europe/London',
+    });
 
+// Cleanup expired webhook data at 3:20 AM
+    cron.schedule('20 3 * * *', async () => {
+      await runJobSafely('cleanupExpiredWebhook', async () => {
+        await cleanupExpiredWebhooks();
+      });
+    }, {
+      scheduled: true,
+      timezone: 'Europe/London',
+    });
   LoggerService.logSystemEvent('cron', 'CRON_JOBS_REGISTERED', {
     timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
   });
@@ -100,6 +120,9 @@ export const runInitialCleanup = async () => {
     { name: 'cleanupOrphanedLocks', fn: cleanupOrphanedLocks, delay: 25000 },
     { name: 'flushLogs', fn: flushLogs, delay: 30000 },
     { name: 'retryFailedLogs', fn: retryFailedLogs, delay: 35000 },
+    { name: 'cleanupExpiredAuthData', fn: cleanupExpiredAuthData, delay: 20000 },
+    { name: 'cleanupExpiredWebhook', fn: cleanupExpiredWebhooks, delay: 45000 },
+
   ];
 
   for (const task of cleanupTasks) {

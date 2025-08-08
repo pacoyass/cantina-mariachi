@@ -6,6 +6,7 @@ const globalForPrisma = global;
 
 let prisma;
 try {
+  
   prisma =globalForPrisma.prisma || new PrismaClient({
     transactionOptions: {
     isolationLevel: Prisma.TransactionIsolationLevel.Serializable,

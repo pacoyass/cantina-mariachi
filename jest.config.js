@@ -2,7 +2,7 @@
 export default {
     testEnvironment: 'node',
     moduleFileExtensions: ['js'],
-    transform: {},
+    transform: {"\\.[jt]sx?$": ["babel-jest", { "excludeJestPreset": true }],},
     moduleNameMapper: {},
     collectCoverage: true,
     coverageDirectory: 'coverage',
