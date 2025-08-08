@@ -9,7 +9,8 @@
     "router-dev": "react-router dev",
     "seed": "node prisma/seed.js",
     "test": "jest",
-    "test:watch": "jest --watchAll --coverage --notify"
+    "test:watch": "jest --watchAll --coverage --notify",
+    "ggshield":"ggshield secret scan repo ."
   },
   "dependencies": {
     "@prisma/extension-accelerate": "^2.0.2",
