@@ -3,13 +3,13 @@ import { acquireLock, releaseLock } from '../utils/lock.js';
 import {createError,createResponse}  from '../utils/response.js';
 import { toZonedTime } from 'date-fns-tz';
 import { subDays } from 'date-fns';
-import {sendWebhook} from '../controllers/webhook.controller.js'
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import prisma from '../config/database.js';
 import { LoggerService } from '../utils/logger.js';
 import cacheService from '../services/cacheService.js';
 import { databaseService } from '../services/databaseService.js';
+import { sendWebhook } from './webhook.controller.js';
 
 // Cleanup expired authentication data (refresh tokens, blacklisted tokens)
 export const cleanupExpiredAuthData = async () => {
@@ -102,17 +102,33 @@ export const cleanupExpiredAuthData = async () => {
 // POST /api/auth/register - User registration
 export const register = async (req, res) => {
   try {
+    if (!req.body || !req.body.email || !req.body.password || !req.body.name) {
+      return createError(res, 400, 'Please provide email, password, and name', 'INVALID_INPUT', {
+        fields: ['email', 'password', 'name'],
+      });
+    }
     const { email, password, role, name, phone } = req.body;
     const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10));
-    const user = await authService.createUser({ email, password: hashedPassword, role, name, phone });
+    const user = await databaseService.createUser({email, password: hashedPassword, role, name, phone });
+    
     await LoggerService.logAudit(user.id, 'USER_REGISTERED', user.id, { email, role, name, phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_registered', `User ${email} registered`, 'SENT');
     await sendWebhook('USER_REGISTERED', { userId: user.id, email, role, name, phone });
-    return createResponse(res, 201, 'User registered successfully', { userId: user.id, email, role, name, phone });
+    return createResponse(res, 201, 'User registered successfully', { data:user });
   } catch (error) {
+    console.error(error);
+    
     await LoggerService.logError('Registration failed', error.stack, { email: req.body.email });
     await LoggerService.logAudit(null, 'USER_REGISTER_FAILED', null, { reason: error.message, email: req.body.email });
-    return createError(res, error.message.includes('exists') ? 409 : 500, error.message, 'REGISTRATION_ERROR');
+    return createError(
+      res,
+      error.code === 'P2002' || error.message.includes('already exists') ? 409 : 500,
+      error.message,
+      error.code === 'P2002' || error.message.includes('already exists') ? 'CONFLICT' : 'REGISTRATION_ERROR',
+      error.code === 'P2002' || error.message.includes('already exists')
+        ? { field: 'email', suggestion: 'Try logging in or use a different email' }
+        : {}
+    );
   }
 };
 
@@ -221,11 +237,12 @@ export const login = async (req, res) => {
     
       hashedRefreshToken = await hashToken(refreshToken);
     
-      // Use databaseService methods
-      await prisma.$transaction(async () => {
-        await databaseService.clearOldRefreshTokens(user.id);
-        await databaseService.storeRefreshToken(user.id, hashedRefreshToken, new Date(refreshExp));
-      });
+        try {
+          await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp));
+        } catch (error) {
+          return createError(res, 500, 'Token storage failed');
+        }
+      
     } catch (authError) {
       const errorMessage = typeof authError === 'string' ? authError : authError.message || authError.code || 'Unknown auth error';
       const errorStack = authError.stack || 'No stack trace';
@@ -297,8 +314,14 @@ export const login = async (req, res) => {
       }
     }
 
-    return createResponse(res, 200, generateLoginMessage(), {
-      user: { id: user.id, email, role: user.role, name: sanitizedName, phone: user.phone },
+    return createResponse(res, 200, getGreetingMessage(sanitizedName), {
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: sanitizedName,
+        phone: user.phone,
+      },
       accessToken,
     });
   } catch (error) {

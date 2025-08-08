@@ -8,7 +8,7 @@
     "start": "node server.js",
     "router-dev": "react-router dev",
     "seed": "node prisma/seed.js",
-    "test": "jest --runInBand",
+    "test": "jest",
     "test:watch": "jest --watchAll --coverage --notify"
   },
   "dependencies": {
