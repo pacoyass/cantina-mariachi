@@ -6,7 +6,8 @@ import cookieParser from "cookie-parser";
 import apiRoutes from "./routes/index.routes.js";
 import { registerCronJobs } from "./cron/index.js";
 import { LoggerService } from "./utils/logger.js";
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 export const app = express();
