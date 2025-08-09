@@ -498,4 +498,14 @@ export const LoggerService = {
       paymentTimestamp: new Date(),
     });
   },
+
+  async logFailedWebhook(webhook, event, payload, errorMessage, attempts) {
+    console.error(`[FAILED WEBHOOK] ID: ${webhook.id} URL: ${webhook.url}`, {
+      event,
+      payload,
+      error: errorMessage,
+      attempts,
+    });
+    // Optionally save to DB here if you want permanent history
+  },
 };
