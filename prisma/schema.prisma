@@ -266,12 +266,30 @@ model Webhook {
   lastSync      DateTime?
   integrationId String?
   integration   Integration? @relation(fields: [integrationId], references: [id], onDelete: SetNull, name: "WebhookToIntegration")
-  details       Json // e.g., { "provider": "Stripe", "event": "payment_confirmed" }
+  details       Json
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   deletedAt     DateTime?
 
+  logs WebhookLog[] @relation("WebhookToWebhookLogs") // Reverse relation to logs
+
   @@map("webhooks")
+}
+
+model WebhookLog {
+  id        String   @id @default(uuid())
+  webhookId String
+  event     String
+  payload   Json
+  status    String // "SUCCESS" | "FAILED"
+  error     String?
+  attempts  Int
+  createdAt DateTime @default(now())
+
+  webhook Webhook @relation("WebhookToWebhookLogs", fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@index([webhookId, status, createdAt])
+  @@map("webhook_logs")
 }
 
 model Integration {
