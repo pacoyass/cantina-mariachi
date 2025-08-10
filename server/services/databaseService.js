@@ -82,6 +82,22 @@ export const databaseService = {
     return await db.refreshToken.findUnique({ where: { token: tokenHash } });
   },
 
+  // Blacklisted token helpers
+  async findBlacklistedToken(tokenHash, additionalWhere = {}, tx) {
+    const db = withTx(tx);
+    return await db.blacklistedToken.findFirst({ where: { tokenHash, ...additionalWhere } });
+    },
+
+  async createBlacklistedToken({ tokenHash, expiresAt }, tx) {
+    const db = withTx(tx);
+    return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });
+  },
+
+  async deleteExpiredBlacklistedToken(tokenHash, tx) {
+    const db = withTx(tx);
+    return await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });
+  },
+
   async cleanupExpiredTokens(tx) {
     const db = withTx(tx);
     const deleted = await db.refreshToken.deleteMany({ where: { expiresAt: { lte: new Date() } } });
@@ -135,8 +151,112 @@ export const databaseService = {
     });
   
     return record;
-  }
-  
+  },
+
+  // Additional APIs expected by tests
+  async createOrder(orderData, orderItems, cashTxData, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const order = await trx.order.create({ data: orderData });
+      if (orderItems?.length) {
+        await trx.orderItem.createMany({ data: orderItems });
+      }
+      if (cashTxData) {
+        await trx.cashTransaction.create({ data: cashTxData });
+      }
+      return order;
+    });
+  },
+
+  async getOrderById(id, tx) {
+    const db = withTx(tx);
+    return await db.order.findUnique({ where: { id } });
+  },
+
+  async updateOrderStatus(id, status, extra = {}, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const updated = await trx.order.update({ where: { id }, data: { status, ...extra } });
+      return updated;
+    });
+  },
+
+  async getAvailableMenuItems(tx) {
+    const db = withTx(tx);
+    return await db.menuItem.findMany();
+  },
+
+  async createCashTransaction(orderId, data, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const order = await trx.order.findUnique({ where: { id: orderId } });
+      if (!order) throw new Error('Order not found');
+      const created = await trx.cashTransaction.create({ data: { orderId, ...data } });
+      return created;
+    });
+  },
+
+  async getDriverById(id, tx) {
+    const db = withTx(tx);
+    return await db.driver.findUnique({ where: { id } });
+  },
+
+  async getActivityLogs(type, startDate, endDate, tx) {
+    const db = withTx(tx);
+    return await db.activityLog.findMany({ where: { type, createdAt: { gte: startDate, lte: endDate } } });
+  },
+
+  async getUsersByRole(role, tx) {
+    const db = withTx(tx);
+    return await db.user.findMany({ where: { role, isActive: true } });
+  },
+
+  async updateUser(id, data, tx) {
+    const db = withTx(tx);
+    return await db.user.update({ where: { id }, data });
+  },
+
+  async getOrdersByStatus(status, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({ where: { status }, include: { orderItems: true, driver: true } });
+  },
+
+  async createDriver(data, tx) {
+    const db = withTx(tx);
+    return await db.driver.create({ data });
+  },
+
+  async updateDriverStatus(id, status, tx) {
+    const db = withTx(tx);
+    return await db.driver.update({ where: { id }, data: { currentStatus: status } });
+  },
+
+  async getDriversByZone(zone, tx) {
+    const db = withTx(tx);
+    return await db.driver.findMany({ where: { deliveryZone: zone, active: true } });
+  },
+
+  async createCategory(data, tx) {
+    const db = withTx(tx);
+    return await db.category.create({ data });
+  },
+
+  async createMenuItem(data, tx) {
+    const db = withTx(tx);
+    return await db.menuItem.create({ data, include: { category: true } });
+  },
+
+  async getCashSummaryByDriver(driverId, date, tx) {
+    const db = withTx(tx);
+    return await db.cashSummary.findFirst({ where: { driverId, date } });
+  },
+
+  async getNotificationLogs(status, startDate, endDate, tx) {
+    const db = withTx(tx);
+    return await db.notificationLog.findMany({
+      where: { status, createdAt: { gte: startDate, lte: endDate } },
+    });
+  },
 };
 
 

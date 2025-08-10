@@ -29,8 +29,8 @@ export const cleanupExpiredAuthData = async () => {
 
       try {
         const cutoffDate = toZonedTime(subDays(new Date(), 30), 'Europe/London');
-        const deletedRefreshTokens = await tx.refresh_tokens.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
-        const deletedBlacklistedTokens = await tx.blacklisted_tokens.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
+        const deletedRefreshTokens = await tx.refreshToken.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
+        const deletedBlacklistedTokens = await tx.blacklistedToken.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
         totalDeleted = deletedRefreshTokens.count + deletedBlacklistedTokens.count;
 
         if (totalDeleted === 0) {
@@ -481,10 +481,7 @@ export const refreshToken = async (req, res) => {
     }
 
     const { accessToken, newRefreshToken, userId } = await authService.refreshToken(refreshToken);
-    const user = await prisma.users.findUnique({
-      where: { id: userId, isActive: true },
-      select: { id: true, email: true, role: true, name: true, phone: true },
-    });
+    const user = await databaseService.getUserById(userId, { id: true, email: true, role: true, name: true, phone: true });
 
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', userId, { reason: 'User not found' });
@@ -553,16 +550,14 @@ export const getToken = async (req, res) => {
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    const user = await authService.getUserById(req.user.id);
+    const user = await authService.getUserById(req.user.userId);
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', req.user.id, { reason: 'User not found' });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
     const tokenHash = crypto.createHash('sha256').update(accessToken).digest('hex');
-    const blacklisted = await prisma.blacklisted_tokens.findFirst({
-      where: { tokenHash, expiresAt: { gte: new Date() } },
-    });
+    const blacklisted = await databaseService.findBlacklistedToken(tokenHash, { expiresAt: { gte: new Date() } });
 
     if (blacklisted) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', user.id, { reason: 'Token is revoked' });
