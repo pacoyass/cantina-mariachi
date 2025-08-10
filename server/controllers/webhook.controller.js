@@ -35,9 +35,10 @@ export const triggerWebhook = async (req, res) => {
           attempts: 1,
         });
 
-        LoggerService.info(`Webhook sent successfully to ${webhook.url}`, {
+        await LoggerService.logSystemEvent('webhook', 'WEBHOOK_DELIVERED', {
           webhookId: webhook.id,
           statusCode: response.status,
+          url: webhook.url,
         });
 
         results.push({ webhookId: webhook.id, status: 'SUCCESS' });
@@ -51,9 +52,10 @@ export const triggerWebhook = async (req, res) => {
           attempts: 1,
         });
 
-        LoggerService.error(`Webhook delivery failed to ${webhook.url}`, {
+        await LoggerService.logError('Webhook delivery failed', err.stack, {
           webhookId: webhook.id,
           error: err.message,
+          url: webhook.url,
         });
 
         results.push({ webhookId: webhook.id, status: 'FAILED', error: err.message });
@@ -66,7 +68,7 @@ export const triggerWebhook = async (req, res) => {
     return createResponse(res, 200, 'Webhook processing completed', { results });
 >>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
   } catch (error) {
-    LoggerService.error('Error in triggerWebhook', { error: error.message, stack: error.stack });
+    await LoggerService.logError('Error in triggerWebhook', error.stack, { error: error.message });
     return createError(res, 500, 'Internal server error', 'WEBHOOK_TRIGGER_ERROR', {
       message: error.message,
     });
