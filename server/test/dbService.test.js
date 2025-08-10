@@ -9,12 +9,14 @@ await jest.unstable_mockModule('../config/database.js', () => ({
       findUnique: jest.fn(),
       findMany: jest.fn(),
       update: jest.fn(),
+      findFirst: jest.fn(),
     },
     order: {
       create: jest.fn(),
       findUnique: jest.fn(),
       update: jest.fn(),
       findMany: jest.fn(),
+      deleteMany: jest.fn(),
     },
     orderItem: {
       createMany: jest.fn(),
@@ -35,7 +37,12 @@ await jest.unstable_mockModule('../config/database.js', () => ({
     activityLog: { findMany: jest.fn() },
     systemLog: { findMany: jest.fn() },
     notificationLog: { findMany: jest.fn() },
-    $transaction: jest.fn(),
+    refreshToken: { deleteMany: jest.fn(), create: jest.fn(), findUnique: jest.fn() },
+    blacklistedToken: { findFirst: jest.fn(), create: jest.fn(), deleteMany: jest.fn() },
+    webhook: { findMany: jest.fn(), deleteMany: jest.fn() },
+    webhookLog: { create: jest.fn() },
+    cronLock: { upsert: jest.fn(), findUnique: jest.fn(), delete: jest.fn(), findMany: jest.fn() },
+    $transaction: jest.fn(async (cb) => cb(this)),
     $disconnect: jest.fn(),
   },
 }));
@@ -50,7 +57,7 @@ await jest.unstable_mockModule('../utils/logger.js', () => ({
 }));
 
 const prisma = (await import('../config/database.js')).default;
-const databaseService = (await import('../services/databaseService.js')).default;
+const { databaseService } = await import('../services/databaseService.js');
 const { LoggerService } = await import('../utils/logger.js');
 
 describe('DatabaseService', () => {
