@@ -2,11 +2,7 @@
 import axios from 'axios';
 import { databaseService } from '../services/databaseService.js';
 import { LoggerService } from '../utils/logger.js';
-<<<<<<< HEAD
-import { createError, createSuccess } from '../utils/response.js';
-=======
 import { createError, createResponse } from '../utils/response.js';
->>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
 
 export const triggerWebhook = async (req, res) => {
   const { event, payload } = req.body;
@@ -62,11 +58,7 @@ export const triggerWebhook = async (req, res) => {
       }
     }
 
-<<<<<<< HEAD
-    return createSuccess(res, 200, 'Webhook processing completed', { results });
-=======
     return createResponse(res, 200, 'Webhook processing completed', { results });
->>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
   } catch (error) {
     await LoggerService.logError('Error in triggerWebhook', error.stack, { error: error.message });
     return createError(res, 500, 'Internal server error', 'WEBHOOK_TRIGGER_ERROR', {
@@ -74,8 +66,6 @@ export const triggerWebhook = async (req, res) => {
     });
   }
 };
-<<<<<<< HEAD
-=======
 
 export const sendWebhook = async (event, payload) => {
   try {
@@ -128,4 +118,3 @@ export const cleanupExpiredWebhooks = async () => {
 };
 
 export default { sendWebhook };
->>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
