@@ -29,8 +29,8 @@ export const cleanupExpiredAuthData = async () => {
 
       try {
         const cutoffDate = toZonedTime(subDays(new Date(), 30), 'Europe/London');
-        const deletedRefreshTokens = await tx.refresh_tokens.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
-        const deletedBlacklistedTokens = await tx.blacklisted_tokens.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
+        const deletedRefreshTokens = await tx.refreshToken.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
+        const deletedBlacklistedTokens = await tx.blacklistedToken.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
         totalDeleted = deletedRefreshTokens.count + deletedBlacklistedTokens.count;
 
         if (totalDeleted === 0) {
@@ -480,37 +480,42 @@ export const refreshToken = async (req, res) => {
       return createError(res, 401, 'Session expired. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    const { accessToken, newRefreshToken, userId } = await authService.refreshToken(refreshToken);
-    const user = await prisma.users.findUnique({
-      where: { id: userId, isActive: true },
-      select: { id: true, email: true, role: true, name: true, phone: true },
-    });
+    // Verify provided refresh token and extract payload
+    const { verifyToken } = await import('../services/authService.js');
+    const rtPayload = await verifyToken(refreshToken);
 
+    // Fetch user and ensure exists
+    const user = await databaseService.getUserById(rtPayload.userId, { id: true, email: true, role: true, name: true, phone: true, isActive: true });
     if (!user) {
-      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', userId, { reason: 'User not found' });
+      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', rtPayload.userId, { reason: 'User not found' });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
+    // Build payload and issue a new access token
+    const payload = {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+      active: user.isActive,
+      phone: user.phone,
+    };
+    const { token: newAccessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || '15m');
+
     const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('accessToken', accessToken, {
+    res.cookie('accessToken', newAccessToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
       maxAge: 15 * 60 * 1000, // 15 minutes
       path: '/',
     });
-    res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path: '/',
-    });
+    // Do not rotate refresh token; keep existing cookie as-is
 
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Token refreshed successfully', { accessToken, refreshToken: newRefreshToken });
+    return createResponse(res, 200, 'Token refreshed successfully', { accessToken: newAccessToken });
   } catch (error) {
     await LoggerService.logError('Token refresh failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: error.message });
@@ -553,16 +558,14 @@ export const getToken = async (req, res) => {
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    const user = await authService.getUserById(req.user.id);
+    const user = await authService.getUserById(req.user.userId);
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', req.user.id, { reason: 'User not found' });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
     const tokenHash = crypto.createHash('sha256').update(accessToken).digest('hex');
-    const blacklisted = await prisma.blacklisted_tokens.findFirst({
-      where: { tokenHash, expiresAt: { gte: new Date() } },
-    });
+    const blacklisted = await databaseService.findBlacklistedToken(tokenHash, { expiresAt: { gte: new Date() } });
 
     if (blacklisted) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', user.id, { reason: 'Token is revoked' });
