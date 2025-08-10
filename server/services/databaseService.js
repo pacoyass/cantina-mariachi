@@ -34,8 +34,6 @@ export const databaseService = {
         isActive: true,
         ...select,
       },
-<<<<<<< HEAD
-=======
     });
     if (!user) throw new Error('User not found');
     return user;
@@ -167,28 +165,11 @@ export const databaseService = {
         await trx.cashTransaction.create({ data: cashTxData });
       }
       return order;
->>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
     });
     if (!user) throw new Error('User not found');
     return user;
   },
 
-<<<<<<< HEAD
-  async getUserById(id, select = {}, tx) {
-    const db = withTx(tx);
-    const user = await db.user.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        phone: true,
-        isActive: true,
-        createdAt: true,
-        ...select,
-      },
-=======
   async getOrderById(id, tx) {
     const db = withTx(tx);
     return await db.order.findUnique({ where: { id } });
@@ -199,43 +180,11 @@ export const databaseService = {
     return await db.$transaction(async (trx) => {
       const updated = await trx.order.update({ where: { id }, data: { status, ...extra } });
       return updated;
->>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
     });
     if (!user) throw new Error('User not found');
     return user;
   },
 
-<<<<<<< HEAD
-  async createUser(data, tx) {
-    const db = withTx(tx);
-    const existing = await db.user.findFirst({ where: { email: data.email, deletedAt: null } });
-    if (existing) throw new Error('User with this email already exists');
-    const user = await db.user.create({ data });
-    await LoggerService.logSystemEvent('DatabaseService', 'CREATE_USER', { userId: user.id });
-    return user;
-  },
-
-  async refreshUserTokens(userId, hashedToken, expiresAt, tx) {
-    const db = withTx(tx);
-    await db.refreshToken.deleteMany({ where: { userId } });
-    const token = await db.refreshToken.create({
-      data: { userId, token: hashedToken, expiresAt },
-    });
-    await LoggerService.logSystemEvent('DatabaseService', 'REFRESH_USER_TOKENS', { userId });
-    return token;
-  },
-
-  async getRefreshToken(tokenHash, tx) {
-    const db = withTx(tx);
-    return await db.refreshToken.findUnique({ where: { token: tokenHash } });
-  },
-
-  async cleanupExpiredTokens(tx) {
-    const db = withTx(tx);
-    const deleted = await db.refreshToken.deleteMany({ where: { expiresAt: { lte: new Date() } } });
-    await LoggerService.logSystemEvent('DatabaseService', 'CLEANUP_EXPIRED_TOKENS', { count: deleted.count });
-    return deleted.count;
-=======
   async getAvailableMenuItems(tx) {
     const db = withTx(tx);
     return await db.menuItem.findMany();
@@ -311,7 +260,6 @@ export const databaseService = {
     return await db.notificationLog.findMany({
       where: { status, createdAt: { gte: startDate, lte: endDate } },
     });
->>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
   },
 
   async getActiveWebhooks(tx) {
