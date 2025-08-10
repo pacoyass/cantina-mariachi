@@ -2,6 +2,7 @@ import { V4 } from 'paseto';
 const { sign, verify } = V4;
 import bcrypt from 'bcrypt';
 import { databaseService } from './databaseService.js';
+import { createHash } from 'crypto';
 
 const privateKey = process.env.PASETO_PRIVATE_KEY;
 const publicKey = process.env.PASETO_PUBLIC_KEY;
@@ -60,12 +61,7 @@ export const verifyToken = async (token) => {
 
 // Hash a token using SHA-256
 export async function hashToken(token) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(token);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const tokenHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return tokenHash;
+  return createHash('sha256').update(token).digest('hex');
 }
 
 // Compare refresh token with stored hash
@@ -125,22 +121,29 @@ export const login = async (email, password) => {
 
 // Refresh tokens
 export const refreshToken = async (refreshToken) => {
-  const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-  const storedToken = await databaseService.findRefreshToken(hashedRefreshToken, { expiresAt: { gte: new Date() } });
-  if (!storedToken) throw new Error('Invalid or expired refresh token');
+  // Hash provided refresh token with SHA-256
+  const providedTokenHash = await hashToken(refreshToken);
 
+  // Validate stored refresh token exists and is not expired
+  const storedToken = await databaseService.getRefreshToken(providedTokenHash);
+  if (!storedToken || storedToken.expiresAt < new Date()) {
+    throw new Error('Invalid or expired refresh token');
+  }
+
+  // Verify provided PASETO refresh token
   const payload = await verifyToken(refreshToken);
-  const user = await databaseService.getUserById(payload.userId, { isActive: true });
-  if (!user) throw new Error('User not found');
 
+  // Fetch user and ensure active
+  const user = await databaseService.getUserById(payload.userId);
+  if (!user || user.isActive === false) throw new Error('User not found');
+
+  // Issue new tokens
   const newAccessToken = await generateToken(user, '15m');
   const newRefreshToken = await generateToken(user, '7d');
-  const newHashedRefreshToken = await bcrypt.hash(newRefreshToken.token, 10);
 
-  await databaseService.updateRefreshTokens(hashedRefreshToken, {
-    token: newHashedRefreshToken,
-    expiresAt: newRefreshToken.exp,
-  });
+  // Store new refresh token hash for the user (rotate)
+  const newHashedRefreshToken = await hashToken(newRefreshToken.token);
+  await databaseService.refreshUserTokens(user.id, newHashedRefreshToken, newRefreshToken.exp);
 
   return { accessToken: newAccessToken.token, newRefreshToken: newRefreshToken.token, userId: user.id };
 };
