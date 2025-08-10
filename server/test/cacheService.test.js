@@ -28,6 +28,13 @@ await jest.unstable_mockModule('redis', () => ({
   const { LoggerService } = await import('../utils/logger.js');
 
 
+// Ensure internal client connected state is true for tests
+beforeAll(() => {
+  // simulate connect event
+  const connectHandler = mockRedisClient.on.mock.calls.find(call => call[0] === 'connect')?.[1];
+  if (connectHandler) connectHandler();
+});
+
 
 describe('CacheService', () => {
   beforeEach(() => {
