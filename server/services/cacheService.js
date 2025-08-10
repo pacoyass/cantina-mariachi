@@ -58,6 +58,31 @@ class CacheService {
     }
   }
 
+  // Backward-compatible JSON cache helpers used by tests
+  async getCache(key) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, returning null');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return null;
+    }
+    try {
+      const data = await this.#client.get(key);
+      if (data) {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_HIT', { key });
+        return JSON.parse(data);
+      }
+      await LoggerService.logSystemEvent('CacheService', 'CACHE_MISS', { key });
+      return null;
+    } catch (error) {
+      await LoggerService.logError(error.message || 'getCache error', error.stack, { method: 'getCache', key });
+      throw error;
+    }
+  }
+
   async set(key, value, options = {}) {
     if (!this.#isConnected) {
       console.warn('Redis not connected, skipping set');
@@ -81,6 +106,25 @@ class CacheService {
       } catch (logError) {
         console.error('Failed to log cache error:', logError.message);
       }
+      throw error;
+    }
+  }
+
+  async setCache(key, value, ttl = 300) {
+    if (!this.#isConnected) {
+      console.warn('Redis not connected, skipping setCache');
+      try {
+        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
+      } catch (logError) {
+        console.error('Failed to log cache event:', logError.message);
+      }
+      return;
+    }
+    try {
+      await this.#client.setEx(key, ttl, JSON.stringify(value));
+      await LoggerService.logSystemEvent('CacheService', 'CACHE_SET', { key, ttl });
+    } catch (error) {
+      await LoggerService.logError(error.message || 'setCache error', error.stack, { method: 'setCache', key, ttl });
       throw error;
     }
   }

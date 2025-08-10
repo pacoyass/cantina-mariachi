@@ -1,6 +1,10 @@
 // utils/validate.middleware.js
 import { z } from 'zod';
+<<<<<<< HEAD
 import { createError } from '../utils/response';
+=======
+import { createError } from '../utils/response.js';
+>>>>>>> 81e1cddda51e5d59f35929558a81dae12197f13a
 import { LoggerService } from '../utils/logger.js';
 import cacheService from '../services/cacheService.js';
 
