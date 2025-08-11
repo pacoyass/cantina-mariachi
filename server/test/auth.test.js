@@ -46,6 +46,13 @@ await jest.unstable_mockModule('../services/databaseService.js', () => ({
   databaseService: dbMock,
 }));
 
+// Mock dataService with a shared logout mock used by both default and named export
+const dataServiceLogoutMock = jest.fn();
+await jest.unstable_mockModule('../services/dataService.js', () => ({
+  default: { logout: dataServiceLogoutMock },
+  logout: dataServiceLogoutMock,
+}));
+
 // Auth middleware mock (RBAC-protected routes rely on req.user)
 await jest.unstable_mockModule('../middleware/auth.middleware.js', () => ({
   default: async (req, res, next) => {
@@ -177,13 +184,12 @@ describe('Auth routes', () => {
   });
   test('logout blacklists current access token', async () => {
     const app = buildApp();
-    const { logout } = await import('../services/authService.js');
-    const spy = jest.spyOn((await import('../services/authService.js')), 'logout');
+    const { logout } = await import('../services/dataService.js');
     await request(app)
       .post('/api/auth/logout')
       .set('Authorization', 'Bearer access-token-123')
       .expect(200);
-    expect(spy).toHaveBeenCalledWith('access-token-123');
+    expect(logout).toHaveBeenCalledWith('access-token-123');
   });
   test('logout-others sessions returns 200', async () => {
     const app = buildApp();
