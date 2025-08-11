@@ -1,6 +1,5 @@
 import prisma from '../config/database.js';
 import { LoggerService } from '../utils/logger.js';
-import { verifyToken, hashToken } from './authService.js';
 
 const withTx = (tx) => tx || prisma;
 
@@ -109,6 +108,7 @@ export const databaseService = {
   async logout(accessToken, tx) {
     const db = withTx(tx);
     let expiresAt;
+    const { verifyToken, hashToken } = await import('./authService.js');
     try {
       const payload = await verifyToken(accessToken);
       expiresAt = new Date(payload.exp);
