@@ -18,3 +18,17 @@ export const loginSchema = z.object({
   email: z.string().trim().toLowerCase().email({ message: 'Invalid email format' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
 });
+
+// Pagination Query Schema
+export const paginationQuerySchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .transform((v) => (v ? parseInt(v, 10) : 1))
+    .pipe(z.number().int().min(1).default(1)),
+  pageSize: z
+    .string()
+    .optional()
+    .transform((v) => (v ? parseInt(v, 10) : 20))
+    .pipe(z.number().int().min(1).max(100).default(20)),
+});
