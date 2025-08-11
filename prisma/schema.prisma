@@ -44,12 +44,15 @@ model RefreshToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   expiresAt DateTime
   userAgent String?
   ip        String?
 
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([userId, expiresAt])
   @@map("refresh_tokens")
 }
 
@@ -59,6 +62,7 @@ model BlacklistedToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
 
+  @@index([expiresAt])
   @@map("blacklisted_tokens")
 }
 
@@ -66,7 +70,7 @@ model BlacklistedToken {
 model Driver {
   id                   String            @id @default(uuid())
   userId               String?           @unique // Links to User (optional, for drivers with login)
-  user                 User?             @relation("UserToDriver", fields: [userId], references: [id])
+  user                 User?             @relation("UserToDriver", fields: [userId], references: [id], onDelete: SetNull)
   name                 String
   phone                String
   active               Boolean           @default(true)
@@ -88,7 +92,7 @@ model Driver {
 model ActivityLog {
   id        String   @id @default(uuid())
   userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   type      String // e.g., "VIEW_PAGE", "CLICK_BUTTON", "NAVIGATION", "EXPORT"
   message   String
   metadata  Json? // Optional structured data
@@ -101,7 +105,7 @@ model ActivityLog {
 model LoginLog {
   id        String   @id @default(uuid())
   userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   status    String // "SUCCESS" | "FAILURE"
   ip        String?
   userAgent String?
@@ -125,7 +129,7 @@ model ErrorLog {
 model NotificationLog {
   id           String   @id @default(uuid())
   userId       String?
-  user         User?    @relation(fields: [userId], references: [id])
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   type         String // e.g., "EMAIL", "SMS", "PUSH"
   target       String // phone, email, deviceId
   content      String
@@ -188,6 +192,7 @@ model CashSummary {
 
   @@index([driverId, date])
   @@index([date])
+  @@unique([driverId, date])
   @@map("cash_summary")
 }
 
@@ -209,7 +214,7 @@ model AppConfig {
 model AuditLog {
   id        String    @id @default(uuid())
   userId    String?
-  user      User?     @relation(fields: [userId], references: [id])
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   action    String
   targetId  String?
   details   Json? // e.g., { "transactionId": "uuid", "discrepancy": "Paid $20, owed $2" }
@@ -225,14 +230,14 @@ model AuditLog {
 model Notification {
   id         String   @id @default(uuid())
   userId     String?
-  user       User?    @relation(fields: [userId], references: [id])
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   content    String
   read       Boolean  @default(false)
   pushConfig Json? // e.g., { "type": "SMS", "phone": "1234567890" }
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@index([userId, createdAt])
+  @@index([userId, read, createdAt])
   @@map("notifications")
 }
 
@@ -310,7 +315,7 @@ model Integration {
 model UserPreference {
   id                     String    @id @default(uuid())
   userId                 String    @unique
-  user                   User      @relation(fields: [userId], references: [id])
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   theme                  String?
   shortcuts              Json?
   accessibility          Json?
@@ -385,8 +390,8 @@ model Order {
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
 
-  user            User?            @relation(fields: [userId], references: [id])
-  driver          Driver?          @relation(fields: [driverId], references: [id])
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  driver          Driver?          @relation(fields: [driverId], references: [id], onDelete: SetNull)
   orderItems      OrderItem[]
   cashTransaction CashTransaction?
 
@@ -395,6 +400,7 @@ model Order {
   @@index([customerPhone])
   @@index([userId])
   @@index([createdAt])
+  @@index([customerEmail])
   @@map("orders")
 }
 
@@ -426,7 +432,7 @@ model Reservation {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("reservations")
 }
