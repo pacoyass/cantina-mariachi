@@ -222,7 +222,21 @@ export const databaseService = {
     const db = withTx(tx);
     return await db.order.findMany({ where: { status }, include: { orderItems: true, driver: true } });
   },
-
+// Logout current access token by blacklisting it
+async logout(accessToken, tx) {
+  const db = withTx(tx);
+  let expiresAt;
+  try {
+    const payload = await verifyToken(accessToken);
+    expiresAt = new Date(payload.exp);
+  } catch (error) {
+    // If verification fails, fallback to a short-lived blacklist window
+    expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+  }
+  const tokenHash = await hashToken(accessToken);
+  await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });
+  return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });
+},
   async createDriver(data, tx) {
     const db = withTx(tx);
     return await db.driver.create({ data });
