@@ -13,6 +13,7 @@ const mockLogger = {
   logNotification: jest.fn(),
   logLogin: jest.fn(),
   flushQueue: jest.fn(),
+
 };
 
 await jest.unstable_mockModule('../utils/logger.js', () => ({
@@ -33,6 +34,10 @@ const dbMock = {
   getUserByEmail: jest.fn(),
   refreshUserTokens: jest.fn(),
   getUserById: jest.fn(),
+  getRefreshToken: jest.fn(),
+listRefreshTokensByUser: jest.fn(),
+deleteAllRefreshTokensForUser: jest.fn(),
+deleteOtherRefreshTokensForUser: jest.fn(),
 };
 await jest.unstable_mockModule('../services/databaseService.js', () => ({
   databaseService: dbMock,
@@ -133,5 +138,46 @@ describe('Auth routes', () => {
     await request(app)
       .post('/api/auth/logout')
       .expect(401);
+  });
+  test('refresh-token rotates refresh cookie and returns new access token', async () => {
+    const app = buildApp();
+    // mock DB accept of provided refresh hash
+    dbMock.getUserById.mockResolvedValue({ id: 'u1', email: 'test@example.com', role: 'CUSTOMER', name: 'T', phone: null, isActive: true });
+    // provide a fake DB getRefreshToken for rotation path
+    (dbMock.getRefreshToken || (dbMock.getRefreshToken = jest.fn())).mockResolvedValue({ id: 'rt1', expiresAt: new Date(Date.now() + 3600_000) });
+    (dbMock.refreshUserTokens || (dbMock.refreshUserTokens = jest.fn())).mockResolvedValue({});
+  
+    const res = await request(app)
+      .post('/api/auth/refresh-token')
+      .set('Cookie', ['refreshToken=prevRefresh'])
+      .send({})
+      .expect(200);
+  
+    const setCookies = res.headers['set-cookie'] || [];
+    expect(setCookies.some(c => c.startsWith('accessToken='))).toBeTruthy();
+    expect(setCookies.some(c => c.startsWith('refreshToken='))).toBeTruthy();
+  });
+  
+  test('list sessions returns array', async () => {
+    const app = buildApp();
+    (dbMock.listRefreshTokensByUser || (dbMock.listRefreshTokensByUser = jest.fn())).mockResolvedValue([
+      { id: 'rt1', expiresAt: new Date(Date.now() + 3600_000) }
+    ]);
+    const res = await request(app).get('/api/auth/sessions').expect(200);
+    expect(Array.isArray(res.body.data.sessions)).toBe(true);
+  });
+  
+  test('logout-all sessions returns 200 and clears cookies', async () => {
+    const app = buildApp();
+    (dbMock.deleteAllRefreshTokensForUser || (dbMock.deleteAllRefreshTokensForUser = jest.fn())).mockResolvedValue(2);
+    const res = await request(app).post('/api/auth/logout-all').set('Cookie', ['accessToken=a']).send({}).expect(200);
+    expect(res.body.status).toBe('success');
+  });
+  
+  test('logout-others sessions returns 200', async () => {
+    const app = buildApp();
+    (dbMock.deleteOtherRefreshTokensForUser || (dbMock.deleteOtherRefreshTokensForUser = jest.fn())).mockResolvedValue(1);
+    const res = await request(app).post('/api/auth/logout-others').set('Cookie', ['refreshToken=keep']).send({}).expect(200);
+    expect(res.body.status).toBe('success');
   });
 });

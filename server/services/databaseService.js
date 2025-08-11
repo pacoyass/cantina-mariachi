@@ -259,4 +259,36 @@ export const databaseService = {
       where: { status, createdAt: { gte: startDate, lte: endDate } },
     });
   },
+
+  // List refresh tokens for a user (id + expiresAt only)
+  async listRefreshTokensByUser(userId, tx) {
+    const db = withTx(tx);
+    return await db.refreshToken.findMany({
+      where: { userId },
+      select: { id: true, expiresAt: true },
+      orderBy: { expiresAt: 'desc' },
+    });
+  },
+
+  // Delete all refresh tokens for user (logout all sessions)
+  async deleteAllRefreshTokensForUser(userId, tx) {
+    const db = withTx(tx);
+    const result = await db.refreshToken.deleteMany({ where: { userId } });
+    await LoggerService.logSystemEvent('DatabaseService', 'DELETE_ALL_REFRESH_TOKENS', { userId, count: result.count });
+    return result.count;
+  },
+
+  // Delete other refresh tokens for user, keep the current one by hash
+  async deleteOtherRefreshTokensForUser(userId, keepTokenHash, tx) {
+    const db = withTx(tx);
+    const result = await db.refreshToken.deleteMany({
+      where: { userId, NOT: { token: keepTokenHash } },
+    });
+    await LoggerService.logSystemEvent('DatabaseService', 'DELETE_OTHER_REFRESH_TOKENS', {
+      userId,
+      keptHash: keepTokenHash,
+      count: result.count,
+    });
+    return result.count;
+  },
 };
