@@ -1,4 +1,4 @@
-import { authService, generateToken, hashToken } from '../services/authService.js';
+import { generateToken, hashToken, verifyToken } from '../services/authService.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
 import {createError,createResponse}  from '../utils/response.js';
 import { toZonedTime } from 'date-fns-tz';
@@ -474,25 +474,32 @@ export const login = async (req, res) => {
 // POST /api/auth/refresh - Refresh access token
 export const refreshToken = async (req, res) => {
   try {
-    const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
-    if (!refreshToken) {
+    const providedRefreshToken = req.body.refreshToken || req.cookies.refreshToken;
+    if (!providedRefreshToken) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: 'No refresh token provided' });
       return createError(res, 401, 'Session expired. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    // Verify provided refresh token and extract payload
-    const { verifyToken } = await import('../services/authService.js');
-    const rtPayload = await verifyToken(refreshToken);
+    // Verify provided refresh token
+    const payload = await verifyToken(providedRefreshToken);
 
-    // Fetch user and ensure exists
-    const user = await databaseService.getUserById(rtPayload.userId, { id: true, email: true, role: true, name: true, phone: true, isActive: true });
-    if (!user) {
-      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', rtPayload.userId, { reason: 'User not found' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
+    // Ensure stored hash exists (rotate only if valid current token)
+    const providedTokenHash = await hashToken(providedRefreshToken);
+    const stored = await databaseService.getRefreshToken(providedTokenHash);
+    if (!stored || stored.expiresAt < new Date()) {
+      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'Refresh token not recognized or expired' });
+      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED');
     }
 
-    // Build payload and issue a new access token
-    const payload = {
+    // Fetch user
+    const user = await databaseService.getUserById(payload.userId, { id: true, email: true, role: true, name: true, phone: true, isActive: true });
+    if (!user) {
+      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'User not found' });
+      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED');
+    }
+
+    // Issue new tokens (rotate refresh)
+    const accessPayload = {
       userId: user.id,
       email: user.email,
       role: user.role,
@@ -500,22 +507,33 @@ export const refreshToken = async (req, res) => {
       active: user.isActive,
       phone: user.phone,
     };
-    const { token: newAccessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || '15m');
+    const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '15m');
+    const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || '7d');
+
+    // Store new refresh token hash (replaces previous)
+    const newHashedRefresh = await hashToken(newRefreshToken);
+    await databaseService.refreshUserTokens(user.id, newHashedRefresh, newRefreshExp);
 
     const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('accessToken', newAccessToken, {
+    res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 15 * 60 * 1000,
       path: '/',
     });
-    // Do not rotate refresh token; keep existing cookie as-is
+    res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'strict' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/',
+    });
 
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Token refreshed successfully', { accessToken: newAccessToken });
+    return createResponse(res, 200, 'Token refreshed successfully', { accessToken });
   } catch (error) {
     await LoggerService.logError('Token refresh failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: error.message });
@@ -580,5 +598,66 @@ export const getToken = async (req, res) => {
     await LoggerService.logError('Token validation failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: error.message });
     return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
+  }
+};
+
+
+// List current user's refresh tokens (sessions)
+export const listSessions = async (req, res) => {
+  try {
+    if (!req.user?.userId) {
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+    }
+    const tokens = await databaseService.listRefreshTokensByUser(req.user.userId);
+    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens });
+  } catch (error) {
+    await LoggerService.logError('listSessions failed', error.stack, { userId: req.user?.userId });
+    return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR');
+  }
+};
+
+// Logout all sessions: delete all refresh tokens for user and blacklist current access token
+export const logoutAllSessions = async (req, res) => {
+  try {
+    if (!req.user?.userId) {
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+    }
+    // Blacklist current access token if present
+    const accessToken = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
+    if (accessToken) {
+      const { logout } = await import('../services/authService.js');
+      await logout(accessToken);
+    }
+
+    const count = await databaseService.deleteAllRefreshTokensForUser(req.user.userId);
+    res.clearCookie('accessToken', { path: '/', httpOnly: true });
+    res.clearCookie('refreshToken', { path: '/', httpOnly: true });
+
+    await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_ALL_SESSIONS', req.user.userId, { deletedTokens: count });
+    return createResponse(res, 200, 'Logged out from all sessions', { deletedTokens: count });
+  } catch (error) {
+    await LoggerService.logError('logoutAllSessions failed', error.stack, { userId: req.user?.userId });
+    return createError(res, 500, 'Failed to logout from all sessions', 'SERVER_ERROR');
+  }
+};
+
+// Logout other sessions: delete all refresh tokens except the current one (from provided cookie)
+export const logoutOtherSessions = async (req, res) => {
+  try {
+    if (!req.user?.userId) {
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+    }
+    const currentRefresh = req.cookies.refreshToken || req.body.refreshToken;
+    if (!currentRefresh) {
+      return createError(res, 400, 'Current refresh token required', 'BAD_REQUEST');
+    }
+    const keepHash = await hashToken(currentRefresh);
+    const count = await databaseService.deleteOtherRefreshTokensForUser(req.user.userId, keepHash);
+
+    await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_OTHER_SESSIONS', req.user.userId, { deletedTokens: count });
+    return createResponse(res, 200, 'Logged out from other sessions', { deletedTokens: count });
+  } catch (error) {
+    await LoggerService.logError('logoutOtherSessions failed', error.stack, { userId: req.user?.userId });
+    return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR');
   }
 };
