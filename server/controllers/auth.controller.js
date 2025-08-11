@@ -10,7 +10,7 @@ import { LoggerService } from '../utils/logger.js';
 import cacheService from '../services/cacheService.js';
 import { databaseService } from '../services/databaseService.js';
 import { sendWebhook } from './webhook.controller.js';
-
+ 
 // Cleanup expired authentication data (refresh tokens, blacklisted tokens)
 export const cleanupExpiredAuthData = async () => {
   const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
@@ -403,7 +403,7 @@ export const getToken = async (req, res) => {
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    const tokenHash = crypto.createHash('sha256').update(accessToken).digest('hex');
+    const tokenHash = await hashToken(accessToken);
     const blacklisted = await databaseService.findBlacklistedToken(tokenHash, { expiresAt: { gte: new Date() } });
 
     if (blacklisted) {
@@ -446,8 +446,7 @@ export const logoutAllSessions = async (req, res) => {
     // Blacklist current access token if present
     const accessToken = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
     if (accessToken) {
-  await databaseService.logout(accessToken)
-     
+      await databaseService.logout(accessToken);
     }
 
     const count = await databaseService.deleteAllRefreshTokensForUser(req.user.userId);

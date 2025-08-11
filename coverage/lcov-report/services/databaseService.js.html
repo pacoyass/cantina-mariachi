@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.3% </span>
+                <span class="strong">47.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>59/115</span>
+                <span class='fraction'>59/124</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60.52% </span>
+                <span class="strong">58.97% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>23/38</span>
+                <span class='fraction'>23/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.72% </span>
+                <span class="strong">48.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>58/110</span>
+                <span class='fraction'>58/119</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -356,7 +356,24 @@
 <a name='L291'></a><a href='#L291'>291</a>
 <a name='L292'></a><a href='#L292'>292</a>
 <a name='L293'></a><a href='#L293'>293</a>
-<a name='L294'></a><a href='#L294'>294</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
@@ -458,6 +475,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -755,6 +789,23 @@ export const databaseService = {
 <span class="cstat-no" title="statement not covered" >    return await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });</span>
   },
 &nbsp;
+  // Logout current access token by blacklisting it
+<span class="fstat-no" title="function not covered" >  as</span>ync logout(accessToken, tx) {
+    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
+    let expiresAt;
+    const { verifyToken, hashToken } = <span class="cstat-no" title="statement not covered" >await import('./authService.js');</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const payload = <span class="cstat-no" title="statement not covered" >await verifyToken(accessToken);</span>
+<span class="cstat-no" title="statement not covered" >      expiresAt = new Date(payload.exp);</span>
+    } catch (error) {
+      // If verification fails, fallback to a short-lived blacklist window
+<span class="cstat-no" title="statement not covered" >      expiresAt = new Date(Date.now() + 15 * 60 * 1000);</span>
+    }
+    const tokenHash = <span class="cstat-no" title="statement not covered" >await hashToken(accessToken);</span>
+<span class="cstat-no" title="statement not covered" >    await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });</span>
+<span class="cstat-no" title="statement not covered" >    return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });</span>
+  },
+&nbsp;
   // Webhooks helpers
 <span class="fstat-no" title="function not covered" >  as</span>ync getActiveWebhooks(tx) {
     const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
@@ -949,7 +1000,7 @@ export const databaseService = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-11T04:07:58.936Z
+                at 2025-08-11T14:59:55.553Z
             </div>
         <script src="../prettify.js"></script>
         <script>
