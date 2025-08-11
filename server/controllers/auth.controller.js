@@ -403,7 +403,7 @@ export const getToken = async (req, res) => {
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    const tokenHash = crypto.createHash('sha256').update(accessToken).digest('hex');
+    const tokenHash = await hashToken(accessToken);
     const blacklisted = await databaseService.findBlacklistedToken(tokenHash, { expiresAt: { gte: new Date() } });
 
     if (blacklisted) {
