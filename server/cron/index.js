@@ -7,6 +7,7 @@ import { retryFailedLogs } from './retryFailedLogs.js';
 import { toZonedTime } from 'date-fns-tz';
 import { cleanupExpiredAuthData } from '../controllers/auth.controller.js';
 import { cleanupExpiredWebhooks } from '../controllers/webhook.controller.js';
+import { cleanupUserData } from '../controllers/user.controller.js';
 
 const runningJobs = new Set();
 
@@ -95,6 +96,16 @@ export const registerCronJobs = () => {
       scheduled: true,
       timezone: 'Europe/London',
     });
+ 
+    // Cleanup expired user data at 3:20 AM
+    cron.schedule('20 3 * * *', async () => {
+      await runJobSafely('cleanupUserData', async () => {
+        await cleanupUserData();
+      });
+    }, {
+      scheduled: true,
+      timezone: 'Europe/London',
+    });
 
 // Cleanup expired webhook data at 3:20 AM
     cron.schedule('20 3 * * *', async () => {
@@ -122,7 +133,7 @@ export const runInitialCleanup = async () => {
     { name: 'retryFailedLogs', fn: retryFailedLogs, delay: 35000 },
     { name: 'cleanupExpiredAuthData', fn: cleanupExpiredAuthData, delay: 20000 },
     { name: 'cleanupExpiredWebhook', fn: cleanupExpiredWebhooks, delay: 45000 },
-
+    { name: 'cleanupUserData', fn: cleanupUserData, delay: 50000 },
   ];
 
   for (const task of cleanupTasks) {
