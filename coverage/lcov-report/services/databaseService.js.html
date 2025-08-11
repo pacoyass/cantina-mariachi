@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.58% </span>
+                <span class="strong">44.69% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>59/124</span>
+                <span class='fraction'>59/132</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.97% </span>
+                <span class="strong">57.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>23/39</span>
+                <span class='fraction'>23/40</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">48.73% </span>
+                <span class="strong">45.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>58/119</span>
+                <span class='fraction'>58/127</span>
             </div>
         
             
@@ -373,7 +373,21 @@
 <a name='L308'></a><a href='#L308'>308</a>
 <a name='L309'></a><a href='#L309'>309</a>
 <a name='L310'></a><a href='#L310'>310</a>
-<a name='L311'></a><a href='#L311'>311</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a>
+<a name='L313'></a><a href='#L313'>313</a>
+<a name='L314'></a><a href='#L314'>314</a>
+<a name='L315'></a><a href='#L315'>315</a>
+<a name='L316'></a><a href='#L316'>316</a>
+<a name='L317'></a><a href='#L317'>317</a>
+<a name='L318'></a><a href='#L318'>318</a>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a>
+<a name='L324'></a><a href='#L324'>324</a>
+<a name='L325'></a><a href='#L325'>325</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
@@ -614,6 +628,20 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -924,7 +952,21 @@ export const databaseService = {
     const db = withTx(tx);
     return await db.order.findMany({ where: { status }, include: { orderItems: true, driver: true } });
   },
-&nbsp;
+// Logout current access token by blacklisting it
+<span class="fstat-no" title="function not covered" >as</span>ync logout(accessToken, tx) {
+  const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
+  let expiresAt;
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const payload = <span class="cstat-no" title="statement not covered" >await verifyToken(accessToken);</span>
+<span class="cstat-no" title="statement not covered" >    expiresAt = new Date(payload.exp);</span>
+  } catch (error) {
+    // If verification fails, fallback to a short-lived blacklist window
+<span class="cstat-no" title="statement not covered" >    expiresAt = new Date(Date.now() + 15 * 60 * 1000);</span>
+  }
+  const tokenHash = <span class="cstat-no" title="statement not covered" >await hashToken(accessToken);</span>
+<span class="cstat-no" title="statement not covered" >  await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });</span>
+<span class="cstat-no" title="statement not covered" >  return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });</span>
+},
   async createDriver(data, tx) {
     const db = withTx(tx);
     return await db.driver.create({ data });
@@ -1000,7 +1042,7 @@ export const databaseService = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-11T14:59:55.553Z
+                at 2025-08-11T15:45:35.213Z
             </div>
         <script src="../prettify.js"></script>
         <script>
