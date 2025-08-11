@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.58% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/58</span>
+                <span class='fraction'>0/58</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.28% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/21</span>
+                <span class='fraction'>0/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.27% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/55</span>
+                <span class='fraction'>0/55</span>
             </div>
         
             
@@ -222,31 +222,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -322,16 +322,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -375,32 +375,32 @@
 import crypto from 'crypto';
 import { LoggerService } from './logger.js';
 &nbsp;
-export async function acquireLock(tx, taskName, instanceId, ttlMinutes = 60, maxRetries = 3) {
-  const now = toZonedTime(new Date(), 'Europe/London');
-  const staleThreshold = new Date(now.getTime() - ttlMinutes * 60 * 1000);
-  const lockId = crypto.randomUUID();
+export async function <span class="fstat-no" title="function not covered" >acquireLock(</span>tx, taskName, instanceId, ttlMinutes = <span class="branch-0 cbranch-no" title="branch not covered" >60,</span> maxRetries = <span class="branch-0 cbranch-no" title="branch not covered" >3)</span> {
+  const now = <span class="cstat-no" title="statement not covered" >toZonedTime(new Date(), 'Europe/London');</span>
+  const staleThreshold = <span class="cstat-no" title="statement not covered" >new Date(now.getTime() - ttlMinutes * 60 * 1000);</span>
+  const lockId = <span class="cstat-no" title="statement not covered" >crypto.randomUUID();</span>
 &nbsp;
-  for (let attempt = 0; attempt &lt;= maxRetries; attempt++) {
-    try {
-      await LoggerService.logSystemEvent('lock', `ATTEMPT_ACQUIRE_LOCK_${taskName}`, {
+<span class="cstat-no" title="statement not covered" >  for (let attempt = <span class="cstat-no" title="statement not covered" >0;</span> attempt &lt;= maxRetries; attempt++) {</span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      await LoggerService.logSystemEvent('lock', `ATTEMPT_ACQUIRE_LOCK_${taskName}`, {</span>
         instanceId,
         lockId,
         attempt: attempt + 1,
         timestamp: now.toISOString(),
       });
 &nbsp;
-      await tx.cronLock.upsert({
+<span class="cstat-no" title="statement not covered" >      await tx.cronLock.upsert({</span>
         where: { taskName },
         update: { instanceId, lockedAt: now },
         create: { id: lockId, taskName, instanceId, lockedAt: now },
       });
 &nbsp;
-      await LoggerService.logSystemEvent('lock', `LOCK_ACQUIRED_${taskName}`, {
+<span class="cstat-no" title="statement not covered" >      await LoggerService.logSystemEvent('lock', `LOCK_ACQUIRED_${taskName}`, {</span>
         instanceId,
         lockId,
         timestamp: now.toISOString(),
       });
-      return true;
+<span class="cstat-no" title="statement not covered" >      return true;</span>
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      if (error.code === 'P2002') {</span>
 <span class="cstat-no" title="statement not covered" >        await LoggerService.logSystemEvent('lock', `LOCK_CONFLICT_${taskName}`, {</span>
@@ -475,21 +475,21 @@ export async function acquireLock(tx, taskName, instanceId, ttlMinutes = 60, max
 <span class="cstat-no" title="statement not covered" >  return false;</span>
 }
 &nbsp;
-export async function releaseLock(tx, taskName) {
-  const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();
-  try {
-    const lock = await tx.cronLock.findUnique({
+export async function <span class="fstat-no" title="function not covered" >releaseLock(</span>tx, taskName) {
+  const timestamp = <span class="cstat-no" title="statement not covered" >toZonedTime(new Date(), 'Europe/London').toISOString();</span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+    const lock = <span class="cstat-no" title="statement not covered" >await tx.cronLock.findUnique({</span>
       where: { taskName },
       select: { id: true },
     });
 &nbsp;
-    if (lock) {
-      await tx.cronLock.delete({ where: { taskName } });
-      await LoggerService.logSystemEvent('lock', `LOCK_RELEASED_${taskName}`, {
+<span class="cstat-no" title="statement not covered" >    if (lock) {</span>
+<span class="cstat-no" title="statement not covered" >      await tx.cronLock.delete({ where: { taskName } });</span>
+<span class="cstat-no" title="statement not covered" >      await LoggerService.logSystemEvent('lock', `LOCK_RELEASED_${taskName}`, {</span>
         lockId: lock.id,
         timestamp,
       });
-    } else <span class="missing-if-branch" title="else path not taken" >E</span>{
+    } else {
 <span class="cstat-no" title="statement not covered" >      await LoggerService.logSystemEvent('lock', `NO_LOCK_FOUND_${taskName}`, { timestamp });</span>
     }
   } catch (error) {
@@ -532,7 +532,7 @@ export async function <span class="fstat-no" title="function not covered" >isLoc
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-05T23:17:47.680Z
+                at 2025-08-11T02:32:26.557Z
             </div>
         <script src="../prettify.js"></script>
         <script>

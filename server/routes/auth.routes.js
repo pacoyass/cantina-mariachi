@@ -4,6 +4,8 @@ import { loginSchema, registerSchema } from '../validations/auth.validation.js';
 import { getToken, login, logout, refreshToken, register ,listSessions, logoutAllSessions, logoutOtherSessions } from '../controllers/auth.controller.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 
+import { requireRole } from '../middleware/rbac.middleware.js';
+
 const router = express.Router();
 
 router.post('/register', validate(registerSchema), register);
