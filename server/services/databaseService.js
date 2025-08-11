@@ -104,6 +104,23 @@ export const databaseService = {
     return await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });
   },
 
+  // Logout current access token by blacklisting it
+  async logout(accessToken, tx) {
+    const db = withTx(tx);
+    let expiresAt;
+    const { verifyToken, hashToken } = await import('./authService.js');
+    try {
+      const payload = await verifyToken(accessToken);
+      expiresAt = new Date(payload.exp);
+    } catch (error) {
+      // If verification fails, fallback to a short-lived blacklist window
+      expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    }
+    const tokenHash = await hashToken(accessToken);
+    await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });
+    return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });
+  },
+
   // Webhooks helpers
   async getActiveWebhooks(tx) {
     const db = withTx(tx);
