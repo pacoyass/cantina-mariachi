@@ -1,9 +1,6 @@
 import prisma from '../config/database.js';
 import { LoggerService } from '../utils/logger.js';
-import { V4 } from 'paseto';
-import { createHash } from 'crypto';
-
-const { verify } = V4;
+import { verifyToken, hashToken } from './authService.js';
 
 const withTx = (tx) => tx || prisma;
 
@@ -113,13 +110,13 @@ export const databaseService = {
     const db = withTx(tx);
     let expiresAt;
     try {
-      const payload = await verify(accessToken, process.env.PASETO_PUBLIC_KEY);
+      const payload = await verifyToken(accessToken);
       expiresAt = new Date(payload.exp);
     } catch (error) {
       // If verification fails, fallback to a short-lived blacklist window
       expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     }
-    const tokenHash = createHash('sha256').update(accessToken).digest('hex');
+    const tokenHash = await hashToken(accessToken);
     await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });
     return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });
   },
