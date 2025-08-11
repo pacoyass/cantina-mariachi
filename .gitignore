@@ -1,8 +1,18 @@
+# OS and tools
 .DS_Store
+
+# Dependencies
 /node_modules/
+
 # React Router
 /.react-router/
-/build/
 
+# Build outputs
+/build/
+/coverage/
+
+# Prisma generated (if used)
 /app/generated/prisma
+
+# Env vars
 .env
