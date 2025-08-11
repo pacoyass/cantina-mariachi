@@ -220,11 +220,6 @@ export const databaseService = {
     return await db.driver.findUnique({ where: { id } });
   },
 
-  async getActivityLogs(type, startDate, endDate, tx) {
-    const db = withTx(tx);
-    return await db.activityLog.findMany({ where: { type, createdAt: { gte: startDate, lte: endDate } } });
-  },
-
   async getUsersByRole(role, tx) {
     const db = withTx(tx);
     return await db.user.findMany({ where: { role, isActive: true } });
@@ -235,9 +230,30 @@ export const databaseService = {
     return await db.user.update({ where: { id }, data });
   },
 
-  async getOrdersByStatus(status, tx) {
+  async getOrdersByStatus(status, optionsOrTx, maybeTx) {
+    const options = optionsOrTx && !optionsOrTx.$transaction ? optionsOrTx : {};
+    const tx = maybeTx || (optionsOrTx && optionsOrTx.$transaction ? optionsOrTx : undefined);
     const db = withTx(tx);
-    return await db.order.findMany({ where: { status }, include: { orderItems: true, driver: true } });
+    const hasOptions = options.page || options.pageSize;
+  
+    if (!hasOptions) {
+      return await db.order.findMany({
+        where: { status },
+        include: { orderItems: true, driver: true },
+      });
+    }
+  
+    const page = Math.max(parseInt(options.page || '1', 10), 1);
+    const pageSize = Math.min(Math.max(parseInt(options.pageSize || '50', 10), 1), 200);
+    const skip = (page - 1) * pageSize;
+  
+    return await db.order.findMany({
+      where: { status },
+      include: { orderItems: true, driver: true },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: pageSize,
+    });
   },
 // Logout current access token by blacklisting it
 async logout(accessToken, tx) {
@@ -284,10 +300,27 @@ async logout(accessToken, tx) {
     return await db.cashSummary.findFirst({ where: { driverId, date } });
   },
 
-  async getNotificationLogs(status, startDate, endDate, tx) {
+  async getNotificationLogs(status, startDate, endDate, optionsOrTx, maybeTx) {
+    const options = optionsOrTx && !optionsOrTx.$transaction ? optionsOrTx : {};
+    const tx = maybeTx || (optionsOrTx && optionsOrTx.$transaction ? optionsOrTx : undefined);
     const db = withTx(tx);
+    const hasOptions = options.page || options.pageSize;
+  
+    if (!hasOptions) {
+      return await db.notificationLog.findMany({
+        where: { status, createdAt: { gte: startDate, lte: endDate } },
+      });
+    }
+  
+    const page = Math.max(parseInt(options.page || '1', 10), 1);
+    const pageSize = Math.min(Math.max(parseInt(options.pageSize || '50', 10), 1), 200);
+    const skip = (page - 1) * pageSize;
+  
     return await db.notificationLog.findMany({
       where: { status, createdAt: { gte: startDate, lte: endDate } },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: pageSize,
     });
   },
 
@@ -329,4 +362,29 @@ async logout(accessToken, tx) {
     });
     return result.count;
   },
+  // Drivers and activity
+async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
+  const options = optionsOrTx && !optionsOrTx.$transaction ? optionsOrTx : {};
+  const tx = maybeTx || (optionsOrTx && optionsOrTx.$transaction ? optionsOrTx : undefined);
+  const db = withTx(tx);
+  const hasOptions = options.page || options.pageSize;
+
+  if (!hasOptions) {
+    return await db.activityLog.findMany({
+      where: { type, createdAt: { gte: startDate, lte: endDate } },
+    });
+  }
+
+  const page = Math.max(parseInt(options.page || '1', 10), 1);
+  const pageSize = Math.min(Math.max(parseInt(options.pageSize || '50', 10), 1), 200);
+  const skip = (page - 1) * pageSize;
+
+  return await db.activityLog.findMany({
+    where: { type, createdAt: { gte: startDate, lte: endDate } },
+    orderBy: { createdAt: 'desc' },
+    skip,
+    take: pageSize,
+  });
+},
+
 };
