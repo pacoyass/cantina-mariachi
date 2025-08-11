@@ -47,6 +47,8 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   expiresAt DateTime
+  userAgent String?
+  ip        String?
 
   @@map("refresh_tokens")
 }

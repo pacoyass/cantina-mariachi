@@ -66,13 +66,13 @@ export const databaseService = {
     return user;
   },
 
-  async refreshUserTokens(userId, hashedToken, expiresAt, tx) {
+  async refreshUserTokens(userId, hashedToken, expiresAt, tx, meta = {}) {
     const db = withTx(tx);
     await db.refreshToken.deleteMany({ where: { userId } });
     const token = await db.refreshToken.create({
-      data: { userId, token: hashedToken, expiresAt },
+      data: { userId, token: hashedToken, expiresAt, userAgent: meta.userAgent || null, ip: meta.ip || null },
     });
-    await LoggerService.logSystemEvent('DatabaseService', 'REFRESH_USER_TOKENS', { userId });
+    await LoggerService.logSystemEvent('DatabaseService', 'REFRESH_USER_TOKENS', { userId, hasMeta: !!(meta.userAgent || meta.ip) });
     return token;
   },
 
