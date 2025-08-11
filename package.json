@@ -10,7 +10,8 @@
     "seed": "node prisma/seed.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "jest --watchAll --coverage --notify",
-    "ggshield": "ggshield secret scan repo ."
+    "ggshield": "ggshield secret scan repo .",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
