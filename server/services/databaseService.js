@@ -292,12 +292,19 @@ async logout(accessToken, tx) {
   },
 
   // List refresh tokens for a user (id + expiresAt only)
-  async listRefreshTokensByUser(userId, tx) {
+  async listRefreshTokensByUser(userId, optionsOrTx, maybeTx) {
+    const options = optionsOrTx && !optionsOrTx.$transaction ? optionsOrTx : {};
+    const tx = maybeTx || (optionsOrTx && optionsOrTx.$transaction ? optionsOrTx : undefined);
     const db = withTx(tx);
+    const page = Math.max(parseInt(options.page || '1', 10), 1);
+    const pageSize = Math.min(Math.max(parseInt(options.pageSize || '20', 10), 1), 100);
+    const skip = (page - 1) * pageSize;
     return await db.refreshToken.findMany({
       where: { userId },
       select: { id: true, expiresAt: true },
       orderBy: { expiresAt: 'desc' },
+      skip,
+      take: pageSize,
     });
   },
 
