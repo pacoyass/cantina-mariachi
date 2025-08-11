@@ -10,6 +10,7 @@ import { LoggerService } from '../utils/logger.js';
 import cacheService from '../services/cacheService.js';
 import { databaseService } from '../services/databaseService.js';
 import { sendWebhook } from './webhook.controller.js';
+import dataService from '../services/dataService.js';
 
 // Cleanup expired authentication data (refresh tokens, blacklisted tokens)
 export const cleanupExpiredAuthData = async () => {
@@ -371,7 +372,7 @@ export const logout = async (req, res) => {
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    await authService.logout(accessToken);
+    await dataService.logout(accessToken);
     res.clearCookie('accessToken', { path: '/', httpOnly: true });
     res.clearCookie('refreshToken', { path: '/', httpOnly: true });
 
@@ -397,7 +398,7 @@ export const getToken = async (req, res) => {
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    const user = await authService.getUserById(req.user.userId);
+    const user = await databaseService.getUserById(req.user.userId);
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', req.user.id, { reason: 'User not found' });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
@@ -446,8 +447,7 @@ export const logoutAllSessions = async (req, res) => {
     // Blacklist current access token if present
     const accessToken = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
     if (accessToken) {
-      const { logout } = await import('../services/authService.js');
-      await logout(accessToken);
+      await dataService.logout(accessToken);
     }
 
     const count = await databaseService.deleteAllRefreshTokensForUser(req.user.userId);
