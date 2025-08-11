@@ -58,24 +58,18 @@ Create a `.env` file in the root directory:
 # Database
 DATABASE_URL="postgresql://username:password@localhost:5432/cantina_mariachi?schema=public"
 
-# JWT Secret
-JWT_SECRET="your-super-secret-jwt-key-here"
+# PASETO keys (required for auth)
+PASETO_PRIVATE_KEY="<your-private-key>"
+PASETO_PUBLIC_KEY="<your-public-key>"
 
-# Email Configuration
-EMAIL_HOST="smtp.gmail.com"
-EMAIL_PORT=587
-EMAIL_USER="your-email@gmail.com"
-EMAIL_PASS="your-app-password"
+# Optional retention windows (days)
+AUTH_DATA_RETENTION_DAYS=30
+USER_DATA_RETENTION_DAYS=90
+WEBHOOK_RETENTION_DAYS=30
 
 # Server Configuration
 NODE_ENV="development"
 PORT=3000
-
-# Restaurant Information
-RESTAURANT_NAME="Cantina Mariachi"
-RESTAURANT_ADDRESS="4 Rue Ahmed Charci, Vélodrome, Casablanca, Morocco"
-RESTAURANT_PHONE="+212 5223-99178"
-RESTAURANT_EMAIL="info@cantinamariachi.ma"
 ```
 
 ### 4. Database Setup
@@ -117,58 +111,24 @@ cantina-mariachi/
 │   └── routes.ts           # Route configuration
 ├── server/
 │   ├── routes/             # API endpoints
-│   │   ├── menu.ts         # Menu API
-│   │   ├── orders.ts       # Orders API
-│   │   ├── reservations.ts # Reservations API
-│   │   ├── contact.ts      # Contact API
-│   │   └── newsletter.ts   # Newsletter API
-│   ├── app.ts              # Express app configuration
-│   └── db.ts               # Database client
+│   ├── controllers/        # Controllers
+│   ├── services/           # Services
+│   ├── middleware/         # Middleware
+│   ├── config/             # Config (database, retention)
+│   └── utils/              # Helpers (logger, response)
 ├── prisma/
 │   ├── schema.prisma       # Database schema
-│   └── seed.ts             # Database seeding
+│   └── seed.js             # Database seeding
 ├── public/                 # Static assets
 └── server.js               # Server entry point
 ```
 
-## 🎨 Design System
-
-### Colors
-- **Primary Red**: `#dc2626` (Mexican red)
-- **Secondary Yellow**: `#eab308` (Mexican yellow)
-- **Accent Orange**: `#ea580c` (Festive orange)
-- **Success Green**: `#16a34a` (Vegetarian badge)
-
-### Typography
-- **Headers**: Fredoka (Mexican-themed, playful)
-- **Body**: Inter (Clean, readable)
-
-### Components
-- Custom Mexican-themed gradients
-- Animated elements (bounce, shine effects)
-- Responsive cards with hover effects
-- Form styling with focus states
-
-## 🍽️ Menu Categories
-
-The application includes a comprehensive menu with:
-
-- **Appetizers**: Nachos, Guacamole, Jalapeño Poppers
-- **Tacos**: Carnitas, Chicken Tinga, Vegetarian options
-- **Fajitas**: Chicken, Beef, Shrimp, Mixed, Vegetable
-- **Burritos**: California, Chicken, Bean & Rice, Veggie
-- **Flautas**: Chicken and Beef varieties
-- **Chili con Carne**: Traditional and Vegetarian
-- **Weekend Specials**: Pollo a la Brasa (Friday-Sunday)
-- **Desserts**: Churros, Flan, Tres Leches
-- **Beverages**: Agua Fresca, Horchata, Mexican sodas
-
 ## 🔧 API Endpoints
 
-### Menu
-- `GET /api/menu` - Get all categories with items
-- `GET /api/menu/category/:id` - Get items by category
-- `GET /api/menu/specials` - Get weekend specials
+### Auth
+- `GET /api/auth/sessions` — List refresh token sessions for the current user
+  - Query params: `page` (default 1), `pageSize` (default 20, max 100)
+  - Response: `{ sessions, page, pageSize, hasMore }`
 
 ### Orders
 - `POST /api/orders` - Create new order
@@ -179,9 +139,12 @@ The application includes a comprehensive menu with:
 - `POST /api/reservations` - Create reservation
 - `GET /api/reservations/availability/:date` - Check availability
 
-### Contact & Newsletter
-- `POST /api/contact` - Send contact message
-- `POST /api/newsletter/subscribe` - Subscribe to newsletter
+## 🔐 Security & Retention
+- Access tokens are blacklisted on logout and enforced by middleware.
+- Cleanup jobs use retention windows (configurable via env):
+  - `AUTH_DATA_RETENTION_DAYS` for auth tokens
+  - `USER_DATA_RETENTION_DAYS` for user-related logs/data
+  - `WEBHOOK_RETENTION_DAYS` for webhooks/logs
 
 ## 🚀 Deployment
 
@@ -192,60 +155,14 @@ npm start
 ```
 
 ### Environment Variables for Production
-Update your `.env` file with production values:
-- Set `NODE_ENV=production`
-- Update `DATABASE_URL` to production database
-- Configure email settings
-- Set proper CORS origins in `server/app.ts`
-
-### Recommended Hosting
-- **Frontend & Backend**: Railway, Render, or DigitalOcean
-- **Database**: Railway PostgreSQL, Supabase, or AWS RDS
-- **Domain**: Configure DNS to point to your hosting provider
-
-## 🔐 Security Features
-
-- **Helmet.js**: Security headers
-- **CORS**: Cross-origin request protection  
-- **Input Validation**: Form validation and sanitization
-- **Rate Limiting**: API endpoint protection
-- **Environment Variables**: Sensitive data protection
-
-## 📱 Mobile Responsiveness
-
-The website is fully responsive with:
-- Mobile-first design approach
-- Touch-friendly navigation
-- Optimized images and loading
-- Responsive typography and spacing
-- Mobile-optimized forms and CTAs
-
-## 🌟 SEO Optimization
-
-- **Meta Tags**: Comprehensive meta descriptions and titles
-- **Structured Data**: Restaurant schema markup
-- **Semantic HTML**: Proper heading hierarchy
-- **Alt Text**: Image accessibility
-- **Open Graph**: Social media sharing optimization
-
-## 📧 Contact Information
-
-**Cantina Mariachi**
-- 📍 4 Rue Ahmed Charci, Vélodrome, Casablanca, Morocco
-- 📞 +212 5223-99178
-- 📧 info@cantinamariachi.ma
+Update your `.env` file with production values and PASETO keys.
 
 ## 🤝 Contributing
-
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
-
-## 📄 License
-
-This project is proprietary and confidential. All rights reserved by Cantina Mariachi.
 
 ---
 
