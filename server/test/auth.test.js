@@ -175,7 +175,16 @@ describe('Auth routes', () => {
       .expect(200);
     expect(res.body.status).toBe('success');
   });
-
+  test('logout blacklists current access token', async () => {
+    const app = buildApp();
+    const { logout } = await import('../services/authService.js');
+    const spy = jest.spyOn((await import('../services/authService.js')), 'logout');
+    await request(app)
+      .post('/api/auth/logout')
+      .set('Authorization', 'Bearer access-token-123')
+      .expect(200);
+    expect(spy).toHaveBeenCalledWith('access-token-123');
+  });
   test('logout-others sessions returns 200', async () => {
     const app = buildApp();
     dbMock.deleteOtherRefreshTokensForUser.mockResolvedValue(1);
