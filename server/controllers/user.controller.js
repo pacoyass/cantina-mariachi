@@ -9,6 +9,7 @@ import { createError, createResponse } from '../utils/response.js';
 import { LoggerService } from '../utils/logger.js';
 import { databaseService } from '../services/databaseService.js';
 import { sendWebhook } from './webhook.controller.js';
+import { USER_DATA_RETENTION_DAYS } from '../config/retention.js';
 
 function sanitizeUser(user) {
   if (!user) return null;
@@ -76,7 +77,7 @@ export const changePassword = async (req, res) => {
  * - Deletes user preferences for users soft-deleted beyond retention
  * - Optionally hard-deletes users soft-deleted beyond retention with no blocking relations
  */
-export const cleanupUserData = async (retentionDays = 90) => {
+export const cleanupUserData = async (retentionDays = USER_DATA_RETENTION_DAYS) => {
   const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
   const taskName = 'user_cleanup';
   const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();

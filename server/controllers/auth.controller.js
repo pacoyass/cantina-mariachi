@@ -10,6 +10,7 @@ import { LoggerService } from '../utils/logger.js';
 import cacheService from '../services/cacheService.js';
 import { databaseService } from '../services/databaseService.js';
 import { sendWebhook } from './webhook.controller.js';
+import { AUTH_DATA_RETENTION_DAYS } from '../config/retention.js';
  
 // Cleanup expired authentication data (refresh tokens, blacklisted tokens)
 export const cleanupExpiredAuthData = async () => {
@@ -28,7 +29,7 @@ export const cleanupExpiredAuthData = async () => {
       }
 
       try {
-        const cutoffDate = toZonedTime(subDays(new Date(), 30), 'Europe/London');
+        const cutoffDate = toZonedTime(subDays(new Date(), AUTH_DATA_RETENTION_DAYS), 'Europe/London');
         const deletedRefreshTokens = await tx.refreshToken.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
         const deletedBlacklistedTokens = await tx.blacklistedToken.deleteMany({ where: { expiresAt: { lt: cutoffDate } } });
         totalDeleted = deletedRefreshTokens.count + deletedBlacklistedTokens.count;
@@ -429,8 +430,11 @@ export const listSessions = async (req, res) => {
     if (!req.user?.userId) {
       return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
     }
-    const tokens = await databaseService.listRefreshTokensByUser(req.user.userId);
-    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens });
+    const page = Math.max(parseInt(req.query.page || '1', 10), 1);
+    const pageSize = Math.min(Math.max(parseInt(req.query.pageSize || '20', 10), 1), 100);
+    const tokens = await databaseService.listRefreshTokensByUser(req.user.userId, { page, pageSize });
+    const hasMore = tokens.length === pageSize;
+    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens, page, pageSize, hasMore });
   } catch (error) {
     await LoggerService.logError('listSessions failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR');

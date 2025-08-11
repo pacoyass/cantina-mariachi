@@ -3,6 +3,7 @@ import axios from 'axios';
 import { databaseService } from '../services/databaseService.js';
 import { LoggerService } from '../utils/logger.js';
 import { createError, createResponse } from '../utils/response.js';
+import { WEBHOOK_RETENTION_DAYS } from '../config/retention.js';
 
 export const triggerWebhook = async (req, res) => {
   const { event, payload } = req.body;
@@ -110,7 +111,7 @@ export const sendWebhook = async (event, payload) => {
 
 export const cleanupExpiredWebhooks = async () => {
   try {
-    const deleted = await databaseService.deleteExpiredWebhooks(30);
+    const deleted = await databaseService.deleteExpiredWebhooks(WEBHOOK_RETENTION_DAYS);
     await LoggerService.logSystemEvent('webhook', 'CLEANUP_EXPIRED_WEBHOOKS', { deleted });
   } catch (error) {
     await LoggerService.logError('cleanupExpiredWebhooks failed', error.stack, { error: error.message });

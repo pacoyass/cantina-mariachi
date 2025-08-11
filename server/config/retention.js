@@ -1,0 +1,9 @@
+export const AUTH_DATA_RETENTION_DAYS = parseInt(process.env.AUTH_DATA_RETENTION_DAYS || '30', 10);
+export const USER_DATA_RETENTION_DAYS = parseInt(process.env.USER_DATA_RETENTION_DAYS || '90', 10);
+export const WEBHOOK_RETENTION_DAYS = parseInt(process.env.WEBHOOK_RETENTION_DAYS || '30', 10);
+
+export default {
+  AUTH_DATA_RETENTION_DAYS,
+  USER_DATA_RETENTION_DAYS,
+  WEBHOOK_RETENTION_DAYS,
+};
