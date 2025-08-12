@@ -2,7 +2,7 @@ import { LoggerService } from '../utils/logger.js';
 import { toZonedTime } from 'date-fns-tz';
 import fs from 'fs/promises';
 import path from 'path';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import prisma from '../config/database.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
 

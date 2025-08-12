@@ -68,7 +68,6 @@ export const databaseService = {
 
   async refreshUserTokens(userId, hashedToken, expiresAt, tx, meta = {}) {
     const db = withTx(tx);
-    await db.refreshToken.deleteMany({ where: { userId } });
     const token = await db.refreshToken.create({
       data: { userId, token: hashedToken, expiresAt, userAgent: meta.userAgent || null, ip: meta.ip || null },
     });
@@ -319,7 +318,7 @@ export const databaseService = {
     const skip = (page - 1) * pageSize;
     return await db.refreshToken.findMany({
       where: { userId },
-      select: { id: true, expiresAt: true },
+      select: { id: true, expiresAt: true, userAgent: true, ip: true },
       orderBy: { expiresAt: 'desc' },
       skip,
       take: pageSize,

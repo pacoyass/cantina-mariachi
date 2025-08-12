@@ -1,6 +1,6 @@
 // server/controllers/user.controller.js
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { subDays } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import prisma from '../config/database.js';

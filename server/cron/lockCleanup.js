@@ -2,7 +2,7 @@ import { LoggerService } from '../utils/logger.js';
 import prisma from '../config/database.js';
 import { toZonedTime } from 'date-fns-tz';
 import { acquireLock, releaseLock } from '../utils/lock.js';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 export async function cleanupOrphanedLocks() {
   const taskName = 'lockCleanup';

@@ -1,5 +1,5 @@
 import { toZonedTime } from 'date-fns-tz';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { LoggerService } from './logger.js';
 
 export async function acquireLock(tx, taskName, instanceId, ttlMinutes = 60, maxRetries = 3) {

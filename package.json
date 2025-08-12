@@ -21,7 +21,6 @@
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
-    "crypto": "^1.0.1",
     "date-fns-tz": "^3.2.0",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
