@@ -3,6 +3,7 @@ import { createResponse, createError } from '../utils/response.js';
 import testRoutes from "./test.routes.js";
 import authRoutes from "./auth.routes.js";
 import userRoutes from './user.routes.js';
+import logsRoutes from './logs.routes.js';
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const router = express.Router();
 router.use( "/test", testRoutes );
 router.use( "/auth", authRoutes );
 router.use("/users", userRoutes);
+router.use('/logs', logsRoutes);
 
 router.use((req, res, next) => {
   createError(
