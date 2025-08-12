@@ -11,7 +11,8 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "jest --watchAll --coverage --notify",
     "ggshield": "ggshield secret scan repo .",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "redis":"docker run -d --name redis -p 6379:6379 redis:7-alpine"
   },
   "dependencies": {
     "@prisma/extension-accelerate": "^2.0.2",
