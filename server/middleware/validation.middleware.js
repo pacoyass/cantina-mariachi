@@ -44,7 +44,7 @@ const validateWithSchema = (schema, dataSource, assignParsed) => async (req, res
 
   try {
     const parsed = schema.parse(data);
-    // assign parsed values back
+    // assign parsed values back (avoid mutating read-only getters like req.query in Express 5)
     assignParsed(req, parsed);
     next();
   } catch (error) {
@@ -89,7 +89,7 @@ const validateWithSchema = (schema, dataSource, assignParsed) => async (req, res
 
 const setBody = (req, parsed) => { req.body = parsed; };
 const setParams = (req, parsed) => { req.params = parsed; };
-const setQuery = (req, parsed) => { req.query = parsed; };
+const setQuery = (req, parsed) => { req.validatedQuery = parsed; };
 
 const validate = (schema) => validateWithSchema(schema, req => req.body, setBody);
 export const validateParams = (schema) => validateWithSchema(schema, req => req.params, setParams);
