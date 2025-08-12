@@ -7,7 +7,7 @@ import cacheService from '../services/cacheService.js';
 const MAX_VALIDATION_ATTEMPTS = 10;
 const BLOCK_DURATION_SECONDS = 60;
 
-const validateWithSchema = (schema, dataSource) => async (req, res, next) => {
+const validateWithSchema = (schema, dataSource, assignParsed) => async (req, res, next) => {
   const data = dataSource(req);
   const routePath = req.originalUrl || req.path;
   const ip = req.ip;
@@ -43,7 +43,9 @@ const validateWithSchema = (schema, dataSource) => async (req, res, next) => {
   }
 
   try {
-    schema.parse(data);
+    const parsed = schema.parse(data);
+    // assign parsed values back
+    assignParsed(req, parsed);
     next();
   } catch (error) {
     console.error(error);
@@ -85,47 +87,11 @@ const validateWithSchema = (schema, dataSource) => async (req, res, next) => {
   }
 };
 
-const validate = (schema) => validateWithSchema(schema, req => req.body);
-export const validateParams = (schema) => validateWithSchema(schema, req => req.params);
-export const validateQuery = (schema) => validateWithSchema(schema, req => req.query);
+const setBody = (req, parsed) => { req.body = parsed; };
+const setParams = (req, parsed) => { req.params = parsed; };
+const setQuery = (req, parsed) => { req.query = parsed; };
+
+const validate = (schema) => validateWithSchema(schema, req => req.body, setBody);
+export const validateParams = (schema) => validateWithSchema(schema, req => req.params, setParams);
+export const validateQuery = (schema) => validateWithSchema(schema, req => req.query, setQuery);
 export default validate;
-
-// // utils/validate.middleware.js
-// import { z } from 'zod';
-// import { createError } from '../utils/response';
-// const validateWithSchema = (schema, dataSource) => (req, res, next) => {
-//   const data = dataSource(req);
-//   if (process.env.NODE_ENV !== 'production') {
-//     console.log(`[validate middleware] ${dataSource.name} =`, data);
-//   }
-//   if (!data) {
-//     return createError(res, 400, 'Request data is required', null, {});
-//   }
-//   try {
-//     schema.parse(data);
-//     next();
-//   } catch (error) {
-//     console.error('Validation middleware error:', error);
-  
-//     if (error instanceof z.ZodError) {
-//       const errors = Array.isArray(error.errors) ? error.errors : error.issues || [];
-//       const errorDetails = errors.map((err) => ({
-//         path: Array.isArray(err.path) ? err.path.join('.') : err.path || 'unknown',
-//         message: err.message || 'Invalid input',
-//       }));
-      
-//       return createError(res, 400, 'Validation error', 'ZOD_VALIDATION_ERROR', errorDetails);
-//     }
-  
-//     return createError(res, 500, 'Internal server error', 'VALIDATION_MIDDLEWARE_ERROR', {
-//       message: error?.message || 'Unknown error',
-//       stack: error?.stack || '',
-//     });
-//   }
-  
-// };
-
-// const validate = (schema) => validateWithSchema(schema, req => req.body);
-// export const validateParams = (schema) => validateWithSchema(schema, req => req.params);
-// export const validateQuery = (schema) => validateWithSchema(schema, req => req.query);
-// export default validate;
