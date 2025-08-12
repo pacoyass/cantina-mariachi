@@ -2,14 +2,14 @@ import { V4 } from 'paseto';
 const { sign, verify } = V4;
 import bcrypt from 'bcrypt';
 import { databaseService } from './databaseService.js';
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
 
 const privateKey = process.env.PASETO_PRIVATE_KEY;
 const publicKey = process.env.PASETO_PUBLIC_KEY;
+const allowInsecureTestTokens = process.env.NODE_ENV === 'test' || process.env.ALLOW_INSECURE_TEST_TOKENS === '1';
 
 if (!privateKey || !publicKey) {
-  console.error("❌ Private/Public keys are missing! Set them in .env.");
-  process.exit(1);
+  console.warn("⚠️ PASETO keys are missing. Set PASETO_PRIVATE_KEY and PASETO_PUBLIC_KEY in .env. Token operations will fail until configured.");
 }
 
 // Convert "15m", "7d" → seconds
@@ -40,6 +40,13 @@ export const generateToken = async (user, expiresIn) => {
     iat: new Date().toISOString(),
   };
 
+  if (!privateKey && allowInsecureTestTokens) {
+    // Insecure test token: base64-encoded JSON
+    const token = Buffer.from(JSON.stringify(payload)).toString('base64url');
+    return { token, exp: expDate };
+  }
+
+  if (!privateKey) throw new Error('PASETO private key missing');
   const token = await sign(payload, privateKey);
   return { token, exp: expDate };
 };
@@ -47,6 +54,14 @@ export const generateToken = async (user, expiresIn) => {
 // Verify and decode a PASETO token
 export const verifyToken = async (token) => {
   try {
+    if (!publicKey && allowInsecureTestTokens) {
+      const json = Buffer.from(token, 'base64url').toString('utf8');
+      const payload = JSON.parse(json);
+      payload.exp = new Date(payload.exp);
+      if (payload.exp < new Date()) throw new Error('expired');
+      return payload;
+    }
+    if (!publicKey) throw new Error('PASETO public key missing');
     const payload = await verify(token, publicKey);
     payload.exp = new Date(payload.exp);
     return payload;

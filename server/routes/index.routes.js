@@ -22,7 +22,7 @@ router.use((req, res, next) => {
     {
       route: req.originalUrl,
       action: 'Check the URL or refer to the API documentation for valid endpoints.',
-      contactSupport: 'support@taskmaster.com'
+      contactSupport: 'support@cantina.app'
     }
   );
 });

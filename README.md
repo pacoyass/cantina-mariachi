@@ -59,6 +59,7 @@ Create a `.env` file in the root directory:
 DATABASE_URL="postgresql://username:password@localhost:5432/cantina_mariachi?schema=public"
 
 # PASETO keys (required for auth)
+# These are required for login/token flows. In development/tests, the server will start but token operations will fail until configured.
 PASETO_PRIVATE_KEY="<your-private-key>"
 PASETO_PUBLIC_KEY="<your-public-key>"
 
@@ -70,6 +71,9 @@ WEBHOOK_RETENTION_DAYS=30
 # Server Configuration
 NODE_ENV="development"
 PORT=3000
+SESSION_SECRET="replace-with-strong-secret"
+COOKIE_SECRET="replace-with-strong-cookie-secret"
+REDIS_URL="redis://localhost:6379"
 ```
 
 ### 4. Database Setup

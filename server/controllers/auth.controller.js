@@ -4,7 +4,7 @@ import {createError,createResponse}  from '../utils/response.js';
 import { toZonedTime } from 'date-fns-tz';
 import { subDays } from 'date-fns';
 import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import prisma from '../config/database.js';
 import { LoggerService } from '../utils/logger.js';
 import cacheService from '../services/cacheService.js';
@@ -434,7 +434,7 @@ export const listSessions = async (req, res) => {
     const pageSize = Math.min(Math.max(parseInt(req.query.pageSize || '20', 10), 1), 100);
     const tokens = await databaseService.listRefreshTokensByUser(req.user.userId, { page, pageSize });
     const hasMore = tokens.length === pageSize;
-    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens, page, pageSize, hasMore });
+    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens.map(t => ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip })), page, pageSize, hasMore });
   } catch (error) {
     await LoggerService.logError('listSessions failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR');

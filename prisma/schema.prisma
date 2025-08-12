@@ -254,7 +254,7 @@ model CronLock {
 
 model CronRun {
   id        String   @id @default(uuid())
-  taskName  String   @unique
+  taskName  String
   lastRunAt DateTime
   status    String
   details   Json? // e.g., { "totalCash": 500.00, "unconfirmed": 2 }
@@ -471,4 +471,5 @@ enum UserRole {
   COOK
   WAITER
   CASHIER
+  DRIVER
 }
