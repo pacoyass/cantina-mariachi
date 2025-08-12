@@ -4,33 +4,31 @@ import { requireRole } from '../middleware/rbac.middleware.js';
 import { validateQuery } from '../middleware/validation.middleware.js';
 
 import { getActivityLogs, getNotifications, getOrders } from '../controllers/logs.controller.js';
-import { paginationQuery } from '../validations/logs.validation.js';
+import { activityQuery, notificationsQuery, ordersQuery } from '../validations/logs.validation.js';
 
 const router = express.Router();
-
-
 
 router.get(
   '/activity',
   authMiddleware,
   requireRole('ADMIN','OWNER'),
-  validateQuery(paginationQuery),
-   getActivityLogs
+  validateQuery(activityQuery),
+  getActivityLogs
 );
 
 router.get(
   '/notifications',
   authMiddleware,
   requireRole('ADMIN','OWNER'),
-  validateQuery(paginationQuery),
- getNotifications
+  validateQuery(notificationsQuery),
+  getNotifications
 );
 
 router.get(
   '/orders',
   authMiddleware,
   requireRole('ADMIN','OWNER'),
-  validateQuery(paginationQuery),
+  validateQuery(ordersQuery),
   getOrders
 );
 
