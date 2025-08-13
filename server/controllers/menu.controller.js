@@ -15,9 +15,14 @@ const itemsKey = (filters) => `menu:items:${filters.categoryId || 'all'}:${Strin
 export const listCategories = async (req, res) => {
   try {
     const cached = await cacheService.getCache(categoriesKey);
-    if (cached) return createResponse(res, 200, 'Categories fetched (cache)', { categories: cached, cached: true });
+    if (cached) {
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.setHeader('ETag', `W/"${Buffer.from(JSON.stringify(cached)).length}"`);
+      return createResponse(res, 200, 'Categories fetched (cache)', { categories: cached, cached: true });
+    }
     const categories = await databaseService.listCategories();
     await cacheService.setCache(categoriesKey, categories, 300);
+    res.setHeader('Cache-Control', 'public, max-age=60');
     return createResponse(res, 200, 'Categories fetched', { categories, cached: false });
   } catch (error) {
     return createError(res, 500, 'Failed to fetch categories', 'SERVER_ERROR');
@@ -60,9 +65,14 @@ export const listMenuItems = async (req, res) => {
     const filters = req.validatedQuery || {};
     const key = itemsKey(filters);
     const cached = await cacheService.getCache(key);
-    if (cached) return createResponse(res, 200, 'Menu items fetched (cache)', { items: cached, cached: true });
+    if (cached) {
+      res.setHeader('Cache-Control', 'public, max-age=300');
+      res.setHeader('ETag', `W/"${Buffer.from(JSON.stringify(cached)).length}"`);
+      return createResponse(res, 200, 'Menu items fetched (cache)', { items: cached, cached: true });
+    }
     const items = await databaseService.listMenuItems(filters);
     await cacheService.setCache(key, items, 300);
+    res.setHeader('Cache-Control', 'public, max-age=60');
     return createResponse(res, 200, 'Menu items fetched', { items, cached: false });
   } catch (error) {
     return createError(res, 500, 'Failed to fetch menu items', 'SERVER_ERROR');
