@@ -171,3 +171,33 @@ Update your `.env` file with production values and PASETO keys.
 ---
 
 Built with ❤️ for authentic Mexican cuisine in Casablanca 🌮
+
+## API reference (selected)
+
+- Auth: POST /api/auth/login, POST /api/auth/register, GET /api/auth/sessions, DELETE /api/auth/sessions/:id
+- Menu: GET /api/menu/categories, GET /api/menu/items, POST/PUT/DELETE /api/menu/* (ADMIN/OWNER)
+- Orders: POST /api/orders, GET /api/orders/:orderNumber, GET /api/orders/track/by?orderNumber=&code=, PATCH /api/orders/:orderNumber/status (staff)
+- Drivers: CRUD under /api/drivers (ADMIN/OWNER), POST /api/drivers/assign
+- Cash: POST /api/cash, /confirm, /verify, GET /api/cash/summary/driver/:id (ADMIN/OWNER)
+- Reservations: POST /api/reservations, GET /api/reservations/availability, GET/PATCH (ADMIN/OWNER)
+- Notifications: POST /api/notifications/dispatch (ADMIN/OWNER)
+- Webhooks admin: POST/GET /api/webhooks, enable/disable, POST /api/webhooks/trigger
+
+## Environment
+
+- DATABASE_URL, REDIS_URL
+- PASETO_PRIVATE_KEY, PASETO_PUBLIC_KEY
+- SESSION_SECRET, COOKIE_SECRET
+- CORS_ORIGIN (comma-separated for prod)
+- JSON_BODY_LIMIT (default 1mb), ALLOW_URLENCODED (default 0)
+
+## Session policy
+
+- Multi-session tokens; list/revoke per-session, logout others/all supported
+- Access tokens short-lived; refresh tokens rotated; blacklisting enforced
+
+## Security
+
+- Helmet, strict CORS in production, Redis rate limits
+- Zod validation for inputs; normalized emails; minimal PII on public endpoints
+- Cleanup cron jobs for tokens, logs, menu cache, orders tracking, drivers, cash, reservations, notifications
