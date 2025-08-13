@@ -16,8 +16,12 @@ export const listCategories = async (req, res) => {
   try {
     const cached = await cacheService.getCache(categoriesKey);
     if (cached) {
+      const etag = `W/"${Buffer.from(JSON.stringify(cached)).length}"`;
+      if (req.headers['if-none-match'] === etag) {
+        res.statusCode = 304; return res.end();
+      }
       res.setHeader('Cache-Control', 'public, max-age=300');
-      res.setHeader('ETag', `W/"${Buffer.from(JSON.stringify(cached)).length}"`);
+      res.setHeader('ETag', etag);
       return createResponse(res, 200, 'Categories fetched (cache)', { categories: cached, cached: true });
     }
     const categories = await databaseService.listCategories();
@@ -66,8 +70,10 @@ export const listMenuItems = async (req, res) => {
     const key = itemsKey(filters);
     const cached = await cacheService.getCache(key);
     if (cached) {
+      const etag = `W/"${Buffer.from(JSON.stringify(cached)).length}"`;
+      if (req.headers['if-none-match'] === etag) { res.statusCode = 304; return res.end(); }
       res.setHeader('Cache-Control', 'public, max-age=300');
-      res.setHeader('ETag', `W/"${Buffer.from(JSON.stringify(cached)).length}"`);
+      res.setHeader('ETag', etag);
       return createResponse(res, 200, 'Menu items fetched (cache)', { items: cached, cached: true });
     }
     const items = await databaseService.listMenuItems(filters);
