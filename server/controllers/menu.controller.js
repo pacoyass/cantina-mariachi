@@ -1,6 +1,11 @@
 import { createResponse, createError } from '../utils/response.js';
 import { databaseService } from '../services/databaseService.js';
 import cacheService from '../services/cacheService.js';
+import prisma from '../config/database.js';
+import { acquireLock, releaseLock } from '../utils/lock.js';
+import { LoggerService } from '../utils/logger.js';
+import { toZonedTime } from 'date-fns-tz';
+import crypto from 'node:crypto';
 
 // Caching keys
 const categoriesKey = 'menu:categories';
@@ -104,4 +109,30 @@ export const toggleMenuItemAvailability = async (req, res) => {
   }
 };
 
-export default { listCategories, createCategory, updateCategory, deleteCategory, listMenuItems, createMenuItem, updateMenuItem, deleteMenuItem, toggleMenuItemAvailability };
+export const cleanupMenuCache = async () => {
+  const taskName = 'menu_cache_cleanup';
+  const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
+  const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();
+  try {
+    await prisma.$transaction(async (tx) => {
+      const locked = await acquireLock(tx, taskName, instanceId);
+      if (!locked) {
+        await LoggerService.logCronRun(taskName, 'SKIPPED', { reason: 'Lock held', timestamp });
+        return;
+      }
+      try {
+        await cacheService.invalidateByPrefix('menu');
+        await LoggerService.logCronRun(taskName, 'SUCCESS', { timestamp });
+      } finally {
+        await releaseLock(tx, taskName);
+        await LoggerService.logAudit(null, 'MENU_CACHE_CLEANUP_LOCK_RELEASED', null, { instanceId, timestamp });
+      }
+    });
+  } catch (error) {
+    await LoggerService.logError('Menu cache cleanup failed', error.stack, { taskName, error: error.message, timestamp });
+    await LoggerService.logCronRun(taskName, 'FAILED', { error: error.message, timestamp });
+    throw error;
+  }
+};
+
+export default { listCategories, createCategory, updateCategory, deleteCategory, listMenuItems, createMenuItem, updateMenuItem, deleteMenuItem, toggleMenuItemAvailability, cleanupMenuCache };
