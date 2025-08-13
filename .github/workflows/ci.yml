@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test --silent -- --coverage
+      - name: Enforce coverage threshold
+        run: |
+          node -e "const fs=require('fs');const c=JSON.parse(fs.readFileSync('coverage/coverage-final.json'));let s=0,l=0;for(const f in c){s+=c[f].s;l+=Object.keys(c[f].s).length;}const pct=(s/l)*100;console.log('Statements coverage:',pct.toFixed(2),'%');if(pct<80){process.exit(1)}"
