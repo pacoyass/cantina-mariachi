@@ -1,6 +1,11 @@
 import { createResponse, createError } from '../utils/response.js';
 import { databaseService } from '../services/databaseService.js';
 import { LoggerService } from '../utils/logger.js';
+import prisma from '../config/database.js';
+import { acquireLock, releaseLock } from '../utils/lock.js';
+import { toZonedTime } from 'date-fns-tz';
+import { subDays } from 'date-fns';
+import crypto from 'node:crypto';
 
 export const listDrivers = async (req, res) => {
   try {
@@ -78,4 +83,38 @@ export const listDriverAssignments = async (req, res) => {
   }
 };
 
-export default { listDrivers, createDriver, updateDriver, deleteDriver, updateDriverStatus, linkDriverToUser, assignOrder, listDriverAssignments };
+export const cleanupInactiveDrivers = async (retentionDays = 90) => {
+  const taskName = 'drivers_cleanup';
+  const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
+  const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();
+  try {
+    await prisma.$transaction(async (tx) => {
+      const locked = await acquireLock(tx, taskName, instanceId);
+      if (!locked) {
+        await LoggerService.logCronRun(taskName, 'SKIPPED', { reason: 'Lock held', timestamp });
+        return;
+      }
+      try {
+        const cutoff = subDays(new Date(), retentionDays);
+        const deleted = await tx.driver.deleteMany({
+          where: {
+            active: false,
+            updatedAt: { lt: cutoff },
+            userId: null,
+            orders: { none: {} },
+          },
+        });
+        await LoggerService.logCronRun(taskName, 'SUCCESS', { deleted: deleted.count, cutoff: cutoff.toISOString(), timestamp });
+      } finally {
+        await releaseLock(tx, taskName);
+        await LoggerService.logAudit(null, 'DRIVERS_CLEANUP_LOCK_RELEASED', null, { instanceId, timestamp });
+      }
+    });
+  } catch (error) {
+    await LoggerService.logError('Drivers cleanup failed', error.stack, { taskName, error: error.message, timestamp });
+    await LoggerService.logCronRun(taskName, 'FAILED', { error: error.message, timestamp });
+    throw error;
+  }
+};
+
+export default { listDrivers, createDriver, updateDriver, deleteDriver, updateDriverStatus, linkDriverToUser, assignOrder, listDriverAssignments, cleanupInactiveDrivers };
