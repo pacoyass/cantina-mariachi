@@ -11,11 +11,13 @@ import cashRoutes from './cash.routes.js';
 import reservationsRoutes from './reservations.routes.js';
 import notificationsRoutes from './notifications.routes.js';
 import webhooksAdminRoutes from './webhooks.routes.js';
+import metricsRoutes from './metrics.routes.js';
 
 const router = express.Router();
 
 // Group all API routes
 router.use('/healthz', healthRoutes);
+router.use('/metrics', metricsRoutes);
 router.use( "/auth", authRoutes );
 router.use("/users", userRoutes);
 router.use('/logs', logsRoutes);
