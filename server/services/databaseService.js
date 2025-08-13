@@ -198,6 +198,67 @@ export const databaseService = {
     });
   },
 
+  async getOrderByNumber(orderNumber, tx) {
+    const db = withTx(tx);
+    return await db.order.findUnique({ where: { orderNumber }, include: { orderItems: true, driver: true, user: true } });
+  },
+
+  async createOrderWithItems(payload, tx) {
+    const db = withTx(tx);
+    const { type, items, customerName, customerEmail, customerPhone, notes, deliveryAddress, deliveryInstructions, userId } = payload;
+
+    // compute subtotal/tax/total (taxRate from AppConfig if present)
+    const menuItems = await db.menuItem.findMany({ where: { id: { in: items.map(i => i.menuItemId) } } });
+    const priceMap = Object.fromEntries(menuItems.map(m => [m.id, m.price]));
+    const missing = items.find(i => !priceMap[i.menuItemId]);
+    if (missing) throw new Error('Invalid menu item');
+
+    const subtotal = items.reduce((acc, i) => acc + Number(priceMap[i.menuItemId]) * i.quantity, 0);
+    const cfg = await db.appConfig.findFirst();
+    const taxRate = cfg?.taxRate ? Number(cfg.taxRate) : 0;
+    const tax = Number((subtotal * taxRate).toFixed(2));
+    const total = Number((subtotal + tax).toFixed(2));
+
+    const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random()*1000)}`;
+
+    return await db.$transaction(async (trx) => {
+      const order = await trx.order.create({
+        data: {
+          orderNumber,
+          type,
+          status: 'PENDING',
+          customerName,
+          customerEmail,
+          customerPhone,
+          notes: notes || null,
+          deliveryAddress: deliveryAddress || null,
+          deliveryInstructions: deliveryInstructions || null,
+          userId: userId || null,
+          subtotal,
+          tax,
+          total,
+        },
+      });
+      await trx.orderItem.createMany({ data: items.map(i => ({ orderId: order.id, menuItemId: i.menuItemId, quantity: i.quantity, price: priceMap[i.menuItemId] })) });
+      return await trx.order.findUnique({ where: { id: order.id }, include: { orderItems: true } });
+    });
+  },
+
+  async updateOrderStatusByNumber(orderNumber, status, extra = {}, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const existing = await trx.order.findUnique({ where: { orderNumber } });
+      if (!existing) throw new Error('Order not found');
+      // minimal state machine enforcement
+      const allowed = new Set([
+        'PENDING','CONFIRMED','PREPARING','READY','OUT_FOR_DELIVERY','AWAITING_PAYMENT','PAYMENT_DISPUTED','DELIVERED','COMPLETED','CANCELLED'
+      ]);
+      if (!allowed.has(status)) throw new Error('Invalid status');
+      const updated = await trx.order.update({ where: { orderNumber }, data: { status, ...extra } });
+      return updated;
+    });
+  },
+
   async getAvailableMenuItems(tx) {
     const db = withTx(tx);
     return await db.menuItem.findMany();
