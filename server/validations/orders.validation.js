@@ -38,3 +38,8 @@ export const createOrderSchema = z.object({
 export const updateOrderStatusSchema = z.object({
   status: orderStatusEnum,
 });
+
+export const trackOrderQuery = z.object({
+  orderNumber: z.string().min(5),
+  code: z.string().min(4),
+});

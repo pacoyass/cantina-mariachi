@@ -383,12 +383,14 @@ model Order {
   tax                  Decimal     @db.Decimal(10, 2)
   total                Decimal     @db.Decimal(10, 2)
   notes                String?
-  deliveryAddress      String? // Required for DELIVERY orders via app logic
-  deliveryInstructions String? // e.g., "Leave at gate"
+  deliveryAddress      String?
+  deliveryInstructions String?
   deliveryTimeEstimate DateTime?
   driverId             String?
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
+  trackingCode         String?
+  trackingCodeExpiresAt DateTime?
 
   user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
   driver          Driver?          @relation(fields: [driverId], references: [id], onDelete: SetNull)
