@@ -38,12 +38,14 @@ if (process.env.ALLOW_URLENCODED === '1') {
   app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 }
 app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
-app.use( "/api", apiRoutes );
-// Serve API docs if present
+
+// Serve API docs BEFORE /api router so 404 handler does not intercept
 try {
   const openapi = require('./openapi.json');
   if (openapi) app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi));
 } catch {}
+
+app.use( "/api", apiRoutes );
 
 // ✅ Start system maintenance cron jobs (only in non-test environments)
 if (process.env.NODE_ENV !== 'test') {
