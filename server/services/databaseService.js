@@ -274,6 +274,49 @@ export const databaseService = {
     });
   },
 
+  async createCashTransactionForOrder(orderNumber, driverId, amount, notes = {}, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const order = await trx.order.findUnique({ where: { orderNumber } });
+      if (!order) throw new Error('Order not found');
+      const driver = await trx.driver.findUnique({ where: { id: driverId } });
+      if (!driver || !driver.active) throw new Error('Driver not available');
+      const created = await trx.cashTransaction.create({ data: { orderId: order.id, driverId, amount, confirmed: false, adminVerified: false, customerNotes: notes.customerNotes || null } });
+      return created;
+    });
+  },
+
+  async confirmCashTransaction(orderNumber, paymentTimestamp, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const order = await trx.order.findUnique({ where: { orderNumber } });
+      if (!order) throw new Error('Order not found');
+      const updated = await trx.cashTransaction.update({ where: { orderId: order.id }, data: { confirmed: true, paymentTimestamp: paymentTimestamp || new Date() } });
+      return updated;
+    });
+  },
+
+  async verifyCashTransaction(orderNumber, adminVerified, discrepancy = {}, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const order = await trx.order.findUnique({ where: { orderNumber } });
+      if (!order) throw new Error('Order not found');
+      const updated = await trx.cashTransaction.update({ where: { orderId: order.id }, data: { adminVerified, discrepancyAmount: discrepancy.amount || null, discrepancyNotes: discrepancy.notes || null } });
+      return updated;
+    });
+  },
+
+  async getCashSummaryByDriverAndDate(driverId, date, tx) {
+    const db = withTx(tx);
+    const start = new Date(date); start.setHours(0,0,0,0);
+    const end = new Date(date); end.setHours(23,59,59,999);
+    const transactions = await db.cashTransaction.findMany({ where: { driverId, createdAt: { gte: start, lte: end } } });
+    const totalAmount = transactions.reduce((acc, t) => acc + Number(t.amount), 0);
+    const unconfirmedCount = transactions.filter(t => !t.confirmed).length;
+    const discrepancyTotal = transactions.reduce((acc, t) => acc + Number(t.discrepancyAmount || 0), 0);
+    return { date: start, totalAmount, unconfirmedCount, discrepancyTotal };
+  },
+
   // Drivers and activity
   async getDriverById(id, tx) {
     const db = withTx(tx);
