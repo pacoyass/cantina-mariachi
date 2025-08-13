@@ -8,6 +8,7 @@ import { toZonedTime } from 'date-fns-tz';
 import { sendWebhook } from './webhook.controller.js';
 
 const mask = (s) => (typeof s === 'string' && s.length > 2 ? s[0] + '*'.repeat(Math.max(1, s.length - 2)) + s[s.length - 1] : s);
+const TRACKING_TTL_HOURS = parseInt(process.env.ORDER_TRACKING_TTL_HOURS || '24', 10);
 
 export const createOrder = async (req, res) => {
   try {
@@ -15,7 +16,7 @@ export const createOrder = async (req, res) => {
     const order = await databaseService.createOrderWithItems(payload);
     // generate tracking code (short-lived)
     const code = crypto.randomBytes(4).toString('hex');
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + TRACKING_TTL_HOURS * 60 * 60 * 1000);
     await databaseService.setOrderTracking(order.id, code, expiresAt);
 
     await LoggerService.logAudit(req.user?.userId || null, 'ORDER_CREATED', order.id, { orderNumber: order.orderNumber, total: order.total });
