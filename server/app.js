@@ -31,6 +31,7 @@ app.use(session({
   cookie: { secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' },
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
 app.use( "/api", apiRoutes );
 
