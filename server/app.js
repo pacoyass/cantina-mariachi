@@ -3,6 +3,8 @@ import { createRequestHandler } from "@react-router/express";
 import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import cors from 'cors';
+import helmet from 'helmet';
 import apiRoutes from "./routes/index.routes.js";
 import { registerCronJobs } from "./cron/index.js";
 import { LoggerService } from "./utils/logger.js";
@@ -15,6 +17,12 @@ export const app = express();
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
+
+app.use(helmet());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN?.split(',') || '*',
+  credentials: true,
+}));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || process.env.COOKIE_SECRET || 'dev-session-secret',
