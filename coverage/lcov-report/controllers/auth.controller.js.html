@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50.8% </span>
+                <span class="strong">45.96% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>63/124</span>
+                <span class='fraction'>57/124</span>
             </div>
         
             
@@ -1176,7 +1176,7 @@ export const register = async (req, res) =&gt; {
       });
     }
     const { email, password, role, name, phone } = req.body;
-    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10));
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS || <span class="branch-1 cbranch-no" title="branch not covered" >'10',</span> 10));
     const user = await databaseService.createUser({email, password: hashedPassword, role, name, phone });
     
     await LoggerService.logAudit(user.id, 'USER_REGISTERED', user.id, { email, role, name, phone });
@@ -1262,8 +1262,8 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
       active: user.isActive,
       phone: user.phone,
     };
-    ({ token: accessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || '15m'));
-    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || '7d'));
+    ({ token: accessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'15m')</span>);
+    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'7d')</span>);
     const hashedRefreshToken = await hashToken(refreshToken);
     await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp), undefined, { userAgent, ip });
   } catch (authErr) {
@@ -1294,7 +1294,7 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
   // Generate dynamic welcome message
   const getGreetingMessage = (name) =&gt; {
     const hour = new Date().getHours();
-    const timeGreeting = hour &lt; 12 ? <span class="branch-0 cbranch-no" title="branch not covered" >'Good morning' </span>: hour &lt; 18 ? 'Good afternoon' : <span class="branch-1 cbranch-no" title="branch not covered" >'Good evening';</span>
+    const timeGreeting = hour &lt; 12 ? <span class="branch-0 cbranch-no" title="branch not covered" >'Good morning' </span>: hour &lt; 18 ? <span class="branch-0 cbranch-no" title="branch not covered" >'Good afternoon' </span>: 'Good evening';
     const firstName = name ? name.split(' ')[0].charAt(0).toUpperCase() + name.split(' ')[0].slice(1).toLowerCase() : <span class="branch-1 cbranch-no" title="branch not covered" >'User';</span>
     const funMessages = [
       'Great to see you again! 💫',
@@ -1342,7 +1342,7 @@ export const refreshToken = async (req, res) =&gt; {
   try {
     const userAgent = req.get('User-Agent') || null;
 const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
-    const rotate = (process.env.REFRESH_ROTATION || 'true').toLowerCase() === 'true';
+    const rotate = (process.env.REFRESH_ROTATION || <span class="branch-1 cbranch-no" title="branch not covered" >'true')</span>.toLowerCase() === 'true';
     const providedRefreshToken = req.body.refreshToken || req.cookies.refreshToken;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!providedRefreshToken) {
 <span class="cstat-no" title="statement not covered" >      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: 'No refresh token provided' });</span>
@@ -1396,8 +1396,8 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
       active: user.isActive,
       phone: user.phone,
     };
-    const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '15m');
-    const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || '7d');
+    const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'15m')</span>;
+    const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'7d')</span>;
 &nbsp;
     // Store new refresh token hash (replaces previous)
     const newHashedRefresh = await hashToken(newRefreshToken);
@@ -1573,7 +1573,7 @@ export const revokeSessionById = <span class="fstat-no" title="function not cove
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-13T17:00:19.469Z
+                at 2025-08-13T19:57:20.772Z
             </div>
         <script src="../prettify.js"></script>
         <script>
