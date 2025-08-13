@@ -226,6 +226,20 @@ class CacheService {
       }
     }
   }
+
+  async ping() {
+    if (!this.#isConnected) {
+      return { ok: false, error: 'DISCONNECTED' };
+    }
+    try {
+      // redis v5 client supports ping()
+      const resp = await this.#client.ping();
+      return { ok: resp === 'PONG', value: resp };
+    } catch (error) {
+      await LoggerService.logError(error.message || 'ping error', error.stack, { method: 'ping' });
+      return { ok: false, error: error.message };
+    }
+  }
 }
 
 export default new CacheService();

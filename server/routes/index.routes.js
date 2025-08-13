@@ -1,14 +1,14 @@
 import express from "express";
 import { createResponse, createError } from '../utils/response.js';
-import testRoutes from "./test.routes.js";
 import authRoutes from "./auth.routes.js";
 import userRoutes from './user.routes.js';
 import logsRoutes from './logs.routes.js';
+import healthRoutes from './health.routes.js';
 
 const router = express.Router();
 
 // Group all API routes
-router.use( "/test", testRoutes );
+router.use('/healthz', healthRoutes);
 router.use( "/auth", authRoutes );
 router.use("/users", userRoutes);
 router.use('/logs', logsRoutes);
