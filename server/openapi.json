@@ -1,0 +1,11 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Cantina API", "version": "1.0.0" },
+  "servers": [{ "url": "/api" }],
+  "paths": {
+    "/healthz": { "get": { "summary": "Health", "responses": { "200": { "description": "OK" } } } },
+    "/menu/categories": { "get": { "summary": "List categories", "responses": { "200": { "description": "OK" } } } },
+    "/orders": { "post": { "summary": "Create order", "responses": { "201": { "description": "Created" } } } },
+    "/orders/{orderNumber}": { "get": { "summary": "Get order", "parameters": [{"name":"orderNumber","in":"path","required":true,"schema":{"type":"string"}}], "responses": { "200": { "description": "OK" } } } }
+  }
+}

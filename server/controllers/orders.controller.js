@@ -6,13 +6,14 @@ import prisma from '../config/database.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
 import { toZonedTime } from 'date-fns-tz';
 import { sendWebhook } from './webhook.controller.js';
+import { normalizePhoneE164 } from '../utils/phone.js';
 
 const mask = (s) => (typeof s === 'string' && s.length > 2 ? s[0] + '*'.repeat(Math.max(1, s.length - 2)) + s[s.length - 1] : s);
 const TRACKING_TTL_HOURS = parseInt(process.env.ORDER_TRACKING_TTL_HOURS || '24', 10);
 
 export const createOrder = async (req, res) => {
   try {
-    const payload = { ...req.body, userId: req.user?.userId || null };
+    const payload = { ...req.body, customerPhone: normalizePhoneE164(req.body.customerPhone), userId: req.user?.userId || null };
     const order = await databaseService.createOrderWithItems(payload);
     // generate tracking code (short-lived)
     const code = crypto.randomBytes(4).toString('hex');

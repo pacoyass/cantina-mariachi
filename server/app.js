@@ -10,6 +10,9 @@ import { registerCronJobs } from "./cron/index.js";
 import { LoggerService } from "./utils/logger.js";
 import { createError } from "./utils/response.js";
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 dotenv.config();
 
 export const app = express();
@@ -36,6 +39,11 @@ if (process.env.ALLOW_URLENCODED === '1') {
 }
 app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
 app.use( "/api", apiRoutes );
+// Serve API docs if present
+try {
+  const openapi = require('./openapi.json');
+  if (openapi) app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi));
+} catch {}
 
 // ✅ Start system maintenance cron jobs (only in non-test environments)
 if (process.env.NODE_ENV !== 'test') {

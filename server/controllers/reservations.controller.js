@@ -6,13 +6,14 @@ import { acquireLock, releaseLock } from '../utils/lock.js';
 import { toZonedTime } from 'date-fns-tz';
 import { subDays } from 'date-fns';
 import crypto from 'node:crypto';
+import { normalizePhoneE164 } from '../utils/phone.js';
 
 export const createReservation = async (req, res) => {
   try {
     const { customerName, customerEmail, customerPhone, date, time, partySize, notes } = req.body;
     const available = await databaseService.isReservationSlotAvailable(date, time, partySize);
     if (!available) return createError(res, 409, 'Selected slot is full', 'SLOT_FULL');
-    const created = await databaseService.createReservation({ customerName, customerEmail, customerPhone, date, time, partySize, notes: notes || null, status: 'PENDING', userId: req.user?.userId || null });
+    const created = await databaseService.createReservation({ customerName, customerEmail, customerPhone: normalizePhoneE164(customerPhone), date, time, partySize, notes: notes || null, status: 'PENDING', userId: req.user?.userId || null });
     await LoggerService.logAudit(req.user?.userId || null, 'RESERVATION_CREATED', created.id, { date: created.date, time: created.time, partySize: created.partySize });
     return createResponse(res, 201, 'Reservation created', { reservation: created });
   } catch (error) {
