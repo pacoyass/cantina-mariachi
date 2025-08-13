@@ -6,6 +6,7 @@ import logsRoutes from './logs.routes.js';
 import healthRoutes from './health.routes.js';
 import menuRoutes from './menu.routes.js';
 import ordersRoutes from './orders.routes.js';
+import driversRoutes from './drivers.routes.js';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.use("/users", userRoutes);
 router.use('/logs', logsRoutes);
 router.use('/menu', menuRoutes);
 router.use('/orders', ordersRoutes);
+router.use('/drivers', driversRoutes);
 
 router.use((req, res, next) => {
   createError(

@@ -432,6 +432,48 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
   });
 },
 
+  async listDrivers(filters = {}, tx) {
+    const db = withTx(tx);
+    return await db.driver.findMany({ where: { ...(filters.active !== undefined ? { active: filters.active } : {}), ...(filters.deliveryZone ? { deliveryZone: filters.deliveryZone } : {}) } });
+  },
+
+  async getDriver(id, tx) {
+    const db = withTx(tx);
+    return await db.driver.findUnique({ where: { id } });
+  },
+
+  async updateDriver(id, data, tx) {
+    const db = withTx(tx);
+    return await db.driver.update({ where: { id }, data });
+  },
+
+  async deleteDriver(id, tx) {
+    const db = withTx(tx);
+    return await db.driver.delete({ where: { id } });
+  },
+
+  async linkDriverToUser(id, userId, tx) {
+    const db = withTx(tx);
+    return await db.driver.update({ where: { id }, data: { userId } });
+  },
+
+  async assignOrderToDriver(orderNumber, driverId, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) => {
+      const driver = await trx.driver.findUnique({ where: { id: driverId } });
+      if (!driver || !driver.active) throw new Error('Driver not available');
+      const order = await trx.order.findUnique({ where: { orderNumber } });
+      if (!order) throw new Error('Order not found');
+      const updated = await trx.order.update({ where: { orderNumber }, data: { driverId, status: 'OUT_FOR_DELIVERY' } });
+      return updated;
+    });
+  },
+
+  async listOrdersAssignedToDriver(driverId, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({ where: { driverId }, include: { orderItems: true }, orderBy: { createdAt: 'desc' } });
+  },
+
   async listCategories(tx) {
     const db = withTx(tx);
     return await db.category.findMany({ orderBy: { order: 'asc' } });
