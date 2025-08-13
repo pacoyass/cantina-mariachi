@@ -476,4 +476,19 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
     return await db.menuItem.delete({ where: { id } });
   },
 
+  async setOrderTracking(orderId, code, expiresAt, tx) {
+    const db = withTx(tx);
+    return await db.order.update({ where: { id: orderId }, data: { trackingCode: code, trackingCodeExpiresAt: expiresAt } });
+  },
+
+  async getOrderForTracking(orderNumber, code, tx) {
+    const db = withTx(tx);
+    return await db.order.findFirst({ where: { orderNumber, trackingCode: code, trackingCodeExpiresAt: { gt: new Date() } }, include: { orderItems: true } });
+  },
+
+  async listOrdersByUser(userId, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({ where: { userId }, include: { orderItems: true }, orderBy: { createdAt: 'desc' } });
+  },
+
 };
