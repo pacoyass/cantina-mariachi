@@ -1,6 +1,11 @@
 import { createResponse, createError } from '../utils/response.js';
 import { databaseService } from '../services/databaseService.js';
 import { LoggerService } from '../utils/logger.js';
+import prisma from '../config/database.js';
+import { acquireLock, releaseLock } from '../utils/lock.js';
+import { toZonedTime } from 'date-fns-tz';
+import { subDays } from 'date-fns';
+import crypto from 'node:crypto';
 
 export const createCashTransaction = async (req, res) => {
   try {
@@ -46,4 +51,38 @@ export const getDriverDailySummary = async (req, res) => {
   }
 };
 
-export default { createCashTransaction, confirmCashTransaction, verifyCashTransaction, getDriverDailySummary };
+export const cleanupCashData = async (retentionDays = 365) => {
+  const taskName = 'cash_cleanup';
+  const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
+  const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();
+  try {
+    await prisma.$transaction(async (tx) => {
+      const locked = await acquireLock(tx, taskName, instanceId);
+      if (!locked) {
+        await LoggerService.logCronRun(taskName, 'SKIPPED', { reason: 'Lock held', timestamp });
+        return;
+      }
+      try {
+        const cutoff = subDays(new Date(), retentionDays);
+        const deletedSummaries = await tx.cashSummary.deleteMany({ where: { date: { lt: cutoff } } });
+        const deletedTransactions = await tx.cashTransaction.deleteMany({
+          where: {
+            updatedAt: { lt: cutoff },
+            confirmed: true,
+            adminVerified: true,
+          },
+        });
+        await LoggerService.logCronRun(taskName, 'SUCCESS', { deletedSummaries: deletedSummaries.count, deletedTransactions: deletedTransactions.count, cutoff: cutoff.toISOString(), timestamp });
+      } finally {
+        await releaseLock(tx, taskName);
+        await LoggerService.logAudit(null, 'CASH_CLEANUP_LOCK_RELEASED', null, { instanceId, timestamp });
+      }
+    });
+  } catch (error) {
+    await LoggerService.logError('Cash cleanup failed', error.stack, { taskName, error: error.message, timestamp });
+    await LoggerService.logCronRun(taskName, 'FAILED', { error: error.message, timestamp });
+    throw error;
+  }
+};
+
+export default { createCashTransaction, confirmCashTransaction, verifyCashTransaction, getDriverDailySummary, cleanupCashData };
