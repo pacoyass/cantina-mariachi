@@ -5,7 +5,18 @@
   "paths": {
     "/healthz": { "get": { "summary": "Health", "responses": { "200": { "description": "OK" } } } },
     "/menu/categories": { "get": { "summary": "List categories", "responses": { "200": { "description": "OK" } } } },
-    "/orders": { "post": { "summary": "Create order", "responses": { "201": { "description": "Created" } } } },
-    "/orders/{orderNumber}": { "get": { "summary": "Get order", "parameters": [{"name":"orderNumber","in":"path","required":true,"schema":{"type":"string"}}], "responses": { "200": { "description": "OK" } } } }
+    "/menu/items": { "get": { "summary": "List items", "parameters": [{"name":"categoryId","in":"query","required":false,"schema":{"type":"string"}}], "responses": { "200": { "description": "OK" } } } },
+    "/orders": { "post": { "summary": "Create order", "responses": { "201": { "description": "Created" }, "400": { "description": "Bad request" } } } },
+    "/orders/{orderNumber}": { "get": { "summary": "Get order", "parameters": [{"name":"orderNumber","in":"path","required":true,"schema":{"type":"string"}}], "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } } } },
+    "/orders/track/by": { "get": { "summary": "Track order", "parameters": [{"name":"orderNumber","in":"query","required":true,"schema":{"type":"string"}},{"name":"code","in":"query","required":true,"schema":{"type":"string"}}], "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } } } },
+    "/drivers": { "get": { "summary": "List drivers", "responses": { "200": { "description": "OK" } } }, "post": { "summary": "Create driver", "responses": { "201": { "description": "Created" } } } },
+    "/drivers/assign": { "post": { "summary": "Assign order to driver", "responses": { "200": { "description": "OK" } } } },
+    "/cash": { "post": { "summary": "Create cash transaction", "responses": { "201": { "description": "Created" } } } },
+    "/cash/confirm": { "post": { "summary": "Confirm cash transaction", "responses": { "200": { "description": "OK" } } } },
+    "/cash/verify": { "post": { "summary": "Verify cash transaction", "responses": { "200": { "description": "OK" } } } },
+    "/reservations": { "post": { "summary": "Create reservation", "responses": { "201": { "description": "Created" } } }, "get": { "summary": "List reservations", "responses": { "200": { "description": "OK" } } } },
+    "/reservations/availability": { "get": { "summary": "Check availability", "responses": { "200": { "description": "OK" } } } },
+    "/notifications/dispatch": { "post": { "summary": "Dispatch notification", "responses": { "200": { "description": "OK" } } } },
+    "/webhooks": { "get": { "summary": "List webhooks", "responses": { "200": { "description": "OK" } } }, "post": { "summary": "Register webhook", "responses": { "201": { "description": "Created" } } } }
   }
 }
