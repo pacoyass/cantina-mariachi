@@ -2,6 +2,9 @@ import { createResponse, createError } from '../utils/response.js';
 import { databaseService } from '../services/databaseService.js';
 import { LoggerService } from '../utils/logger.js';
 import crypto from 'node:crypto';
+import prisma from '../config/database.js';
+import { acquireLock, releaseLock } from '../utils/lock.js';
+import { toZonedTime } from 'date-fns-tz';
 
 const mask = (s) => (typeof s === 'string' && s.length > 2 ? s[0] + '*'.repeat(Math.max(1, s.length - 2)) + s[s.length - 1] : s);
 
@@ -65,4 +68,33 @@ export const listMyOrders = async (req, res) => {
   }
 };
 
-export default { createOrder, getOrderByNumber, updateOrderStatus, trackOrder, listMyOrders };
+export const cleanupExpiredOrderTracking = async () => {
+  const taskName = 'orders_tracking_cleanup';
+  const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
+  const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();
+  try {
+    await prisma.$transaction(async (tx) => {
+      const locked = await acquireLock(tx, taskName, instanceId);
+      if (!locked) {
+        await LoggerService.logCronRun(taskName, 'SKIPPED', { reason: 'Lock held', timestamp });
+        return;
+      }
+      try {
+        const res = await tx.order.updateMany({
+          where: { trackingCodeExpiresAt: { lt: new Date() }, trackingCode: { not: null } },
+          data: { trackingCode: null, trackingCodeExpiresAt: null },
+        });
+        await LoggerService.logCronRun(taskName, 'SUCCESS', { cleared: res.count, timestamp });
+      } finally {
+        await releaseLock(tx, taskName);
+        await LoggerService.logAudit(null, 'ORDERS_TRACKING_CLEANUP_LOCK_RELEASED', null, { instanceId, timestamp });
+      }
+    });
+  } catch (error) {
+    await LoggerService.logError('Orders tracking cleanup failed', error.stack, { taskName, error: error.message, timestamp });
+    await LoggerService.logCronRun(taskName, 'FAILED', { error: error.message, timestamp });
+    throw error;
+  }
+};
+
+export default { createOrder, getOrderByNumber, updateOrderStatus, trackOrder, listMyOrders, cleanupExpiredOrderTracking };
