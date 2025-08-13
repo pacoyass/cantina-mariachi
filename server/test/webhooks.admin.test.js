@@ -23,4 +23,13 @@ describe('webhooks admin', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json.mock.calls[0][0].data.results[0].status).toBe('FAILED');
   });
+
+  it('triggers success when axios resolves', async () => {
+    axios.post.mockResolvedValue({ status: 200 });
+    const req = { body: { event: 'TEST', payload: {} } };
+    const res = makeRes();
+    await trigger(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json.mock.calls[0][0].data.results[0].status).toBe('SUCCESS');
+  });
 });
