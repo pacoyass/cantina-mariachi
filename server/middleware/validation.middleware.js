@@ -92,6 +92,7 @@ const setParams = (req, parsed) => { req.params = parsed; };
 const setQuery = (req, parsed) => { req.validatedQuery = parsed; };
 
 const validate = (schema) => validateWithSchema(schema, req => req.body, setBody);
+export { validate };
 export const validateParams = (schema) => validateWithSchema(schema, req => req.params, setParams);
 export const validateQuery = (schema) => validateWithSchema(schema, req => req.query, setQuery);
 export default validate;

@@ -371,4 +371,48 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
   });
 },
 
+  async listCategories(tx) {
+    const db = withTx(tx);
+    return await db.category.findMany({ orderBy: { order: 'asc' } });
+  },
+
+  async getCategoryById(id, tx) {
+    const db = withTx(tx);
+    return await db.category.findUnique({ where: { id } });
+  },
+
+  async updateCategory(id, data, tx) {
+    const db = withTx(tx);
+    return await db.category.update({ where: { id }, data });
+  },
+
+  async deleteCategory(id, tx) {
+    const db = withTx(tx);
+    return await db.category.delete({ where: { id } });
+  },
+
+  async listMenuItems(filters = {}, tx) {
+    const db = withTx(tx);
+    const where = {
+      ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
+      ...(filters.available !== undefined ? { isAvailable: filters.available } : {}),
+    };
+    return await db.menuItem.findMany({ where, include: { category: true }, orderBy: { name: 'asc' } });
+  },
+
+  async getMenuItemById(id, tx) {
+    const db = withTx(tx);
+    return await db.menuItem.findUnique({ where: { id }, include: { category: true } });
+  },
+
+  async updateMenuItem(id, data, tx) {
+    const db = withTx(tx);
+    return await db.menuItem.update({ where: { id }, data, include: { category: true } });
+  },
+
+  async deleteMenuItem(id, tx) {
+    const db = withTx(tx);
+    return await db.menuItem.delete({ where: { id } });
+  },
+
 };
