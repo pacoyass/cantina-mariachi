@@ -576,4 +576,27 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
     return await db.order.findMany({ where: { userId }, include: { orderItems: true }, orderBy: { createdAt: 'desc' } });
   },
 
+  async createReservation(data, tx) {
+    const db = withTx(tx);
+    return await db.reservation.create({ data });
+  },
+
+  async listReservations(filters = {}, tx) {
+    const db = withTx(tx);
+    return await db.reservation.findMany({ where: { ...(filters.status ? { status: filters.status } : {}), ...(filters.date ? { date: filters.date } : {}) }, orderBy: { createdAt: 'desc' } });
+  },
+
+  async isReservationSlotAvailable(date, time, partySize, tx) {
+    const db = withTx(tx);
+    // naive capacity: max 50 seats per slot
+    const existing = await db.reservation.findMany({ where: { date, time, status: { in: ['PENDING','CONFIRMED','SEATED'] } } });
+    const used = existing.reduce((acc, r) => acc + r.partySize, 0);
+    return used + partySize <= 50;
+  },
+
+  async updateReservationStatus(id, status, tx) {
+    const db = withTx(tx);
+    return await db.reservation.update({ where: { id }, data: { status } });
+  },
+
 };
