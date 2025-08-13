@@ -19,6 +19,7 @@ const createTestPrismaStub = () => {
     blacklistedToken: {},
     webhook: {},
     webhookLog: {},
+    integration: {},
     $transaction: async (cb) => cb(stub),
     $connect: async () => {},
     $disconnect: async () => {},
