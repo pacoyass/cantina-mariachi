@@ -10,6 +10,7 @@ import driversRoutes from './drivers.routes.js';
 import cashRoutes from './cash.routes.js';
 import reservationsRoutes from './reservations.routes.js';
 import notificationsRoutes from './notifications.routes.js';
+import webhooksAdminRoutes from './webhooks.routes.js';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/drivers', driversRoutes);
 router.use('/cash', cashRoutes);
 router.use('/reservations', reservationsRoutes);
 router.use('/notifications', notificationsRoutes);
+router.use('/webhooks', webhooksAdminRoutes);
 
 router.use((req, res, next) => {
   createError(
