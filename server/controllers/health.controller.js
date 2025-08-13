@@ -1,6 +1,7 @@
 import prisma from '../config/database.js';
 import cacheService from '../services/cacheService.js';
 import { createResponse } from '../utils/response.js';
+import { LoggerService } from '../utils/logger.js';
 
 export const getHealth = async (req, res) => {
   const db = { ok: false };
@@ -21,4 +22,9 @@ export const getHealth = async (req, res) => {
   return createResponse(res, db.ok && cache.ok ? 200 : 503, 'health', { db, cache, time: new Date().toISOString() });
 };
 
-export default { getHealth };
+export const cleanupHealth = async () => {
+  // No-op cleanup; record a heartbeat cron run for observability
+  await LoggerService.logCronRun('health_heartbeat', 'SUCCESS', { timestamp: new Date().toISOString() });
+};
+
+export default { getHealth, cleanupHealth };
