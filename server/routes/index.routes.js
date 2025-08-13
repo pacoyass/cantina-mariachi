@@ -5,6 +5,7 @@ import userRoutes from './user.routes.js';
 import logsRoutes from './logs.routes.js';
 import healthRoutes from './health.routes.js';
 import menuRoutes from './menu.routes.js';
+import ordersRoutes from './orders.routes.js';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.use( "/auth", authRoutes );
 router.use("/users", userRoutes);
 router.use('/logs', logsRoutes);
 router.use('/menu', menuRoutes);
+router.use('/orders', ordersRoutes);
 
 router.use((req, res, next) => {
   createError(
