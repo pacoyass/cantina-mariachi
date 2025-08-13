@@ -1,12 +1,41 @@
 import axios from 'axios';
+import nodemailer from 'nodemailer';
+import twilio from 'twilio';
+import prisma from '../config/database.js';
 import { LoggerService } from '../utils/logger.js';
+
+async function getIntegrationConfig(name) {
+  try {
+    const integ = await prisma.integration.findFirst({ where: { name } });
+    return integ?.config || null;
+  } catch {
+    return null;
+  }
+}
 
 const providers = {
   EMAIL: async ({ target, content }) => {
-    console.log(`[EMAIL] to ${target}: ${content}`);
+    const cfg = await getIntegrationConfig('EMAIL_SMTP');
+    if (!cfg) {
+      console.log(`[EMAIL] to ${target}: ${content}`);
+      return;
+    }
+    const transporter = nodemailer.createTransport({
+      host: cfg.host,
+      port: cfg.port || 587,
+      secure: !!cfg.secure,
+      auth: cfg.user ? { user: cfg.user, pass: cfg.pass } : undefined,
+    });
+    await transporter.sendMail({ from: cfg.from || cfg.user, to: target, subject: cfg.subject || 'Notification', text: content });
   },
   SMS: async ({ target, content }) => {
-    console.log(`[SMS] to ${target}: ${content}`);
+    const cfg = await getIntegrationConfig('TWILIO_SMS');
+    if (!cfg) {
+      console.log(`[SMS] to ${target}: ${content}`);
+      return;
+    }
+    const client = twilio(cfg.accountSid, cfg.authToken);
+    await client.messages.create({ from: cfg.from, to: target, body: content });
   },
   PUSH: async ({ target, content }) => {
     console.log(`[PUSH] to ${target}: ${content}`);
