@@ -20,8 +20,7 @@ export default defineConfig({
 //   // ✅ Your custom migrations path
   migrations: {
   path: path.join("prisma", "migrations"),
-  seed:`node prisma/seed.js` ,
-
+  seed:`node ./server/config/seed.js` ,
   },
 
 //   // ✅ Your custom views path
