@@ -8,6 +8,9 @@ import { toZonedTime } from 'date-fns-tz';
 import { cleanupExpiredAuthData } from '../controllers/auth.controller.js';
 import { cleanupExpiredWebhooks } from '../controllers/webhook.controller.js';
 import { cleanupUserData } from '../controllers/user.controller.js';
+import { cleanupHealth } from '../controllers/health.controller.js';
+import { cleanupLogsRetention } from '../controllers/logs.controller.js';
+import { cleanupMenuCache } from '../controllers/menu.controller.js';
 
 const runningJobs = new Set();
 
@@ -87,35 +90,66 @@ export const registerCronJobs = () => {
     scheduled: true,
     timezone: 'Europe/London',
   });
-    // Cleanup expired auth data at 3:20 AM
-    cron.schedule('20 3 * * *', async () => {
-      await runJobSafely('cleanupExpiredAuthData', async () => {
-        await cleanupExpiredAuthData();
-      });
-    }, {
-      scheduled: true,
-      timezone: 'Europe/London',
+  // Cleanup expired auth data at 3:20 AM
+  cron.schedule('20 3 * * *', async () => {
+    await runJobSafely('cleanupExpiredAuthData', async () => {
+      await cleanupExpiredAuthData();
     });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
  
-    // Cleanup expired user data at 3:20 AM
-    cron.schedule('20 3 * * *', async () => {
-      await runJobSafely('cleanupUserData', async () => {
-        await cleanupUserData();
-      });
-    }, {
-      scheduled: true,
-      timezone: 'Europe/London',
+  // Cleanup expired user data at 3:20 AM
+  cron.schedule('20 3 * * *', async () => {
+    await runJobSafely('cleanupUserData', async () => {
+      await cleanupUserData();
     });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
 
-// Cleanup expired webhook data at 3:20 AM
-    cron.schedule('20 3 * * *', async () => {
-      await runJobSafely('cleanupExpiredWebhook', async () => {
-        await cleanupExpiredWebhooks();
-      });
-    }, {
-      scheduled: true,
-      timezone: 'Europe/London',
+  // Cleanup expired webhook data at 3:20 AM
+  cron.schedule('20 3 * * *', async () => {
+    await runJobSafely('cleanupExpiredWebhook', async () => {
+      await cleanupExpiredWebhooks();
     });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+
+  // Health heartbeat every 5 minutes
+  cron.schedule('*/5 * * * *', async () => {
+    await runJobSafely('health_heartbeat', async () => {
+      await cleanupHealth();
+    });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+
+  // Logs retention cleanup daily at 03:30
+  cron.schedule('30 3 * * *', async () => {
+    await runJobSafely('logs_retention_cleanup', async () => {
+      await cleanupLogsRetention();
+    });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+
+  // Menu cache cleanup daily at 03:40
+  cron.schedule('40 3 * * *', async () => {
+    await runJobSafely('menu_cache_cleanup', async () => {
+      await cleanupMenuCache();
+    });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+
   LoggerService.logSystemEvent('cron', 'CRON_JOBS_REGISTERED', {
     timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
   });
@@ -134,6 +168,9 @@ export const runInitialCleanup = async () => {
     { name: 'cleanupExpiredAuthData', fn: cleanupExpiredAuthData, delay: 20000 },
     { name: 'cleanupExpiredWebhook', fn: cleanupExpiredWebhooks, delay: 45000 },
     { name: 'cleanupUserData', fn: cleanupUserData, delay: 50000 },
+    { name: 'logs_retention_cleanup', fn: cleanupLogsRetention, delay: 55000 },
+    { name: 'menu_cache_cleanup', fn: cleanupMenuCache, delay: 60000 },
+    { name: 'health_heartbeat', fn: cleanupHealth, delay: 65000 },
   ];
 
   for (const task of cleanupTasks) {
