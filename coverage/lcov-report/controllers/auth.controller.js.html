@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.77% </span>
+                <span class="strong">52.13% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>121/225</span>
+                <span class='fraction'>122/234</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.54% </span>
+                <span class="strong">50.8% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>58/122</span>
+                <span class='fraction'>63/124</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.92% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/13</span>
+                <span class='fraction'>10/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.57% </span>
+                <span class="strong">51.93% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>120/224</span>
+                <span class='fraction'>121/233</span>
             </div>
         
             
@@ -549,7 +549,22 @@
 <a name='L484'></a><a href='#L484'>484</a>
 <a name='L485'></a><a href='#L485'>485</a>
 <a name='L486'></a><a href='#L486'>486</a>
-<a name='L487'></a><a href='#L487'>487</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L487'></a><a href='#L487'>487</a>
+<a name='L488'></a><a href='#L488'>488</a>
+<a name='L489'></a><a href='#L489'>489</a>
+<a name='L490'></a><a href='#L490'>490</a>
+<a name='L491'></a><a href='#L491'>491</a>
+<a name='L492'></a><a href='#L492'>492</a>
+<a name='L493'></a><a href='#L493'>493</a>
+<a name='L494'></a><a href='#L494'>494</a>
+<a name='L495'></a><a href='#L495'>495</a>
+<a name='L496'></a><a href='#L496'>496</a>
+<a name='L497'></a><a href='#L497'>497</a>
+<a name='L498'></a><a href='#L498'>498</a>
+<a name='L499'></a><a href='#L499'>499</a>
+<a name='L500'></a><a href='#L500'>500</a>
+<a name='L501'></a><a href='#L501'>501</a>
+<a name='L502'></a><a href='#L502'>502</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1031,6 +1046,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1146,7 +1176,7 @@ export const register = async (req, res) =&gt; {
       });
     }
     const { email, password, role, name, phone } = req.body;
-    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS || <span class="branch-1 cbranch-no" title="branch not covered" >'10',</span> 10));
+    const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10));
     const user = await databaseService.createUser({email, password: hashedPassword, role, name, phone });
     
     await LoggerService.logAudit(user.id, 'USER_REGISTERED', user.id, { email, role, name, phone });
@@ -1232,8 +1262,8 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
       active: user.isActive,
       phone: user.phone,
     };
-    ({ token: accessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'15m')</span>);
-    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'7d')</span>);
+    ({ token: accessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || '15m'));
+    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || '7d'));
     const hashedRefreshToken = await hashToken(refreshToken);
     await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp), undefined, { userAgent, ip });
   } catch (authErr) {
@@ -1366,8 +1396,8 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
       active: user.isActive,
       phone: user.phone,
     };
-    const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'15m')</span>;
-    const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || <span class="branch-1 cbranch-no" title="branch not covered" >'7d')</span>;
+    const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '15m');
+    const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || '7d');
 &nbsp;
     // Store new refresh token hash (replaces previous)
     const newHashedRefresh = await hashToken(newRefreshToken);
@@ -1521,6 +1551,21 @@ export const logoutOtherSessions = async (req, res) =&gt; {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('logoutOtherSessions failed', error.stack, { userId: req.user?.userId });</span>
 <span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR');</span>
   }
+};
+&nbsp;
+// Revoke a specific session (refresh token) by id
+export const revokeSessionById = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    if (!req.user?.userId) {</span>
+<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');</span>
+    }
+    const sessionId = <span class="cstat-no" title="statement not covered" >req.params.id;</span>
+    const result = <span class="cstat-no" title="statement not covered" >await prisma.refreshToken.deleteMany({ where: { id: sessionId, userId: req.user.userId } });</span>
+<span class="cstat-no" title="statement not covered" >    return createResponse(res, 200, 'Session revoked', { deleted: result.count });</span>
+  } catch (error) {
+<span class="cstat-no" title="statement not covered" >    await LoggerService.logError('revokeSessionById failed', error.stack, { userId: req.user?.userId });</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR');</span>
+  }
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -1528,7 +1573,7 @@ export const logoutOtherSessions = async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-12T15:13:26.145Z
+                at 2025-08-13T15:23:09.873Z
             </div>
         <script src="../prettify.js"></script>
         <script>
