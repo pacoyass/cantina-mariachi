@@ -249,11 +249,20 @@ export const databaseService = {
     return await db.$transaction(async (trx) => {
       const existing = await trx.order.findUnique({ where: { orderNumber } });
       if (!existing) throw new Error('Order not found');
-      // minimal state machine enforcement
-      const allowed = new Set([
-        'PENDING','CONFIRMED','PREPARING','READY','OUT_FOR_DELIVERY','AWAITING_PAYMENT','PAYMENT_DISPUTED','DELIVERED','COMPLETED','CANCELLED'
-      ]);
-      if (!allowed.has(status)) throw new Error('Invalid status');
+      const transitions = {
+        PENDING: ['CONFIRMED','CANCELLED'],
+        CONFIRMED: ['PREPARING','CANCELLED'],
+        PREPARING: ['READY','CANCELLED'],
+        READY: ['OUT_FOR_DELIVERY','CANCELLED'],
+        OUT_FOR_DELIVERY: ['DELIVERED','CANCELLED'],
+        DELIVERED: ['COMPLETED'],
+        AWAITING_PAYMENT: ['PAYMENT_DISPUTED','COMPLETED'],
+        PAYMENT_DISPUTED: ['COMPLETED'],
+        COMPLETED: [],
+        CANCELLED: [],
+      };
+      const allowedNext = transitions[existing.status] || [];
+      if (!allowedNext.includes(status)) throw new Error(`Invalid transition from ${existing.status} to ${status}`);
       const updated = await trx.order.update({ where: { orderNumber }, data: { status, ...extra } });
       return updated;
     });

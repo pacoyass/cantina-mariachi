@@ -436,6 +436,7 @@ model Reservation {
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@index([date, time, status])
   @@map("reservations")
 }
 

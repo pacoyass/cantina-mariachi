@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import prisma from '../config/database.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
 import { toZonedTime } from 'date-fns-tz';
+import { sendWebhook } from './webhook.controller.js';
 
 const mask = (s) => (typeof s === 'string' && s.length > 2 ? s[0] + '*'.repeat(Math.max(1, s.length - 2)) + s[s.length - 1] : s);
 
@@ -39,6 +40,8 @@ export const updateOrderStatus = async (req, res) => {
   try {
     const updated = await databaseService.updateOrderStatusByNumber(req.params.orderNumber, req.body.status);
     await LoggerService.logAudit(req.user?.userId || null, 'ORDER_STATUS_UPDATED', updated.id, { status: req.body.status, orderNumber: updated.orderNumber });
+    await LoggerService.logNotification(updated.userId || null, 'WEBHOOK', 'order_status', `Order ${updated.orderNumber} -> ${updated.status}`, 'SENT');
+    await sendWebhook('ORDER_STATUS_UPDATED', { orderNumber: updated.orderNumber, status: updated.status });
     return createResponse(res, 200, 'Order status updated', { order: updated });
   } catch (error) {
     return createError(res, 400, error.message || 'Failed to update order status', 'ORDER_STATUS_FAILED');

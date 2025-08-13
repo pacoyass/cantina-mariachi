@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || '*',
+  origin: process.env.NODE_ENV === 'production' ? (process.env.CORS_ORIGIN?.split(',') || []) : (process.env.CORS_ORIGIN?.split(',') || '*'),
   credentials: true,
 }));
 
@@ -30,8 +30,10 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' },
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
+if (process.env.ALLOW_URLENCODED === '1') {
+  app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
+}
 app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
 app.use( "/api", apiRoutes );
 

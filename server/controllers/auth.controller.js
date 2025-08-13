@@ -485,3 +485,18 @@ export const logoutOtherSessions = async (req, res) => {
     return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR');
   }
 };
+
+// Revoke a specific session (refresh token) by id
+export const revokeSessionById = async (req, res) => {
+  try {
+    if (!req.user?.userId) {
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+    }
+    const sessionId = req.params.id;
+    const result = await prisma.refreshToken.deleteMany({ where: { id: sessionId, userId: req.user.userId } });
+    return createResponse(res, 200, 'Session revoked', { deleted: result.count });
+  } catch (error) {
+    await LoggerService.logError('revokeSessionById failed', error.stack, { userId: req.user?.userId });
+    return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR');
+  }
+};
