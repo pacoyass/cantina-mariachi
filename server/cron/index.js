@@ -11,6 +11,7 @@ import { cleanupUserData } from '../controllers/user.controller.js';
 import { cleanupHealth } from '../controllers/health.controller.js';
 import { cleanupLogsRetention } from '../controllers/logs.controller.js';
 import { cleanupMenuCache } from '../controllers/menu.controller.js';
+import { cleanupExpiredOrderTracking } from '../controllers/orders.controller.js';
 
 const runningJobs = new Set();
 
@@ -150,6 +151,16 @@ export const registerCronJobs = () => {
     timezone: 'Europe/London',
   });
 
+  // Orders tracking cleanup daily at 03:50
+  cron.schedule('50 3 * * *', async () => {
+    await runJobSafely('orders_tracking_cleanup', async () => {
+      await cleanupExpiredOrderTracking();
+    });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+
   LoggerService.logSystemEvent('cron', 'CRON_JOBS_REGISTERED', {
     timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
   });
@@ -171,6 +182,7 @@ export const runInitialCleanup = async () => {
     { name: 'logs_retention_cleanup', fn: cleanupLogsRetention, delay: 55000 },
     { name: 'menu_cache_cleanup', fn: cleanupMenuCache, delay: 60000 },
     { name: 'health_heartbeat', fn: cleanupHealth, delay: 65000 },
+    { name: 'orders_tracking_cleanup', fn: cleanupExpiredOrderTracking, delay: 70000 },
   ];
 
   for (const task of cleanupTasks) {
