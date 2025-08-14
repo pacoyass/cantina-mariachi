@@ -12,7 +12,7 @@ const validateWithSchema = (schema, dataSource, assignParsed) => async (req, res
   const routePath = req.originalUrl || req.path;
   const ip = req.ip;
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development' && process.env.VALIDATION_DEBUG === '1') {
     console.log(`[validate middleware] ${dataSource.name} =`, data);
   }
 
