@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.42% </span>
+                <span class="strong">65.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>172/280</span>
+                <span class='fraction'>184/280</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.65% </span>
+                <span class="strong">66.45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>99/158</span>
+                <span class='fraction'>105/158</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.62% </span>
+                <span class="strong">60.24% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>47/83</span>
+                <span class='fraction'>50/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.7% </span>
+                <span class="strong">68.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>165/255</span>
+                <span class='fraction'>175/255</span>
             </div>
         
             
@@ -676,9 +676,9 @@
 <a name='L611'></a><a href='#L611'>611</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1185,14 +1185,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1246,8 +1246,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1794,15 +1794,15 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
 <span class="cstat-no" title="statement not covered" >    return await db.driver.update({ where: { id }, data: { userId } });</span>
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync assignOrderToDriver(orderNumber, driverId, tx) {
-    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
-<span class="cstat-no" title="statement not covered" >    return await db.$transaction(<span class="fstat-no" title="function not covered" >as</span>ync (trx) =&gt; {</span>
-      const driver = <span class="cstat-no" title="statement not covered" >await trx.driver.findUnique({ where: { id: driverId } });</span>
-<span class="cstat-no" title="statement not covered" >      if (!driver || !driver.active) <span class="cstat-no" title="statement not covered" >throw new Error('Driver not available');</span></span>
-      const order = <span class="cstat-no" title="statement not covered" >await trx.order.findUnique({ where: { orderNumber } });</span>
-<span class="cstat-no" title="statement not covered" >      if (!order) <span class="cstat-no" title="statement not covered" >throw new Error('Order not found');</span></span>
-      const updated = <span class="cstat-no" title="statement not covered" >await trx.order.update({ where: { orderNumber }, data: { driverId, status: 'OUT_FOR_DELIVERY' } });</span>
-<span class="cstat-no" title="statement not covered" >      return updated;</span>
+  async assignOrderToDriver(orderNumber, driverId, tx) {
+    const db = withTx(tx);
+    return await db.$transaction(async (trx) =&gt; {
+      const driver = await trx.driver.findUnique({ where: { id: driverId } });
+      if (!driver || !driver.active) throw new Error('Driver not available');
+      const order = await trx.order.findUnique({ where: { orderNumber } });
+      if (!order) throw new Error('Order not found');
+      const updated = await trx.order.update({ where: { orderNumber }, data: { driverId, status: 'OUT_FOR_DELIVERY' } });
+      return updated;
     });
   },
 &nbsp;
@@ -1855,9 +1855,9 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
 <span class="cstat-no" title="statement not covered" >    return await db.menuItem.delete({ where: { id } });</span>
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync setOrderTracking(orderId, code, expiresAt, tx) {
-    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
-<span class="cstat-no" title="statement not covered" >    return await db.order.update({ where: { id: orderId }, data: { trackingCode: code, trackingCodeExpiresAt: expiresAt } });</span>
+  async setOrderTracking(orderId, code, expiresAt, tx) {
+    const db = withTx(tx);
+    return await db.order.update({ where: { id: orderId }, data: { trackingCode: code, trackingCodeExpiresAt: expiresAt } });
   },
 &nbsp;
 <span class="fstat-no" title="function not covered" >  as</span>ync getOrderForTracking(orderNumber, code, tx) {
@@ -1900,7 +1900,7 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-14T00:16:21.080Z
+                at 2025-08-14T00:18:21.448Z
             </div>
         <script src="../prettify.js"></script>
         <script>
