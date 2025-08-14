@@ -7,8 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
-import stylesheet from "./app.css?url";
-
+import "./app.css";
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -21,9 +20,12 @@ export const links = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
-  { rel: "stylesheet", href: stylesheet },
-
 ];
+
+function ThemeScript() {
+  const code = `try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark')}}catch{}`;
+  return <script dangerouslySetInnerHTML={{ __html: code }} />;
+}
 
 export function Layout({ children }) {
   return (
@@ -33,6 +35,7 @@ export function Layout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <ThemeScript />
       </head>
       <body>
         {children}

@@ -111,3 +111,12 @@ body {
   height: 4px;
   border-radius: 9999px;
 }
+
+/* Hero background pattern */
+.hero-pattern {
+  background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+h1,h2,h3 { letter-spacing: -0.02em; }
+.lead { font-size: 1.1rem; line-height: 1.7; }
