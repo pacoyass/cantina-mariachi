@@ -123,13 +123,9 @@ export const login = async (email, password) => {
 
   const accessToken = await generateToken(user, '15m');
   const refreshToken = await generateToken(user, '7d');
-  const hashedRefreshToken = await bcrypt.hash(refreshToken.token, 10);
+  const hashedRefreshToken = await hashToken(refreshToken.token);
 
-  await databaseService.createRefreshToken({
-    token: hashedRefreshToken,
-    userId: user.id,
-    expiresAt: refreshToken.exp,
-  });
+  await databaseService.refreshUserTokens(user.id, hashedRefreshToken, refreshToken.exp);
 
   return { accessToken: accessToken.token, refreshToken: refreshToken.token };
 };

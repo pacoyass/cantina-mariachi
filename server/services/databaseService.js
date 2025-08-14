@@ -200,7 +200,7 @@ export const databaseService = {
 
   async getOrderByNumber(orderNumber, tx) {
     const db = withTx(tx);
-    return await db.order.findUnique({ where: { orderNumber }, include: { orderItems: true, driver: true, user: true } });
+    return await db.order.findUnique({ where: { orderNumber }, include: { orderItems: true } });
   },
 
   async createOrderWithItems(payload, tx) {

@@ -376,9 +376,9 @@ export const logout = async (req, res) => {
     res.clearCookie('accessToken', { path: '/', httpOnly: true });
     res.clearCookie('refreshToken', { path: '/', httpOnly: true });
 
-    await LoggerService.logAudit(req.user.id, 'USER_LOGOUT_SUCCESS', req.user.id, { email: req.user.email, phone: req.user.phone });
-    await LoggerService.logNotification(req.user.id, 'WEBHOOK', 'user_logout', `User ${req.user.email} logged out`, 'SENT');
-    await sendWebhook('USER_LOGOUT', { userId: req.user.id, email: req.user.email, phone: req.user.phone });
+    await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_SUCCESS', req.user.userId, { email: req.user.email });
+    await LoggerService.logNotification(req.user.userId, 'WEBHOOK', 'user_logout', `User ${req.user.email} logged out`, 'SENT');
+    await sendWebhook('USER_LOGOUT', { userId: req.user.userId, email: req.user.email });
     return createResponse(res, 200, 'Signed out successfully', { nextSteps: 'Log in again to access your account' });
   } catch (error) {
     await LoggerService.logError('Logout failed', error.stack, { userId: req.user?.id });

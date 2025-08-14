@@ -23,16 +23,23 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(helmet());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? (process.env.CORS_ORIGIN?.split(',') || []) : (process.env.CORS_ORIGIN?.split(',') || '*'),
+  origin: (origin, cb) => {
+    const origins = (process.env.CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
+    if (!origins.length) return cb(null, true);
+    if (!origin) return cb(null, true);
+    return cb(null, origins.includes(origin));
+  },
   credentials: true,
 }));
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || process.env.COOKIE_SECRET || 'dev-session-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' },
-}));
+if (process.env.ENABLE_EXPRESS_SESSION === 'true') {
+  app.use(session({
+    secret: process.env.SESSION_SECRET || process.env.COOKIE_SECRET || 'dev-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' },
+  }));
+}
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 if (process.env.ALLOW_URLENCODED === '1') {
   app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
