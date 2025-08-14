@@ -28,10 +28,12 @@ class CacheService {
       }
     });
 
-    this.#client.connect().catch((err) => {
-      const errorMessage = typeof err === 'string' ? err : err.message || err.code || 'Unknown error';
-      console.error('Redis connection failed:', errorMessage);
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      this.#client.connect().catch((err) => {
+        const errorMessage = typeof err === 'string' ? err : err.message || err.code || 'Unknown error';
+        console.error('Redis connection failed:', errorMessage);
+      });
+    }
   }
 
   async get(key) {
