@@ -303,10 +303,17 @@ export const LoggerService = {
     for (const model in logsByModel) {
       try {
         const entries = logsByModel[model];
-        if (entries.length > 1) {
-          await prisma[model].createMany({ data: entries, skipDuplicates: true });
+        const client = prisma[model];
+        if (entries.length > 1 && typeof client?.createMany === 'function') {
+          await client.createMany({ data: entries, skipDuplicates: true });
         } else {
-          await prisma[model].create({ data: entries[0] });
+          if (entries.length > 1 && typeof client?.createMany !== 'function') {
+            for (const entry of entries) {
+              await client.create({ data: entry });
+            }
+          } else {
+            await client.create({ data: entries[0] });
+          }
         }
       } catch (err) {
         for (const data of logsByModel[model]) {
