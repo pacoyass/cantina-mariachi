@@ -26,10 +26,15 @@
   --color-ring: var(--ring);
 
   --radius: 0.5rem;
+
+  /* Mexican palette accents */
+  --mex-red:  hsl(3 74% 55%);
+  --mex-green:hsl(153 46% 39%);
+  --mex-gold: hsl(46 92% 60%);
 }
 
 :root {
-  /* Light theme HSL values (shadcn defaults) */
+  /* Light theme HSL values */
   --background: hsl(0 0% 100%);
   --foreground: hsl(222.2 84% 4.9%);
 
@@ -39,8 +44,8 @@
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(222.2 84% 4.9%);
 
-  --primary: hsl(222.2 47.4% 11.2%);
-  --primary-foreground: hsl(210 40% 98%);
+  --primary: var(--mex-green);
+  --primary-foreground: hsl(0 0% 100%);
 
   --secondary: hsl(210 40% 96.1%);
   --secondary-foreground: hsl(222.2 47.4% 11.2%);
@@ -48,11 +53,11 @@
   --muted: hsl(210 40% 96.1%);
   --muted-foreground: hsl(215.4 16.3% 46.9%);
 
-  --accent: hsl(210 40% 96.1%);
-  --accent-foreground: hsl(222.2 47.4% 11.2%);
+  --accent: var(--mex-gold);
+  --accent-foreground: hsl(24 9.8% 10%);
 
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(210 40% 98%);
+  --destructive: var(--mex-red);
+  --destructive-foreground: hsl(0 0% 100%);
 
   --border: hsl(214.3 31.8% 91.4%);
   --input: hsl(214.3 31.8% 91.4%);
@@ -64,14 +69,14 @@
   --background: hsl(222.2 84% 4.9%);
   --foreground: hsl(210 40% 98%);
 
-  --card: hsl(222.2 84% 4.9%);
+  --card: hsl(222.2 84% 6%);
   --card-foreground: hsl(210 40% 98%);
 
   --popover: hsl(222.2 84% 4.9%);
   --popover-foreground: hsl(210 40% 98%);
 
-  --primary: hsl(210 40% 98%);
-  --primary-foreground: hsl(222.2 47.4% 11.2%);
+  --primary: hsl(151 45% 44%);
+  --primary-foreground: hsl(210 40% 98%);
 
   --secondary: hsl(217.2 32.6% 17.5%);
   --secondary-foreground: hsl(210 40% 98%);
@@ -79,10 +84,10 @@
   --muted: hsl(217.2 32.6% 17.5%);
   --muted-foreground: hsl(215 20.2% 65.1%);
 
-  --accent: hsl(217.2 32.6% 17.5%);
-  --accent-foreground: hsl(210 40% 98%);
+  --accent: hsl(46 88% 62%);
+  --accent-foreground: hsl(222.2 84% 4.9%);
 
-  --destructive: hsl(0 62.8% 30.6%);
+  --destructive: hsl(3 70% 53%);
   --destructive-foreground: hsl(210 40% 98%);
 
   --border: hsl(217.2 32.6% 17.5%);
@@ -98,4 +103,11 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+/* Accent divider used in hero */
+.mex-divider {
+  background: linear-gradient(90deg, var(--mex-green), var(--mex-gold), var(--mex-red));
+  height: 4px;
+  border-radius: 9999px;
 }
