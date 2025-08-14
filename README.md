@@ -136,7 +136,7 @@ cantina-mariachi/
 
 ### Orders
 - `POST /api/orders` - Create new order
-- `GET /api/orders/:orderNumber` - Get order details
+- `GET /api/orders/:orderNumber` - Get order details (requires auth)
 - `PATCH /api/orders/:orderNumber/status` - Update order status
 
 ### Reservations
@@ -186,7 +186,7 @@ Built with ❤️ for authentic Mexican cuisine in Casablanca 🌮
 ## Environment
 
 - DATABASE_URL, REDIS_URL
-- PASETO_PRIVATE_KEY, PASETO_PUBLIC_KEY
+- PASETO_PRIVATE_KEY, PASETO_PUBLIC_KEY (generate using `node -e "(async()=>{const {V4}=require('paseto');const kp=await V4.generateKey('public');console.log('PRIVATE=',kp.export({type:'secret'}).toString());console.log('PUBLIC=',kp.export({type:'public'}).toString());})();"`)
 - SESSION_SECRET, COOKIE_SECRET
 - CORS_ORIGIN (comma-separated for prod)
 - JSON_BODY_LIMIT (default 1mb), ALLOW_URLENCODED (default 0)
