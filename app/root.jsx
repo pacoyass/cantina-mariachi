@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import { ThemeProvider } from "next-themes";
 import "./app.css";
 
 export const links = () => [
@@ -22,23 +23,19 @@ export const links = () => [
   },
 ];
 
-function ThemeScript() {
-  const code = `try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark')}}catch{}`;
-  return <script dangerouslySetInnerHTML={{ __html: code }} />;
-}
-
 export function Layout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <ThemeScript />
       </head>
       <body>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -1,31 +1,12 @@
-import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { useTheme } from "next-themes";
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    const initial = document.documentElement.classList.contains("dark");
-    setDark(initial);
-  }, []);
-
+  const { theme, setTheme } = useTheme();
+  const dark = theme === "dark";
   function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch {}
+    setTheme(dark ? "light" : "dark");
   }
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("theme");
-      if (saved === "dark") {
-        document.documentElement.classList.add("dark");
-        setDark(true);
-      }
-    } catch {}
-  }, []);
-
   return (
     <Button variant="ghost" onClick={toggle} aria-label="Toggle theme">
       {dark ? "🌙" : "☀️"}
