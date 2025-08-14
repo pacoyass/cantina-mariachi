@@ -1,5 +1,3 @@
-import { MetaFunction } from "react-router";
-
 export const meta = () => [
   { title: "Menu - Cantina" },
   { name: "description", content: "Explore our categories and items" },
