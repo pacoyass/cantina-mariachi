@@ -1,17 +1,28 @@
-import { index, route, prefix } from "@react-router/dev/routes";
+import { route, index, layout, prefix } from "@react-router/dev/routes";
 
 export default [
-  index("routes/home.jsx"),
-  route("menu", "routes/menu.jsx"),
-  prefix("orders", [
-    index("routes/orders.index.jsx"),
-    route(":orderNumber", "routes/orders.$orderNumber.jsx"),
-    route("track", "routes/orders.track.jsx"),
+  layout("routes/shell.jsx", [
+    index("routes/home.jsx"),
+    route("menu", "routes/menu.jsx"),
+
+    // Auth group under its own layout
+    layout("routes/auth/layout.jsx", [
+      route("login", "routes/login.jsx"),
+      route("register", "routes/register.jsx"),
+      route("logout", "routes/logout.jsx"),
+    ]),
+
+    // Orders group
+    prefix("orders", [
+      index("routes/orders.index.jsx"),
+      route(":orderNumber", "routes/orders.$orderNumber.jsx"),
+      route("track", "routes/orders.track.jsx"),
+    ]),
+
+    route("reservations", "routes/reservations.jsx"),
+    route("account", "routes/account.jsx"),
+    route("admin", "routes/admin.jsx"),
   ]),
-  route("reservations", "routes/reservations.jsx"),
-  route("account", "routes/account.jsx"),
-  route("login", "routes/login.jsx"),
-  route("register", "routes/register.jsx"),
-  route("admin", "routes/admin.jsx"),
+
   route("*", "routes/not-found.jsx"),
 ];
