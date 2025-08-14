@@ -13,7 +13,6 @@ function makePrisma() {
       findUnique: jest.fn(),
       create: jest.fn(),
       findMany: jest.fn(),
-      deleteMany: jest.fn(),
     },
     blacklistedToken: {
       findFirst: jest.fn().mockResolvedValue(null),
