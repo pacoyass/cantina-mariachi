@@ -5,7 +5,7 @@ A modern, responsive website for Cantina Mariachi, an authentic Mexican restaura
 ## 🌮 Features
 
 ### Frontend
-- **Modern React Router Setup**: Using the latest React Router v7 with custom server
+- **Modern React Router Setup**: Using the latest React Router v7 with a custom Node server
 - **Responsive Design**: Mobile-first design with Tailwind CSS
 - **Mexican-Themed UI**: Vibrant colors, custom fonts (Fredoka), and festive styling
 - **SEO Optimized**: Proper meta tags, structured data, and semantic HTML
@@ -23,22 +23,20 @@ A modern, responsive website for Cantina Mariachi, an authentic Mexican restaura
 - **PostgreSQL Database**: Robust data storage with Prisma ORM
 - **Order Management**: Complete order processing and tracking
 - **Reservation System**: Table booking with availability checking
-- **Contact Forms**: Message handling with email notifications
-- **Newsletter**: Subscription management system
+- **Notifications & Webhooks**: Dispatch notifications and manage outgoing webhooks
 
 ### Technical Features
-- **TypeScript**: Full type safety across frontend and backend
+- **JavaScript (ESM)** across frontend and backend
 - **Prisma ORM**: Type-safe database operations
-- **Email Integration**: Nodemailer for notifications
-- **Security**: Helmet.js, CORS, input validation
-- **Modern CSS**: Custom animations, gradients, and Mexican-themed styling
+- **Email/Providers Ready**: Nodemailer/Twilio/TBD (providers are optional)
+- **Security**: Helmet, strict CORS in production, zod input validation, Redis-backed rate limits
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - PostgreSQL database
-- SMTP email service (Gmail, etc.)
+- Redis (recommended for rate limiting; app falls back gracefully in dev/tests)
 
 ### 1. Clone the Repository
 ```bash
@@ -48,32 +46,38 @@ cd cantina-mariachi
 
 ### 2. Install Dependencies
 ```bash
-npm install
+npm ci
 ```
 
 ### 3. Environment Setup
-Create a `.env` file in the root directory:
+Create a `.env` file in the repo root (see `.env.example` for the full list):
 
 ```env
 # Database
 DATABASE_URL="postgresql://username:password@localhost:5432/cantina_mariachi?schema=public"
 
 # PASETO keys (required for auth)
-# These are required for login/token flows. In development/tests, the server will start but token operations will fail until configured.
 PASETO_PRIVATE_KEY="<your-private-key>"
 PASETO_PUBLIC_KEY="<your-public-key>"
 
-# Optional retention windows (days)
+# Retention windows (days)
 AUTH_DATA_RETENTION_DAYS=30
 USER_DATA_RETENTION_DAYS=90
 WEBHOOK_RETENTION_DAYS=30
 
 # Server Configuration
-NODE_ENV="development"
-PORT=3000
-SESSION_SECRET="replace-with-strong-secret"
+NODE_ENV=development
+PORT=3333
 COOKIE_SECRET="replace-with-strong-cookie-secret"
+SESSION_SECRET="replace-with-strong-secret"
+ENABLE_EXPRESS_SESSION=false
 REDIS_URL="redis://localhost:6379"
+CORS_ORIGIN="http://localhost:3333,http://localhost:5173"
+```
+
+Tip: generate PASETO keys (example):
+```bash
+node -e "(async()=>{const {V4}=require('paseto');const kp=await V4.generateKey('public');console.log('PRIVATE=',kp.export({type:'secret'}).toString());console.log('PUBLIC=',kp.export({type:'public'}).toString());})();"
 ```
 
 ### 4. Database Setup
@@ -82,73 +86,63 @@ REDIS_URL="redis://localhost:6379"
 npx prisma generate
 
 # Run database migrations
-npx prisma migrate dev --name init
+echo "Use: npx prisma migrate dev --name init" # or migrate deploy in CI
 
-# Seed the database with menu data
-npx prisma db seed
+# Seed the database (optional)
+# npx prisma db seed
 ```
 
 ### 5. Development Server
 ```bash
 npm run dev
 ```
-
-The application will be available at `http://localhost:3000`
+The server selects an available port (default 3333). Open:
+- App: http://localhost:3333
+- API docs (Swagger UI): http://localhost:3333/api/docs
+- OpenAPI JSON: http://localhost:3333/api/openapi.json
 
 ## 📁 Project Structure
 
 ```
 cantina-mariachi/
-├── app/
-│   ├── components/          # Reusable React components
-│   │   ├── Navigation.tsx   # Main navigation
-│   │   └── Footer.tsx       # Site footer
-│   ├── routes/              # Page components
-│   │   ├── home.tsx         # Homepage
-│   │   ├── menu.tsx         # Menu page
-│   │   ├── order.tsx        # Online ordering
-│   │   ├── reservations.tsx # Table booking
-│   │   ├── about.tsx        # About us
-│   │   └── contact.tsx      # Contact page
-│   ├── app.css             # Global styles
-│   ├── root.tsx            # Root layout
-│   └── routes.ts           # Route configuration
-├── server/
-│   ├── routes/             # API endpoints
-│   ├── controllers/        # Controllers
-│   ├── services/           # Services
-│   ├── middleware/         # Middleware
-│   ├── config/             # Config (database, retention)
-│   └── utils/              # Helpers (logger, response)
-├── prisma/
-│   ├── schema.prisma       # Database schema
-│   └── seed.js             # Database seeding
-├── public/                 # Static assets
-└── server.js               # Server entry point
+├── app/                      # Frontend (React Router)
+│   ├── routes/               # Page components
+│   ├── root.jsx              # Root layout
+│   ├── entry.client.jsx      # Client entry
+│   └── entry.server.jsx      # SSR entry
+├── server/                   # Backend
+│   ├── routes/               # API endpoints
+│   ├── controllers/          # Controllers
+│   ├── services/             # Services (auth/cache/DB/webhooks)
+│   ├── middleware/           # Auth, RBAC, validation, rateLimit
+│   ├── config/               # Prisma client, retention
+│   └── utils/                # Logger, response helpers, lock
+├── prisma/                   # Prisma schema and seeds
+└── server.js                 # Node server entry (dev/prod)
 ```
 
-## 🔧 API Endpoints
+## 🔧 API Highlights
 
-### Auth
-- `GET /api/auth/sessions` — List refresh token sessions for the current user
-  - Query params: `page` (default 1), `pageSize` (default 20, max 100)
-  - Response: `{ sessions, page, pageSize, hasMore }`
+- Auth: POST /api/auth/login, POST /api/auth/register, GET /api/auth/sessions, DELETE /api/auth/sessions/:id, POST /api/auth/logout, POST /api/auth/logout-all, POST /api/auth/logout-others
+- Users: GET/PUT /api/users/me, PUT /api/users/me/password
+- Menu: GET /api/menu/categories, GET /api/menu/items, POST/PUT/DELETE /api/menu/* (ADMIN/OWNER)
+- Orders: POST /api/orders, GET /api/orders/:orderNumber (requires auth), GET /api/orders/track/by?orderNumber=&code=, PATCH /api/orders/:orderNumber/status (staff), GET /api/orders/mine/list
+- Drivers: CRUD under /api/drivers (ADMIN/OWNER), PATCH status/link-user, GET assignments, POST /api/drivers/assign
+- Cash: POST /api/cash, /confirm, /verify, GET /api/cash/summary/driver/:id (ADMIN/OWNER)
+- Reservations: POST /api/reservations, GET /api/reservations/availability, GET (ADMIN/OWNER), PATCH /api/reservations/:id/status, POST /api/reservations/:id/cancel
+- Logs: GET /api/logs/activity, /notifications, /orders (ADMIN/OWNER)
+- Notifications: POST /api/notifications/dispatch (ADMIN/OWNER)
+- Webhooks admin: POST/GET /api/webhooks, POST /api/webhooks/{id}/enable, /{id}/disable, POST /api/webhooks/trigger (ADMIN/OWNER)
+- Metrics: GET /api/metrics (ADMIN/OWNER)
 
-### Orders
-- `POST /api/orders` - Create new order
-- `GET /api/orders/:orderNumber` - Get order details (requires auth)
-- `PATCH /api/orders/:orderNumber/status` - Update order status
-
-### Reservations
-- `POST /api/reservations` - Create reservation
-- `GET /api/reservations/availability/:date` - Check availability
+For full details, see Swagger UI at `/api/docs`.
 
 ## 🔐 Security & Retention
-- Access tokens are blacklisted on logout and enforced by middleware.
-- Cleanup jobs use retention windows (configurable via env):
-  - `AUTH_DATA_RETENTION_DAYS` for auth tokens
-  - `USER_DATA_RETENTION_DAYS` for user-related logs/data
-  - `WEBHOOK_RETENTION_DAYS` for webhooks/logs
+- Helmet, strict production CORS with explicit allowlist
+- Zod validation on inputs; minimal PII on public endpoints
+- Redis-backed rate limiting with in-memory fallback
+- Token blacklisting on logout; refresh rotation supported
+- Cron jobs: cleanup auth data, logs retention, menu cache, order tracking, drivers, cash, reservations, notifications
 
 ## 🚀 Deployment
 
@@ -159,45 +153,19 @@ npm start
 ```
 
 ### Environment Variables for Production
-Update your `.env` file with production values and PASETO keys.
+Update your `.env` with production values (DB, Redis, PASETO keys, CORS_ORIGIN). Set `ENABLE_EXPRESS_SESSION=false` unless sessions are explicitly needed.
 
-## 🤝 Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
----
-
-Built with ❤️ for authentic Mexican cuisine in Casablanca 🌮
-
-## API reference (selected)
-
-- Auth: POST /api/auth/login, POST /api/auth/register, GET /api/auth/sessions, DELETE /api/auth/sessions/:id
-- Menu: GET /api/menu/categories, GET /api/menu/items, POST/PUT/DELETE /api/menu/* (ADMIN/OWNER)
-- Orders: POST /api/orders, GET /api/orders/:orderNumber, GET /api/orders/track/by?orderNumber=&code=, PATCH /api/orders/:orderNumber/status (staff)
-- Drivers: CRUD under /api/drivers (ADMIN/OWNER), POST /api/drivers/assign
-- Cash: POST /api/cash, /confirm, /verify, GET /api/cash/summary/driver/:id (ADMIN/OWNER)
-- Reservations: POST /api/reservations, GET /api/reservations/availability, GET/PATCH (ADMIN/OWNER)
-- Notifications: POST /api/notifications/dispatch (ADMIN/OWNER)
-- Webhooks admin: POST/GET /api/webhooks, enable/disable, POST /api/webhooks/trigger
-
-## Environment
-
+## Environment quick list
 - DATABASE_URL, REDIS_URL
-- PASETO_PRIVATE_KEY, PASETO_PUBLIC_KEY (generate using `node -e "(async()=>{const {V4}=require('paseto');const kp=await V4.generateKey('public');console.log('PRIVATE=',kp.export({type:'secret'}).toString());console.log('PUBLIC=',kp.export({type:'public'}).toString());})();"`)
-- SESSION_SECRET, COOKIE_SECRET
-- CORS_ORIGIN (comma-separated for prod)
+- PASETO_PRIVATE_KEY, PASETO_PUBLIC_KEY
+- SESSION_SECRET, COOKIE_SECRET, ENABLE_EXPRESS_SESSION
+- CORS_ORIGIN (comma-separated)
 - JSON_BODY_LIMIT (default 1mb), ALLOW_URLENCODED (default 0)
 
 ## Session policy
-
-- Multi-session tokens; list/revoke per-session, logout others/all supported
+- Multi-session tokens; list/revoke per-session; logout others/all
 - Access tokens short-lived; refresh tokens rotated; blacklisting enforced
 
-## Security
-
-- Helmet, strict CORS in production, Redis rate limits
-- Zod validation for inputs; normalized emails; minimal PII on public endpoints
-- Cleanup cron jobs for tokens, logs, menu cache, orders tracking, drivers, cash, reservations, notifications
+## Notes
+- Tests: Redis connection disabled in tests to avoid lingering handles
+- Graceful shutdown flushes logs and disconnects Redis
