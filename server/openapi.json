@@ -136,43 +136,46 @@
     "/healthz": {
       "get": { "summary": "Health", "responses": { "200": { "description": "OK" } } }
     },
-    "/menu/categories": {
-      "get": { "summary": "List categories", "responses": { "200": { "description": "OK" } } }
-    },
-    "/menu/items": {
+    "/auth/token": {
       "get": {
-        "summary": "List items",
-        "parameters": [ { "name": "categoryId", "in": "query", "required": false, "schema": { "type": "string" } } ],
-        "responses": { "200": { "description": "OK" } }
+        "summary": "Get token",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
       }
     },
 
-    "/orders": {
-      "post": {
-        "summary": "Create order",
-        "requestBody": {
-          "required": true,
-          "content": { "application/json": { "schema": { "type": "object", "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/OrderItemInput" } } }, "required": ["items"] } } }
-        },
-        "responses": { "201": { "description": "Created" }, "400": { "description": "Bad Request" }, "401": { "description": "Unauthorized" } },
-        "security": [ { "BearerAuth": [] } ]
-      }
+    "/users/me": {
+      "get": { "summary": "Get me", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] },
+      "put": { "summary": "Update me", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] }
     },
-    "/orders/{orderNumber}": {
-      "get": {
-        "summary": "Get order",
-        "parameters": [ { "name": "orderNumber", "in": "path", "required": true, "schema": { "type": "string" } } ],
-        "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } },
-        "security": [ { "BearerAuth": [] } ]
-      }
+    "/users/me/password": {
+      "put": { "summary": "Change password", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] }
     },
-    "/orders/track/by": {
-      "get": {
-        "summary": "Track order",
-        "parameters": [ { "name": "orderNumber", "in": "query", "required": true, "schema": { "type": "string" } }, { "name": "code", "in": "query", "required": true, "schema": { "type": "string" } } ],
-        "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } }
-      }
+
+    "/orders/mine/list": {
+      "get": { "summary": "List my orders", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] }
     },
+    "/orders/{orderNumber}/status": {
+      "patch": { "summary": "Update order status", "responses": { "200": { "description": "OK" }, "400": { "description": "Bad Request" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }
+    },
+
+    "/logs/activity": {
+      "get": { "summary": "Activity logs", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }
+    },
+    "/logs/notifications": {
+      "get": { "summary": "Notification logs", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }
+    },
+    "/logs/orders": {
+      "get": { "summary": "Orders logs", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }
+    },
+
+    "/menu/categories": { "get": { "summary": "List categories", "responses": { "200": { "description": "OK" } } }, "post": { "summary": "Create category", "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }, "delete": { "summary": "Delete category", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/menu/items": { "get": { "summary": "List items", "responses": { "200": { "description": "OK" } } }, "post": { "summary": "Create menu item", "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }, "delete": { "summary": "Delete menu item", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/menu/items/{id}": {
+      "put": { "summary": "Update menu item", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] },
+      "delete": { "summary": "Delete menu item", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] }
+    },
+    "/menu/items/{id}/availability": { "patch": { "summary": "Toggle menu item availability", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
 
     "/drivers": {
       "get": {
@@ -237,25 +240,10 @@
       }
     },
 
-    "/webhooks": {
-      "get": {
-        "summary": "List webhooks",
-        "responses": { "200": { "description": "OK" } },
-        "security": [ { "BearerAuth": [] } ]
-      },
-      "post": {
-        "summary": "Register webhook",
-        "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
-        "security": [ { "BearerAuth": [] } ]
-      }
-    },
-    "/webhooks/trigger": {
-      "post": {
-        "summary": "Trigger webhooks",
-        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
-        "security": [ { "BearerAuth": [] } ]
-      }
-    },
+    "/webhooks": { "post": { "summary": "Register webhook", "responses": { "201": { "description": "Created" } }, "security": [ { "BearerAuth": [] } ] }, "get": { "summary": "List webhooks", "responses": { "200": { "description": "OK" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/webhooks/{id}/enable": { "post": { "summary": "Enable webhook", "responses": { "200": { "description": "OK" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/webhooks/{id}/disable": { "post": { "summary": "Disable webhook", "responses": { "200": { "description": "OK" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/webhooks/trigger": { "post": { "summary": "Trigger webhooks", "responses": { "200": { "description": "OK" } }, "security": [ { "BearerAuth": [] } ] } },
 
     "/metrics": {
       "get": {
@@ -263,6 +251,11 @@
         "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
         "security": [ { "BearerAuth": [] } ]
       }
-    }
+    },
+    "/cash/summary/driver/{id}": { "get": { "summary": "Driver daily summary", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
+
+    "/reservations/availability": { "get": { "summary": "Check availability", "responses": { "200": { "description": "OK" } } } },
+    "/reservations/{id}/status": { "patch": { "summary": "Update reservation status", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/reservations/{id}/cancel": { "post": { "summary": "Cancel reservation", "responses": { "200": { "description": "OK" } } } }
   }
 }
