@@ -1,61 +1,268 @@
 {
   "openapi": "3.0.3",
   "info": { "title": "Cantina API", "version": "1.0.0" },
-  "servers": [{ "url": "/api" }],
+  "servers": [ { "url": "/api" } ],
   "components": {
-    "securitySchemes": { "BearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "PASETO" } },
+    "securitySchemes": {
+      "BearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "PASETO" }
+    },
     "schemas": {
-      "Error": { "type": "object", "properties": { "status": { "type": "string", "example": "error" }, "error": { "type": "object", "properties": { "type": { "type": "string" }, "message": { "type": "string" }, "details": { "type": "object", "nullable": true }, "code": { "type": "integer" } }, "required": ["type", "message", "code"] }, "timestamp": { "type": "string", "format": "date-time" } }, "required": ["status", "error", "timestamp"] },
-      "Success": { "type": "object", "properties": { "status": { "type": "string", "example": "success" }, "message": { "type": "string" }, "data": { "type": "object" }, "timestamp": { "type": "string", "format": "date-time" } }, "required": ["status", "message", "data", "timestamp"] },
-      "AuthRegisterRequest": { "type": "object", "properties": { "email": { "type": "string", "format": "email" }, "password": { "type": "string", "minLength": 8 }, "name": { "type": "string" } }, "required": ["email","password","name"] },
-      "AuthLoginRequest": { "type": "object", "properties": { "email": { "type": "string", "format": "email" }, "password": { "type": "string" } }, "required": ["email","password"] },
-      "AuthTokenResponse": { "type": "object", "properties": { "status": { "type": "string" }, "message": { "type": "string" }, "data": { "type": "object", "properties": { "accessToken": { "type": "string" }, "refreshToken": { "type": "string" } } }, "timestamp": { "type": "string" } }, "required": ["status","data","timestamp"] },
-      "SessionListResponse": { "type": "object", "properties": { "status": { "type": "string" }, "message": { "type": "string" }, "data": { "type": "object", "properties": { "sessions": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "createdAt": { "type": "string" }, "ip": { "type": "string" }, "userAgent": { "type": "string" } } } } } }, "timestamp": { "type": "string" } } },
-      "Category": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "description": { "type": "string" }, "order": { "type": "integer" } }, "required": ["id", "name", "order"] },
-      "MenuItem": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "description": { "type": "string" }, "price": { "type": "number" }, "available": { "type": "boolean" }, "categoryId": { "type": "string" } }, "required": ["id", "name", "price", "available", "categoryId"] },
-      "OrderItemInput": { "type": "object", "properties": { "menuItemId": { "type": "string" }, "quantity": { "type": "integer", "minimum": 1 } }, "required": ["menuItemId", "quantity"] },
-      "Order": { "type": "object", "properties": { "id": { "type": "string" }, "orderNumber": { "type": "integer" }, "status": { "type": "string", "enum": ["PENDING","CONFIRMED","PREPARING","READY","OUT_FOR_DELIVERY","DELIVERED","CANCELLED"] }, "total": { "type": "number" }, "trackingCode": { "type": "string" }, "createdAt": { "type": "string", "format": "date-time" } }, "required": ["id","orderNumber","status","total","createdAt"] },
-      "OrderCreateRequest": { "type": "object", "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/OrderItemInput" } }, "notes": { "type": "string" }, "delivery": { "type": "object", "nullable": true, "properties": { "address": { "type": "string" }, "phone": { "type": "string" } } } }, "required": ["items"] },
-      "OrderCreatedResponse": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "order": { "$ref": "#/components/schemas/Order" } } } } } ] },
-      "Driver": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "phone": { "type": "string" }, "status": { "type": "string", "enum": ["ACTIVE","INACTIVE","OFFLINE"] } }, "required": ["id","name","phone","status"] },
-      "DriverCreateRequest": { "type": "object", "properties": { "name": { "type": "string" }, "phone": { "type": "string" } }, "required": ["name","phone"] },
-      "CashTransaction": { "type": "object", "properties": { "id": { "type": "string" }, "driverId": { "type": "string" }, "amount": { "type": "number" }, "status": { "type": "string", "enum": ["PENDING","CONFIRMED","VERIFIED"] } }, "required": ["id","driverId","amount","status"] },
-      "CashCreateRequest": { "type": "object", "properties": { "driverId": { "type": "string" }, "amount": { "type": "number" } }, "required": ["driverId","amount"] },
-      "Reservation": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" }, "phone": { "type": "string" }, "date": { "type": "string", "format": "date" }, "time": { "type": "string" }, "partySize": { "type": "integer" }, "status": { "type": "string", "enum": ["PENDING","CONFIRMED","CANCELLED","COMPLETED"] } }, "required": ["id","name","phone","date","time","partySize","status"] },
-      "ReservationCreateRequest": { "type": "object", "properties": { "name": { "type": "string" }, "phone": { "type": "string" }, "date": { "type": "string", "format": "date" }, "time": { "type": "string" }, "partySize": { "type": "integer", "minimum": 1 } }, "required": ["name","phone","date","time","partySize"] },
-      "NotificationDispatchRequest": { "type": "object", "properties": { "type": { "type": "string", "enum": ["EMAIL","SMS","PUSH","WEBHOOK"] }, "target": { "type": "string" }, "content": { "type": "string" } }, "required": ["type","target","content"] },
-      "NotificationDispatchResponse": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "success": { "type": "boolean" } } } } } ] },
-      "Webhook": { "type": "object", "properties": { "id": { "type": "string" }, "url": { "type": "string", "format": "uri" }, "status": { "type": "string", "enum": ["ACTIVE","DISABLED"] } }, "required": ["id","url","status"] },
-      "WebhookRegisterRequest": { "type": "object", "properties": { "url": { "type": "string", "format": "uri" }, "event": { "type": "string" } }, "required": ["url","event"] },
-      "WebhookTriggerRequest": { "type": "object", "properties": { "event": { "type": "string" }, "payload": { "type": "object" } }, "required": ["event","payload"] }
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "error" },
+          "error": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "message": { "type": "string" },
+              "details": { "type": "object", "nullable": true },
+              "code": { "type": "integer" }
+            },
+            "required": ["type", "message", "code"]
+          },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["status", "error", "timestamp"]
+      },
+      "Success": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "success" },
+          "message": { "type": "string" },
+          "data": { "type": "object" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["status", "message", "data", "timestamp"]
+      },
+      "AuthRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 },
+          "name": { "type": "string" }
+        },
+        "required": ["email", "password", "name"]
+      },
+      "AuthLoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        },
+        "required": ["email", "password"]
+      },
+      "OrderItemInput": {
+        "type": "object",
+        "properties": {
+          "menuItemId": { "type": "string" },
+          "quantity": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["menuItemId", "quantity"]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "status": { "type": "string", "enum": ["PENDING", "CONFIRMED", "PREPARING", "READY", "OUT_FOR_DELIVERY", "DELIVERED", "CANCELLED", "COMPLETED"] },
+          "total": { "type": "number" },
+          "trackingCode": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "orderNumber", "status", "total", "createdAt"]
+      }
     }
   },
   "paths": {
-    "/auth/register": { "post": { "summary": "Register", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthRegisterRequest" } } } }, "responses": { "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthTokenResponse" } } } }, "400": { "description": "Bad Request" } } } },
-    "/auth/login": { "post": { "summary": "Login", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthLoginRequest" } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthTokenResponse" } } } }, "401": { "description": "Unauthorized" } } } },
-    "/auth/refresh-token": { "post": { "summary": "Refresh token", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthTokenResponse" } } } } } },
-    "/auth/logout": { "post": { "summary": "Logout", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/auth/token": { "get": { "summary": "Get token", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/auth/sessions": { "get": { "summary": "List sessions", "parameters": [ { "name": "page", "in": "query", "schema": { "type": "integer" } }, { "name": "pageSize", "in": "query", "schema": { "type": "integer" } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SessionListResponse" } } } }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/auth/logout-all": { "post": { "summary": "Logout all sessions", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/auth/logout-others": { "post": { "summary": "Logout other sessions", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/auth/sessions/{id}": { "delete": { "summary": "Revoke session by id", "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ], "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
+    "/auth/register": {
+      "post": {
+        "summary": "Register",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthRegisterRequest" } } } },
+        "responses": { "201": { "description": "Created" }, "400": { "description": "Bad Request" } }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthLoginRequest" } } } },
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh token",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/auth/sessions": {
+      "get": {
+        "summary": "List sessions",
+        "parameters": [ { "name": "page", "in": "query", "schema": { "type": "integer" } }, { "name": "pageSize", "in": "query", "schema": { "type": "integer" } } ],
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/auth/logout-all": {
+      "post": {
+        "summary": "Logout all sessions",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/auth/logout-others": {
+      "post": {
+        "summary": "Logout other sessions",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/auth/sessions/{id}": {
+      "delete": {
+        "summary": "Revoke session by id",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
 
-    "/healthz": { "get": { "summary": "Health", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Success" } } } } } },
-    "/menu/categories": { "get": { "summary": "List categories", "responses": { "200": { "description": "OK", "headers": { "ETag": { "schema": { "type": "string" } } }, "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "categories": { "type": "array", "items": { "$ref": "#/components/schemas/Category" } }, "cached": { "type": "boolean" } } } } } ] } } } } },
-    "/menu/items": { "get": { "summary": "List items", "parameters": [ { "name": "categoryId", "in": "query", "required": false, "schema": { "type": "string" } } ], "responses": { "200": { "description": "OK", "headers": { "ETag": { "schema": { "type": "string" } } }, "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/MenuItem" } }, "cached": { "type": "boolean" } } } } } ] } } } } },
-    "/orders": { "post": { "summary": "Create order", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderCreateRequest" } } } }, "responses": { "201": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/OrderCreatedResponse" } } } }, "400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/orders/{orderNumber}": { "get": { "summary": "Get order", "parameters": [ { "name": "orderNumber", "in": "path", "required": true, "schema": { "type": "string" } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "order": { "$ref": "#/components/schemas/Order" } } } } } ] } } } }, "404": { "description": "Not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } } }, "security": [ { "BearerAuth": [] } ] } },
-    "/orders/track/by": { "get": { "summary": "Track order", "parameters": [ { "name": "orderNumber", "in": "query", "required": true, "schema": { "type": "string" } }, { "name": "code", "in": "query", "required": true, "schema": { "type": "string" } } ], "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "order": { "$ref": "#/components/schemas/Order" } } } } } ] } } } }, "404": { "description": "Not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } } } },
-    "/drivers": { "get": { "summary": "List drivers", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "drivers": { "type": "array", "items": { "$ref": "#/components/schemas/Driver" } } } } } } ] } } } }, "security": [ { "BearerAuth": [] } ] }, "post": { "summary": "Create driver", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/DriverCreateRequest" } } } }, "responses": { "201": { "description": "Created", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "driver": { "$ref": "#/components/schemas/Driver" } } } } } ] } } } }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/drivers/assign": { "post": { "summary": "Assign order to driver", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "orderId": { "type": "string" }, "driverId": { "type": "string" } }, "required": ["orderId","driverId"] } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Success" } } } }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/cash": { "post": { "summary": "Create cash transaction", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CashCreateRequest" } } } }, "responses": { "201": { "description": "Created", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "transaction": { "$ref": "#/components/schemas/CashTransaction" } } } } } ] } } } }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/cash/confirm": { "post": { "summary": "Confirm cash transaction", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "transactionId": { "type": "string" } }, "required": ["transactionId"] } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Success" } } } }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/cash/verify": { "post": { "summary": "Verify cash transaction", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "transactionId": { "type": "string" } }, "required": ["transactionId"] } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Success" } } } }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/reservations": { "get": { "summary": "List reservations", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "reservations": { "type": "array", "items": { "$ref": "#/components/schemas/Reservation" } } } } } } ] } } } }, "security": [ { "BearerAuth": [] } ] }, "post": { "summary": "Create reservation", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ReservationCreateRequest" } } } }, "responses": { "201": { "description": "Created", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "reservation": { "$ref": "#/components/schemas/Reservation" } } } } } ] } } } }, "401": { "description": "Unauthorized" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/notifications/dispatch": { "post": { "summary": "Dispatch notification", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NotificationDispatchRequest" } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NotificationDispatchResponse" } } } }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/webhooks": { "get": { "summary": "List webhooks", "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "webhooks": { "type": "array", "items": { "$ref": "#/components/schemas/Webhook" } } } } } } ] } } } }, "security": [ { "BearerAuth": [] } ] }, "post": { "summary": "Register webhook", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/WebhookRegisterRequest" } } } }, "responses": { "201": { "description": "Created", "content": { "application/json": { "schema": { "allOf": [ { "$ref": "#/components/schemas/Success" }, { "type": "object", "properties": { "data": { "type": "object", "properties": { "webhook": { "$ref": "#/components/schemas/Webhook" } } } } } ] } } } }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/webhooks/trigger": { "post": { "summary": "Trigger webhooks", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/WebhookTriggerRequest" } } } }, "responses": { "200": { "description": "OK", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Success" } } } }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } },
-    "/metrics": { "get": { "summary": "Prometheus metrics", "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } }, "security": [ { "BearerAuth": [] } ] } }
+    "/healthz": {
+      "get": { "summary": "Health", "responses": { "200": { "description": "OK" } } }
+    },
+    "/menu/categories": {
+      "get": { "summary": "List categories", "responses": { "200": { "description": "OK" } } }
+    },
+    "/menu/items": {
+      "get": {
+        "summary": "List items",
+        "parameters": [ { "name": "categoryId", "in": "query", "required": false, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+
+    "/orders": {
+      "post": {
+        "summary": "Create order",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/OrderItemInput" } } }, "required": ["items"] } } }
+        },
+        "responses": { "201": { "description": "Created" }, "400": { "description": "Bad Request" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/orders/{orderNumber}": {
+      "get": {
+        "summary": "Get order",
+        "parameters": [ { "name": "orderNumber", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/orders/track/by": {
+      "get": {
+        "summary": "Track order",
+        "parameters": [ { "name": "orderNumber", "in": "query", "required": true, "schema": { "type": "string" } }, { "name": "code", "in": "query", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" }, "404": { "description": "Not found" } }
+      }
+    },
+
+    "/drivers": {
+      "get": {
+        "summary": "List drivers",
+        "responses": { "200": { "description": "OK" } },
+        "security": [ { "BearerAuth": [] } ]
+      },
+      "post": {
+        "summary": "Create driver",
+        "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/drivers/assign": {
+      "post": {
+        "summary": "Assign order to driver",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+
+    "/cash": {
+      "post": {
+        "summary": "Create cash transaction",
+        "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/cash/confirm": {
+      "post": {
+        "summary": "Confirm cash transaction",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/cash/verify": {
+      "post": {
+        "summary": "Verify cash transaction",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+
+    "/reservations": {
+      "get": {
+        "summary": "List reservations",
+        "responses": { "200": { "description": "OK" } },
+        "security": [ { "BearerAuth": [] } ]
+      },
+      "post": {
+        "summary": "Create reservation",
+        "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+
+    "/notifications/dispatch": {
+      "post": {
+        "summary": "Dispatch notification",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+
+    "/webhooks": {
+      "get": {
+        "summary": "List webhooks",
+        "responses": { "200": { "description": "OK" } },
+        "security": [ { "BearerAuth": [] } ]
+      },
+      "post": {
+        "summary": "Register webhook",
+        "responses": { "201": { "description": "Created" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+    "/webhooks/trigger": {
+      "post": {
+        "summary": "Trigger webhooks",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    },
+
+    "/metrics": {
+      "get": {
+        "summary": "Prometheus metrics",
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" }, "403": { "description": "Forbidden" } },
+        "security": [ { "BearerAuth": [] } ]
+      }
+    }
   }
 }
