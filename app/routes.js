@@ -1,4 +1,4 @@
-import { route, index, layout, prefix } from "@react-router/dev/routes";
+import { route, index, layout } from "@react-router/dev/routes";
 
 export default [
   layout("routes/shell.jsx", [
@@ -12,8 +12,8 @@ export default [
       route("logout", "routes/logout.jsx"),
     ]),
 
-    // Orders group
-    prefix("orders", [
+    // Orders group (use layout for compatibility)
+    layout("routes/orders/layout.jsx", [
       index("routes/orders.index.jsx"),
       route(":orderNumber", "routes/orders.$orderNumber.jsx"),
       route("track", "routes/orders.track.jsx"),
