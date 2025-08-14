@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.35% </span>
+                <span class="strong">79.28% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>211/280</span>
+                <span class='fraction'>222/280</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.35% </span>
+                <span class="strong">69.62% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>108/158</span>
+                <span class='fraction'>110/158</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.08% </span>
+                <span class="strong">77.1% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>59/83</span>
+                <span class='fraction'>64/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.21% </span>
+                <span class="strong">83.13% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>202/255</span>
+                <span class='fraction'>212/255</span>
             </div>
         
             
@@ -676,9 +676,9 @@
 <a name='L611'></a><a href='#L611'>611</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">79x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -1261,26 +1261,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import prisma from '../config/database.js';
@@ -1870,27 +1870,27 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
 <span class="cstat-no" title="statement not covered" >    return await db.order.findMany({ where: { userId }, include: { orderItems: true }, orderBy: { createdAt: 'desc' } });</span>
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync createReservation(data, tx) {
-    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
-<span class="cstat-no" title="statement not covered" >    return await db.reservation.create({ data });</span>
+  async createReservation(data, tx) {
+    const db = withTx(tx);
+    return await db.reservation.create({ data });
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync listReservations(filters = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> tx) {
-    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
-<span class="cstat-no" title="statement not covered" >    return await db.reservation.findMany({ where: { ...(filters.status ? { status: filters.status } : {}), ...(filters.date ? { date: filters.date } : {}) }, orderBy: { createdAt: 'desc' } });</span>
+  async listReservations(filters = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> tx) {
+    const db = withTx(tx);
+    return await db.reservation.findMany({ where: { ...(filters.status ? { status: filters.status } : <span class="branch-1 cbranch-no" title="branch not covered" >{})</span>, ...(filters.date ? { date: filters.date } : <span class="branch-1 cbranch-no" title="branch not covered" >{})</span> }, orderBy: { createdAt: 'desc' } });
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync isReservationSlotAvailable(date, time, partySize, tx) {
-    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
+  async isReservationSlotAvailable(date, time, partySize, tx) {
+    const db = withTx(tx);
     // naive capacity: max 50 seats per slot
-    const existing = <span class="cstat-no" title="statement not covered" >await db.reservation.findMany({ where: { date, time, status: { in: ['PENDING','CONFIRMED','SEATED'] } } });</span>
-    const used = <span class="cstat-no" title="statement not covered" >existing.reduce(<span class="fstat-no" title="function not covered" >(a</span>cc, r) =&gt; <span class="cstat-no" title="statement not covered" >acc + r.partySize,</span> 0);</span>
-<span class="cstat-no" title="statement not covered" >    return used + partySize &lt;= 50;</span>
+    const existing = await db.reservation.findMany({ where: { date, time, status: { in: ['PENDING','CONFIRMED','SEATED'] } } });
+    const used = existing.reduce((acc, r) =&gt; acc + r.partySize, 0);
+    return used + partySize &lt;= 50;
   },
 &nbsp;
-<span class="fstat-no" title="function not covered" >  as</span>ync updateReservationStatus(id, status, tx) {
-    const db = <span class="cstat-no" title="statement not covered" >withTx(tx);</span>
-<span class="cstat-no" title="statement not covered" >    return await db.reservation.update({ where: { id }, data: { status } });</span>
+  async updateReservationStatus(id, status, tx) {
+    const db = withTx(tx);
+    return await db.reservation.update({ where: { id }, data: { status } });
   },
 &nbsp;
 };</pre></td></tr></table></pre>
@@ -1900,7 +1900,7 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-14T02:42:08.512Z
+                at 2025-08-14T02:47:37.208Z
             </div>
         <script src="../prettify.js"></script>
         <script>
