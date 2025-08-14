@@ -48,14 +48,16 @@ app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
 
 // Serve API docs BEFORE /api router so 404 handler does not intercept
 try {
-  const { readFileSync } = await import('node:fs');
   const { fileURLToPath } = await import('node:url');
   const { dirname, join } = await import('node:path');
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
   const openapiPath = join(__dirname, 'openapi.json');
-  const openapi = JSON.parse(readFileSync(openapiPath, 'utf-8'));
-  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi));
+
+  app.get('/api/openapi.json', (req, res) => {
+    res.sendFile(openapiPath);
+  });
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(undefined, { swaggerOptions: { url: '/api/openapi.json' } }));
 } catch (e) {
   console.warn('OpenAPI docs not served:', e?.message || e);
 }
