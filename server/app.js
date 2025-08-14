@@ -10,6 +10,7 @@ import { registerCronJobs } from "./cron/index.js";
 import { LoggerService } from "./utils/logger.js";
 import { createError } from "./utils/response.js";
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 import swaggerUi from 'swagger-ui-express';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -20,8 +21,66 @@ export const app = express();
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
+function generateNonce()
+{
+  return crypto.randomBytes( 24 ).toString( 'base64' );
+}
+app.use( ( req, res, next ) =>
+  {
+    const nonce = generateNonce();
+    res.locals.nonce = nonce; // Attach the nonce to the response object
+  
+    next();
+  } );
+// // Helmet security headers
+app.use(
+  helmet( {
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          ( req, res ) => `'nonce-${res.locals.nonce}'`,
+          "'strict-dynamic'",
+          process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+        ].filter( Boolean ),
+        styleSrc: [
+          "'self'",
+          ( req, res ) => `'nonce-${res.locals.nonce}'`,
+          "https://fonts.googleapis.com",
+          process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+        ].filter( Boolean ),
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: [
+          "'self'",
+          process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null,
+          process.env.NODE_ENV === 'production' ? 'https://your-api.com' : null,
+          // "ws://localhost:24678",
+          // "http://localhost:3333",
+          // "http://localhost:5173",
+          // "http://localhost:5174",
+          // "http://localhost:4173",
+        ].filter( Boolean ),
 
-app.use(helmet());
+
+        frameAncestors: ["'none'"], // No need for `frameguard: false`
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        upgradeInsecureRequests:
+          process.env.NODE_ENV === "production" ? ["upgrade-insecure-requests"] : [],
+      },
+    },
+    frameguard: false, // No need for X-Frame-Options
+  } )
+);
+app.use( helmet.hsts( {
+  maxAge: 31536000,
+  includeSubDomains: true,
+  preload: true
+} ) );
 app.use(cors({
   origin: (origin, cb) => {
     const origins = (process.env.CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -33,6 +92,7 @@ app.use(cors({
 }));
 
 if (process.env.ENABLE_EXPRESS_SESSION === 'true') {
+
   app.use(session({
     secret: process.env.SESSION_SECRET || process.env.COOKIE_SECRET || 'dev-session-secret',
     resave: false,
@@ -61,7 +121,38 @@ try {
 } catch (e) {
   console.warn('OpenAPI docs not served:', e?.message || e);
 }
+const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf( {
+  getSecret: () => process.env.CSRF_SECRET || 'your-fallback-secret', // Replace with a strong secret or use environment variables
+  getSessionIdentifier: (req) => req.session.id,
+  cookieName: "Host-csrf-token", // Use a secure cookie name with __Host- prefix
+  cookieOptions: {
+    httpOnly: true, // Prevent client-side JavaScript from accessing the cookie
+    secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+    sameSite: "lax", // Prevent CSRF attacks by restricting cross-origin requests
+    path: "/", // Make the cookie accessible across the entire site
+    signed: true,
+    expires: new Date( Date.now() + 24 * 60 * 60 * 1000 ),
+    maxAge: 24 * 60 * 60 * 1000,
 
+  },
+  size: 128, // Size of the CSRF token in bits
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"], // Methods that do not require CSRF protection
+  getTokenFromRequest: ( req ) => req.headers["x-csrf-token"], // Extract token from headers
+} );
+app.use( ( req, res, next ) =>
+  {
+  
+    const csrf = generateCsrfToken( req, res );
+    res.locals.csrfToken = csrf; // Attach the nonce to the response object
+  
+    next();
+  } );
+
+  // Example protected route
+app.post( '/protected-route', doubleCsrfProtection, ( req, res ) =>
+  {
+    res.json( { message: 'This route is protected by CSRF' } );
+  } );
 app.use( "/api", apiRoutes );
 
 // ✅ Start system maintenance cron jobs (only in non-test environments)
