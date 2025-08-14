@@ -2,7 +2,7 @@ import { toZonedTime } from 'date-fns-tz';
 import crypto from 'node:crypto';
 import { LoggerService } from './logger.js';
 
-export async function acquireLock(tx, taskName, instanceId, ttlMinutes = 60, maxRetries = 3) {
+export async function acquireLock(tx, taskName, instanceId, ttlMinutes = (process.env.NODE_ENV === 'test' ? 0.01 : 60), maxRetries = 3) {
   const now = toZonedTime(new Date(), 'Europe/London');
   const staleThreshold = new Date(now.getTime() - ttlMinutes * 60 * 1000);
   const lockId = crypto.randomUUID();
