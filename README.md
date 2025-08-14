@@ -115,9 +115,9 @@ cantina-mariachi/
 │   ├── controllers/          # Controllers
 │   ├── services/             # Services (auth/cache/DB/webhooks)
 │   ├── middleware/           # Auth, RBAC, validation, rateLimit
-│   ├── config/               # Prisma client, retention
+│   ├── config/               # Prisma client, retention and seeds
 │   └── utils/                # Logger, response helpers, lock
-├── prisma/                   # Prisma schema and seeds
+├── prisma/                   # Prisma schema
 └── server.js                 # Node server entry (dev/prod)
 ```
 
