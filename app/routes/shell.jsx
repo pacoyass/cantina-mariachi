@@ -1,8 +1,8 @@
 import { Outlet, NavLink } from "react-router";
 import { Button } from "../components/ui/button";
-import { Dropdown, DropdownItem } from "../components/ui/dropdown";
-import { ThemeToggle } from "../components/theme-toggle";
+import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
+import { ModeToggle } from "@/components/ThemeToggle";
 
 export default function ShellLayout() {
   return (
@@ -41,12 +41,14 @@ export default function ShellLayout() {
               <NavLink to="/reservations">Reservations</NavLink>
               <NavLink to="/account">Account</NavLink>
             </div>
-            <ThemeToggle />
-            <Dropdown label="Account">
-              <DropdownItem><NavLink to="/account">Profile</NavLink></DropdownItem>
-              <DropdownItem><NavLink to="/login">Login</NavLink></DropdownItem>
-              <DropdownItem><NavLink to="/register">Register</NavLink></DropdownItem>
-            </Dropdown>
+            <ModeToggle />
+            <DropdownMenu label="Account">
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
+              <DropdownMenuItem><NavLink to="/login">Login</NavLink></DropdownMenuItem>
+              <DropdownMenuItem><NavLink to="/register">Register</NavLink></DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button className="hidden md:inline-flex">Order Now</Button>
           </div>
         </nav>
