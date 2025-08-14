@@ -8,6 +8,9 @@ import net from 'net';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import { LoggerService } from './server/utils/logger.js';
+import cacheService from './server/services/cacheService.js';
+
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const BASE_PORT = Number.parseInt(process.env.PORT || '3333');
 
@@ -90,6 +93,18 @@ if (DEVELOPMENT) {
 }
 
 app.use(morgan('tiny'));
+
+async function gracefulShutdown(signal) {
+  try {
+    console.log(`\n${signal} received: flushing logs and shutting down...`);
+    try { await LoggerService.flushQueue(); } catch {}
+    try { await cacheService.disconnect(); } catch {}
+  } finally {
+    process.exit(0);
+  }
+}
+
+['SIGINT','SIGTERM'].forEach(sig => process.on(sig, () => gracefulShutdown(sig)));
 
 async function startServer() {
   try {
