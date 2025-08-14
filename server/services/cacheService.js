@@ -23,7 +23,9 @@ class CacheService {
 
     this.#client.on('connect', () => {
       this.#isConnected = true;
-      console.log('Redis connected');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Redis connected');
+      }
     });
 
     this.#client.connect().catch((err) => {
