@@ -9,10 +9,10 @@ function Card({
   return (
     (<div
       data-slot="card"
-      className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
-        className
-      )}
+            className={cn(
+          "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-md",
+          className
+        )}
       {...props} />)
   );
 }
