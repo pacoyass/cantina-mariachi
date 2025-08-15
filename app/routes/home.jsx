@@ -91,12 +91,12 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <h2 className="text-2xl font-semibold tracking-tight mb-4">Explore the menu</h2>
         <Tabs defaultValue="tacos" className="w-full">
-          <div className="relative min-h-[260px]">
           <TabsList>
             <TabsTrigger value="tacos">Tacos</TabsTrigger>
             <TabsTrigger value="bowls">Bowls</TabsTrigger>
             <TabsTrigger value="drinks">Drinks</TabsTrigger>
           </TabsList>
+          <div className="relative min-h-[260px] mt-3">
           <TabsContent value="tacos" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.slice(0,3).map((item) => (
