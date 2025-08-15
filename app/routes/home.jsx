@@ -1,4 +1,5 @@
 import { useLoaderData } from "react-router";
+import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -129,6 +130,135 @@ export default function Home() {
           </Tabs>
         </section>
 
+      {/* Loyalty & rewards */}
+      <section className="container mx-auto px-6 py-14">
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">Loyalty & rewards</CardTitle>
+              <Badge variant="secondary">Members save more</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between text-sm">
+              <div>
+                <div className="text-2xl font-bold">1,250</div>
+                <div className="text-muted-foreground">points</div>
+              </div>
+              <div className="text-right">
+                <div className="font-medium">Next reward at 1,500</div>
+                <div className="text-muted-foreground">Free dessert</div>
+              </div>
+            </div>
+            <ProgressBar value={1250} max={1500} />
+            <div className="mt-3 flex gap-2">
+              <Button size="sm">Join rewards</Button>
+              <Button size="sm" variant="outline">View perks</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Why choose us */}
+      <section className="container mx-auto px-6 py-14">
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">Why choose Cantina</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <FeatureCard icon={<Clock className="size-5" />} title="Faster than apps">Direct kitchen to doorstep, no third‑party delays.</FeatureCard>
+          <FeatureCard icon={<ShieldCheck className="size-5" />} title="Transparent fees">No surprise charges at checkout.</FeatureCard>
+          <FeatureCard icon={<Smartphone className="size-5" />} title="One‑tap reservations">Live availability and SMS confirmations.</FeatureCard>
+          <FeatureCard icon={<Truck className="size-5" />} title="Live tracking">Minute‑by‑minute delivery updates.</FeatureCard>
+          <FeatureCard icon={<UtensilsCrossed className="size-5" />} title="Chef‑crafted">Fresh ingredients and seasonal menus.</FeatureCard>
+          <FeatureCard icon={<Sparkles className="size-5" />} title="Rewards that matter">Points on every order, instant perks.</FeatureCard>
+        </div>
+      </section>
+
+      {/* Group events & catering */}
+      <section className="container mx-auto px-6 py-14">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Group events & catering</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="text-sm text-muted-foreground">Book for 8+ guests or plan office catering in minutes.</div>
+              <div className="flex gap-2">
+                <Button size="sm">Plan event</Button>
+                <Button size="sm" variant="outline">Catering</Button>
+              </div>
+            </div>
+            <div className="mt-4">
+              <Accordion type="single" collapsible>
+                <AccordionItem value="e1">
+                  <AccordionTrigger>Do you offer set menus?</AccordionTrigger>
+                  <AccordionContent>Yes — set menus for groups of 8–30, with vegetarian options.</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="e2">
+                  <AccordionTrigger>How far in advance should I book?</AccordionTrigger>
+                  <AccordionContent>We recommend 48 hours, but same‑day may be possible off‑peak.</AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Seasonal offers */}
+      <section className="container mx-auto px-6 py-14">
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">Seasonal offers</CardTitle>
+              <Badge variant="secondary">Limited time</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <div className="text-sm text-muted-foreground">Taco Tuesday Bundle</div>
+                <div className="text-xl font-semibold">2 tacos + drink — $9.99</div>
+                <div className="text-xs text-muted-foreground">Ends in <Countdown to={Date.now() + 1000 * 60 * 60 * 24 * 2} /></div>
+              </div>
+              <div className="flex gap-2">
+                <Button>Order bundle</Button>
+                <Button variant="outline">View details</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Customer love (testimonials) */}
+      <section className="container mx-auto px-6 py-14">
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">Customer love</h2>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Testimonial name="A. Rivera" initials="AR">“Hands‑down the best tacos in town. Ordering is so fast, and delivery always lands earlier than expected.”</Testimonial>
+          <Testimonial name="M. Santos" initials="MS">“Reservations that actually work. I booked for 8pm and was seated at 8:02. Five stars.”</Testimonial>
+          <Testimonial name="L. Chen" initials="LC">“The rewards program is legit. Free guac after my second order — say less.”</Testimonial>
+        </div>
+      </section>
+
+      {/* Sourcing & values */}
+      <section className="container mx-auto px-6 py-14">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-3">
+            <h3 className="text-xl font-semibold tracking-tight">Sourcing & values</h3>
+            <p className="text-sm text-muted-foreground">We believe in fresh, local ingredients and sustainable practices — from kitchen to table.</p>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">Local produce</Badge>
+              <Badge variant="secondary">Sustainable seafood</Badge>
+              <Badge variant="secondary">Fair trade</Badge>
+              <Badge variant="secondary">Low waste</Badge>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">Daily market picks</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">House‑made salsas</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">Locally baked tortillas</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">Compostable packaging</CardContent></Card>
+          </div>
+        </div>
+      </section>
+
       {/* Value props */}
       <section className="container mx-auto px-6 py-14 grid gap-4 md:grid-cols-4">
         <ValueCard icon={<Clock className="size-5" />} title="Order in 30s">One tap reorder, saved favorites, and Apple/Google Pay.</ValueCard>
@@ -248,7 +378,44 @@ export default function Home() {
   );
 }
 
+function ProgressBar({ value, max }) {
+  const pct = Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+  return (
+    <div className="mt-3 h-2 w-full rounded-full bg-secondary">
+      <div className="h-2 rounded-full bg-primary transition-[width] duration-500" style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
+function Countdown({ to }) {
+  const [ms, setMs] = useState(Math.max(0, to - Date.now()));
+  useEffect(() => {
+    const id = setInterval(() => setMs((prev) => Math.max(0, prev - 1000)), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const total = ms / 1000;
+  const d = Math.floor(total / 86400);
+  const h = Math.floor((total % 86400) / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = Math.floor(total % 60);
+  return (<span>{d}d {String(h).padStart(2, '0')}:{String(m).padStart(2, '0')}:{String(s).padStart(2, '0')}</span>);
+}
+
 function ValueCard({ icon, title, children }) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-primary">{icon}</span>
+          <CardTitle className="text-base">{title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="text-sm text-muted-foreground">{children}</CardContent>
+    </Card>
+  );
+}
+
+function FeatureCard({ icon, title, children }) {
   return (
     <Card>
       <CardHeader className="pb-2">
