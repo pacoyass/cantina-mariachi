@@ -9,7 +9,6 @@ import { useEffect, useState } from "react"
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <OfferBar />
       <nav className="container mx-auto grid grid-cols-3 h-14 items-center px-4">
         <div className="flex items-center gap-3">
           <div className="md:hidden">
@@ -62,6 +61,7 @@ export function Navbar() {
         </div>
       </nav>
       <div className="mex-divider" />
+      <OfferBar />
     </header>
   )
 }
@@ -86,7 +86,7 @@ function OfferBar() {
 
   return (
     <div className={`overflow-hidden transition-[height] duration-300 ${visible ? 'h-8' : 'h-0'}`}>
-      <div className="bg-primary text-primary-foreground text-xs">
+      <div className="bg-background text-foreground text-xs border-b">
         <div className="container mx-auto px-4 h-8 flex items-center justify-between">
           <span>Today only: free delivery on orders over $25</span>
           <a href="/menu" className="underline">Order now</a>
