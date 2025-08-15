@@ -68,28 +68,13 @@ export function Navbar() {
 
 function OfferBar() {
   const [visible, setVisible] = useState(true)
-  const lastYRef = useRef(0)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    lastYRef.current = window.scrollY
-    let ticking = false
     const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      window.requestAnimationFrame(() => {
-        const y = window.scrollY
-        const delta = y - lastYRef.current
-        if (y <= 16) {
-          setVisible(true)
-        } else if (delta > 4) {
-          setVisible(false)
-        } else if (delta < -4) {
-          setVisible(true)
-        }
-        lastYRef.current = y
-        ticking = false
-      })
+      const y = window.scrollY
+      setVisible(y <= 64)
     }
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
