@@ -97,7 +97,7 @@ function OfferBar() {
   return (
     <div className={`overflow-hidden transition-[height] duration-300 ${visible ? 'h-8' : 'h-0'}`}>
       <div className={`will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="bg-card text-card-foreground text-xs border-b">
+        <div className="bg-card/90 backdrop-blur text-card-foreground text-xs border-b">
           <div className="container mx-auto px-4 h-8 flex items-center justify-center">
             <span>Today only: free delivery on orders over $25</span>
           </div>
