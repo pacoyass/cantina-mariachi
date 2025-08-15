@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
+import { useEffect, useState } from "react"
 
 export function Navbar() {
   return (
@@ -60,6 +61,39 @@ export function Navbar() {
         </div>
       </nav>
       <div className="mex-divider" />
+      <OfferBar />
     </header>
+  )
+}
+
+function OfferBar() {
+  const [visible, setVisible] = useState(true)
+  useEffect(() => {
+    let lastY = typeof window !== 'undefined' ? window.scrollY : 0
+    function onScroll() {
+      const y = window.scrollY
+      const scrolledDown = y > lastY && y > 80
+      const scrolledUp = y < lastY || y <= 80
+      if (scrolledDown && visible) setVisible(false)
+      if (scrolledUp && !visible) setVisible(true)
+      lastY = y
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', onScroll, { passive: true })
+      return () => window.removeEventListener('scroll', onScroll)
+    }
+  }, [visible])
+
+  return (
+    <div className="relative h-8 overflow-visible">
+      <div className={`absolute inset-x-0 top-0 will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="bg-card text-card-foreground text-xs border-b">
+          <div className="container mx-auto px-4 h-8 flex items-center justify-between">
+            <span>Today only: free delivery on orders over $25</span>
+            <a href="/menu" className="underline">Order now</a>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
