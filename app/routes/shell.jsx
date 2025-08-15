@@ -6,7 +6,8 @@ import { ModeToggle } from "../components/ThemeToggle";
 
 export default function ShellLayout() {
   return (
-    <div>
+    <div className="bg-mexican-pattern min-h-screen">
+
       <header className="border-b">
         <nav className="container mx-auto grid grid-cols-3 h-14 items-center px-4">
           <div className="flex items-center gap-3">
@@ -54,7 +55,9 @@ export default function ShellLayout() {
         </nav>
         <div className="mex-divider" />
       </header>
-      <Outlet />
+        
+     <Outlet />
+     
     </div>
   );
 }

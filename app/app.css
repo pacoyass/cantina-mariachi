@@ -36,6 +36,23 @@
   --mex-gold: hsl(46 92% 60%);
 }
 
+.bg-mexican-pattern {
+  background-image: 
+  radial-gradient(circle at 25% 25%, rgba(248, 113, 113, 0.2) 2px, transparent 2px),
+  radial-gradient(circle at 75% 75%, rgba(250, 204, 21, 0.2) 2px, transparent 2px);
+  background-size: 20px 20px;
+  opacity: 10px;
+
+}
+
+/* Dark mode */
+.dark .bg-mexican-pattern {
+  background-image: 
+  radial-gradient(circle at 25% 25%, rgba(248, 113, 113, 0.2) 2px, transparent 2px),
+  radial-gradient(circle at 75% 75%, rgba(250, 204, 21, 0.2) 2px, transparent 2px);
+  background-size: 20px 20px;
+  
+}
 
 :root {
   /* Light theme HSL values */
