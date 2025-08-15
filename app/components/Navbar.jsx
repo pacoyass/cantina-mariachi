@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 
 export function Navbar() {
   return (
-    <header className="border-b bg-background">
+    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto grid grid-cols-3 h-14 items-center px-4">
         <div className="flex items-center gap-3">
           <div className="md:hidden">
