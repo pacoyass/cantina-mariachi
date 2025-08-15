@@ -91,11 +91,11 @@ import
   NavLink,
 } from "react-router";
 import stylesheet from "./app.css?url";
-import { ThemeProvider } from "./components/ThemeProvider";
 import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet";
 import { Button } from "./components/ui/button";
 import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "./components/ui/dropdown-menu";
 import { ModeToggle } from "./components/ThemeToggle";
+import { ThemeProvider } from "next-themes";
 
 
 export const links = () => [
@@ -131,7 +131,7 @@ export function Layout( { children } )
         <Links nonce={nonce} />
       </head>
       <body >
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
          {children}
         </ThemeProvider>
         <ScrollRestoration nonce={nonce} />
