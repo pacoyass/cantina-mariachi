@@ -30,7 +30,7 @@ export default function Home() {
   const { items } = useLoaderData();
 
   return (
-    <main>
+    <main className="space-y-0">
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
@@ -75,7 +75,7 @@ export default function Home() {
       </section>
 
       {/* Value props */}
-      <section className="container mx-auto px-6 py-12 grid gap-4 md:grid-cols-4">
+      <section className="container mx-auto px-6 py-14 grid gap-4 md:grid-cols-4">
         <ValueCard icon={<Clock className="size-5" />} title="Order in 30s">One tap reorder, saved favorites, and Apple/Google Pay.</ValueCard>
         <ValueCard icon={<Truck className="size-5" />} title="Live tracking">From kitchen to doorstep with minute‑by‑minute updates.</ValueCard>
         <ValueCard icon={<Smartphone className="size-5" />} title="Instant reservations">Real‑time availability, SMS confirmations, waitlist.</ValueCard>
@@ -83,7 +83,7 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="container mx-auto px-6 py-8">
+      <section className="container mx-auto px-6 py-14">
         <div className="mb-6">
           <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
           <p className="text-sm text-muted-foreground">From craving to table in three simple steps.</p>
@@ -96,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* Popular this week */}
-      <section className="container mx-auto px-6 py-12">
+      <section className="container mx-auto px-6 py-14">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-semibold tracking-tight">Popular this week</h2>
           <a className="text-sm underline" href="/menu">See full menu</a>
@@ -142,7 +142,7 @@ export default function Home() {
       </section>
 
       {/* Social proof */}
-      <section className="container mx-auto px-6 pb-16">
+      <section className="container mx-auto px-6 py-14">
         <div className="mb-6">
           <h2 className="text-2xl font-semibold tracking-tight">Loved by the community</h2>
           <p className="text-sm text-muted-foreground">What guests are saying about Cantina.</p>
@@ -155,7 +155,7 @@ export default function Home() {
       </section>
 
       {/* CTA banner */}
-      <section className="container mx-auto px-6 pb-20">
+      <section className="container mx-auto px-6 py-16">
         <Card className="overflow-hidden">
           <div className="bg-gradient-to-r from-[var(--mex-green)] via-[var(--mex-gold)] to-[var(--mex-red)] p-[1px]">
             <div className="bg-background p-6 md:p-8 rounded-[calc(var(--radius)+2px)]">

@@ -4,10 +4,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
+import { useEffect, useState } from "react"
 
 export function Navbar() {
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <OfferBar />
       <nav className="container mx-auto grid grid-cols-3 h-14 items-center px-4">
         <div className="flex items-center gap-3">
           <div className="md:hidden">
@@ -61,5 +63,35 @@ export function Navbar() {
       </nav>
       <div className="mex-divider" />
     </header>
+  )
+}
+
+function OfferBar() {
+  const [visible, setVisible] = useState(true)
+  useEffect(() => {
+    let lastY = typeof window !== 'undefined' ? window.scrollY : 0
+    function onScroll() {
+      const y = window.scrollY
+      const scrolledDown = y > lastY && y > 80
+      const scrolledUp = y < lastY || y <= 80
+      if (scrolledDown && visible) setVisible(false)
+      if (scrolledUp && !visible) setVisible(true)
+      lastY = y
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', onScroll, { passive: true })
+      return () => window.removeEventListener('scroll', onScroll)
+    }
+  }, [visible])
+
+  return (
+    <div className={`overflow-hidden transition-[height] duration-300 ${visible ? 'h-8' : 'h-0'}`}>
+      <div className="bg-primary text-primary-foreground text-xs">
+        <div className="container mx-auto px-4 h-8 flex items-center justify-between">
+          <span>Today only: free delivery on orders over $25</span>
+          <a href="/menu" className="underline">Order now</a>
+        </div>
+      </div>
+    </div>
   )
 }
