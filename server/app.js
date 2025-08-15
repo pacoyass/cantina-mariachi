@@ -10,7 +10,7 @@ import { registerCronJobs } from "./cron/index.js";
 import { LoggerService } from "./utils/logger.js";
 import { createError } from "./utils/response.js";
 import dotenv from 'dotenv';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import swaggerUi from 'swagger-ui-express';
 import { doubleCsrf } from 'csrf-csrf';
 dotenv.config();

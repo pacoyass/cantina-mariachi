@@ -1,4 +1,4 @@
-import { Table, THead, TBody, TR, TH, TD } from "../components/ui/table";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../components/ui/table";
 import { Button } from "../components/ui/button";
 
 export const meta = () => [
@@ -17,22 +17,22 @@ export default function OrdersIndexPage() {
     <main className="container mx-auto p-6 grid gap-6">
       <h1 className="text-xl font-semibold">My Orders</h1>
       <Table>
-        <THead>
-          <TR>
-            <TH>Order #</TH>
-            <TH>Status</TH>
-            <TH>Total</TH>
-            <TH>Date</TH>
-            <TH></TH>
-          </TR>
-        </THead>
-        <TBody>
-          <TR>
-            <TD colSpan={5}>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Order #</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Total</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell colSpan={5}>
               <div className="text-muted-foreground">No orders yet.</div>
-            </TD>
-          </TR>
-        </TBody>
+            </TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
       <div>
         <Button>Create order</Button>

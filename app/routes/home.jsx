@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <main>
       <section className="relative overflow-hidden">
-        <div className="container mx-auto px-6 pt-16 pb-12 grid gap-8 md:grid-cols-2 md:items-center">
+        <div className="container mx-auto px-6 pt-16 pb-12 grid gap-8 md:grid-cols-2 md:items-center hero-pattern">
           <div className="space-y-6">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               Authentic Mexican, crafted fresh. Delivered fast.
