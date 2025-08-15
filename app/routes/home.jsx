@@ -156,24 +156,23 @@ export default function Home() {
 
       {/* CTA banner */}
       <section className="container mx-auto px-6 py-16">
-        <Card className="overflow-hidden">
-          <div className="bg-gradient-to-r from-[var(--mex-green)] via-[var(--mex-gold)] to-[var(--mex-red)] p-[1px]">
-            <div className="bg-background p-6 md:p-8 rounded-[calc(var(--radius)+2px)]">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Sparkles className="size-4" />
-                    Limited‑time: free delivery on orders over $25
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-semibold mt-1">Skip the wait. Satisfy the craving.</h3>
+        <Card>
+          <CardContent className="p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Sparkles className="size-4 text-primary" />
+                  Limited‑time offer
                 </div>
-                <div className="flex gap-3">
-                  <Button className="px-6">Start an Order</Button>
-                  <Button variant="secondary" className="px-6">Reserve Now</Button>
-                </div>
+                <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">Free delivery on orders over $25</h3>
+                <p className="text-sm text-muted-foreground mt-1">Order in seconds or reserve instantly — no extra fees today.</p>
+              </div>
+              <div className="flex gap-3">
+                <Button className="px-6">Start an Order</Button>
+                <Button variant="outline" className="px-6">Reserve Now</Button>
               </div>
             </div>
-          </div>
+          </CardContent>
         </Card>
       </section>
     </main>
