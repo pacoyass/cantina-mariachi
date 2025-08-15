@@ -40,6 +40,7 @@
   background-image: 
   radial-gradient(circle at 25% 25%, rgba(248, 113, 113, 0.2) 2px, transparent 2px),
   radial-gradient(circle at 75% 75%, rgba(250, 204, 21, 0.2) 2px, transparent 2px);
+  background-color: var(--secondary);
   background-size: 20px 20px;
   opacity: 10px;
 
@@ -48,8 +49,9 @@
 /* Dark mode */
 .dark .bg-mexican-pattern {
   background-image: 
-  radial-gradient(circle at 25% 25%, rgba(248, 113, 113, 0.2) 2px, transparent 2px),
-  radial-gradient(circle at 75% 75%, rgba(250, 204, 21, 0.2) 2px, transparent 2px);
+  radial-gradient(circle at 25% 25%, rgba(248, 113, 113, 0.15) 2px, transparent 2px),
+  radial-gradient(circle at 75% 75%, rgba(250, 204, 21, 0.15) 2px, transparent 2px);
+  background-color: oklch(0.18 0 0); /* slightly lighter than dark bg for contrast */
   background-size: 20px 20px;
   
 }
