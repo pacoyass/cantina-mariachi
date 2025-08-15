@@ -32,49 +32,79 @@ app.use( ( req, res, next ) =>
 		next();
 	} );
 // // Helmet security headers
-app.use(
-	helmet( {
-		contentSecurityPolicy: {
-			useDefaults: true,
-			directives: {
-				defaultSrc: ["'self'"],
-				scriptSrc: [
-					"'self'",
-					( req, res ) => `'nonce-${res.locals.nonce}'`,
-					"'strict-dynamic'",
-					process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
-				].filter( Boolean ),
-				styleSrc: [
-					"'self'",
-					( req, res ) => `'nonce-${res.locals.nonce}'`,
-					"https://fonts.googleapis.com",
-					process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
-				].filter( Boolean ),
-				fontSrc: ["'self'", "https://fonts.gstatic.com"],
-				imgSrc: ["'self'", "data:"],
-				connectSrc: [
-					"'self'",
-					process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null,
-					process.env.NODE_ENV === 'production' ? 'https://your-api.com' : null,
-					// "ws://localhost:24678",
-					// "http://localhost:3333",
-					// "http://localhost:5173",
-					// "http://localhost:5174",
-					// "http://localhost:4173",
-				].filter( Boolean ),
+// app.use(
+// 	helmet( {
+// 		contentSecurityPolicy: {
+// 			useDefaults: true,
+// 			directives: {
+// 				defaultSrc: ["'self'"],
+// 				scriptSrc: [
+// 					"'self'",
+// 					( req, res ) => `'nonce-${res.locals.nonce}'`,
+// 					"'strict-dynamic'",
+// 					process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+// 				].filter( Boolean ),
+// 				styleSrc: [
+// 					"'self'",
+// 					( req, res ) => `'nonce-${res.locals.nonce}'`,
+// 					"https://fonts.googleapis.com",
+// 					process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+// 				].filter( Boolean ),
+// 				fontSrc: ["'self'", "https://fonts.gstatic.com"],
+// 				imgSrc: ["'self'", "data:"],
+// 				connectSrc: [
+// 					"'self'",
+// 					process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null,
+// 					process.env.NODE_ENV === 'production' ? 'https://your-api.com' : null,
+// 					// "ws://localhost:24678",
+// 					// "http://localhost:3333",
+// 					// "http://localhost:5173",
+// 					// "http://localhost:5174",
+// 					// "http://localhost:4173",
+// 				].filter( Boolean ),
 
 
-				frameAncestors: ["'none'"], // No need for `frameguard: false`
-				objectSrc: ["'none'"],
-				baseUri: ["'self'"],
-				formAction: ["'self'"],
-				upgradeInsecureRequests:
-					process.env.NODE_ENV === "production" ? ["upgrade-insecure-requests"] : [],
-			},
-		},
-		frameguard: false, // No need for X-Frame-Options
-	} )
-);
+// 				frameAncestors: ["'none'"], // No need for `frameguard: false`
+// 				objectSrc: ["'none'"],
+// 				baseUri: ["'self'"],
+// 				formAction: ["'self'"],
+// 				upgradeInsecureRequests:
+// 					process.env.NODE_ENV === "production" ? ["upgrade-insecure-requests"] : [],
+// 			},
+// 		},
+// 		frameguard: false, // No need for X-Frame-Options
+// 	} )
+// );
+helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+        "'strict-dynamic'",
+        process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+      ].filter(Boolean),
+      styleSrc: ["'self'", "https://fonts.googleapis.com"],
+      styleSrcElem: [
+        "'self'",
+        "https://fonts.googleapis.com",
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+      ],
+      styleSrcAttr: ["'unsafe-inline'"], // <-- allow style="" attributes
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'", process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null].filter(Boolean),
+      frameAncestors: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? ["upgrade-insecure-requests"] : [],
+    },
+  },
+  frameguard: false,
+})
 app.use( helmet.hsts( {
 	maxAge: 31536000,
 	includeSubDomains: true,
@@ -178,6 +208,8 @@ app.use(
 		getLoadContext(req,res) {
 			return {
 				VALUE_FROM_EXPRESS: "Hello from Express",
+        nonce: res.locals.nonce,
+        csrfToken: res.locals.csrfToken
 			};
 		},
 	}),

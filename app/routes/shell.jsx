@@ -12,7 +12,7 @@ export default function ShellLayout() {
           <div className="flex items-center gap-3">
             <div className="md:hidden">
               <Sheet>
-                <SheetTrigger>
+                <SheetTrigger asChild>
                   <Button variant="ghost" aria-label="Open menu">☰</Button>
                 </SheetTrigger>
                 <SheetContent>

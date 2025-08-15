@@ -13,7 +13,7 @@ export default defineConfig( ( { isSsrBuild } ) => ( {
       : undefined,
   },
   
-  plugins: [reactRouter(), tailwindcss()],
+  plugins: [tailwindcss(),reactRouter() ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "app"),

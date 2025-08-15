@@ -1,83 +1,3 @@
-// import {
-//   isRouteErrorResponse,
-//   Links,
-//   Meta,
-//   Outlet,
-//   Scripts,
-//   ScrollRestoration,
-// } from "react-router";
-
-// import { ThemeProvider } from "next-themes";
-// import stylesheet from "./app.css?url";
-
-
-// export const links = () => [
-//   { rel: "preconnect", href: "https://fonts.googleapis.com" },
-//   {
-//     rel: "preconnect",
-//     href: "https://fonts.gstatic.com",
-//     crossOrigin: "anonymous",
-//   },
-//   {
-//     rel: "stylesheet",
-//     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-//   },
-//   { rel: "stylesheet", href: stylesheet },
-
-// ];
-
-// export function Layout({ children }) {
-//   return (
-//     <html lang="en" suppressHydrationWarning>
-//       <head>
-//         <meta charSet="utf-8" />
-//         <meta name="viewport" content="width=device-width, initial-scale=1" />
-//         <Meta />
-//         <Links />
-//       </head>
-//       <body>
-//         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-//           {children}
-//         </ThemeProvider>
-//         <ScrollRestoration />
-//         <Scripts />
-//       </body>
-//     </html>
-//   );
-// }
-
-// export default function App() {
-//   return <Outlet />;
-// }
-
-// export function ErrorBoundary({ error }) {
-//   let message = "Oops!";
-//   let details = "An unexpected error occurred.";
-//   let stack;
-
-//   if (isRouteErrorResponse(error)) {
-//     message = error.status === 404 ? "404" : "Error";
-//     details =
-//       error.status === 404
-//         ? "The requested page could not be found."
-//         : error.statusText || details;
-//   } else if (import.meta.env.DEV && error && error instanceof Error) {
-//     details = error.message;
-//     stack = error.stack;
-//   }
-
-//   return (
-//     <main className="pt-16 p-4 container mx-auto">
-//       <h1>{message}</h1>
-//       <p>{details}</p>
-//       {stack && (
-//         <pre className="w-full p-4 overflow-x-auto">
-//           <code>{stack}</code>
-//         </pre>
-//       )}
-//     </main>
-//   );
-// }
 
 import
 {
@@ -95,9 +15,22 @@ import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet";
 import { Button } from "./components/ui/button";
 import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "./components/ui/dropdown-menu";
 import { ModeToggle } from "./components/ThemeToggle";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "./components/ThemeProvider";
 
+export async function loader( { request, context } )
+{
+  // console.log("🔍 loader() context:", context); // Debugging
 
+  const nonce = context?.nonce || "";
+  const csrfToken = context?.csrfToken || "";
+  if ( nonce ) {
+    // console.log("✅ Nonce found in loader:", context.nonce);
+
+    return { nonce: nonce, csrfToken: csrfToken};
+  }
+  // console.warn("🚨 Nonce is missing in loader!");
+  return { nonce: "" }; // Avoid undefined issues
+}
 export const links = () => [
 
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -113,8 +46,6 @@ export const links = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-
-
 export function Layout( { children } )
 {
   const loaderData = useLoaderData() || {}; // ✅ Prevents undefined error
@@ -123,15 +54,17 @@ export function Layout( { children } )
   // console.log( "🛠 Nonce inside Layout:", nonce );
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta nonce={nonce} />
-        <Links nonce={nonce} />
+        <Links  nonce={nonce}/>
       </head>
-      <body >
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <body className="antialiased">
+      {/* <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" nonce={nonce}> */}
+      <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
+
          {children}
         </ThemeProvider>
         <ScrollRestoration nonce={nonce} />
