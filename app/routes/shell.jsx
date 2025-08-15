@@ -1,8 +1,9 @@
 import { Outlet, NavLink } from "react-router";
 import { Button } from "../components/ui/button";
-import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu";
+import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { ModeToggle } from "../components/ThemeToggle";
+import { Avatar, AvatarFallback } from "../components/ui/avatar";
 
 export default function ShellLayout() {
   return (
@@ -43,11 +44,18 @@ export default function ShellLayout() {
               <NavLink to="/account">Account</NavLink>
             </div>
             <ModeToggle />
-            <DropdownMenu label="Account">
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
-              <DropdownMenuItem><NavLink to="/login">Login</NavLink></DropdownMenuItem>
-              <DropdownMenuItem><NavLink to="/register">Register</NavLink></DropdownMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="px-2">
+                  <Avatar>
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/login">Login</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/register">Register</NavLink></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button className="hidden md:inline-flex">Order Now</Button>
