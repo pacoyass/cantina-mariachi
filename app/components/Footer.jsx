@@ -7,7 +7,7 @@ import { Github, Instagram, Twitter } from "lucide-react"
 export function Footer() {
   const year = new Date().getFullYear()
   return (
-    <footer className="border-t bg-card">
+    <footer className="border-t bg-background">
       <div className="container mx-auto px-6 py-10 grid gap-8 md:grid-cols-4">
         <div className="space-y-2">
           <div className="text-lg font-semibold">Cantina</div>

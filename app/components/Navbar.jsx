@@ -88,9 +88,8 @@ function OfferBar() {
     <div className="relative h-8 overflow-visible">
       <div className={`absolute inset-x-0 top-0 will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="bg-card text-card-foreground text-xs border-b">
-          <div className="container mx-auto px-4 h-8 flex items-center justify-between">
+          <div className="container mx-auto px-4 h-8 flex items-center justify-center">
             <span>Today only: free delivery on orders over $25</span>
-            <a href="/menu" className="underline">Order now</a>
           </div>
         </div>
       </div>
