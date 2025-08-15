@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Badge } from "../components/ui/badge";
 import { Separator } from "../components/ui/separator";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "../components/ui/hover-card";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../components/ui/accordion";
 import { Star, Clock, Truck, Smartphone, UtensilsCrossed, ShieldCheck, Sparkles } from "lucide-react";
 
 export function meta() {
@@ -74,6 +77,56 @@ export default function Home() {
         <div className="mex-divider" />
       </section>
 
+      {/* Logo cloud */}
+      <section className="container mx-auto px-6 py-8">
+        <div className="text-center text-xs text-muted-foreground">Trusted by local foodies and featured in</div>
+        <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
+          {['FlavorMag','EatHub','CityEats','DineNow','LocalBest'].map((name) => (
+            <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
+          ))}
+        </div>
+      </section>
+
+      {/* Explore menu (Tabs + HoverCard) */}
+      <section className="container mx-auto px-6 py-14">
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">Explore the menu</h2>
+        <Tabs defaultValue="tacos" className="w-full">
+          <TabsList>
+            <TabsTrigger value="tacos">Tacos</TabsTrigger>
+            <TabsTrigger value="bowls">Bowls</TabsTrigger>
+            <TabsTrigger value="drinks">Drinks</TabsTrigger>
+          </TabsList>
+          <TabsContent value="tacos">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {items.slice(0,3).map((item) => (
+                <HoverCard key={item.id}>
+                  <HoverCardTrigger asChild>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                          <span>{item.name}</span>
+                          <Badge variant="outline">${Number(item.price).toFixed(2)}</Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="text-sm text-muted-foreground line-clamp-2">{item.description}</CardContent>
+                    </Card>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                    <div className="text-sm text-muted-foreground">Chef notes: crowd favorite with fresh cilantro and lime.</div>
+                  </HoverCardContent>
+                </HoverCard>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="bowls">
+            <div className="text-sm text-muted-foreground">Bowls coming soon.</div>
+          </TabsContent>
+          <TabsContent value="drinks">
+            <div className="text-sm text-muted-foreground">Drinks coming soon.</div>
+          </TabsContent>
+        </Tabs>
+      </section>
+
       {/* Value props */}
       <section className="container mx-auto px-6 py-14 grid gap-4 md:grid-cols-4">
         <ValueCard icon={<Clock className="size-5" />} title="Order in 30s">One tap reorder, saved favorites, and Apple/Google Pay.</ValueCard>
@@ -141,17 +194,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Social proof */}
+      {/* FAQ */}
       <section className="container mx-auto px-6 py-14">
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight">Loved by the community</h2>
-          <p className="text-sm text-muted-foreground">What guests are saying about Cantina.</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <Testimonial name="A. Rivera" initials="AR">“Hands‑down the best tacos in town. Ordering is so fast, and delivery always lands earlier than expected.”</Testimonial>
-          <Testimonial name="M. Santos" initials="MS">“Reservations that actually work. I booked for 8pm and was seated at 8:02. Five stars.”</Testimonial>
-          <Testimonial name="L. Chen" initials="LC">“The rewards program is legit. Free guac after my second order — say less.”</Testimonial>
-        </div>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">Frequently asked questions</h2>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="q1">
+            <AccordionTrigger>Do you offer vegetarian options?</AccordionTrigger>
+            <AccordionContent>Yes, plenty! Many of our tacos and bowls have vegetarian options.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="q2">
+            <AccordionTrigger>How long do deliveries take?</AccordionTrigger>
+            <AccordionContent>On average, under 35 minutes depending on time and distance.</AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="q3">
+            <AccordionTrigger>Can I change my reservation?</AccordionTrigger>
+            <AccordionContent>You can modify your reservation up to 2 hours before your time slot.</AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </section>
 
       {/* CTA banner */}
@@ -175,6 +234,14 @@ export default function Home() {
           </CardContent>
         </Card>
       </section>
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-40 sm:hidden">
+        <div className="mx-4 mb-4 rounded-lg border bg-background shadow-md p-2 flex gap-2">
+          <Button className="flex-1">Order Now</Button>
+          <Button variant="outline" className="flex-1">Reserve</Button>
+        </div>
+      </div>
     </main>
   );
 }
