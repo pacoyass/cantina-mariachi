@@ -2,7 +2,7 @@ import { Outlet, NavLink } from "react-router";
 import { Button } from "../components/ui/button";
 import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
-import { ModeToggle } from "@/components/ThemeToggle";
+import { ModeToggle } from "../components/ThemeToggle";
 
 export default function ShellLayout() {
   return (
