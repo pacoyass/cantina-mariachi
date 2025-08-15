@@ -85,11 +85,13 @@ function OfferBar() {
   }, [visible])
 
   return (
-    <div className={`overflow-hidden transition-[height] duration-300 ${visible ? 'h-8' : 'h-0'}`}>
-      <div className="bg-background text-foreground text-xs border-b">
-        <div className="container mx-auto px-4 h-8 flex items-center justify-between">
-          <span>Today only: free delivery on orders over $25</span>
-          <a href="/menu" className="underline">Order now</a>
+    <div className="relative h-8 overflow-visible">
+      <div className={`absolute inset-x-0 top-0 will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+        <div className="bg-background text-foreground text-xs border-b">
+          <div className="container mx-auto px-4 h-8 flex items-center justify-between">
+            <span>Today only: free delivery on orders over $25</span>
+            <a href="/menu" className="underline">Order now</a>
+          </div>
         </div>
       </div>
     </div>
