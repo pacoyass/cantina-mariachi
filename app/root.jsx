@@ -13,7 +13,7 @@ import
 import stylesheet from "./app.css?url";
 import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet";
 import { Button } from "./components/ui/button";
-import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "./components/ui/dropdown-menu";
+import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/dropdown-menu";
 import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 
@@ -140,11 +140,14 @@ export function ErrorBoundary( { error } )
               <NavLink to="/account">Account</NavLink>
             </div>
             <ModeToggle />
-            <DropdownMenu label="Account">
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
-              <DropdownMenuItem><NavLink to="/login">Login</NavLink></DropdownMenuItem>
-              <DropdownMenuItem><NavLink to="/register">Register</NavLink></DropdownMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" aria-label="Account menu">☰</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/login">Login</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/register">Register</NavLink></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Button className="hidden md:inline-flex">Order Now</Button>
