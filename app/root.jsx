@@ -63,10 +63,15 @@ export function Layout( { children } )
       </head>
       <body className="antialiased">
       {/* <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" nonce={nonce}> */}
-      <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
+
+          <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
 
          {children}
-        </ThemeProvider>
+         </ThemeProvider>
+
+          
+       
+        
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
