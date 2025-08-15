@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export function Navbar() {
   return (
@@ -68,25 +68,35 @@ export function Navbar() {
 
 function OfferBar() {
   const [visible, setVisible] = useState(true)
+  const lastYRef = useRef(0)
   useEffect(() => {
-    let lastY = typeof window !== 'undefined' ? window.scrollY : 0
-    function onScroll() {
-      const y = window.scrollY
-      const scrolledDown = y > lastY && y > 80
-      const scrolledUp = y < lastY || y <= 80
-      if (scrolledDown && visible) setVisible(false)
-      if (scrolledUp && !visible) setVisible(true)
-      lastY = y
+    if (typeof window === 'undefined') return
+    lastYRef.current = window.scrollY
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY
+        const delta = y - lastYRef.current
+        if (y <= 16) {
+          setVisible(true)
+        } else if (delta > 4) {
+          setVisible(false)
+        } else if (delta < -4) {
+          setVisible(true)
+        }
+        lastYRef.current = y
+        ticking = false
+      })
     }
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', onScroll, { passive: true })
-      return () => window.removeEventListener('scroll', onScroll)
-    }
-  }, [visible])
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <div className="relative h-8 overflow-visible">
-      <div className={`absolute inset-x-0 top-0 will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+    <div className={`overflow-hidden transition-[height] duration-300 ${visible ? 'h-8' : 'h-0'}`}>
+      <div className={`will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="bg-card text-card-foreground text-xs border-b">
           <div className="container mx-auto px-4 h-8 flex items-center justify-center">
             <span>Today only: free delivery on orders over $25</span>
