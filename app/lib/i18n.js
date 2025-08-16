@@ -20,7 +20,7 @@ export async function initI18n({ lng = 'en', resources }) {
   await i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'ar'],
+    supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
     interpolation: { escapeValue: false },
     resources,
     ns: ['ui'],
@@ -38,7 +38,7 @@ export function createServerI18n({ lng = 'en', resources }) {
   i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'ar'],
+    supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
     interpolation: { escapeValue: false },
     resources,
     ns: ['ui'],
