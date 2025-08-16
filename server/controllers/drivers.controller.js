@@ -79,7 +79,7 @@ export const listDriverAssignments = async (req, res) => {
     const orders = await databaseService.listOrdersAssignedToDriver(req.params.id);
     return createResponse(res, 200, 'dataRetrieved', { orders }, req, {}, 'api');
   } catch (error) {
-    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req, {}, 'business:drivers');
+    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
   }
 };
 

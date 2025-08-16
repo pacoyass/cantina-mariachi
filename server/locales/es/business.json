@@ -82,11 +82,19 @@
     "cacheError": "Error del servicio de caché"
   },
   "profile": {
-    "profileUpdated": "Perfil actualizado exitosamente",
-    "profileFetched": "Perfil obtenido exitosamente",
-    "passwordChanged": "Contraseña cambiada exitosamente",
+    "profileUpdated": "Perfil actualizado correctamente",
+    "profileFetched": "Perfil obtenido correctamente",
+    "passwordChanged": "Contraseña cambiada correctamente",
     "invalidCurrentPassword": "La contraseña actual es incorrecta",
-    "profilePictureUpdated": "Foto de perfil actualizada exitosamente",
-    "preferencesUpdated": "Preferencias de usuario actualizadas exitosamente"
+    "profilePictureUpdated": "Foto de perfil actualizada correctamente",
+    "preferencesUpdated": "Preferencias de usuario actualizadas correctamente"
+  },
+  "webhooks": {
+    "registered": "Webhook registrado",
+    "enabled": "Webhook habilitado",
+    "disabled": "Webhook deshabilitado",
+    "triggerProcessed": "Disparador procesado",
+    "processingCompleted": "Procesamiento de webhooks completado",
+    "noneActive": "No se encontraron webhooks activos"
   }
 }
