@@ -259,7 +259,7 @@ const ip = req.ip || null;
   await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_login', `User ${email} logged in`, 'SENT');
   await sendWebhook('USER_LOGIN', { userId: user.id, email, role: user.role, phone: user.phone, loginTime: new Date().toISOString() });
 
-  return createResponse(res, 200, generateLoginMessage(), {
+  return createResponse(res, 200, 'loginSuccess', {
     user: {
       id: user.id,
       email: user.email,
@@ -267,7 +267,7 @@ const ip = req.ip || null;
       name: sanitizedName,
       phone: user.phone,
     },
-  });
+  }, req, {}, 'auth');
 };
 
 // POST /api/auth/refresh - Refresh access token
@@ -303,7 +303,7 @@ const ip = req.ip || null;
         maxAge: 15 * 60 * 1000,
         path: '/',
       });
-      return createResponse(res, 200, 'Token refreshed successfully', { accessToken }, req, {}, 'auth');
+      return createResponse(res, 200, 'loginSuccess', { accessToken }, req, {}, 'auth');
     }
     // Ensure stored hash exists (rotate only if valid current token)
     const providedTokenHash = await hashToken(providedRefreshToken);
@@ -355,7 +355,7 @@ const ip = req.ip || null;
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Token refreshed successfully', { accessToken }, req, {}, 'auth');
+    return createResponse(res, 200, 'loginSuccess', { accessToken }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('Token refresh failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: error.message });
@@ -379,7 +379,7 @@ export const logout = async (req, res) => {
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_SUCCESS', req.user.userId, { email: req.user.email });
     await LoggerService.logNotification(req.user.userId, 'WEBHOOK', 'user_logout', `User ${req.user.email} logged out`, 'SENT');
     await sendWebhook('USER_LOGOUT', { userId: req.user.userId, email: req.user.email });
-    return createResponse(res, 200, 'Signed out successfully', { nextSteps: 'Log in again to access your account' }, req, {}, 'auth');
+    return createResponse(res, 200, 'logoutSuccess', { nextSteps: 'Log in again to access your account' }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('Logout failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'USER_LOGOUT_FAILED', null, { reason: error.message });
@@ -415,7 +415,7 @@ export const getToken = async (req, res) => {
     await LoggerService.logAudit(user.id, 'TOKEN_VALIDATE_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_validated', `Token validated for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_VALIDATED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Session is active', { user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone } });
+    return createResponse(res, 200, 'loginSuccess', { user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone } }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('Token validation failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: error.message });
@@ -434,7 +434,7 @@ export const listSessions = async (req, res) => {
     const pageSize = Math.min(Math.max(parseInt(req.query.pageSize || '20', 10), 1), 100);
     const tokens = await databaseService.listRefreshTokensByUser(req.user.userId, { page, pageSize });
     const hasMore = tokens.length === pageSize;
-    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens.map(t => ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip }, req)), page, pageSize, hasMore });
+    return createResponse(res, 200, 'dataRetrieved', { sessions: tokens.map(t => ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip })), page, pageSize, hasMore }, req, {}, 'api');
   } catch (error) {
     await LoggerService.logError('listSessions failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR', {}, req, {}, 'auth');
@@ -458,7 +458,7 @@ export const logoutAllSessions = async (req, res) => {
     res.clearCookie('refreshToken', { path: '/', httpOnly: true });
 
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_ALL_SESSIONS', req.user.userId, { deletedTokens: count });
-    return createResponse(res, 200, 'Logged out from all sessions', { deletedTokens: count }, req, {}, 'auth');
+    return createResponse(res, 200, 'logoutSuccess', { deletedTokens: count }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('logoutAllSessions failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'Failed to logout from all sessions', 'SERVER_ERROR', {}, req, {}, 'auth');
@@ -479,7 +479,7 @@ export const logoutOtherSessions = async (req, res) => {
     const count = await databaseService.deleteOtherRefreshTokensForUser(req.user.userId, keepHash);
 
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_OTHER_SESSIONS', req.user.userId, { deletedTokens: count });
-    return createResponse(res, 200, 'Logged out from other sessions', { deletedTokens: count }, req, {}, 'auth');
+    return createResponse(res, 200, 'logoutSuccess', { deletedTokens: count }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('logoutOtherSessions failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR', {}, req, {}, 'auth');
@@ -494,7 +494,7 @@ export const revokeSessionById = async (req, res) => {
     }
     const sessionId = req.params.id;
     const result = await prisma.refreshToken.deleteMany({ where: { id: sessionId, userId: req.user.userId } });
-    return createResponse(res, 200, 'Session revoked', { deleted: result.count }, req, {}, 'auth');
+    return createResponse(res, 200, 'logoutSuccess', { deleted: result.count }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('revokeSessionById failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR', {}, req, {}, 'auth');
