@@ -24,13 +24,14 @@ export async function loader( { request, context } )
 
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
+  const lng = context?.lng || 'en';
   if ( nonce ) {
     // console.log("✅ Nonce found in loader:", context.nonce);
 
-    return { nonce: nonce, csrfToken: csrfToken};
+    return { nonce: nonce, csrfToken: csrfToken, lng };
   }
   // console.warn("🚨 Nonce is missing in loader!");
-  return { nonce: "" }; // Avoid undefined issues
+  return { nonce: "", lng }; // Avoid undefined issues
 }
 export const links = () => [
 
@@ -52,7 +53,8 @@ export function Layout( { children } )
   const loaderData = useLoaderData() || {}; // ✅ Prevents undefined error
   const nonce = loaderData.nonce || ""; // Get nonce from server
   const { i18n } = useTranslation();
-  const lang = i18n?.language || 'en';
+  const initialLang = loaderData.lng || 'en';
+  const lang = i18n?.language || initialLang;
 
   // console.log( "🛠 Nonce inside Layout:", nonce );
 
