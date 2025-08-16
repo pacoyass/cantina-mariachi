@@ -1,5 +1,7 @@
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../components/ui/table";
 import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { useTranslation } from 'react-i18next';
 
 export const meta = () => [
   { title: "My Orders - Cantina" },
@@ -13,30 +15,32 @@ export async function loader() {
 }
 
 export default function OrdersIndexPage() {
+  const { t } = useTranslation('orders');
   return (
-    <main className="container mx-auto p-6 grid gap-6">
-      <h1 className="text-xl font-semibold">My Orders</h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Order #</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell colSpan={5}>
-              <div className="text-muted-foreground">No orders yet.</div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <div>
-        <Button>Create order</Button>
+    <Card>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('table.order')}</TableHead>
+              <TableHead>{t('table.status')}</TableHead>
+              <TableHead>{t('table.total')}</TableHead>
+              <TableHead>{t('table.date')}</TableHead>
+              <TableHead>{t('table.actions')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={5}>
+                <div className="p-6 text-center text-muted-foreground text-sm">{t('empty')}</div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardContent>
+      <div className="p-4">
+        <Button>{t('create')}</Button>
       </div>
-    </main>
+    </Card>
   );
 }
