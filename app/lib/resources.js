@@ -58,7 +58,10 @@ export const uiResources = {
         rewards: { title: 'Rewards that matter', desc: 'Points on every order, instant perks.' }
       },
       faq: {
-        heading: 'Frequently asked questions'
+        heading: 'Frequently asked questions',
+        q1: { question: 'Do you offer vegetarian options?', answer: 'Yes, plenty! Many of our tacos and bowls have vegetarian options.' },
+        q2: { question: 'How long do deliveries take?', answer: 'On average, under 35 minutes depending on time and distance.' },
+        q3: { question: 'Can I change my reservation?', answer: 'You can modify your reservation up to 2 hours before your time slot.' }
       },
       cta: {
         limited: 'Limited‑time offer',
@@ -140,7 +143,10 @@ export const uiResources = {
         rewards: { title: 'مكافآت قيّمة', desc: 'نقاط على كل طلب ومزايا فورية.' }
       },
       faq: {
-        heading: 'الأسئلة الشائعة'
+        heading: 'الأسئلة الشائعة',
+        q1: { question: 'هل لديكم خيارات نباتية؟', answer: 'نعم، الكثير! العديد من التاكو والأطباق لدينا تحتوي على خيارات نباتية.' },
+        q2: { question: 'كم تستغرق عملية التوصيل؟', answer: 'في المتوسط، أقل من 35 دقيقة حسب الوقت والمسافة.' },
+        q3: { question: 'هل يمكنني تغيير الحجز؟', answer: 'يمكنك تعديل حجزك حتى ساعتين قبل موعدك.' }
       },
       cta: {
         limited: 'عرض لفترة محدودة',
@@ -221,7 +227,12 @@ export const uiResources = {
         chef: { title: 'Signé par nos chefs', desc: 'Ingrédients frais et menús de saison.' },
         rewards: { title: 'Des récompenses utiles', desc: 'Des points à chaque commande, des avantages immédiats.' }
       },
-      faq: { heading: 'Preguntas frecuentes' },
+      faq: {
+        heading: 'Preguntas frecuentes',
+        q1: { question: '¿Ofrecen opciones vegetarianas?', answer: '¡Sí, muchas! Muchos de nuestros tacos y bowls tienen opciones vegetarianas.' },
+        q2: { question: '¿Cuánto tardan los envíos?', answer: 'De media, menos de 35 minutos según la hora y la distancia.' },
+        q3: { question: '¿Puedo cambiar mi reserva?', answer: 'Puedes modificar tu reserva hasta 2 horas antes de tu horario.' }
+      },
       cta: {
         limited: 'Oferta por tiempo limitado',
         title: 'Envío gratis en pedidos superiores a $25',
@@ -298,7 +309,12 @@ export const uiResources = {
         chef: { title: 'Signé par nos chefs', desc: 'Ingrédients frais et menús de saison.' },
         rewards: { title: 'Des récompenses utiles', desc: 'Des points à chaque commande, des avantages immédiats.' }
       },
-      faq: { heading: 'Foire aux questions' },
+      faq: {
+        heading: 'Foire aux questions',
+        q1: { question: 'Proposez‑vous des options végétariennes ?', answer: 'Oui, beaucoup ! Beaucoup de nos tacos et bols ont des options végétariennes.' },
+        q2: { question: 'Combien de temps durent les livraisons ?', answer: 'En moyenne, moins de 35 minutes selon l’heure et la distance.' },
+        q3: { question: 'Puis‑je modifier ma réservation ?', answer: 'Vous pouvez modifier votre réservation jusqu’à 2 heures avant votre créneau.' }
+      },
       cta: {
         limited: 'Offre à durée limitée',
         title: 'Livraison gratuite pour les commandes de plus de 25 $',
@@ -375,7 +391,12 @@ export const uiResources = {
         chef: { title: 'Von Köchen kreiert', desc: 'Frische Zutaten und saisonale Menüs.' },
         rewards: { title: 'Sinnvolle Prämien', desc: 'Punkte bei jeder Bestellung, sofortige Vorteile.' }
       },
-      faq: { heading: 'Häufig gestellte Fragen' },
+      faq: {
+        heading: 'Häufig gestellte Fragen',
+        q1: { question: 'Bieten Sie vegetarische Optionen an?', answer: 'Ja, viele! Viele unserer Tacos und Bowls gibt es in vegetarischen Varianten.' },
+        q2: { question: 'Wie lange dauern Lieferungen?', answer: 'Im Durchschnitt unter 35 Minuten, je nach Uhrzeit und Entfernung.' },
+        q3: { question: 'Kann ich meine Reservierung ändern?', answer: 'Sie können Ihre Reservierung bis zu 2 Stunden vor Ihrem Termin ändern.' }
+      },
       cta: {
         limited: 'Nur für kurze Zeit',
         title: 'Kostenlose Lieferung ab 25 $ Bestellwert',
@@ -452,7 +473,12 @@ export const uiResources = {
         chef: { title: 'Creato dagli chef', desc: 'Ingredienti freschi e menù stagionali.' },
         rewards: { title: 'Ricompense utili', desc: 'Punti su ogni ordine, vantaggi immediati.' }
       },
-      faq: { heading: 'Domande frequenti' },
+      faq: {
+        heading: 'Domande frequenti',
+        q1: { question: 'Avete opzioni vegetarianane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetarianane.' },
+        q2: { question: 'Quanto tempo impiega la consegna?', answer: 'In media, meno di 35 minuti a seconda dell’orario e della distanza.' },
+        q3: { question: 'Posso modificare la mia prenotazione?', answer: 'Puoi modificare la prenotazione fino a 2 ore prima dell’orario.' }
+      },
       cta: {
         limited: 'Offerta a tempo limitato',
         title: 'Consegna gratuita per ordini superiori a $25',
@@ -529,7 +555,12 @@ export const uiResources = {
         chef: { title: 'Feito por chefs', desc: 'Ingredientes frescos e menus sazonais.' },
         rewards: { title: 'Recompensas que valem a pena', desc: 'Pontos em cada pedido, benefícios imediatos.' }
       },
-      faq: { heading: 'Perguntas frequentes' },
+      faq: {
+        heading: 'Perguntas frequentes',
+        q1: { question: 'Vocês oferecem opções vegetarianas?', answer: 'Sim, muitas! Muitos dos nossos tacos e tigelas têm opções vegetarianas.' },
+        q2: { question: 'Quanto tempo leva a entrega?', answer: 'Em média, menos de 35 minutos, dependendo do horário e da distância.' },
+        q3: { question: 'Posso alterar minha reserva?', answer: 'Você pode modificar sua reserva até 2 horas antes do horário.' }
+      },
       cta: {
         limited: 'Oferta por tempo limitado',
         title: 'Entrega grátis em pedidos acima de $25',
