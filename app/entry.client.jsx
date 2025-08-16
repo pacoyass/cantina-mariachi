@@ -14,6 +14,10 @@ startTransition(async () => {
   try {
     document.documentElement.lang = i18n.language;
     document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    if (!stored) {
+      try { localStorage.setItem('lng', i18n.language); } catch {}
+      try { document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
+    }
     if (!params.get('lng')) {
       const url = new URL(window.location.href);
       url.searchParams.set('lng', i18n.language);
