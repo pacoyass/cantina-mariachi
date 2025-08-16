@@ -18,5 +18,6 @@
   "invalidFieldValue": "Valor inválido para el campo: {{field}}",
   "duplicateEntry": "Entrada duplicada encontrada",
   "constraintViolation": "Violación de restricción de base de datos",
-  "connectionError": "Error de conexión de base de datos"
+  "connectionError": "Error de conexión a la base de datos",
+  "checkApiDocsAction": "Verifique la URL o consulte la documentación de la API para obtener endpoints válidos."
 }

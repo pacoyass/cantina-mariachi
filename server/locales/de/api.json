@@ -17,6 +17,7 @@
   "missingRequiredField": "Erforderliches Feld fehlt: {{field}}",
   "invalidFieldValue": "Ungültiger Wert für Feld: {{field}}",
   "duplicateEntry": "Doppelter Eintrag gefunden",
-  "constraintViolation": "Datenbankbeschränkung verletzt",
-  "connectionError": "Datenbankverbindungsfehler"
+  "constraintViolation": "Datenbank-Constraint-Verletzung",
+  "connectionError": "Datenbankverbindungsfehler",
+  "checkApiDocsAction": "Überprüfen Sie die URL oder sehen Sie in der API-Dokumentation nach gültigen Endpunkten."
 }

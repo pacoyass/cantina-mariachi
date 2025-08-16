@@ -37,7 +37,7 @@ router.use((req, res, next) => {
     'ROUTE_NOT_FOUND',
     {
       route: req.originalUrl,
-      action: 'Check the URL or refer to the API documentation for valid endpoints.',
+      action: req.t ? req.t('checkApiDocsAction', {}, 'api') : 'Check the URL or refer to the API documentation for valid endpoints.',
       contactSupport: 'support@cantina.app'
     },
     req,
