@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
@@ -50,6 +50,7 @@ export default function MenuPage() {
   const [sort, setSort] = useState("popular");
   const [view, setView] = useState("grid");
   const [filters, setFilters] = useState({ vegetarian: false, vegan: false, glutenFree: false, spicy: false });
+  const searchRef = useRef(null);
 
   const displayedItems = useMemo(() => {
     const normalized = (s) => (s || "").toString().toLowerCase();
@@ -85,9 +86,53 @@ export default function MenuPage() {
   return (
     <main className="container mx-auto p-6 grid gap-8">
       {/* Hero */}
-      <section className="rounded-xl border bg-card p-8 shadow-sm">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{t('hero.title')}</h1>
-        <p className="text-muted-foreground mt-2 max-w-prose">{t('hero.subtitle')}</p>
+      <section className="rounded-xl border bg-card p-8 shadow-sm relative overflow-hidden">
+        <div className="grid gap-6 md:grid-cols-2 md:items-center">
+          <div className="space-y-4">
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{t('hero.title')}</h1>
+            <p className="text-muted-foreground max-w-prose">{t('hero.subtitle')}</p>
+            <div className="flex flex-wrap gap-2">
+              <Button className="px-6" onClick={() => { try { searchRef.current?.focus(); } catch {} }}>{t('nav.orderNow', { ns: 'ui' })}</Button>
+              <a href="#menu-items" className="px-6 inline-flex items-center justify-center rounded-md border bg-secondary text-secondary-foreground text-sm font-medium">
+                {t('hero.browseMenu', { ns: 'home' })}
+              </a>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <Badge variant="secondary">{categories.length} {t('categories')}</Badge>
+              <Badge variant="secondary">{t('results', { count: resultsCount })}</Badge>
+            </div>
+          </div>
+          <div className="relative">
+            {(() => {
+              const score = (it) => Number(it.orderCount ?? it.popularity ?? 0);
+              const featured = [...items].sort((a, b) => score(b) - score(a))[0];
+              if (!featured) return null;
+              return (
+                <Card className="overflow-hidden">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2">
+                      <span>{featured.name}</span>
+                      <Badge variant="secondary">{t('badges.popular')}</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="rounded-md overflow-hidden border bg-muted">
+                        {featured.imageUrl ? (
+                          <img src={featured.imageUrl} alt={featured.name} className="w-full h-full object-cover aspect-video" />
+                        ) : (
+                          <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground line-clamp-2">{featured.description}</p>
+                      <div className="text-sm font-medium">${Number(featured.price).toFixed(2)}</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })()}
+          </div>
+        </div>
       </section>
 
       {/* Categories & Controls */}
@@ -113,6 +158,7 @@ export default function MenuPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t('actions.searchPlaceholder')}
                 className="max-w-sm"
+                ref={searchRef}
               />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -150,7 +196,7 @@ export default function MenuPage() {
       </section>
 
       {/* Items */}
-      <section>
+      <section id="menu-items">
         <div className={`grid gap-4 ${view === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
           {displayedItems.map((item) => (
             <Card key={item.id} className="overflow-hidden">
