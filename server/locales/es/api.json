@@ -1,0 +1,22 @@
+{
+  "dataRetrieved": "Datos recuperados con éxito",
+  "dataUpdated": "Datos actualizados con éxito",
+  "dataCreated": "Datos creados con éxito",
+  "dataDeleted": "Datos eliminados con éxito",
+  "noDataFound": "No se encontraron datos",
+  "invalidApiKey": "Clave API inválida",
+  "apiKeyExpired": "La clave API ha expirado",
+  "apiKeyRequired": "Clave API requerida",
+  "quotaExceeded": "Cuota de API excedida",
+  "methodNotAllowed": "Método no permitido",
+  "unsupportedMediaType": "Tipo de medio no soportado",
+  "payloadTooLarge": "Carga útil demasiado grande",
+  "requestEntityTooLarge": "Entidad de solicitud demasiado grande",
+  "contentTypeRequired": "Encabezado Content-Type requerido",
+  "jsonParseError": "Formato JSON inválido",
+  "missingRequiredField": "Campo requerido faltante: {{field}}",
+  "invalidFieldValue": "Valor inválido para el campo: {{field}}",
+  "duplicateEntry": "Entrada duplicada encontrada",
+  "constraintViolation": "Violación de restricción de base de datos",
+  "connectionError": "Error de conexión de base de datos"
+}

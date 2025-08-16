@@ -1,0 +1,23 @@
+{
+  "subject": {
+    "welcome": "Bienvenido a {{appName}}",
+    "passwordReset": "Solicitud de Restablecimiento de Contraseña",
+    "emailVerification": "Verifica tu Dirección de Correo Electrónico",
+    "accountLocked": "Alerta de Seguridad de Cuenta",
+    "loginAlert": "Nuevo Inicio de Sesión Detectado"
+  },
+  "greeting": "Hola {{name}},",
+  "welcomeMessage": "¡Bienvenido a {{appName}}! Estamos emocionados de tenerte a bordo.",
+  "passwordResetMessage": "Has solicitado restablecer tu contraseña. Haz clic en el enlace a continuación para proceder:",
+  "verificationMessage": "Por favor verifica tu dirección de correo electrónico haciendo clic en el enlace a continuación:",
+  "accountLockedMessage": "Tu cuenta ha sido temporalmente bloqueada debido a múltiples intentos fallidos de inicio de sesión.",
+  "loginAlertMessage": "Detectamos un nuevo inicio de sesión en tu cuenta desde {{location}} a las {{time}}.",
+  "footer": "Si no solicitaste esto, por favor ignora este correo o contacta a soporte.",
+  "buttonText": {
+    "resetPassword": "Restablecer Contraseña",
+    "verifyEmail": "Verificar Correo",
+    "contactSupport": "Contactar Soporte"
+  },
+  "expiryNotice": "Este enlace expirará en {{hours}} horas.",
+  "supportContact": "Si necesitas ayuda, contáctanos en {{email}}"
+}

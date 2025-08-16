@@ -1,0 +1,23 @@
+{
+  "required": "{{field}} es requerido",
+  "email": "Por favor ingrese una dirección de correo electrónico válida",
+  "minLength": "{{field}} debe tener al menos {{min}} caracteres",
+  "maxLength": "{{field}} no debe exceder {{max}} caracteres",
+  "passwordStrength": "La contraseña debe contener al menos 8 caracteres, una letra mayúscula, una minúscula y un número",
+  "passwordMatch": "Las contraseñas no coinciden",
+  "invalidFormat": "Formato inválido para {{field}}",
+  "invalidDate": "Formato de fecha inválido",
+  "futureDateRequired": "La fecha debe estar en el futuro",
+  "pastDateRequired": "La fecha debe estar en el pasado",
+  "invalidPhone": "Formato de número de teléfono inválido",
+  "invalidUrl": "Formato de URL inválido",
+  "numericOnly": "{{field}} debe contener solo números",
+  "alphabeticOnly": "{{field}} debe contener solo letras",
+  "alphanumericOnly": "{{field}} debe contener solo letras y números",
+  "invalidRange": "{{field}} debe estar entre {{min}} y {{max}}",
+  "fileRequired": "El archivo es requerido",
+  "invalidFileType": "Tipo de archivo inválido. Tipos permitidos: {{types}}",
+  "fileSizeExceeded": "El tamaño del archivo no debe exceder {{maxSize}}",
+  "invalidImageFormat": "Formato de imagen inválido",
+  "duplicateValue": "{{field}} ya existe"
+}
