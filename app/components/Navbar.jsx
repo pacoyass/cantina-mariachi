@@ -5,8 +5,10 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { useEffect, useRef, useState } from "react"
+import { useTranslation } from 'react-i18next'
 
 export function Navbar() {
+  const { t } = useTranslation('ui')
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto grid grid-cols-3 h-14 items-center px-4">
@@ -18,29 +20,29 @@ export function Navbar() {
               </SheetTrigger>
               <SheetContent>
                 <div className="flex flex-col gap-3">
-                  <NavLink to="/">Home</NavLink>
-                  <NavLink to="/menu">Menu</NavLink>
-                  <NavLink to="/orders">Orders</NavLink>
-                  <NavLink to="/reservations">Reservations</NavLink>
-                  <NavLink to="/account">Account</NavLink>
+                  <NavLink to="/">{t('nav.home')}</NavLink>
+                  <NavLink to="/menu">{t('nav.menu')}</NavLink>
+                  <NavLink to="/orders">{t('nav.orders')}</NavLink>
+                  <NavLink to="/reservations">{t('nav.reservations')}</NavLink>
+                  <NavLink to="/account">{t('nav.account')}</NavLink>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm">
-            <NavLink to="/menu">Menu</NavLink>
-            <NavLink to="/orders">Orders</NavLink>
+            <NavLink to="/menu">{t('nav.menu')}</NavLink>
+            <NavLink to="/orders">{t('nav.orders')}</NavLink>
           </div>
         </div>
 
         <div className="flex items-center justify-center">
-          <NavLink to="/" className="text-lg font-semibold">Cantina</NavLink>
+          <NavLink to="/" className="text-lg font-semibold">{t('brand')}</NavLink>
         </div>
 
         <div className="flex items-center justify-end gap-2">
           <div className="hidden md:flex items-center gap-4 text-sm mr-2">
-            <NavLink to="/reservations">Reservations</NavLink>
-            <NavLink to="/account">Account</NavLink>
+            <NavLink to="/reservations">{t('nav.reservations')}</NavLink>
+            <NavLink to="/account">{t('nav.account')}</NavLink>
           </div>
           <ModeToggle />
           <DropdownMenu>
@@ -52,12 +54,12 @@ export function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to="/login">Login</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to="/register">Register</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to="/account">{t('nav.profile')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to="/login">{t('nav.login')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to="/register">{t('nav.register')}</NavLink></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button className="hidden md:inline-flex">Order Now</Button>
+          <Button className="hidden md:inline-flex">{t('nav.orderNow')}</Button>
         </div>
       </nav>
       <div className="mex-divider" />
@@ -67,6 +69,7 @@ export function Navbar() {
 }
 
 function OfferBar() {
+  const { t } = useTranslation('ui')
   const [visible, setVisible] = useState(true)
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -84,7 +87,7 @@ function OfferBar() {
       <div className={`will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="bg-card/90 backdrop-blur text-card-foreground text-xs border-b">
           <div className="container mx-auto px-4 h-8 flex items-center justify-center">
-            <span>Today only: free delivery on orders over $25</span>
+            <span>{t('offer.freeDelivery')}</span>
           </div>
         </div>
       </div>

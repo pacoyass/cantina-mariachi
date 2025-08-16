@@ -175,7 +175,8 @@ app.use(
 			return {
 				VALUE_FROM_EXPRESS: "Hello from Express",
         nonce: res.locals.nonce,
-        csrfToken: res.locals.csrfToken
+        csrfToken: res.locals.csrfToken,
+        lng: req.language || req.lng || 'en'
 			};
 		},
 	}),
