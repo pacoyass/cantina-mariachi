@@ -80,6 +80,19 @@ export default function Home() {
         <div className="mex-divider" />
       </section>
 
+      {/* Why choose us */}
+      <section className="container mx-auto px-6 py-14">
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('why.heading')}</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <FeatureCard icon={<Clock className="size-5" />} title={t('why.faster.title')}>{t('why.faster.desc')}</FeatureCard>
+          <FeatureCard icon={<ShieldCheck className="size-5" />} title={t('why.fees.title')}>{t('why.fees.desc')}</FeatureCard>
+          <FeatureCard icon={<Smartphone className="size-5" />} title={t('why.oneTap.title')}>{t('why.oneTap.desc')}</FeatureCard>
+          <FeatureCard icon={<Truck className="size-5" />} title={t('why.tracking.title')}>{t('why.tracking.desc')}</FeatureCard>
+          <FeatureCard icon={<UtensilsCrossed className="size-5" />} title={t('why.chef.title')}>{t('why.chef.desc')}</FeatureCard>
+          <FeatureCard icon={<Sparkles className="size-5" />} title={t('why.rewards.title')}>{t('why.rewards.desc')}</FeatureCard>
+        </div>
+      </section>
+
       {/* Logo cloud */}
       <section className="container mx-auto px-6 py-8">
         <div className="text-center text-xs text-muted-foreground">{t('logo.heading')}</div>
@@ -159,19 +172,6 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
-      </section>
-
-      {/* Why choose us */}
-      <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('why.heading')}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <FeatureCard icon={<Clock className="size-5" />} title={t('why.faster.title')}>{t('why.faster.desc')}</FeatureCard>
-          <FeatureCard icon={<ShieldCheck className="size-5" />} title={t('why.fees.title')}>{t('why.fees.desc')}</FeatureCard>
-          <FeatureCard icon={<Smartphone className="size-5" />} title={t('why.oneTap.title')}>{t('why.oneTap.desc')}</FeatureCard>
-          <FeatureCard icon={<Truck className="size-5" />} title={t('why.tracking.title')}>{t('why.tracking.desc')}</FeatureCard>
-          <FeatureCard icon={<UtensilsCrossed className="size-5" />} title={t('why.chef.title')}>{t('why.chef.desc')}</FeatureCard>
-          <FeatureCard icon={<Sparkles className="size-5" />} title={t('why.rewards.title')}>{t('why.rewards.desc')}</FeatureCard>
-        </div>
       </section>
 
       {/* Group events & catering */}
