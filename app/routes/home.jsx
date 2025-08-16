@@ -291,35 +291,53 @@ export default function Home() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items && items.length > 0 ? (
             items.map((item) => (
-              <Card key={item.id}>
+              <Card key={item.id} className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span>{item.name}</span>
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="flex items-center gap-2">
+                      <span>{item.name}</span>
+                      <div className="flex gap-1">
+                        {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('badges.popular', { ns: 'menu' })}</Badge>}
+                      </div>
+                    </CardTitle>
                     {item.available === false && (
                       <Badge variant="outline">{t('popular.unavailable')}</Badge>
                     )}
-                  </CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-                    <Button size="sm">{t('popular.add')}</Button>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="rounded-md overflow-hidden border bg-muted">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover aspect-video" />
+                      ) : (
+                        <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />)}
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">${Number(item.price).toFixed(2)}</span>
+                      <Button size="sm">{t('popular.add')}</Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))
           ) : (
             [...Array(3)].map((_, i) => (
-              <Card key={i}>
+              <Card key={i} className="overflow-hidden">
                 <CardHeader>
                   <CardTitle>{t('popular.chefSpecial', { num: i + 1 })}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">$12.{i}0</span>
-                    <Button size="sm">{t('popular.notify')}</Button>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="rounded-md overflow-hidden border bg-muted">
+                      <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">$12.{i}0</span>
+                      <Button size="sm">{t('popular.notify')}</Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
