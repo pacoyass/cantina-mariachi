@@ -181,24 +181,31 @@ export default function Home() {
             <CardTitle className="text-lg">{t('events.heading')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="text-sm text-muted-foreground">{t('events.desc')}</div>
-              <div className="flex gap-2">
-                <Button size="sm">{t('events.plan')}</Button>
-                <Button size="sm" variant="outline">{t('events.catering')}</Button>
+            <div className="grid gap-4 md:grid-cols-[1fr_320px] md:items-center">
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="text-sm text-muted-foreground">{t('events.desc')}</div>
+                  <div className="flex gap-2">
+                    <Button size="sm">{t('events.plan')}</Button>
+                    <Button size="sm" variant="outline">{t('events.catering')}</Button>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="e1">
+                      <AccordionTrigger>{t('events.q1.question')}</AccordionTrigger>
+                      <AccordionContent>{t('events.q1.answer')}</AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="e2">
+                      <AccordionTrigger>{t('events.q2.question')}</AccordionTrigger>
+                      <AccordionContent>{t('events.q2.answer')}</AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
               </div>
-            </div>
-            <div className="mt-4">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="e1">
-                  <AccordionTrigger>{t('events.q1.question')}</AccordionTrigger>
-                  <AccordionContent>{t('events.q1.answer')}</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="e2">
-                  <AccordionTrigger>{t('events.q2.question')}</AccordionTrigger>
-                  <AccordionContent>{t('events.q2.answer')}</AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              <div className="rounded-md overflow-hidden border bg-muted">
+                <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -214,15 +221,20 @@ export default function Home() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <div className="text-sm text-muted-foreground">{t('offers.bundle')}</div>
-                <div className="text-xl font-semibold">{t('offers.deal')}</div>
-                <div className="text-xs text-muted-foreground">{t('offers.endsIn')} <Countdown to={Date.now() + 1000 * 60 * 60 * 24 * 2} /></div>
+            <div className="grid gap-4 md:grid-cols-[320px_1fr] md:items-center">
+              <div className="rounded-md overflow-hidden border bg-muted">
+                <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
               </div>
-              <div className="flex gap-2">
-                <Button>{t('offers.orderBundle')}</Button>
-                <Button variant="outline">{t('offers.viewDetails')}</Button>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">{t('offers.bundle')}</div>
+                  <div className="text-xl font-semibold">{t('offers.deal')}</div>
+                  <div className="text-xs text-muted-foreground">{t('offers.endsIn')} <Countdown to={Date.now() + 1000 * 60 * 60 * 24 * 2} /></div>
+                </div>
+                <div className="flex gap-2">
+                  <Button>{t('offers.orderBundle')}</Button>
+                  <Button variant="outline">{t('offers.viewDetails')}</Button>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -253,10 +265,10 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.dailyMarket')}</CardContent></Card>
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.houseSalsas')}</CardContent></Card>
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.localTortillas')}</CardContent></Card>
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.compostablePackaging')}</CardContent></Card>
+            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.dailyMarket')}</div></CardContent></Card>
+            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.houseSalsas')}</div></CardContent></Card>
+            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.localTortillas')}</div></CardContent></Card>
+            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.compostablePackaging')}</div></CardContent></Card>
           </div>
         </div>
       </section>
@@ -423,7 +435,7 @@ function Countdown({ to }) {
 
 function ValueCard({ icon, title, children }) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
           <span className="text-primary">{icon}</span>
@@ -437,7 +449,7 @@ function ValueCard({ icon, title, children }) {
 
 function FeatureCard({ icon, title, children }) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
           <span className="text-primary">{icon}</span>
@@ -465,7 +477,7 @@ function Step({ number, title, children }) {
 
 function Testimonial({ name, initials, children }) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardContent className="pt-6">
         <div className="flex items-start gap-3">
           <Avatar>
