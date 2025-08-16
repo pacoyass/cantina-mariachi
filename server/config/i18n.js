@@ -61,7 +61,7 @@ i18next
     load: 'languageOnly', // Load 'en' instead of 'en-US'
     
     // Preload languages
-    preload: ['en', 'es', 'fr'],
+    preload: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'],
     
     // Clean code options
     cleanCode: true,
