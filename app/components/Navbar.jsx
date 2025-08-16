@@ -6,6 +6,7 @@ import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { useEffect, useRef, useState } from "react"
 import { useTranslation } from 'react-i18next'
+import { LangToggle } from './LangToggle'
 
 export function Navbar() {
   const { t } = useTranslation('ui')
@@ -45,6 +46,7 @@ export function Navbar() {
             <NavLink to="/account">{t('nav.account')}</NavLink>
           </div>
           <ModeToggle />
+          <LangToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="px-2">
