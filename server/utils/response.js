@@ -28,16 +28,16 @@ export const createError = (res, status, message, type, details = {}, req = null
     });
   }
   
-  // Translate status field
-  let translatedStatus = 'error';
-  // Keep status constant for API consumers; do not translate
+  // Status: translate when possible, else keep constant
+  const statusText = req && req.t ? req.t('statusError', {}, 'common') : 'error';
 
   const response = {
-    status: translatedStatus,
+    status: statusText,
     error: {
-      type: type || 'UNKNOWN_ERROR',
+      type: req && req.t ? translatedMessage : (type || 'UNKNOWN_ERROR'),
+      typeKey: type || 'UNKNOWN_ERROR',
       message: translatedMessage || 'Internal server error',
-      details: { ...details }, // Spread to ensure details is included
+      details: { ...details },
       code: status,
     },
     timestamp: new Date().toISOString(),
@@ -72,12 +72,11 @@ export const createResponse = (res, status, message, data = {}, req = null, inte
     });
   }
   
-  // Translate status field
-  let translatedStatus = 'success';
-  // Keep status constant for API consumers; do not translate
+  // Status: translate when possible, else keep constant
+  const statusText = req && req.t ? req.t('statusSuccess', {}, 'common') : 'success';
 
   return res.status(status).json({
-    status: translatedStatus,
+    status: statusText,
     message: translatedMessage,
     data,
     timestamp: new Date().toISOString(),
