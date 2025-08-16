@@ -16,6 +16,7 @@ import { Button } from "./components/ui/button";
 import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/dropdown-menu";
 import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { useTranslation } from 'react-i18next';
 
 export async function loader( { request, context } )
 {
@@ -50,11 +51,13 @@ export function Layout( { children } )
 {
   const loaderData = useLoaderData() || {}; // ✅ Prevents undefined error
   const nonce = loaderData.nonce || ""; // Get nonce from server
+  const { i18n } = useTranslation();
+  const lang = i18n?.language || 'en';
 
   // console.log( "🛠 Nonce inside Layout:", nonce );
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -69,7 +72,7 @@ export function Layout( { children } )
          {children}
          </ThemeProvider>
 
-          
+        
        
         
         <ScrollRestoration nonce={nonce} />
@@ -87,14 +90,15 @@ export default function App()
 
 export function ErrorBoundary( { error } )
 {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  const { t } = useTranslation();
+  let message = t('errors.title', { ns: 'ui' });
+  let details = t('errors.notFound', { ns: 'ui' });
   let stack;
   if ( isRouteErrorResponse( error ) ) {
-    message = error.status === 404 ? `${error.status}-${error.statusText}` : "Error";
+    message = error.status === 404 ? `${error.status}-${error.statusText}` : t('errors.title', { ns: 'ui' });
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? t('errors.notFound', { ns: 'ui' })
         : error.statusText || details;
   } else if ( import.meta.env.DEV && error && error instanceof Error ) {
     details = error.message;
@@ -115,29 +119,29 @@ export function ErrorBoundary( { error } )
                 </SheetTrigger>
                 <SheetContent>
                   <div className="flex flex-col gap-3">
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/menu">Menu</NavLink>
-                    <NavLink to="/orders">Orders</NavLink>
-                    <NavLink to="/reservations">Reservations</NavLink>
-                    <NavLink to="/account">Account</NavLink>
+                    <NavLink to="/">{t('nav.home', { ns: 'ui' })}</NavLink>
+                    <NavLink to="/menu">{t('nav.menu', { ns: 'ui' })}</NavLink>
+                    <NavLink to="/orders">{t('nav.orders', { ns: 'ui' })}</NavLink>
+                    <NavLink to="/reservations">{t('nav.reservations', { ns: 'ui' })}</NavLink>
+                    <NavLink to="/account">{t('nav.account', { ns: 'ui' })}</NavLink>
                   </div>
                 </SheetContent>
               </Sheet>
             </div>
             <div className="hidden md:flex items-center gap-4 text-sm">
-              <NavLink to="/menu">Menu</NavLink>
-              <NavLink to="/orders">Orders</NavLink>
+              <NavLink to="/menu">{t('nav.menu', { ns: 'ui' })}</NavLink>
+              <NavLink to="/orders">{t('nav.orders', { ns: 'ui' })}</NavLink>
             </div>
           </div>
 
           <div className="flex items-center justify-center">
-            <NavLink to="/" className="text-lg font-semibold">Cantina</NavLink>
+            <NavLink to="/" className="text-lg font-semibold">{t('brand', { ns: 'ui' })}</NavLink>
           </div>
 
           <div className="flex items-center justify-end gap-2">
             <div className="hidden md:flex items-center gap-4 text-sm mr-2">
-              <NavLink to="/reservations">Reservations</NavLink>
-              <NavLink to="/account">Account</NavLink>
+              <NavLink to="/reservations">{t('nav.reservations', { ns: 'ui' })}</NavLink>
+              <NavLink to="/account">{t('nav.account', { ns: 'ui' })}</NavLink>
             </div>
             <ModeToggle />
             <DropdownMenu>
@@ -145,12 +149,12 @@ export function ErrorBoundary( { error } )
                 <Button variant="ghost" aria-label="Account menu">☰</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
-                <DropdownMenuItem asChild><NavLink to="/login">Login</NavLink></DropdownMenuItem>
-                <DropdownMenuItem asChild><NavLink to="/register">Register</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/account">{t('nav.profile', { ns: 'ui' })}</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/login">{t('nav.login', { ns: 'ui' })}</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/register">{t('nav.register', { ns: 'ui' })}</NavLink></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button className="hidden md:inline-flex">Order Now</Button>
+            <Button className="hidden md:inline-flex">{t('nav.orderNow', { ns: 'ui' })}</Button>
           </div>
         </nav>
       <div className="flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl rounded-4xl  p-4 sm:p-6 lg:p-8 xl:p-24">
