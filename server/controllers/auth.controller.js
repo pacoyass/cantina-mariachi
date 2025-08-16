@@ -104,7 +104,7 @@ export const cleanupExpiredAuthData = async () => {
 export const register = async (req, res) => {
   try {
     if (!req.body || !req.body.email || !req.body.password || !req.body.name) {
-      return createError(res, 400, 'Please provide email, password, and name', 'INVALID_INPUT', {
+      return createError(res, 400, 'badRequest', 'INVALID_INPUT', {
         fields: ['email', 'password', 'name'],
       });
     }
@@ -115,7 +115,7 @@ export const register = async (req, res) => {
     await LoggerService.logAudit(user.id, 'USER_REGISTERED', user.id, { email, role, name, phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_registered', `User ${email} registered`, 'SENT');
     await sendWebhook('USER_REGISTERED', { userId: user.id, email, role, name, phone });
-    return createResponse(res, 201, 'User registered successfully', { data:user });
+    return createResponse(res, 201, 'registerSuccess', { data:user }, req, {}, 'auth');
   } catch (error) {
     console.error(error);
     
@@ -143,7 +143,7 @@ const ip = req.ip || null;
 
   if (!email || !password) {
     await LoggerService.logLogin(null, 'FAILURE', ip, userAgent);
-    return createError(res, 400, 'Email and password are required', 'BAD_REQUEST');
+    return createError(res, 400, 'badRequest', 'BAD_REQUEST', {}, req, {}, 'auth');
   }
 
   // Check rate-limiting
@@ -201,7 +201,7 @@ const ip = req.ip || null;
     await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp), undefined, { userAgent, ip });
   } catch (authErr) {
     await LoggerService.logError('Token generation/storage failed', authErr.stack, { email, error: authErr.message });
-    return createError(res, 500, 'Failed to generate tokens', 'AUTH_ERROR');
+    return createError(res, 500, 'Failed to generate tokens', 'AUTH_ERROR', {}, req, {}, 'auth');
   }
 
   // Set cookies
@@ -303,21 +303,21 @@ const ip = req.ip || null;
         maxAge: 15 * 60 * 1000,
         path: '/',
       });
-      return createResponse(res, 200, 'Token refreshed successfully', { accessToken });
+      return createResponse(res, 200, 'Token refreshed successfully', { accessToken }, req, {}, 'auth');
     }
     // Ensure stored hash exists (rotate only if valid current token)
     const providedTokenHash = await hashToken(providedRefreshToken);
     const stored = await databaseService.getRefreshToken(providedTokenHash);
     if (!stored || stored.expiresAt < new Date()) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'Refresh token not recognized or expired' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED');
+      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
 
     // Fetch user
     const user = await databaseService.getUserById(payload.userId, { id: true, email: true, role: true, name: true, phone: true, isActive: true });
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'User not found' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED');
+      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
 
     // Issue new tokens (rotate refresh)
@@ -355,7 +355,7 @@ const ip = req.ip || null;
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Token refreshed successfully', { accessToken });
+    return createResponse(res, 200, 'Token refreshed successfully', { accessToken }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('Token refresh failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: error.message });
@@ -379,7 +379,7 @@ export const logout = async (req, res) => {
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_SUCCESS', req.user.userId, { email: req.user.email });
     await LoggerService.logNotification(req.user.userId, 'WEBHOOK', 'user_logout', `User ${req.user.email} logged out`, 'SENT');
     await sendWebhook('USER_LOGOUT', { userId: req.user.userId, email: req.user.email });
-    return createResponse(res, 200, 'Signed out successfully', { nextSteps: 'Log in again to access your account' });
+    return createResponse(res, 200, 'Signed out successfully', { nextSteps: 'Log in again to access your account' }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('Logout failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'USER_LOGOUT_FAILED', null, { reason: error.message });
@@ -428,16 +428,16 @@ export const getToken = async (req, res) => {
 export const listSessions = async (req, res) => {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     const page = Math.max(parseInt(req.query.page || '1', 10), 1);
     const pageSize = Math.min(Math.max(parseInt(req.query.pageSize || '20', 10), 1), 100);
     const tokens = await databaseService.listRefreshTokensByUser(req.user.userId, { page, pageSize });
     const hasMore = tokens.length === pageSize;
-    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens.map(t => ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip })), page, pageSize, hasMore });
+    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens.map(t => ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip }, req)), page, pageSize, hasMore });
   } catch (error) {
     await LoggerService.logError('listSessions failed', error.stack, { userId: req.user?.userId });
-    return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR', {}, req, {}, 'auth');
   }
 };
 
@@ -445,7 +445,7 @@ export const listSessions = async (req, res) => {
 export const logoutAllSessions = async (req, res) => {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     // Blacklist current access token if present
     const accessToken = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
@@ -458,10 +458,10 @@ export const logoutAllSessions = async (req, res) => {
     res.clearCookie('refreshToken', { path: '/', httpOnly: true });
 
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_ALL_SESSIONS', req.user.userId, { deletedTokens: count });
-    return createResponse(res, 200, 'Logged out from all sessions', { deletedTokens: count });
+    return createResponse(res, 200, 'Logged out from all sessions', { deletedTokens: count }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('logoutAllSessions failed', error.stack, { userId: req.user?.userId });
-    return createError(res, 500, 'Failed to logout from all sessions', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to logout from all sessions', 'SERVER_ERROR', {}, req, {}, 'auth');
   }
 };
 
@@ -469,20 +469,20 @@ export const logoutAllSessions = async (req, res) => {
 export const logoutOtherSessions = async (req, res) => {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     const currentRefresh = req.cookies.refreshToken || req.body.refreshToken;
     if (!currentRefresh) {
-      return createError(res, 400, 'Current refresh token required', 'BAD_REQUEST');
+      return createError(res, 400, 'Current refresh token required', 'BAD_REQUEST', {}, req, {}, 'auth');
     }
     const keepHash = await hashToken(currentRefresh);
     const count = await databaseService.deleteOtherRefreshTokensForUser(req.user.userId, keepHash);
 
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_OTHER_SESSIONS', req.user.userId, { deletedTokens: count });
-    return createResponse(res, 200, 'Logged out from other sessions', { deletedTokens: count });
+    return createResponse(res, 200, 'Logged out from other sessions', { deletedTokens: count }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('logoutOtherSessions failed', error.stack, { userId: req.user?.userId });
-    return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR', {}, req, {}, 'auth');
   }
 };
 
@@ -490,13 +490,13 @@ export const logoutOtherSessions = async (req, res) => {
 export const revokeSessionById = async (req, res) => {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     const sessionId = req.params.id;
     const result = await prisma.refreshToken.deleteMany({ where: { id: sessionId, userId: req.user.userId } });
-    return createResponse(res, 200, 'Session revoked', { deleted: result.count });
+    return createResponse(res, 200, 'Session revoked', { deleted: result.count }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('revokeSessionById failed', error.stack, { userId: req.user?.userId });
-    return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR', {}, req, {}, 'auth');
   }
 };

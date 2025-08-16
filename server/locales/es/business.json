@@ -1,0 +1,92 @@
+{
+  "menu": {
+    "itemCreated": "Artículo del menú creado exitosamente",
+    "itemUpdated": "Artículo del menú actualizado exitosamente",
+    "itemDeleted": "Artículo del menú eliminado exitosamente",
+    "itemNotFound": "Artículo del menú no encontrado",
+    "categoryCreated": "Categoría del menú creada exitosamente",
+    "categoryUpdated": "Categoría del menú actualizada exitosamente",
+    "categoryDeleted": "Categoría del menú eliminada exitosamente",
+    "categoryNotFound": "Categoría del menú no encontrada",
+    "itemOutOfStock": "El artículo del menú está agotado",
+    "invalidPrice": "Precio inválido especificado",
+    "duplicateItem": "El artículo del menú ya existe"
+  },
+  "orders": {
+    "orderCreated": "Pedido creado exitosamente",
+    "orderUpdated": "Pedido actualizado exitosamente",
+    "orderCancelled": "Pedido cancelado exitosamente",
+    "orderNotFound": "Pedido no encontrado",
+    "orderStatusUpdated": "Estado del pedido actualizado exitosamente",
+    "invalidOrderStatus": "Estado del pedido inválido",
+    "orderAlreadyCancelled": "El pedido ya está cancelado",
+    "orderCannotBeCancelled": "El pedido no puede ser cancelado en esta etapa",
+    "paymentRequired": "Se requiere pago para completar el pedido",
+    "insufficientInventory": "Inventario insuficiente para algunos artículos",
+    "orderTotal": "Total del pedido: {{amount}}",
+    "estimatedDelivery": "Tiempo estimado de entrega: {{time}} minutos"
+  },
+  "reservations": {
+    "reservationCreated": "Reservación creada exitosamente",
+    "reservationUpdated": "Reservación actualizada exitosamente",
+    "reservationCancelled": "Reservación cancelada exitosamente",
+    "reservationNotFound": "Reservación no encontrada",
+    "reservationConfirmed": "Reservación confirmada",
+    "tableNotAvailable": "Mesa no disponible en el horario solicitado",
+    "invalidReservationTime": "Hora de reservación inválida",
+    "reservationTooEarly": "La hora de reservación es muy anticipada",
+    "reservationTooLate": "La hora de reservación ya ha pasado",
+    "capacityExceeded": "El tamaño del grupo excede la capacidad de la mesa"
+  },
+  "drivers": {
+    "driverCreated": "Perfil de conductor creado exitosamente",
+    "driverUpdated": "Perfil de conductor actualizado exitosamente",
+    "driverDeleted": "Perfil de conductor eliminado exitosamente",
+    "driverNotFound": "Conductor no encontrado",
+    "driverAssigned": "Conductor asignado al pedido",
+    "driverUnassigned": "Conductor desasignado del pedido",
+    "driverAvailable": "El conductor ahora está disponible",
+    "driverUnavailable": "El conductor ahora no está disponible",
+    "invalidDriverStatus": "Estado de conductor inválido",
+    "driverBusy": "El conductor está ocupado con otro pedido",
+    "locationUpdated": "Ubicación del conductor actualizada"
+  },
+  "cash": {
+    "transactionCreated": "Transacción en efectivo registrada exitosamente",
+    "transactionUpdated": "Transacción en efectivo actualizada exitosamente",
+    "transactionDeleted": "Transacción en efectivo eliminada exitosamente",
+    "transactionNotFound": "Transacción en efectivo no encontrada",
+    "cashBalanceUpdated": "Saldo de efectivo actualizado exitosamente",
+    "insufficientFunds": "Fondos en efectivo insuficientes",
+    "invalidAmount": "Monto de transacción inválido",
+    "cashDrawerOpened": "Caja registradora abierta",
+    "cashDrawerClosed": "Caja registradora cerrada",
+    "balanceReconciled": "Saldo de efectivo reconciliado"
+  },
+  "notifications": {
+    "notificationSent": "Notificación enviada exitosamente",
+    "notificationFailed": "Error al enviar notificación",
+    "notificationRead": "Notificación marcada como leída",
+    "notificationDeleted": "Notificación eliminada exitosamente",
+    "noNotifications": "No se encontraron notificaciones",
+    "notificationPreferencesUpdated": "Preferencias de notificación actualizadas"
+  },
+  "system": {
+    "maintenanceMode": "El sistema está actualmente en mantenimiento",
+    "serviceUnavailable": "Servicio temporalmente no disponible",
+    "systemHealthy": "Todos los sistemas están operativos",
+    "systemDegraded": "Algunos sistemas están experimentando problemas",
+    "databaseConnected": "Conexión a base de datos establecida",
+    "databaseError": "Error de conexión a base de datos",
+    "cacheConnected": "Servicio de caché conectado",
+    "cacheError": "Error del servicio de caché"
+  },
+  "profile": {
+    "profileUpdated": "Perfil actualizado exitosamente",
+    "profileFetched": "Perfil obtenido exitosamente",
+    "passwordChanged": "Contraseña cambiada exitosamente",
+    "invalidCurrentPassword": "La contraseña actual es incorrecta",
+    "profilePictureUpdated": "Foto de perfil actualizada exitosamente",
+    "preferencesUpdated": "Preferencias de usuario actualizadas exitosamente"
+  }
+}

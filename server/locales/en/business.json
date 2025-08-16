@@ -1,0 +1,92 @@
+{
+  "menu": {
+    "itemCreated": "Menu item created successfully",
+    "itemUpdated": "Menu item updated successfully",
+    "itemDeleted": "Menu item deleted successfully",
+    "itemNotFound": "Menu item not found",
+    "categoryCreated": "Menu category created successfully",
+    "categoryUpdated": "Menu category updated successfully",
+    "categoryDeleted": "Menu category deleted successfully",
+    "categoryNotFound": "Menu category not found",
+    "itemOutOfStock": "Menu item is out of stock",
+    "invalidPrice": "Invalid price specified",
+    "duplicateItem": "Menu item already exists"
+  },
+  "orders": {
+    "orderCreated": "Order created successfully",
+    "orderUpdated": "Order updated successfully",
+    "orderCancelled": "Order cancelled successfully",
+    "orderNotFound": "Order not found",
+    "orderStatusUpdated": "Order status updated successfully",
+    "invalidOrderStatus": "Invalid order status",
+    "orderAlreadyCancelled": "Order is already cancelled",
+    "orderCannotBeCancelled": "Order cannot be cancelled at this stage",
+    "paymentRequired": "Payment is required to complete the order",
+    "insufficientInventory": "Insufficient inventory for some items",
+    "orderTotal": "Order total: {{amount}}",
+    "estimatedDelivery": "Estimated delivery time: {{time}} minutes"
+  },
+  "reservations": {
+    "reservationCreated": "Reservation created successfully",
+    "reservationUpdated": "Reservation updated successfully",
+    "reservationCancelled": "Reservation cancelled successfully",
+    "reservationNotFound": "Reservation not found",
+    "reservationConfirmed": "Reservation confirmed",
+    "tableNotAvailable": "Table not available at the requested time",
+    "invalidReservationTime": "Invalid reservation time",
+    "reservationTooEarly": "Reservation time is too far in advance",
+    "reservationTooLate": "Reservation time has already passed",
+    "capacityExceeded": "Party size exceeds table capacity"
+  },
+  "drivers": {
+    "driverCreated": "Driver profile created successfully",
+    "driverUpdated": "Driver profile updated successfully",
+    "driverDeleted": "Driver profile deleted successfully",
+    "driverNotFound": "Driver not found",
+    "driverAssigned": "Driver assigned to order",
+    "driverUnassigned": "Driver unassigned from order",
+    "driverAvailable": "Driver is now available",
+    "driverUnavailable": "Driver is now unavailable",
+    "invalidDriverStatus": "Invalid driver status",
+    "driverBusy": "Driver is currently busy with another order",
+    "locationUpdated": "Driver location updated"
+  },
+  "cash": {
+    "transactionCreated": "Cash transaction recorded successfully",
+    "transactionUpdated": "Cash transaction updated successfully",
+    "transactionDeleted": "Cash transaction deleted successfully",
+    "transactionNotFound": "Cash transaction not found",
+    "cashBalanceUpdated": "Cash balance updated successfully",
+    "insufficientFunds": "Insufficient cash funds",
+    "invalidAmount": "Invalid transaction amount",
+    "cashDrawerOpened": "Cash drawer opened",
+    "cashDrawerClosed": "Cash drawer closed",
+    "balanceReconciled": "Cash balance reconciled"
+  },
+  "notifications": {
+    "notificationSent": "Notification sent successfully",
+    "notificationFailed": "Failed to send notification",
+    "notificationRead": "Notification marked as read",
+    "notificationDeleted": "Notification deleted successfully",
+    "noNotifications": "No notifications found",
+    "notificationPreferencesUpdated": "Notification preferences updated"
+  },
+  "system": {
+    "maintenanceMode": "System is currently under maintenance",
+    "serviceUnavailable": "Service temporarily unavailable",
+    "systemHealthy": "All systems are operational",
+    "systemDegraded": "Some systems are experiencing issues",
+    "databaseConnected": "Database connection established",
+    "databaseError": "Database connection error",
+    "cacheConnected": "Cache service connected",
+    "cacheError": "Cache service error"
+  },
+  "profile": {
+    "profileUpdated": "Profile updated successfully",
+    "profileFetched": "Profile retrieved successfully",
+    "passwordChanged": "Password changed successfully",
+    "invalidCurrentPassword": "Current password is incorrect",
+    "profilePictureUpdated": "Profile picture updated successfully",
+    "preferencesUpdated": "User preferences updated successfully"
+  }
+}
