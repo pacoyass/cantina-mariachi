@@ -1,23 +1,23 @@
 {
   "subject": {
-    "welcome": "Welcome to {{appName}}",
-    "passwordReset": "Password Reset Request",
-    "emailVerification": "Verify Your Email Address",
-    "accountLocked": "Account Security Alert",
-    "loginAlert": "New Login Detected"
+    "welcome": "Bem-vindo ao {{appName}}",
+    "passwordReset": "Solicitação de redefinição de senha",
+    "emailVerification": "Verifique seu endereço de email",
+    "accountLocked": "Alerta de segurança da conta",
+    "loginAlert": "Novo login detectado"
   },
-  "greeting": "Hello {{name}},",
-  "welcomeMessage": "Welcome to {{appName}}! We're excited to have you on board.",
-  "passwordResetMessage": "You have requested to reset your password. Click the link below to proceed:",
-  "verificationMessage": "Please verify your email address by clicking the link below:",
-  "accountLockedMessage": "Your account has been temporarily locked due to multiple failed login attempts.",
-  "loginAlertMessage": "We detected a new login to your account from {{location}} at {{time}}.",
-  "footer": "If you didn't request this, please ignore this email or contact support.",
+  "greeting": "Olá {{name}},",
+  "welcomeMessage": "Bem-vindo ao {{appName}}! Estamos animados em tê-lo conosco.",
+  "passwordResetMessage": "Você solicitou uma redefinição de senha. Clique no link abaixo para prosseguir:",
+  "verificationMessage": "Por favor, verifique seu endereço de email clicando no link abaixo:",
+  "accountLockedMessage": "Sua conta foi temporariamente bloqueada devido a múltiplas tentativas de login falhadas.",
+  "loginAlertMessage": "Detectamos um novo login em sua conta de {{location}} às {{time}}.",
+  "footer": "Se você não solicitou isso, ignore este email ou entre em contato com o suporte.",
   "buttonText": {
-    "resetPassword": "Reset Password",
-    "verifyEmail": "Verify Email",
-    "contactSupport": "Contact Support"
+    "resetPassword": "Redefinir Senha",
+    "verifyEmail": "Verificar Email",
+    "contactSupport": "Entrar em Contato com Suporte"
   },
-  "expiryNotice": "This link will expire in {{hours}} hours.",
-  "supportContact": "If you need help, contact us at {{email}}"
+  "expiryNotice": "Este link expirará em {{hours}} horas.",
+  "supportContact": "Se precisar de ajuda, entre em contato conosco em {{email}}"
 }
