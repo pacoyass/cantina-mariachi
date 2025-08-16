@@ -19,6 +19,28 @@ export const uiResources = {
       errors: {
         title: 'Oops!',
         notFound: 'The requested page could not be found.',
+      },
+      a11y: {
+        toggleLanguage: 'Toggle language',
+        toggleTheme: 'Toggle theme',
+        close: 'Close'
+      },
+      theme: {
+        toggle: 'Toggle theme',
+        light: 'Light',
+        dark: 'Dark',
+        system: 'System'
+      },
+      footer: {
+        tagline: 'Authentic Mexican flavors, modern experience.',
+        quickLinks: 'Quick Links',
+        contact: 'Contact',
+        newsletter: 'Newsletter',
+        emailPlaceholder: 'Email address',
+        join: 'Join',
+        privacy: 'Privacy',
+        terms: 'Terms',
+        copyright: '© {{year}} {{brand}}. All rights reserved.'
       }
     },
     home: {
@@ -30,14 +52,22 @@ export const uiResources = {
         reserve: 'Reserve a Table',
         browseMenu: 'Browse full menu',
         rating: '4.9/5 from 2,400+ local diners',
-        avgTime: 'Delivery under 35 minutes on average'
+        avgTime: 'Delivery under 35 minutes on average',
+        card: {
+          title: 'Chef’s Pick',
+          desc: 'Slow-braised barbacoa with fresh salsa verde and warm tortillas.'
+        }
+      },
+      logo: {
+        heading: 'Trusted by local foodies and featured in'
       },
       explore: {
         heading: 'Explore the menu',
         tacos: 'Tacos',
         bowls: 'Bowls',
         drinks: 'Drinks',
-        coming: 'Coming soon.'
+        coming: 'Coming soon.',
+        chefNotes: 'Chef notes: crowd favorite with fresh cilantro and lime.'
       },
       loyalty: {
         heading: 'Loyalty & rewards',
@@ -56,6 +86,57 @@ export const uiResources = {
         tracking: { title: 'Live tracking', desc: 'Minute‑by‑minute delivery updates.' },
         chef: { title: 'Chef‑crafted', desc: 'Fresh ingredients and seasonal menus.' },
         rewards: { title: 'Rewards that matter', desc: 'Points on every order, instant perks.' }
+      },
+      events: {
+        heading: 'Group events & catering',
+        desc: 'Book for 8+ guests or plan office catering in minutes.',
+        plan: 'Plan event',
+        catering: 'Catering',
+        q1: { question: 'Do you offer set menus?', answer: 'Yes — set menus for groups of 8–30, with vegetarian options.' },
+        q2: { question: 'How far in advance should I book?', answer: 'We recommend 48 hours, but same‑day may be possible off‑peak.' }
+      },
+      offers: {
+        heading: 'Seasonal offers',
+        badge: 'Limited time',
+        bundle: 'Taco Tuesday Bundle',
+        deal: '2 tacos + drink — $9.99',
+        endsIn: 'Ends in',
+        orderBundle: 'Order bundle',
+        viewDetails: 'View details'
+      },
+      testimonials: {
+        heading: 'Customer love',
+        t1: 'Hands‑down the best tacos in town. Ordering is so fast, and delivery always lands earlier than expected.',
+        t2: 'Reservations that actually work. I booked for 8pm and was seated at 8:02. Five stars.',
+        t3: 'The rewards program is legit. Free guac after my second order — say less.'
+      },
+      values: {
+        heading: 'Sourcing & values',
+        desc: 'We believe in fresh, local ingredients and sustainable practices — from kitchen to table.',
+        badges: {
+          localProduce: 'Local produce',
+          sustainableSeafood: 'Sustainable seafood',
+          fairTrade: 'Fair trade',
+          lowWaste: 'Low waste'
+        },
+        cards: {
+          dailyMarket: 'Daily market picks',
+          houseSalsas: 'House‑made salsas',
+          localTortillas: 'Locally baked tortillas',
+          compostablePackaging: 'Compostable packaging'
+        }
+      },
+      value: {
+        reorderDesc: 'One tap reorder, saved favorites, and Apple/Google Pay.',
+        trustedTitle: 'Trusted & secure',
+        trustedDesc: 'Verified reviews, secure payments, satisfaction guaranteed.'
+      },
+      how: {
+        heading: 'How it works',
+        desc: 'From craving to table in three simple steps.',
+        step1: { title: 'Choose your favorites', desc: 'Browse curated categories or search for a specific dish.' },
+        step2: { title: 'Customize & checkout', desc: 'Add sides, pick spice level, and pay securely in seconds.' },
+        step3: { title: 'Track & enjoy', desc: 'Follow your order live or show your reservation at the door.' }
       },
       faq: {
         heading: 'Frequently asked questions',
@@ -80,7 +161,8 @@ export const uiResources = {
         unavailable: 'Unavailable',
         add: 'Add to Order',
         notify: 'Notify me',
-        coming: 'A delicious selection coming soon.'
+        coming: 'A delicious selection coming soon.',
+        chefSpecial: 'Chef’s Special #{{num}}'
       }
     }
   },
@@ -104,6 +186,28 @@ export const uiResources = {
       errors: {
         title: 'عذرًا!',
         notFound: 'الصفحة المطلوبة غير موجودة.',
+      },
+      a11y: {
+        toggleLanguage: 'تبديل اللغة',
+        toggleTheme: 'تبديل السمة',
+        close: 'إغلاق'
+      },
+      theme: {
+        toggle: 'تبديل السمة',
+        light: 'فاتح',
+        dark: 'داكن',
+        system: 'النظام'
+      },
+      footer: {
+        tagline: 'نكهات مكسيكية أصيلة بتجربة عصرية.',
+        quickLinks: 'روابط سريعة',
+        contact: 'تواصل',
+        newsletter: 'النشرة البريدية',
+        emailPlaceholder: 'عنوان البريد الإلكتروني',
+        join: 'انضم',
+        privacy: 'الخصوصية',
+        terms: 'الشروط',
+        copyright: '© {{year}} {{brand}}. جميع الحقوق محفوظة.'
       }
     },
     home: {
@@ -115,14 +219,20 @@ export const uiResources = {
         reserve: 'احجز طاولة',
         browseMenu: 'تصفح القائمة كاملة',
         rating: '4.9/5 من أكثر من 2400 زائر محلي',
-        avgTime: 'التوصيل في أقل من 35 دقيقة في المتوسط'
+        avgTime: 'التوصيل في أقل من 35 دقيقة في المتوسط',
+        card: {
+          title: 'اختيار الشيف',
+          desc: 'بارباكوا مطهية ببطء مع صلصة خضراء طازجة وتورتيلا دافئة.'
+        }
       },
+      logo: { heading: 'موثوق من عشّاق الطعام المحليين وذُكر في' },
       explore: {
         heading: 'استكشف القائمة',
         tacos: 'تاكو',
         bowls: 'أطباق',
         drinks: 'مشروبات',
-        coming: 'قريبًا.'
+        coming: 'قريبًا.',
+        chefNotes: 'ملاحظات الشيف: المفضل لدى الجميع مع كزبرة طازجة وعصير ليمون.'
       },
       loyalty: {
         heading: 'الولاء والمكافآت',
@@ -142,6 +252,57 @@ export const uiResources = {
         chef: { title: 'من إعداد الطهاة', desc: 'مكونات طازجة وقوائم موسمية.' },
         rewards: { title: 'مكافآت قيّمة', desc: 'نقاط على كل طلب ومزايا فورية.' }
       },
+      events: {
+        heading: 'الفعاليات الجماعية والتموين',
+        desc: 'احجز لـ 8 ضيوف فأكثر أو خطّط تموين المكاتب خلال دقائق.',
+        plan: 'خطّط فعالية',
+        catering: 'تموين',
+        q1: { question: 'هل لديكم قوائم ثابتة؟', answer: 'نعم — قوائم للمجموعات من 8–30 شخصًا، مع خيارات نباتية.' },
+        q2: { question: 'قبل كم من الوقت يجب أن أحجز؟', answer: 'نوصي بـ 48 ساعة، وقد يتوفر نفس اليوم خارج أوقات الذروة.' }
+      },
+      offers: {
+        heading: 'عروض موسمية',
+        badge: 'لفترة محدودة',
+        bundle: 'باقة تاكو الثلاثاء',
+        deal: 'تاكوان + مشروب — $9.99',
+        endsIn: 'ينتهي خلال',
+        orderBundle: 'اطلب الباقة',
+        viewDetails: 'عرض التفاصيل'
+      },
+      testimonials: {
+        heading: 'آراء العملاء',
+        t1: 'بلا منازع أفضل تاكو في المدينة. الطلب سريع والتوصيل يصل قبل المتوقع غالبًا.',
+        t2: 'حجوزات تعمل فعلًا. حجزت 8 مساءً وجلست 8:02. خمس نجوم.',
+        t3: 'برنامج المكافآت رائع. حصلت على غواكامولي مجاني بعد طلبي الثاني — كفى.'
+      },
+      values: {
+        heading: 'المصادر والقيم',
+        desc: 'نؤمن بالمكونات الطازجة المحلية والممارسات المستدامة — من المطبخ إلى الطاولة.',
+        badges: {
+          localProduce: 'منتجات محلية',
+          sustainableSeafood: 'مأكولات بحرية مستدامة',
+          fairTrade: 'تجارة عادلة',
+          lowWaste: 'هدر منخفض'
+        },
+        cards: {
+          dailyMarket: 'اختيارات السوق اليومية',
+          houseSalsas: 'صلصات منزلية الصنع',
+          localTortillas: 'تورتيلا محلية الخَبز',
+          compostablePackaging: 'عبوات قابلة للتحلل'
+        }
+      },
+      value: {
+        reorderDesc: 'إعادة الطلب بلمسة، المفضلة المحفوظة، وApple/Google Pay.',
+        trustedTitle: 'موثوق وآمن',
+        trustedDesc: 'مراجعات موثوقة، مدفوعات آمنة، ورضا مضمون.'
+      },
+      how: {
+        heading: 'كيف تعمل الخدمة',
+        desc: 'من الرغبة إلى الطاولة في ثلاث خطوات بسيطة.',
+        step1: { title: 'اختر مفضلاتك', desc: 'تصفّح الفئات المنسّقة أو ابحث عن طبق محدد.' },
+        step2: { title: 'خصّص وادفع', desc: 'أضف الجوانب، اختر مستوى الحار، وادفع بأمان خلال ثوانٍ.' },
+        step3: { title: 'تتبّع واستمتع', desc: 'تابع طلبك مباشرة أو أظهر حجزك عند الباب.' }
+      },
       faq: {
         heading: 'الأسئلة الشائعة',
         q1: { question: 'هل لديكم خيارات نباتية؟', answer: 'نعم، الكثير! العديد من التاكو والأطباق لدينا تحتوي على خيارات نباتية.' },
@@ -155,17 +316,15 @@ export const uiResources = {
         start: 'ابدأ الطلب',
         reserve: 'احجز الآن'
       },
-      sticky: {
-        order: 'اطلب الآن',
-        reserve: 'احجز'
-      },
+      sticky: { order: 'اطلب الآن', reserve: 'احجز' },
       popular: {
         heading: 'الأكثر رواجًا هذا الأسبوع',
         seeMenu: 'عرض القائمة كاملة',
         unavailable: 'غير متاح',
         add: 'أضف إلى الطلب',
         notify: 'أعلمني',
-        coming: 'اختيارات لذيذة قادمة قريبًا.'
+        coming: 'اختيارات لذيذة قادمة قريبًا.',
+        chefSpecial: 'تشكيلة الشيف رقم {{num}}'
       }
     }
   },
@@ -189,6 +348,28 @@ export const uiResources = {
       errors: {
         title: '¡Ups!',
         notFound: 'La página solicitada no se pudo encontrar.',
+      },
+      a11y: {
+        toggleLanguage: 'Cambiar idioma',
+        toggleTheme: 'Cambiar tema',
+        close: 'Cerrar'
+      },
+      theme: {
+        toggle: 'Cambiar tema',
+        light: 'Claro',
+        dark: 'Oscuro',
+        system: 'Sistema'
+      },
+      footer: {
+        tagline: 'Sabores mexicanos auténticos, experiencia moderna.',
+        quickLinks: 'Enlaces rápidos',
+        contact: 'Contacto',
+        newsletter: 'Boletín',
+        emailPlaceholder: 'Correo electrónico',
+        join: 'Unirse',
+        privacy: 'Privacidad',
+        terms: 'Términos',
+        copyright: '© {{year}} {{brand}}. Todos los derechos reservados.'
       }
     },
     home: {
@@ -200,14 +381,20 @@ export const uiResources = {
         reserve: 'Reservar mesa',
         browseMenu: 'Ver menú completo',
         rating: '4,9/5 de más de 2.400 comensales locales',
-        avgTime: 'Entrega en menos de 35 minutos de media'
+        avgTime: 'Entrega en menos de 35 minutos de media',
+        card: {
+          title: 'Elección del chef',
+          desc: 'Barbacoa cocinada a fuego lento con salsa verde fresca y tortillas calientes.'
+        }
       },
+      logo: { heading: 'De confianza por foodies locales y destacado en' },
       explore: {
         heading: 'Explora el menú',
         tacos: 'Tacos',
         bowls: 'Boles',
         drinks: 'Bebidas',
-        coming: 'Próximamente.'
+        coming: 'Próximamente.',
+        chefNotes: 'Notas del chef: favorito del público con cilantro y lima frescos.'
       },
       loyalty: {
         heading: 'Fidelidad y recompensas',
@@ -222,10 +409,61 @@ export const uiResources = {
         heading: 'Por qué elegir Cantina',
         faster: { title: 'Más rápido que las apps', desc: 'De la cocina a tu puerta, sin retrasos de terceros.' },
         fees: { title: 'Tarifas transparentes', desc: 'Sin cargos sorpresa al pagar.' },
-        oneTap: { title: 'Reservas con un toque', desc: 'Disponibilità en vivo y confirmaciones por SMS.' },
-        tracking: { title: 'Seguimiento en vivo', desc: 'Mises à jour minute par minute.' },
-        chef: { title: 'Signé par nos chefs', desc: 'Ingrédients frais et menús de saison.' },
-        rewards: { title: 'Des récompenses utiles', desc: 'Des points à chaque commande, des avantages immédiats.' }
+        oneTap: { title: 'Reservas con un toque', desc: 'Disponibilidad en vivo y confirmaciones por SMS.' },
+        tracking: { title: 'Seguimiento en vivo', desc: 'Actualizaciones minuto a minuto.' },
+        chef: { title: 'Elaborado por chefs', desc: 'Ingredientes frescos y menús de temporada.' },
+        rewards: { title: 'Recompensas que importan', desc: 'Puntos en cada pedido, beneficios al instante.' }
+      },
+      events: {
+        heading: 'Eventos y catering para grupos',
+        desc: 'Reserva para 8+ personas o planifica catering de oficina en minutos.',
+        plan: 'Planear evento',
+        catering: 'Catering',
+        q1: { question: '¿Ofrecen menús fijos?', answer: 'Sí — menús para grupos de 8–30, con opciones vegetarianas.' },
+        q2: { question: '¿Con cuánta anticipación debo reservar?', answer: 'Recomendamos 48 horas, pero el mismo día puede ser posible fuera de horas pico.' }
+      },
+      offers: {
+        heading: 'Ofertas de temporada',
+        badge: 'Tiempo limitado',
+        bundle: 'Combo Taco Tuesday',
+        deal: '2 tacos + bebida — $9.99',
+        endsIn: 'Termina en',
+        orderBundle: 'Pedir combo',
+        viewDetails: 'Ver detalles'
+      },
+      testimonials: {
+        heading: 'Lo que dicen nuestros clientes',
+        t1: 'Los mejores tacos de la ciudad. Pedir es rapidísimo y la entrega suele llegar antes de lo esperado.',
+        t2: 'Reservas que de verdad funcionan. Reservé a las 20:00 y me senté a las 20:02. Cinco estrellas.',
+        t3: 'El programa de recompensas es real. Guacamole gratis tras mi segundo pedido.'
+      },
+      values: {
+        heading: 'Origen y valores',
+        desc: 'Creemos en ingredientes frescos y locales y prácticas sostenibles — de la cocina a la mesa.',
+        badges: {
+          localProduce: 'Productos locales',
+          sustainableSeafood: 'Mariscos sostenibles',
+          fairTrade: 'Comercio justo',
+          lowWaste: 'Bajo desperdicio'
+        },
+        cards: {
+          dailyMarket: 'Selección diaria del mercado',
+          houseSalsas: 'Salsas caseras',
+          localTortillas: 'Tortillas horneadas localmente',
+          compostablePackaging: 'Empaques compostables'
+        }
+      },
+      value: {
+        reorderDesc: 'Reordenar con un toque, favoritos salvados y Apple/Google Pay.',
+        trustedTitle: 'Confiable y seguro',
+        trustedDesc: 'Reseñas verificadas, pagos seguros, satisfacción garantizada.'
+      },
+      how: {
+        heading: 'Cómo funciona',
+        desc: 'De antojo a mesa en tres sencillos pasos.',
+        step1: { title: 'Elige tus favoritos', desc: 'Explora categorías seleccionadas o busca un plato específico.' },
+        step2: { title: 'Personaliza y paga', desc: 'Añade acompañamientos, elige picor y paga de forma segura en segundos.' },
+        step3: { title: 'Sigue y disfruta', desc: 'Sigue tu pedido en vivo o muestra tu reserva en la entrada.' }
       },
       faq: {
         heading: 'Preguntas frecuentes',
@@ -247,7 +485,8 @@ export const uiResources = {
         unavailable: 'No disponible',
         add: 'Añadir al pedido',
         notify: 'Avísame',
-        coming: 'Una selección deliciosa llegará pronto.'
+        coming: 'Una selección deliciosa llegará pronto.',
+        chefSpecial: 'Especial del chef #{{num}}'
       }
     }
   },
@@ -271,6 +510,28 @@ export const uiResources = {
       errors: {
         title: 'Oups !',
         notFound: 'La page demandée est introuvable.',
+      },
+      a11y: {
+        toggleLanguage: 'Changer de langue',
+        toggleTheme: 'Changer le thème',
+        close: 'Fermer'
+      },
+      theme: {
+        toggle: 'Changer le thème',
+        light: 'Clair',
+        dark: 'Sombre',
+        system: 'Système'
+      },
+      footer: {
+        tagline: 'Saveurs mexicaines authentiques, expérience moderne.',
+        quickLinks: 'Liens rapides',
+        contact: 'Contact',
+        newsletter: 'Newsletter',
+        emailPlaceholder: 'Adresse e‑mail',
+        join: 'S’inscrire',
+        privacy: 'Confidentialité',
+        terms: 'Conditions',
+        copyright: '© {{year}} {{brand}}. Tous droits réservés.'
       }
     },
     home: {
@@ -282,14 +543,20 @@ export const uiResources = {
         reserve: 'Réserver une table',
         browseMenu: 'Voir le menu complet',
         rating: '4,9/5 de plus de 2 400 clients locaux',
-        avgTime: 'Livraison en moins de 35 minutes en moyenne'
+        avgTime: 'Livraison en moins de 35 minutes en moyenne',
+        card: {
+          title: 'Sélection du chef',
+          desc: 'Barbacoa mijotée avec salsa verde fraîche et tortillas chaudes.'
+        }
       },
+      logo: { heading: 'Plébiscité par les gourmets locaux et cité dans' },
       explore: {
         heading: 'Explorez le menu',
         tacos: 'Tacos',
         bowls: 'Bols',
         drinks: 'Boissons',
-        coming: 'Bientôt disponible.'
+        coming: 'Bientôt disponible.',
+        chefNotes: 'Notes du chef : un favori du public, coriandolo et citron vert frais.'
       },
       loyalty: {
         heading: 'Fidélité et récompenses',
@@ -308,6 +575,57 @@ export const uiResources = {
         tracking: { title: 'Suivi en direct', desc: 'Mises à jour minute par minute.' },
         chef: { title: 'Signé par nos chefs', desc: 'Ingrédients frais et menús de saison.' },
         rewards: { title: 'Des récompenses utiles', desc: 'Des points à chaque commande, des avantages immédiats.' }
+      },
+      events: {
+        heading: 'Événements de groupe & traiteur',
+        desc: 'Réservez pour 8+ personnes ou organisez un traiteur d’entreprise en quelques minutes.',
+        plan: 'Planifier',
+        catering: 'Traiteur',
+        q1: { question: 'Proposez‑vous des menus fixes ?', answer: 'Oui — menus pour groupes de 8 à 30, avec options végétariennes.' },
+        q2: { question: 'Combien de temps à l’avance réserver ?', answer: 'Nous recommandons 48 h, mais le jour même peut être possible hors pointe.' }
+      },
+      offers: {
+        heading: 'Offres saisonnières',
+        badge: 'Offre limitée',
+        bundle: 'Offre Taco Tuesday',
+        deal: '2 tacos + boisson — 9,99 $',
+        endsIn: 'Se termine dans',
+        orderBundle: 'Commander l’offre',
+        viewDetails: 'Voir les détails'
+      },
+      testimonials: {
+        heading: 'Ils nous aiment',
+        t1: 'Les meilleurs tacos de la ville. Commander est ultra rapide, la livraison arrive souvent plus tôt que prévu.',
+        t2: 'Des réservations qui fonctionnent vraiment. Réservé à 20 h, assis à 20 h 02. Cinq étoiles.',
+        t3: 'Programme de récompenses sérieux. Guacamole offert après ma deuxième commande.'
+      },
+      values: {
+        heading: 'Approvisionnements & valeurs',
+        desc: 'Ingrédients frais et locaux, pratiques durables — de la cuisine à la table.',
+        badges: {
+          localProduce: 'Produits locaux',
+          sustainableSeafood: 'Produits de la mer durables',
+          fairTrade: 'Commerce équitable',
+          lowWaste: 'Faible gaspillage'
+        },
+        cards: {
+          dailyMarket: 'Sélection du marché quotidien',
+          houseSalsas: 'Salsas maison',
+          localTortillas: 'Tortillas cuites localement',
+          compostablePackaging: 'Emballages compostables'
+        }
+      },
+      value: {
+        reorderDesc: 'Recommandes en un geste, favoris enregistrés et Apple/Google Pay.',
+        trustedTitle: 'Fiable & sécurisé',
+        trustedDesc: 'Avis vérifiés, paiements sécurisés, satisfaction garantie.'
+      },
+      how: {
+        heading: 'Comment ça marche',
+        desc: 'De l’envie à l’assiette en trois étapes simples.',
+        step1: { title: 'Choisissez vos favoris', desc: 'Parcourez des catégories sélectionnées ou recherchez un plat.' },
+        step2: { title: 'Personnalisez & payez', desc: 'Ajoutez des accompagnements, choisissez le piquant et payez en quelques secondes.' },
+        step3: { title: 'Suivez & savourez', desc: 'Suivez votre commande en direct ou présentez votre réservation à l’entrée.' }
       },
       faq: {
         heading: 'Foire aux questions',
@@ -329,7 +647,8 @@ export const uiResources = {
         unavailable: 'Indisponible',
         add: 'Ajouter à la commande',
         notify: 'Prévenez‑moi',
-        coming: 'Une délicieuse sélection arrive bientôt.'
+        coming: 'Une délicieuse sélection arrive bientôt.',
+        chefSpecial: 'Spécial du chef n° {{num}}'
       }
     }
   },
@@ -353,6 +672,28 @@ export const uiResources = {
       errors: {
         title: 'Ups!',
         notFound: 'Die angeforderte Seite wurde nicht gefunden.',
+      },
+      a11y: {
+        toggleLanguage: 'Sprache wechseln',
+        toggleTheme: 'Design wechseln',
+        close: 'Schließen'
+      },
+      theme: {
+        toggle: 'Design wechseln',
+        light: 'Hell',
+        dark: 'Dunkel',
+        system: 'System'
+      },
+      footer: {
+        tagline: 'Authentische mexikanische Aromen, modernes Erlebnis.',
+        quickLinks: 'Schnellzugriff',
+        contact: 'Kontakt',
+        newsletter: 'Newsletter',
+        emailPlaceholder: 'E‑Mail‑Adresse',
+        join: 'Abonnieren',
+        privacy: 'Datenschutz',
+        terms: 'Bedingungen',
+        copyright: '© {{year}} {{brand}}. Alle Rechte vorbehalten.'
       }
     },
     home: {
@@ -364,14 +705,20 @@ export const uiResources = {
         reserve: 'Tisch reservieren',
         browseMenu: 'Gesamte Speisekarte ansehen',
         rating: '4,9/5 von über 2.400 Gästen vor Ort',
-        avgTime: 'Lieferung im Schnitt unter 35 Minuten'
+        avgTime: 'Lieferung im Schnitt unter 35 Minuten',
+        card: {
+          title: 'Wahl des Küchenchefs',
+          desc: 'Langsam geschmorte Barbacoa mit frischer Salsa Verde und warmen Tortillas.'
+        }
       },
+      logo: { heading: 'Beliebt bei Feinschmeckern vor Ort und erwähnt in' },
       explore: {
         heading: 'Entdecke die Speisekarte',
         tacos: 'Tacos',
         bowls: 'Bowls',
         drinks: 'Getränke',
-        coming: 'Demnächst.'
+        coming: 'Demnächst.',
+        chefNotes: 'Notizen des Küchenchefs: Publikumsfavorit mit frischem Koriander und Limette.'
       },
       loyalty: {
         heading: 'Treue & Prämien',
@@ -390,6 +737,57 @@ export const uiResources = {
         tracking: { title: 'Live‑Tracking', desc: 'Minutengenaue Lieferupdates.' },
         chef: { title: 'Von Köchen kreiert', desc: 'Frische Zutaten und saisonale Menüs.' },
         rewards: { title: 'Sinnvolle Prämien', desc: 'Punkte bei jeder Bestellung, sofortige Vorteile.' }
+      },
+      events: {
+        heading: 'Gruppen‑Events & Catering',
+        desc: 'Für 8+ Gäste reservieren oder Büro‑Catering in Minuten planen.',
+        plan: 'Event planen',
+        catering: 'Catering',
+        q1: { question: 'Bieten Sie Menüs an?', answer: 'Ja — Menüs für Gruppen von 8–30, mit vegetarischen Optionen.' },
+        q2: { question: 'Wie früh sollte ich buchen?', answer: 'Wir empfehlen 48 Stunden; am selben Tag ist außerhalb der Stoßzeiten evtl. möglich.' }
+      },
+      offers: {
+        heading: 'Saisonangebote',
+        badge: 'Nur kurze Zeit',
+        bundle: 'Taco‑Dienstag‑Bundle',
+        deal: '2 Tacos + Getränk — 9,99 $',
+        endsIn: 'Endet in',
+        orderBundle: 'Bundle bestellen',
+        viewDetails: 'Details ansehen'
+      },
+      testimonials: {
+        heading: 'Kundenliebe',
+        t1: 'Mit Abstand die besten Tacos der Stadt. Bestellen geht super schnell, Lieferung meist früher als erwartet.',
+        t2: 'Reservierungen, die wirklich funktionieren. 20:00 gebucht, 20:02 am Platz. Fünf Sterne.',
+        t3: 'Treueprogramm überzeugt. Gratis Guacamole nach meiner zweiten Bestellung.'
+      },
+      values: {
+        heading: 'Herkunft & Werte',
+        desc: 'Frische, lokale Zutaten und nachhaltige Praktiken — von der Küche bis zum Tisch.',
+        badges: {
+          localProduce: 'Regionale Produkte',
+          sustainableSeafood: 'Nachhaltige Meeresfrüchte',
+          fairTrade: 'Fairer Handel',
+          lowWaste: 'Wenig Abfall'
+        },
+        cards: {
+          dailyMarket: 'Tägliche Marktauswahl',
+          houseSalsas: 'Hausgemachte Salsas',
+          localTortillas: 'Lokal gebackene Tortillas',
+          compostablePackaging: 'Kompostierbare Verpackungen'
+        }
+      },
+      value: {
+        reorderDesc: 'Mit einem Tipp nachbestellen, Favoriten speichern und Apple/Google Pay.',
+        trustedTitle: 'Vertrauenswürdig & sicher',
+        trustedDesc: 'Verifizierte Bewertungen, sichere Zahlungen, Zufriedenheitsgarantie.'
+      },
+      how: {
+        heading: 'So funktioniert’s',
+        desc: 'Vom Appetit bis zum Tisch in drei einfachen Schritten.',
+        step1: { title: 'Wähle deine Favoriten', desc: 'Durchsuche kuratierte Kategorien oder suche nach einem Gericht.' },
+        step2: { title: 'Anpassen & bezahlen', desc: 'Beilagen hinzufügen, Schärfe wählen und in Sekunden sicher bezahlen.' },
+        step3: { title: 'Verfolgen & genießen', desc: 'Bestellung live verfolgen oder Reservierung an der Tür zeigen.' }
       },
       faq: {
         heading: 'Häufig gestellte Fragen',
@@ -411,7 +809,8 @@ export const uiResources = {
         unavailable: 'Nicht verfügbar',
         add: 'Zur Bestellung hinzufügen',
         notify: 'Benachrichtige mich',
-        coming: 'Eine köstliche Auswahl folgt in Kürze.'
+        coming: 'Eine köstliche Auswahl folgt in Kürze.',
+        chefSpecial: 'Spezial des Küchenchefs Nr. {{num}}'
       }
     }
   },
@@ -435,6 +834,28 @@ export const uiResources = {
       errors: {
         title: 'Ops!',
         notFound: 'La pagina richiesta non è stata trovata.',
+      },
+      a11y: {
+        toggleLanguage: 'Cambia lingua',
+        toggleTheme: 'Cambia tema',
+        close: 'Chiudi'
+      },
+      theme: {
+        toggle: 'Cambia tema',
+        light: 'Chiaro',
+        dark: 'Scuro',
+        system: 'Sistema'
+      },
+      footer: {
+        tagline: 'Sapori messicani autentici, esperienza moderna.',
+        quickLinks: 'Link rapidi',
+        contact: 'Contatti',
+        newsletter: 'Newsletter',
+        emailPlaceholder: 'Indirizzo e‑mail',
+        join: 'Iscriviti',
+        privacy: 'Privacy',
+        terms: 'Termini',
+        copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.'
       }
     },
     home: {
@@ -446,14 +867,20 @@ export const uiResources = {
         reserve: 'Prenota un tavolo',
         browseMenu: 'Vedi il menù completo',
         rating: '4,9/5 da oltre 2.400 clienti locali',
-        avgTime: 'Consegna in meno di 35 minuti in media'
+        avgTime: 'Consegna in meno di 35 minuti in media',
+        card: {
+          title: 'Scelta dello chef',
+          desc: 'Barbacoa cotta lentamente con salsa verde fresca e tortillas calde.'
+        }
       },
+      logo: { heading: 'Apprezzato dai buongustai locali e menzionato in' },
       explore: {
         heading: 'Esplora il menù',
         tacos: 'Tacos',
         bowls: 'Ciotole',
         drinks: 'Bevande',
-        coming: 'Presto disponibile.'
+        coming: 'Presto disponibile.',
+        chefNotes: 'Note dello chef: preferito dal pubblico con coriandolo e lime freschi.'
       },
       loyalty: {
         heading: 'Fidelizzazione e ricompense',
@@ -472,6 +899,57 @@ export const uiResources = {
         tracking: { title: 'Tracciamento live', desc: 'Aggiornamenti minuto per minuto.' },
         chef: { title: 'Creato dagli chef', desc: 'Ingredienti freschi e menù stagionali.' },
         rewards: { title: 'Ricompense utili', desc: 'Punti su ogni ordine, vantaggi immediati.' }
+      },
+      events: {
+        heading: 'Eventi di gruppo & catering',
+        desc: 'Prenota per 8+ ospiti o organizza il catering per uffici in pochi minuti.',
+        plan: 'Pianifica evento',
+        catering: 'Catering',
+        q1: { question: 'Avete menù fissi?', answer: 'Sì — menù per gruppi da 8 a 30, con opzioni vegetariane.' },
+        q2: { question: 'Con quanto anticipo devo prenotare?', answer: 'Consigliamo 48 ore; lo stesso giorno può essere possibile fuori orario di punta.' }
+      },
+      offers: {
+        heading: 'Offerte stagionali',
+        badge: 'A tempo limitato',
+        bundle: 'Bundle Taco Tuesday',
+        deal: '2 tacos + bevanda — $9,99',
+        endsIn: 'Termina tra',
+        orderBundle: 'Ordina il bundle',
+        viewDetails: 'Vedi dettagli'
+      },
+      testimonials: {
+        heading: 'Amore dei clienti',
+        t1: 'I migliori tacos in città. Ordinare è velocissimo e la consegna arriva spesso prima del previsto.',
+        t2: 'Prenotazioni che funzionano davvero. Prenotato alle 20h, seduto alle 20h02. Cinque stelle.',
+        t3: 'Il programma ricompense è reale. Guacamole gratis dopo il mio secondo ordine.'
+      },
+      values: {
+        heading: 'Approvvigionamento & valori',
+        desc: 'Ingredienti freschi e locali e pratiche sostenibili — dalla cucina alla tavola.',
+        badges: {
+          localProduce: 'Prodotti locali',
+          sustainableSeafood: 'Pesce sostenibile',
+          fairTrade: 'Commercio equo',
+          lowWaste: 'Bassi sprechi'
+        },
+        cards: {
+          dailyMarket: 'Scelte quotidiane del mercato',
+          houseSalsas: 'Salsas casere',
+          localTortillas: 'Tortillas assate localmente',
+          compostablePackaging: 'Imballaggi compostabili'
+        }
+      },
+      value: {
+        reorderDesc: 'Riordino con un tocco, favoriti salvati e Apple/Google Pay.',
+        trustedTitle: 'Affidabile & sicuro',
+        trustedDesc: 'Recensioni verificated, pagamenti sicuri, soddisfazione garantita.'
+      },
+      how: {
+        heading: 'Come funziona',
+        desc: 'Dalla voglia alla tavola in tre semplici passaggi.',
+        step1: { title: 'Scegli i tuoi preferiti', desc: 'Sfoglia categorie curate o cerca un piatto specifico.' },
+        step2: { title: 'Personalizza e paga', desc: 'Aggiungi contorni, scegli il livello di piccante e paga in pochi secondi.' },
+        step3: { title: 'Traccia e gusta', desc: 'Segui l’ordine in diretta o mostra la prenotazione all’ingresso.' }
       },
       faq: {
         heading: 'Domande frequenti',
@@ -493,7 +971,8 @@ export const uiResources = {
         unavailable: 'Non disponibile',
         add: 'Aggiungi all’ordine',
         notify: 'Avvisami',
-        coming: 'Una deliziosa selezione in arrivo.'
+        coming: 'Una deliziosa selezione in arrivo.',
+        chefSpecial: 'Speciale dello chef n. {{num}}'
       }
     }
   },
@@ -517,6 +996,28 @@ export const uiResources = {
       errors: {
         title: 'Ops!',
         notFound: 'A página solicitada não foi encontrada.',
+      },
+      a11y: {
+        toggleLanguage: 'Alterar idioma',
+        toggleTheme: 'Alterar tema',
+        close: 'Fechar'
+      },
+      theme: {
+        toggle: 'Alterar tema',
+        light: 'Claro',
+        dark: 'Escuro',
+        system: 'Sistema'
+      },
+      footer: {
+        tagline: 'Sabores mexicanos autênticos, experiência moderna.',
+        quickLinks: 'Links rápidos',
+        contact: 'Contato',
+        newsletter: 'Newsletter',
+        emailPlaceholder: 'E‑mail',
+        join: 'Assinar',
+        privacy: 'Privacidade',
+        terms: 'Termos',
+        copyright: '© {{year}} {{brand}}. Todos os direitos reservados.'
       }
     },
     home: {
@@ -528,14 +1029,20 @@ export const uiResources = {
         reserve: 'Reservar mesa',
         browseMenu: 'Ver menu completo',
         rating: '4,9/5 de mais de 2.400 clientes locais',
-        avgTime: 'Entrega em menos de 35 minutos, em média'
+        avgTime: 'Entrega em menos de 35 minutos, em média',
+        card: {
+          title: 'Escolha do chef',
+          desc: 'Barbacoa cozida lentamente com salsa verde fresca e tortillas quentes.'
+        }
       },
+      logo: { heading: 'Confiado por amantes de comida locais e destaque em' },
       explore: {
         heading: 'Explore o menu',
         tacos: 'Tacos',
         bowls: 'Tigelas',
         drinks: 'Bevidas',
-        coming: 'Em breve.'
+        coming: 'Em breve.',
+        chefNotes: 'Notas do chef: favorito do público com coentro e limão frescos.'
       },
       loyalty: {
         heading: 'Fidelidade e recompensas',
@@ -554,6 +1061,57 @@ export const uiResources = {
         tracking: { title: 'Rastreamento ao vivo', desc: 'Atualizações minuto a minuto.' },
         chef: { title: 'Feito por chefs', desc: 'Ingredientes frescos e menus sazonais.' },
         rewards: { title: 'Recompensas que valem a pena', desc: 'Pontos em cada pedido, benefícios imediatos.' }
+      },
+      events: {
+        heading: 'Eventos em grupo & catering',
+        desc: 'Reserve para 8+ pessoas ou planeje o catering do escritório em minutos.',
+        plan: 'Planejar evento',
+        catering: 'Catering',
+        q1: { question: 'Vocês têm menus fixos?', answer: 'Sim — menus para grupos de 8–30, com opções vegetarianas.' },
+        q2: { question: 'Com quanta antecedência devo reservar?', answer: 'Recomendamos 48 horas; no mesmo dia pode ser possível fora do pico.' }
+      },
+      offers: {
+        heading: 'Ofertas sazonais',
+        badge: 'Por tempo limitado',
+        bundle: 'Combo Taco Tuesday',
+        deal: '2 tacos + bebida — $9,99',
+        endsIn: 'Termina em',
+        orderBundle: 'Pedir combo',
+        viewDetails: 'Ver detalhes'
+      },
+      testimonials: {
+        heading: 'Amor dos clientes',
+        t1: 'Os melhores tacos da cidade. Pedir é muito rápido e a entrega chega antes do esperado.',
+        t2: 'Reservas que realmente funcionam. Reservei para as 20h e sentei às 20h02. Cinco estrelas.',
+        t3: 'O programa de recompensas é de verdade. Guacamole grátis após meu segundo pedido.'
+      },
+      values: {
+        heading: 'Origem & valores',
+        desc: 'Acreditamos em ingredientes frescos e locais e práticas sustentáveis — da cozinha à mesa.',
+        badges: {
+          localProduce: 'Produtos locais',
+          sustainableSeafood: 'Frutos do mar sustentáveis',
+          fairTrade: 'Comércio justo',
+          lowWaste: 'Baixo desperdício'
+        },
+        cards: {
+          dailyMarket: 'Escolhas diárias do mercado',
+          houseSalsas: 'Salsas caseiras',
+          localTortillas: 'Tortillas assadas localmente',
+          compostablePackaging: 'Embalagens compostáveis'
+        }
+      },
+      value: {
+        reorderDesc: 'Repetir pedido com um toque, favoritos salvos e Apple/Google Pay.',
+        trustedTitle: 'Confiável & seguro',
+        trustedDesc: 'Avaliações verificadas, pagamentos seguros, satisfação garantida.'
+      },
+      how: {
+        heading: 'Como funciona',
+        desc: 'Do desejo à mesa em três passos simples.',
+        step1: { title: 'Escolha seus favoritos', desc: 'Navegue por categorias curadas ou pesquise um prato específico.' },
+        step2: { title: 'Personalize e pague', desc: 'Adicione acompanhamentos, escolha o nível de pimenta e pague com segurança em segundos.' },
+        step3: { title: 'Acompanhe e aproveite', desc: 'Acompanhe seu pedido ao vivo ou mostre sua reserva na entrada.' }
       },
       faq: {
         heading: 'Perguntas frequentes',
@@ -575,7 +1133,8 @@ export const uiResources = {
         unavailable: 'Indisponível',
         add: 'Adicionar ao pedido',
         notify: 'Avise-me',
-        coming: 'Uma seleção deliciosa em breve.'
+        coming: 'Uma seleção deliciosa em breve.',
+        chefSpecial: 'Especial do chef nº {{num}}'
       }
     }
   }

@@ -42,7 +42,7 @@ export function LangToggle() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
           <Globe className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">Toggle language</span>
+          <span className="sr-only">{i18n.t('a11y.toggleLanguage', { ns: 'ui' })}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="flex items-center mx-auto">

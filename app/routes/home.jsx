@@ -68,10 +68,10 @@ export default function Home() {
             <div className="absolute -bottom-6 -right-6 hidden md:block">
               <Card className="w-64">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Chef’s Pick</CardTitle>
+                  <CardTitle className="text-base">{t('hero.card.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground">
-                  Slow-braised barbacoa with fresh salsa verde and warm tortillas.
+                  {t('hero.card.desc')}
                 </CardContent>
               </Card>
             </div>
@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* Logo cloud */}
       <section className="container mx-auto px-6 py-8">
-        <div className="text-center text-xs text-muted-foreground">Trusted by local foodies and featured in</div>
+        <div className="text-center text-xs text-muted-foreground">{t('logo.heading')}</div>
         <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
           {['FlavorMag','EatHub','CityEats','DineNow','LocalBest'].map((name) => (
             <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
@@ -116,7 +116,7 @@ export default function Home() {
                     </Card>
                   </HoverCardTrigger>
                   <HoverCardContent>
-                    <div className="text-sm text-muted-foreground">Chef notes: crowd favorite with fresh cilantro and lime.</div>
+                    <div className="text-sm text-muted-foreground">{t('explore.chefNotes')}</div>
                   </HoverCardContent>
                 </HoverCard>
               ))}
@@ -178,25 +178,25 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Group events & catering</CardTitle>
+            <CardTitle className="text-lg">{t('events.heading')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="text-sm text-muted-foreground">Book for 8+ guests or plan office catering in minutes.</div>
+              <div className="text-sm text-muted-foreground">{t('events.desc')}</div>
               <div className="flex gap-2">
-                <Button size="sm">Plan event</Button>
-                <Button size="sm" variant="outline">Catering</Button>
+                <Button size="sm">{t('events.plan')}</Button>
+                <Button size="sm" variant="outline">{t('events.catering')}</Button>
               </div>
             </div>
             <div className="mt-4">
               <Accordion type="single" collapsible>
                 <AccordionItem value="e1">
-                  <AccordionTrigger>Do you offer set menus?</AccordionTrigger>
-                  <AccordionContent>Yes — set menus for groups of 8–30, with vegetarian options.</AccordionContent>
+                  <AccordionTrigger>{t('events.q1.question')}</AccordionTrigger>
+                  <AccordionContent>{t('events.q1.answer')}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="e2">
-                  <AccordionTrigger>How far in advance should I book?</AccordionTrigger>
-                  <AccordionContent>We recommend 48 hours, but same‑day may be possible off‑peak.</AccordionContent>
+                  <AccordionTrigger>{t('events.q2.question')}</AccordionTrigger>
+                  <AccordionContent>{t('events.q2.answer')}</AccordionContent>
                 </AccordionItem>
               </Accordion>
             </div>
@@ -209,20 +209,20 @@ export default function Home() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Seasonal offers</CardTitle>
-              <Badge variant="secondary">Limited time</Badge>
+              <CardTitle className="text-lg">{t('offers.heading')}</CardTitle>
+              <Badge variant="secondary">{t('offers.badge')}</Badge>
             </div>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <div className="text-sm text-muted-foreground">Taco Tuesday Bundle</div>
-                <div className="text-xl font-semibold">2 tacos + drink — $9.99</div>
-                <div className="text-xs text-muted-foreground">Ends in <Countdown to={Date.now() + 1000 * 60 * 60 * 24 * 2} /></div>
+                <div className="text-sm text-muted-foreground">{t('offers.bundle')}</div>
+                <div className="text-xl font-semibold">{t('offers.deal')}</div>
+                <div className="text-xs text-muted-foreground">{t('offers.endsIn')} <Countdown to={Date.now() + 1000 * 60 * 60 * 24 * 2} /></div>
               </div>
               <div className="flex gap-2">
-                <Button>Order bundle</Button>
-                <Button variant="outline">View details</Button>
+                <Button>{t('offers.orderBundle')}</Button>
+                <Button variant="outline">{t('offers.viewDetails')}</Button>
               </div>
             </div>
           </CardContent>
@@ -231,11 +231,11 @@ export default function Home() {
 
       {/* Customer love (testimonials) */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">Customer love</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('testimonials.heading')}</h2>
         <div className="grid gap-4 md:grid-cols-3">
-          <Testimonial name="A. Rivera" initials="AR">“Hands‑down the best tacos in town. Ordering is so fast, and delivery always lands earlier than expected.”</Testimonial>
-          <Testimonial name="M. Santos" initials="MS">“Reservations that actually work. I booked for 8pm and was seated at 8:02. Five stars.”</Testimonial>
-          <Testimonial name="L. Chen" initials="LC">“The rewards program is legit. Free guac after my second order — say less.”</Testimonial>
+          <Testimonial name="A. Rivera" initials="AR">{t('testimonials.t1')}</Testimonial>
+          <Testimonial name="M. Santos" initials="MS">{t('testimonials.t2')}</Testimonial>
+          <Testimonial name="L. Chen" initials="LC">{t('testimonials.t3')}</Testimonial>
         </div>
       </section>
 
@@ -243,42 +243,42 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold tracking-tight">Sourcing & values</h3>
-            <p className="text-sm text-muted-foreground">We believe in fresh, local ingredients and sustainable practices — from kitchen to table.</p>
+            <h3 className="text-xl font-semibold tracking-tight">{t('values.heading')}</h3>
+            <p className="text-sm text-muted-foreground">{t('values.desc')}</p>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">Local produce</Badge>
-              <Badge variant="secondary">Sustainable seafood</Badge>
-              <Badge variant="secondary">Fair trade</Badge>
-              <Badge variant="secondary">Low waste</Badge>
+              <Badge variant="secondary">{t('values.badges.localProduce')}</Badge>
+              <Badge variant="secondary">{t('values.badges.sustainableSeafood')}</Badge>
+              <Badge variant="secondary">{t('values.badges.fairTrade')}</Badge>
+              <Badge variant="secondary">{t('values.badges.lowWaste')}</Badge>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">Daily market picks</CardContent></Card>
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">House‑made salsas</CardContent></Card>
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">Locally baked tortillas</CardContent></Card>
-            <Card><CardContent className="p-4 text-sm text-muted-foreground">Compostable packaging</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.dailyMarket')}</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.houseSalsas')}</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.localTortillas')}</CardContent></Card>
+            <Card><CardContent className="p-4 text-sm text-muted-foreground">{t('values.cards.compostablePackaging')}</CardContent></Card>
           </div>
         </div>
       </section>
 
       {/* Value props */}
       <section className="container mx-auto px-6 py-14 grid gap-4 md:grid-cols-4">
-        <ValueCard icon={<Clock className="size-5" />} title={t('explore.tacos')}>One tap reorder, saved favorites, and Apple/Google Pay.</ValueCard>
+        <ValueCard icon={<Clock className="size-5" />} title={t('explore.tacos')}>{t('value.reorderDesc')}</ValueCard>
         <ValueCard icon={<Truck className="size-5" />} title={t('why.tracking.title')}>{t('why.tracking.desc')}</ValueCard>
         <ValueCard icon={<Smartphone className="size-5" />} title={t('why.oneTap.title')}>{t('why.oneTap.desc')}</ValueCard>
-        <ValueCard icon={<ShieldCheck className="size-5" />} title="Trusted & secure">Verified reviews, secure payments, satisfaction guaranteed.</ValueCard>
+        <ValueCard icon={<ShieldCheck className="size-5" />} title={t('value.trustedTitle')}>{t('value.trustedDesc')}</ValueCard>
       </section>
 
       {/* How it works */}
       <section className="container mx-auto px-6 py-14">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
-          <p className="text-sm text-muted-foreground">From craving to table in three simple steps.</p>
+          <h2 className="text-2xl font-semibold tracking-tight">{t('how.heading')}</h2>
+          <p className="text-sm text-muted-foreground">{t('how.desc')}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          <Step number={1} title="Choose your favorites">Browse curated categories or search for a specific dish.</Step>
-          <Step number={2} title="Customize & checkout">Add sides, pick spice level, and pay securely in seconds.</Step>
-          <Step number={3} title="Track & enjoy">Follow your order live or show your reservation at the door.</Step>
+          <Step number={1} title={t('how.step1.title')}>{t('how.step1.desc')}</Step>
+          <Step number={2} title={t('how.step2.title')}>{t('how.step2.desc')}</Step>
+          <Step number={3} title={t('how.step3.title')}>{t('how.step3.desc')}</Step>
         </div>
       </section>
 
@@ -313,7 +313,7 @@ export default function Home() {
             [...Array(3)].map((_, i) => (
               <Card key={i}>
                 <CardHeader>
-                  <CardTitle>Chef’s Special #{i + 1}</CardTitle>
+                  <CardTitle>{t('popular.chefSpecial', { num: i + 1 })}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
