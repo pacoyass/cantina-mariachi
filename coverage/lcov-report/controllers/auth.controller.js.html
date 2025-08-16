@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.6% </span>
+                <span class="strong">85.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>205/234</span>
+                <span class='fraction'>201/234</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">92.85% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>13/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.55% </span>
+                <span class="strong">85.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>204/233</span>
+                <span class='fraction'>200/233</span>
             </div>
         
             
@@ -808,11 +808,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1171,7 +1171,7 @@ export const cleanupExpiredAuthData = async () =&gt; {
 export const register = async (req, res) =&gt; {
   try {
     if (!req.body || !req.body.email || !req.body.password || !req.body.name) {
-      return createError(res, 400, 'Please provide email, password, and name', 'INVALID_INPUT', {
+      return createError(res, 400, 'badRequest', 'INVALID_INPUT', {
         fields: ['email', 'password', 'name'],
       });
     }
@@ -1182,7 +1182,7 @@ export const register = async (req, res) =&gt; {
     await LoggerService.logAudit(user.id, 'USER_REGISTERED', user.id, { email, role, name, phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_registered', `User ${email} registered`, 'SENT');
     await sendWebhook('USER_REGISTERED', { userId: user.id, email, role, name, phone });
-    return createResponse(res, 201, 'User registered successfully', { data:user });
+    return createResponse(res, 201, 'registerSuccess', { data:user }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    console.error(error);</span>
     
@@ -1210,7 +1210,7 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
 &nbsp;
   if (!email || !password) {
     await LoggerService.logLogin(null, 'FAILURE', ip, userAgent);
-    return createError(res, 400, 'Email and password are required', 'BAD_REQUEST');
+    return createError(res, 400, 'badRequest', 'BAD_REQUEST', {}, req, {}, 'auth');
   }
 &nbsp;
   // Check rate-limiting
@@ -1268,7 +1268,7 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
     await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp), undefined, { userAgent, ip });
   } catch (authErr) {
     await LoggerService.logError('Token generation/storage failed', authErr.stack, { email, error: authErr.message });
-    return createError(res, 500, 'Failed to generate tokens', 'AUTH_ERROR');
+    return createError(res, 500, 'Failed to generate tokens', 'AUTH_ERROR', {}, req, {}, 'auth');
   }
 &nbsp;
   // Set cookies
@@ -1307,13 +1307,13 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
       `${timeGreeting}, ${firstName}! 🌟`,
     ];
     let lastMessageIndex = -1;
-    return () =&gt; {
+    return <span class="fstat-no" title="function not covered" >()</span> =&gt; {
       let randomIndex;
-      do {
-        randomIndex = Math.floor(Math.random() * funMessages.length);
+<span class="cstat-no" title="statement not covered" >      do {</span>
+<span class="cstat-no" title="statement not covered" >        randomIndex = Math.floor(Math.random() * funMessages.length);</span>
       } while (randomIndex === lastMessageIndex);
-      lastMessageIndex = randomIndex;
-      return funMessages[randomIndex];
+<span class="cstat-no" title="statement not covered" >      lastMessageIndex = randomIndex;</span>
+<span class="cstat-no" title="statement not covered" >      return funMessages[randomIndex];</span>
     };
   };
 &nbsp;
@@ -1326,7 +1326,7 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
   await LoggerService.logNotification(user.id, 'WEBHOOK', 'user_login', `User ${email} logged in`, 'SENT');
   await sendWebhook('USER_LOGIN', { userId: user.id, email, role: user.role, phone: user.phone, loginTime: new Date().toISOString() });
 &nbsp;
-  return createResponse(res, 200, generateLoginMessage(), {
+  return createResponse(res, 200, 'loginSuccess', {
     user: {
       id: user.id,
       email: user.email,
@@ -1334,7 +1334,7 @@ const ip = req.ip || <span class="branch-1 cbranch-no" title="branch not covered
       name: sanitizedName,
       phone: user.phone,
     },
-  });
+  }, req, {}, 'auth');
 };
 &nbsp;
 // POST /api/auth/refresh - Refresh access token
@@ -1370,21 +1370,21 @@ const ip = req.ip || null;
         maxAge: 15 * 60 * 1000,
         path: '/',
       });
-      return createResponse(res, 200, 'Token refreshed successfully', { accessToken });
+      return createResponse(res, 200, 'loginSuccess', { accessToken }, req, {}, 'auth');
     }
     // Ensure stored hash exists (rotate only if valid current token)
     const providedTokenHash = await hashToken(providedRefreshToken);
     const stored = await databaseService.getRefreshToken(providedTokenHash);
     if (!stored || stored.expiresAt &lt; new Date()) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'Refresh token not recognized or expired' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED');
+      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
 &nbsp;
     // Fetch user
     const user = await databaseService.getUserById(payload.userId, { id: true, email: true, role: true, name: true, phone: true, isActive: true });
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'User not found' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED');
+      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
 &nbsp;
     // Issue new tokens (rotate refresh)
@@ -1422,7 +1422,7 @@ const ip = req.ip || null;
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Token refreshed successfully', { accessToken });
+    return createResponse(res, 200, 'loginSuccess', { accessToken }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('Token refresh failed', error.stack, { userId: req.user?.id });</span>
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: error.message });</span>
@@ -1446,7 +1446,7 @@ export const logout = async (req, res) =&gt; {
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_SUCCESS', req.user.userId, { email: req.user.email });
     await LoggerService.logNotification(req.user.userId, 'WEBHOOK', 'user_logout', `User ${req.user.email} logged out`, 'SENT');
     await sendWebhook('USER_LOGOUT', { userId: req.user.userId, email: req.user.email });
-    return createResponse(res, 200, 'Signed out successfully', { nextSteps: 'Log in again to access your account' });
+    return createResponse(res, 200, 'logoutSuccess', { nextSteps: 'Log in again to access your account' }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('Logout failed', error.stack, { userId: req.user?.id });</span>
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logAudit(null, 'USER_LOGOUT_FAILED', null, { reason: error.message });</span>
@@ -1482,7 +1482,7 @@ export const getToken = async (req, res) =&gt; {
     await LoggerService.logAudit(user.id, 'TOKEN_VALIDATE_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_validated', `Token validated for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_VALIDATED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'Session is active', { user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone } });
+    return createResponse(res, 200, 'loginSuccess', { user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone } }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('Token validation failed', error.stack, { userId: req.user?.id });</span>
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: error.message });</span>
@@ -1495,16 +1495,16 @@ export const getToken = async (req, res) =&gt; {
 export const listSessions = async (req, res) =&gt; {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     const page = Math.max(parseInt(req.query.page || '1', 10), 1);
     const pageSize = Math.min(Math.max(parseInt(req.query.pageSize || '20', 10), 1), 100);
     const tokens = await databaseService.listRefreshTokensByUser(req.user.userId, { page, pageSize });
     const hasMore = tokens.length === pageSize;
-    return createResponse(res, 200, 'Sessions fetched', { sessions: tokens.map(t =&gt; ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip })), page, pageSize, hasMore });
+    return createResponse(res, 200, 'dataRetrieved', { sessions: tokens.map(t =&gt; ({ id: t.id, expiresAt: t.expiresAt, userAgent: t.userAgent, ip: t.ip })), page, pageSize, hasMore }, req, {}, 'api');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('listSessions failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to fetch sessions', 'SERVER_ERROR', {}, req, {}, 'auth');</span>
   }
 };
 &nbsp;
@@ -1512,7 +1512,7 @@ export const listSessions = async (req, res) =&gt; {
 export const logoutAllSessions = async (req, res) =&gt; {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     // Blacklist current access token if present
     const accessToken = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
@@ -1525,10 +1525,10 @@ export const logoutAllSessions = async (req, res) =&gt; {
     res.clearCookie('refreshToken', { path: '/', httpOnly: true });
 &nbsp;
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_ALL_SESSIONS', req.user.userId, { deletedTokens: count });
-    return createResponse(res, 200, 'Logged out from all sessions', { deletedTokens: count });
+    return createResponse(res, 200, 'logoutSuccess', { deletedTokens: count }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('logoutAllSessions failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to logout from all sessions', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to logout from all sessions', 'SERVER_ERROR', {}, req, {}, 'auth');</span>
   }
 };
 &nbsp;
@@ -1536,20 +1536,20 @@ export const logoutAllSessions = async (req, res) =&gt; {
 export const logoutOtherSessions = async (req, res) =&gt; {
   try {
     if (!req.user?.userId) {
-      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');
+      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
     const currentRefresh = req.cookies.refreshToken || req.body.refreshToken;
     if (!currentRefresh) {
-      return createError(res, 400, 'Current refresh token required', 'BAD_REQUEST');
+      return createError(res, 400, 'Current refresh token required', 'BAD_REQUEST', {}, req, {}, 'auth');
     }
     const keepHash = await hashToken(currentRefresh);
     const count = await databaseService.deleteOtherRefreshTokensForUser(req.user.userId, keepHash);
 &nbsp;
     await LoggerService.logAudit(req.user.userId, 'USER_LOGOUT_OTHER_SESSIONS', req.user.userId, { deletedTokens: count });
-    return createResponse(res, 200, 'Logged out from other sessions', { deletedTokens: count });
+    return createResponse(res, 200, 'logoutSuccess', { deletedTokens: count }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('logoutOtherSessions failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to logout other sessions', 'SERVER_ERROR', {}, req, {}, 'auth');</span>
   }
 };
 &nbsp;
@@ -1557,14 +1557,14 @@ export const logoutOtherSessions = async (req, res) =&gt; {
 export const revokeSessionById = async (req, res) =&gt; {
   try {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!req.user?.userId) {
-<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');</span>
+<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED', {}, req, {}, 'auth');</span>
     }
     const sessionId = req.params.id;
     const result = await prisma.refreshToken.deleteMany({ where: { id: sessionId, userId: req.user.userId } });
-    return createResponse(res, 200, 'Session revoked', { deleted: result.count });
+    return createResponse(res, 200, 'logoutSuccess', { deleted: result.count }, req, {}, 'auth');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('revokeSessionById failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to revoke session', 'SERVER_ERROR', {}, req, {}, 'auth');</span>
   }
 };</pre></td></tr></table></pre>
 
@@ -1573,7 +1573,7 @@ export const revokeSessionById = async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-14T03:52:10.092Z
+                at 2025-08-16T05:39:20.107Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -12,9 +12,9 @@ export const createCashTransaction = async (req, res) => {
     const { orderNumber, driverId, amount, customerNotes } = req.body;
     const created = await databaseService.createCashTransactionForOrder(orderNumber, driverId, amount, { customerNotes });
     await LoggerService.logAudit(req.user?.userId || null, 'CASH_TX_CREATED', created.id, { orderNumber, driverId, amount });
-    return createResponse(res, 201, 'Cash transaction created', { transaction: created }, req, {}, 'business:cash');
+    return createResponse(res, 201, 'cash.transactionCreated', { transaction: created }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 400, error.message || 'Failed to create cash transaction', 'CASH_CREATE_FAILED');
+    return createError(res, 400, 'operationFailed', 'CASH_CREATE_FAILED', { error: error.message }, req);
   }
 };
 
@@ -23,9 +23,9 @@ export const confirmCashTransaction = async (req, res) => {
     const { orderNumber, paymentTimestamp } = req.body;
     const updated = await databaseService.confirmCashTransaction(orderNumber, paymentTimestamp ? new Date(paymentTimestamp) : undefined);
     await LoggerService.logAudit(req.user?.userId || null, 'CASH_TX_CONFIRMED', updated.id, { orderNumber });
-    return createResponse(res, 200, 'Cash transaction confirmed', { transaction: updated }, req, {}, 'business:cash');
+    return createResponse(res, 200, 'cash.transactionUpdated', { transaction: updated }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 400, error.message || 'Failed to confirm cash transaction', 'CASH_CONFIRM_FAILED');
+    return createError(res, 400, 'operationFailed', 'CASH_CONFIRM_FAILED', { error: error.message }, req);
   }
 };
 
@@ -34,9 +34,9 @@ export const verifyCashTransaction = async (req, res) => {
     const { orderNumber, adminVerified, discrepancyAmount, discrepancyNotes } = req.body;
     const updated = await databaseService.verifyCashTransaction(orderNumber, adminVerified, { amount: discrepancyAmount, notes: discrepancyNotes });
     await LoggerService.logAudit(req.user?.userId || null, 'CASH_TX_VERIFIED', updated.id, { orderNumber, adminVerified });
-    return createResponse(res, 200, 'Cash transaction verified', { transaction: updated }, req, {}, 'business:cash');
+    return createResponse(res, 200, 'cash.transactionUpdated', { transaction: updated }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 400, error.message || 'Failed to verify cash transaction', 'CASH_VERIFY_FAILED');
+    return createError(res, 400, 'operationFailed', 'CASH_VERIFY_FAILED', { error: error.message }, req);
   }
 };
 
@@ -45,9 +45,9 @@ export const getDriverDailySummary = async (req, res) => {
     const date = req.validatedQuery?.date || new Date();
     const driverId = req.validatedQuery?.driverId || req.params.id;
     const summary = await databaseService.getCashSummaryByDriverAndDate(driverId, date);
-    return createResponse(res, 200, 'Cash summary fetched', { summary }, req, {}, 'business:cash');
+    return createResponse(res, 200, 'dataRetrieved', { summary }, req, {}, 'api');
   } catch (error) {
-    return createError(res, 500, 'Failed to fetch cash summary', 'SERVER_ERROR', {}, req, {}, 'business:cash');
+    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
   }
 };
 

@@ -33,13 +33,16 @@ router.use((req, res, next) => {
   createError(
     res,
     404,
-    `The requested route ${req.originalUrl} does not exist.`,
+    'notFound',
     'ROUTE_NOT_FOUND',
     {
       route: req.originalUrl,
       action: 'Check the URL or refer to the API documentation for valid endpoints.',
       contactSupport: 'support@cantina.app'
-    }
+    },
+    req,
+    {},
+    'common'
   );
 });
 export default router;
