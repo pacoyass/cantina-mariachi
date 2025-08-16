@@ -1,0 +1,21 @@
+{
+  "success": "Éxito",
+  "error": "Error",
+  "welcome": "Bienvenido",
+  "loading": "Cargando...",
+  "notFound": "No encontrado",
+  "unauthorized": "Acceso no autorizado",
+  "forbidden": "Acceso prohibido",
+  "internalError": "Error interno del servidor",
+  "badRequest": "Solicitud incorrecta",
+  "created": "Creado exitosamente",
+  "updated": "Actualizado exitosamente",
+  "deleted": "Eliminado exitosamente",
+  "operationFailed": "Operación fallida",
+  "invalidRequest": "Solicitud inválida",
+  "resourceNotFound": "Recurso no encontrado",
+  "serverError": "Error del servidor",
+  "maintenance": "El servidor está en mantenimiento",
+  "rateLimited": "Demasiadas solicitudes. Intente de nuevo más tarde.",
+  "timeout": "Tiempo de espera agotado"
+}
