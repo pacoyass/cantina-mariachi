@@ -15,9 +15,9 @@ export const getActivityLogs = async (req, res) => {
   try {
     const { page, pageSize, start, end, type } = req.validatedQuery || {};
     const logs = await databaseService.getActivityLogs(type, start, end, { page, pageSize });
-    return createResponse(res, 200, 'Activity logs fetched', { logs, page, pageSize, hasMore: logs.length === pageSize });
+    return createResponse(res, 200, 'Activity logs fetched', { logs, page, pageSize, hasMore: logs.length === pageSize }, req);
   } catch (error) {
-    return createError(res, 500, 'Failed to fetch activity logs', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to fetch activity logs', 'SERVER_ERROR', {}, req);
   }
 };
 
@@ -29,9 +29,9 @@ export const getNotifications = async (req, res) => {
   try {
     const { page, pageSize, start, end, status } = req.validatedQuery || {};
     const logs = await databaseService.getNotificationLogs(status, start, end, { page, pageSize });
-    return createResponse(res, 200, 'Notification logs fetched', { logs, page, pageSize, hasMore: logs.length === pageSize });
+    return createResponse(res, 200, 'Notification logs fetched', { logs, page, pageSize, hasMore: logs.length === pageSize }, req);
   } catch (error) {
-    return createError(res, 500, 'Failed to fetch notification logs', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to fetch notification logs', 'SERVER_ERROR', {}, req);
   }
 };
 
@@ -43,9 +43,9 @@ export const getOrders = async (req, res) => {
   try {
     const { page, pageSize, status } = req.validatedQuery || {};
     const orders = await databaseService.getOrdersByStatus(status, { page, pageSize });
-    return createResponse(res, 200, 'Orders fetched', { orders, page, pageSize, hasMore: orders.length === pageSize });
+    return createResponse(res, 200, 'Orders fetched', { orders, page, pageSize, hasMore: orders.length === pageSize }, req);
   } catch (error) {
-    return createError(res, 500, 'Failed to fetch orders', 'SERVER_ERROR');
+    return createError(res, 500, 'Failed to fetch orders', 'SERVER_ERROR', {}, req);
   }
 };
 

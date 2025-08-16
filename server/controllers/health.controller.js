@@ -19,7 +19,12 @@ export const getHealth = async (req, res) => {
   } catch (e) {
     cache.error = e.message;
   }
-  return createResponse(res, db.ok && cache.ok ? 200 : 503, 'health', { db, cache, time: new Date().toISOString() });
+  
+  const isHealthy = db.ok && cache.ok;
+  const messageKey = isHealthy ? 'systemHealthy' : 'systemDegraded';
+  
+  return createResponse(res, isHealthy ? 200 : 503, messageKey, 
+    { db, cache, time: new Date().toISOString() }, req, {}, 'business:system');
 };
 
 export const cleanupHealth = async () => {
