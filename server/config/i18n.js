@@ -34,7 +34,7 @@ i18next
     // Language detection options
     detection: {
       // Order of language detection
-      order: ['header', 'querystring', 'cookie', 'session'],
+      order: ['querystring', 'cookie', 'header', 'session'],
       
       // Available detectors
       caches: ['cookie'],
