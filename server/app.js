@@ -13,6 +13,7 @@ import dotenv from 'dotenv';
 import crypto from 'node:crypto';
 import swaggerUi from 'swagger-ui-express';
 import { doubleCsrf } from 'csrf-csrf';
+import i18next, { middleware as i18nextMiddleware } from './config/i18n.js';
 dotenv.config();
 
 export const app = express();
@@ -92,6 +93,13 @@ if (process.env.ALLOW_URLENCODED === '1') {
 	app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 }
 app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
+
+// Add i18next middleware for translation support
+app.use(i18nextMiddleware.handle(i18next));
+
+// Import and add translation helpers to request object
+const { addTranslationHelpers } = await import('./utils/translation.js');
+app.use(addTranslationHelpers);
 
 // Serve API docs BEFORE /api router so 404 handler does not intercept
 try {
