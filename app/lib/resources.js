@@ -184,7 +184,17 @@ export const uiResources = {
         unavailable: 'Unavailable',
         noItems: 'No items found.'
       },
-      categories: 'Categories'
+      categories: 'Categories',
+      categoriesAll: 'All',
+      filters: {
+        dietary: 'Dietary',
+        vegetarian: 'Vegetarian',
+        vegan: 'Vegan',
+        glutenFree: 'Gluten‑free',
+        spicy: 'Spicy'
+      },
+      results: 'Showing {{count}} items',
+      badges: { new: 'New', popular: 'Popular' }
     }
   },
   ar: {
@@ -367,7 +377,17 @@ export const uiResources = {
         unavailable: 'غير متاح',
         noItems: 'لا توجد عناصر.'
       },
-      categories: 'الفئات'
+      categories: 'الفئات',
+      categoriesAll: 'الكل',
+      filters: {
+        dietary: 'أنظمة غذائية',
+        vegetarian: 'نباتي',
+        vegan: 'نباتي صارم',
+        glutenFree: 'خالٍ من الغلوتين',
+        spicy: 'حار'
+      },
+      results: 'عرض {{count}} عنصر',
+      badges: { new: 'جديد', popular: 'شائع' }
     }
   },
   es: {
@@ -550,7 +570,17 @@ export const uiResources = {
         unavailable: 'No disponible',
         noItems: 'No se encontraron artículos.'
       },
-      categories: 'Categorías'
+      categories: 'Categorías',
+      categoriesAll: 'Todas',
+      filters: {
+        dietary: 'Preferencias',
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano',
+        glutenFree: 'Sin gluten',
+        spicy: 'Picante'
+      },
+      results: 'Mostrando {{count}} artículos',
+      badges: { new: 'Nuevo', popular: 'Popular' }
     }
   },
   fr: {
@@ -733,7 +763,17 @@ export const uiResources = {
         unavailable: 'Indisponible',
         noItems: 'Aucun élément trouvé.'
       },
-      categories: 'Catégories'
+      categories: 'Catégories',
+      categoriesAll: 'Toutes',
+      filters: {
+        dietary: 'Diete',
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano',
+        glutenFree: 'Senza glutine',
+        spicy: 'Piccante'
+      },
+      results: 'Mostrati {{count}} elementi',
+      badges: { new: 'Nuovo', popular: 'Popolare' }
     }
   },
   de: {
@@ -916,7 +956,17 @@ export const uiResources = {
         unavailable: 'Nicht verfügbar',
         noItems: 'Keine Einträge gefunden.'
       },
-      categories: 'Kategorien'
+      categories: 'Kategorien',
+      categoriesAll: 'Alle',
+      filters: {
+        dietary: 'Ernährung',
+        vegetarian: 'Vegetarisch',
+        vegan: 'Vegan',
+        glutenFree: 'Glutenfrei',
+        spicy: 'Scharf'
+      },
+      results: '{{count}} Artikel',
+      badges: { new: 'Neu', popular: 'Beliebt' }
     }
   },
   it: {
@@ -1039,15 +1089,15 @@ export const uiResources = {
         },
         cards: {
           dailyMarket: 'Scelte quotidiane del mercato',
-          houseSalsas: 'Salsas casere',
-          localTortillas: 'Tortillas assate localmente',
+          houseSalsas: 'Salse fatte in casa',
+          localTortillas: 'Tortillas cotte localmente',
           compostablePackaging: 'Imballaggi compostabili'
         }
       },
       value: {
-        reorderDesc: 'Riordino con un tocco, favoriti salvati e Apple/Google Pay.',
+        reorderDesc: 'Riordino con un tocco, preferiti salvati e Apple/Google Pay.',
         trustedTitle: 'Affidabile & sicuro',
-        trustedDesc: 'Recensioni verificated, pagamenti sicuri, soddisfazione garantita.'
+        trustedDesc: 'Recensioni verificate, pagamenti sicuri, soddisfazione garantita.'
       },
       how: {
         heading: 'Come funziona',
@@ -1058,7 +1108,7 @@ export const uiResources = {
       },
       faq: {
         heading: 'Domande frequenti',
-        q1: { question: 'Avete opzioni vegetarianane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetarianane.' },
+        q1: { question: 'Avete opzioni vegetariane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetariane.' },
         q2: { question: 'Quanto tempo impiega la consegna?', answer: 'In media, meno di 35 minuti a seconda dell’orario e della distanza.' },
         q3: { question: 'Posso modificare la mia prenotazione?', answer: 'Puoi modificare la prenotazione fino a 2 ore prima dell’orario.' }
       },
@@ -1099,7 +1149,17 @@ export const uiResources = {
         unavailable: 'Non disponibile',
         noItems: 'Nessun elemento trovato.'
       },
-      categories: 'Categorie'
+      categories: 'Categorie',
+      categoriesAll: 'Tutte',
+      filters: {
+        dietary: 'Diete',
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano',
+        glutenFree: 'Senza glutine',
+        spicy: 'Piccante'
+      },
+      results: 'Mostrati {{count}} elementi',
+      badges: { new: 'Nuovo', popular: 'Popolare' }
     }
   },
   pt: {
@@ -1282,7 +1342,17 @@ export const uiResources = {
         unavailable: 'Indisponível',
         noItems: 'Nenhum item encontrado.'
       },
-      categories: 'Categorias'
+      categories: 'Categorias',
+      categoriesAll: 'Todas',
+      filters: {
+        dietary: 'Preferências',
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano',
+        glutenFree: 'Sem glúten',
+        spicy: 'Apimentado'
+      },
+      results: 'Mostrando {{count}} itens',
+      badges: { new: 'Novo', popular: 'Popular' }
     }
   }
 };
