@@ -4,7 +4,7 @@ import { Globe } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 
 export function LangToggle() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('ui');
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -42,7 +42,7 @@ export function LangToggle() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
           <Globe className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">{i18n.t('a11y.toggleLanguage', { ns: 'ui' })}</span>
+          <span className="sr-only">{t('a11y.toggleLanguage')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="flex items-center mx-auto">
