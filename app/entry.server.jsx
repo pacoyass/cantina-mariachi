@@ -5,19 +5,19 @@ import { ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { I18nextProvider } from 'react-i18next';
-import { initI18n } from './lib/i18n.js';
+import { createServerI18n } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
 
 export const streamTimeout = 5000;
 
-export default async function handleRequest(
+export default function handleRequest(
   request,
   responseStatusCode,
   responseHeaders,
   routerContext,
   loadContext
 ) {
-  const i18n = await initI18n({ lng: loadContext?.lng || 'en', resources: uiResources });
+  const i18n = createServerI18n({ lng: loadContext?.lng || 'en', resources: uiResources });
 
   return new Promise((resolve, reject) => {
     let shellRendered = false;
