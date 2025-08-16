@@ -20,6 +20,65 @@ export const uiResources = {
         title: 'Oops!',
         notFound: 'The requested page could not be found.',
       }
+    },
+    home: {
+      hero: {
+        badge: 'New: Rewards launch — earn points on every order',
+        title: 'Authentic Mexican. <primary>Delivered fast.</primary>',
+        desc: 'From street‑style tacos to slow‑cooked specialties. Order in seconds, reserve a table instantly, and track your delivery in real time — all in one place.',
+        orderNow: 'Order Now',
+        reserve: 'Reserve a Table',
+        browseMenu: 'Browse full menu',
+        rating: '4.9/5 from 2,400+ local diners',
+        avgTime: 'Delivery under 35 minutes on average'
+      },
+      explore: {
+        heading: 'Explore the menu',
+        tacos: 'Tacos',
+        bowls: 'Bowls',
+        drinks: 'Drinks',
+        coming: 'Coming soon.'
+      },
+      loyalty: {
+        heading: 'Loyalty & rewards',
+        membersSave: 'Members save more',
+        points: 'points',
+        nextAt: 'Next reward at {{points}}',
+        freeDessert: 'Free dessert',
+        join: 'Join rewards',
+        perks: 'View perks'
+      },
+      why: {
+        heading: 'Why choose Cantina',
+        faster: { title: 'Faster than apps', desc: 'Direct kitchen to doorstep, no third‑party delays.' },
+        fees: { title: 'Transparent fees', desc: 'No surprise charges at checkout.' },
+        oneTap: { title: 'One‑tap reservations', desc: 'Live availability and SMS confirmations.' },
+        tracking: { title: 'Live tracking', desc: 'Minute‑by‑minute delivery updates.' },
+        chef: { title: 'Chef‑crafted', desc: 'Fresh ingredients and seasonal menus.' },
+        rewards: { title: 'Rewards that matter', desc: 'Points on every order, instant perks.' }
+      },
+      faq: {
+        heading: 'Frequently asked questions'
+      },
+      cta: {
+        limited: 'Limited‑time offer',
+        title: 'Free delivery on orders over $25',
+        desc: 'Order in seconds or reserve instantly — no extra fees today.',
+        start: 'Start an Order',
+        reserve: 'Reserve Now'
+      },
+      sticky: {
+        order: 'Order Now',
+        reserve: 'Reserve'
+      },
+      popular: {
+        heading: 'Popular this week',
+        seeMenu: 'See full menu',
+        unavailable: 'Unavailable',
+        add: 'Add to Order',
+        notify: 'Notify me',
+        coming: 'A delicious selection coming soon.'
+      }
     }
   },
   ar: {
@@ -42,6 +101,65 @@ export const uiResources = {
       errors: {
         title: 'عذرًا!',
         notFound: 'الصفحة المطلوبة غير موجودة.',
+      }
+    },
+    home: {
+      hero: {
+        badge: 'جديد: إطلاق المكافآت — اكسب نقاطًا مع كل طلب',
+        title: 'مأكولات مكسيكية أصيلة. <primary>توصيل سريع.</primary>',
+        desc: 'من تاكو بأسلوب الشارع إلى الأطباق المطهية ببطء. اطلب خلال ثوانٍ، احجز فورًا، وتابع التوصيل في الوقت الفعلي — كل ذلك في مكان واحد.',
+        orderNow: 'اطلب الآن',
+        reserve: 'احجز طاولة',
+        browseMenu: 'تصفح القائمة كاملة',
+        rating: '4.9/5 من أكثر من 2400 زائر محلي',
+        avgTime: 'التوصيل في أقل من 35 دقيقة في المتوسط'
+      },
+      explore: {
+        heading: 'استكشف القائمة',
+        tacos: 'تاكو',
+        bowls: 'أطباق',
+        drinks: 'مشروبات',
+        coming: 'قريبًا.'
+      },
+      loyalty: {
+        heading: 'الولاء والمكافآت',
+        membersSave: 'الأعضاء يوفرون أكثر',
+        points: 'نقطة',
+        nextAt: 'المكافأة التالية عند {{points}}',
+        freeDessert: 'تحلية مجانية',
+        join: 'انضم لبرنامج المكافآت',
+        perks: 'عرض المزايا'
+      },
+      why: {
+        heading: 'لماذا تختار كانتينا',
+        faster: { title: 'أسرع من التطبيقات', desc: 'من المطبخ إلى الباب مباشرةً، بلا تأخير من طرف ثالث.' },
+        fees: { title: 'رسوم شفافة', desc: 'لا رسوم مفاجئة عند الدفع.' },
+        oneTap: { title: 'حجوزات بلمسة واحدة', desc: 'توفر فوري ورسائل تأكيد.' },
+        tracking: { title: 'تتبع مباشر', desc: 'تحديثات التوصيل دقيقة بدقيقة.' },
+        chef: { title: 'من إعداد الطهاة', desc: 'مكونات طازجة وقوائم موسمية.' },
+        rewards: { title: 'مكافآت قيّمة', desc: 'نقاط على كل طلب ومزايا فورية.' }
+      },
+      faq: {
+        heading: 'الأسئلة الشائعة'
+      },
+      cta: {
+        limited: 'عرض لفترة محدودة',
+        title: 'توصيل مجاني للطلبات التي تزيد عن $25',
+        desc: 'اطلب خلال ثوانٍ أو احجز فورًا — بدون رسوم إضافية اليوم.',
+        start: 'ابدأ الطلب',
+        reserve: 'احجز الآن'
+      },
+      sticky: {
+        order: 'اطلب الآن',
+        reserve: 'احجز'
+      },
+      popular: {
+        heading: 'الأكثر رواجًا هذا الأسبوع',
+        seeMenu: 'عرض القائمة كاملة',
+        unavailable: 'غير متاح',
+        add: 'أضف إلى الطلب',
+        notify: 'أعلمني',
+        coming: 'اختيارات لذيذة قادمة قريبًا.'
       }
     }
   },

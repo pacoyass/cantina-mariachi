@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs"
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "../components/ui/hover-card";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../components/ui/accordion";
 import { Star, Clock, Truck, Smartphone, UtensilsCrossed, ShieldCheck, Sparkles } from "lucide-react";
+import { useTranslation, Trans } from 'react-i18next';
 
 export function meta() {
   return [
@@ -32,6 +33,7 @@ export async function loader({ request }) {
 
 export default function Home() {
   const { items } = useLoaderData();
+  const { t } = useTranslation('home');
 
   return (
     <main className="space-y-0">
@@ -39,25 +41,25 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit" variant="secondary">New: Rewards launch — earn points on every order</Badge>
+            <Badge className="w-fit" variant="secondary">{t('hero.badge')}</Badge>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              Authentic Mexican. <span className="text-primary">Delivered fast.</span>
+              <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />
             </h1>
             <p className="text-muted-foreground max-w-prose">
-              From street‑style tacos to slow‑cooked specialties. Order in seconds, reserve a table instantly, and track your delivery in real time — all in one place.
+              {t('hero.desc')}
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button className="px-6">Order Now</Button>
-              <Button variant="secondary" className="px-6">Reserve a Table</Button>
-              <a className="underline text-sm self-center" href="/menu">Browse full menu</a>
+              <Button className="px-6">{t('hero.orderNow')}</Button>
+              <Button variant="secondary" className="px-6">{t('hero.reserve')}</Button>
+              <a className="underline text-sm self-center" href="/menu">{t('hero.browseMenu')}</a>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-1 text-yellow-500">
                 {[...Array(5)].map((_, i) => (<Star key={i} className="size-4 fill-current" />))}
               </div>
-              <div className="text-muted-foreground">4.9/5 from 2,400+ local diners</div>
+              <div className="text-muted-foreground">{t('hero.rating')}</div>
               <Separator className="hidden md:block w-px h-5" orientation="vertical" />
-              <div className="text-muted-foreground">Delivery under 35 minutes on average</div>
+              <div className="text-muted-foreground">{t('hero.avgTime')}</div>
             </div>
           </div>
 
@@ -90,12 +92,12 @@ export default function Home() {
 
       {/* Explore menu (Tabs + HoverCard) */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">Explore the menu</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('explore.heading')}</h2>
         <Tabs defaultValue="tacos" className="w-full">
           <TabsList>
-            <TabsTrigger value="tacos">Tacos</TabsTrigger>
-            <TabsTrigger value="bowls">Bowls</TabsTrigger>
-            <TabsTrigger value="drinks">Drinks</TabsTrigger>
+            <TabsTrigger value="tacos">{t('explore.tacos')}</TabsTrigger>
+            <TabsTrigger value="bowls">{t('explore.bowls')}</TabsTrigger>
+            <TabsTrigger value="drinks">{t('explore.drinks')}</TabsTrigger>
           </TabsList>
           <div className="relative min-h-[150px] mt-3">
           <TabsContent value="tacos" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
@@ -121,10 +123,10 @@ export default function Home() {
             </div>
           </TabsContent>
           <TabsContent value="bowls" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
-            <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">Bowls coming soon.</div>
+            <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
           </TabsContent>
           <TabsContent value="drinks" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
-            <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">Drinks coming soon.</div>
+            <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
           </TabsContent>
                     </div>
           </Tabs>
@@ -135,25 +137,25 @@ export default function Home() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Loyalty & rewards</CardTitle>
-              <Badge variant="secondary">Members save more</Badge>
+              <CardTitle className="text-lg">{t('loyalty.heading')}</CardTitle>
+              <Badge variant="secondary">{t('loyalty.membersSave')}</Badge>
             </div>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-sm">
               <div>
                 <div className="text-2xl font-bold">1,250</div>
-                <div className="text-muted-foreground">points</div>
+                <div className="text-muted-foreground">{t('loyalty.points')}</div>
               </div>
               <div className="text-right">
-                <div className="font-medium">Next reward at 1,500</div>
-                <div className="text-muted-foreground">Free dessert</div>
+                <div className="font-medium">{t('loyalty.nextAt', { points: 1500 })}</div>
+                <div className="text-muted-foreground">{t('loyalty.freeDessert')}</div>
               </div>
             </div>
             <ProgressBar value={1250} max={1500} />
             <div className="mt-3 flex gap-2">
-              <Button size="sm">Join rewards</Button>
-              <Button size="sm" variant="outline">View perks</Button>
+              <Button size="sm">{t('loyalty.join')}</Button>
+              <Button size="sm" variant="outline">{t('loyalty.perks')}</Button>
             </div>
           </CardContent>
         </Card>
@@ -161,14 +163,14 @@ export default function Home() {
 
       {/* Why choose us */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">Why choose Cantina</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('why.heading')}</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <FeatureCard icon={<Clock className="size-5" />} title="Faster than apps">Direct kitchen to doorstep, no third‑party delays.</FeatureCard>
-          <FeatureCard icon={<ShieldCheck className="size-5" />} title="Transparent fees">No surprise charges at checkout.</FeatureCard>
-          <FeatureCard icon={<Smartphone className="size-5" />} title="One‑tap reservations">Live availability and SMS confirmations.</FeatureCard>
-          <FeatureCard icon={<Truck className="size-5" />} title="Live tracking">Minute‑by‑minute delivery updates.</FeatureCard>
-          <FeatureCard icon={<UtensilsCrossed className="size-5" />} title="Chef‑crafted">Fresh ingredients and seasonal menus.</FeatureCard>
-          <FeatureCard icon={<Sparkles className="size-5" />} title="Rewards that matter">Points on every order, instant perks.</FeatureCard>
+          <FeatureCard icon={<Clock className="size-5" />} title={t('why.faster.title')}>{t('why.faster.desc')}</FeatureCard>
+          <FeatureCard icon={<ShieldCheck className="size-5" />} title={t('why.fees.title')}>{t('why.fees.desc')}</FeatureCard>
+          <FeatureCard icon={<Smartphone className="size-5" />} title={t('why.oneTap.title')}>{t('why.oneTap.desc')}</FeatureCard>
+          <FeatureCard icon={<Truck className="size-5" />} title={t('why.tracking.title')}>{t('why.tracking.desc')}</FeatureCard>
+          <FeatureCard icon={<UtensilsCrossed className="size-5" />} title={t('why.chef.title')}>{t('why.chef.desc')}</FeatureCard>
+          <FeatureCard icon={<Sparkles className="size-5" />} title={t('why.rewards.title')}>{t('why.rewards.desc')}</FeatureCard>
         </div>
       </section>
 
@@ -261,9 +263,9 @@ export default function Home() {
 
       {/* Value props */}
       <section className="container mx-auto px-6 py-14 grid gap-4 md:grid-cols-4">
-        <ValueCard icon={<Clock className="size-5" />} title="Order in 30s">One tap reorder, saved favorites, and Apple/Google Pay.</ValueCard>
-        <ValueCard icon={<Truck className="size-5" />} title="Live tracking">From kitchen to doorstep with minute‑by‑minute updates.</ValueCard>
-        <ValueCard icon={<Smartphone className="size-5" />} title="Instant reservations">Real‑time availability, SMS confirmations, waitlist.</ValueCard>
+        <ValueCard icon={<Clock className="size-5" />} title={t('explore.tacos')}>One tap reorder, saved favorites, and Apple/Google Pay.</ValueCard>
+        <ValueCard icon={<Truck className="size-5" />} title={t('why.tracking.title')}>{t('why.tracking.desc')}</ValueCard>
+        <ValueCard icon={<Smartphone className="size-5" />} title={t('why.oneTap.title')}>{t('why.oneTap.desc')}</ValueCard>
         <ValueCard icon={<ShieldCheck className="size-5" />} title="Trusted & secure">Verified reviews, secure payments, satisfaction guaranteed.</ValueCard>
       </section>
 
@@ -283,8 +285,8 @@ export default function Home() {
       {/* Popular this week */}
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold tracking-tight">Popular this week</h2>
-          <a className="text-sm underline" href="/menu">See full menu</a>
+          <h2 className="text-2xl font-semibold tracking-tight">{t('popular.heading')}</h2>
+          <a className="text-sm underline" href="/menu">{t('popular.seeMenu')}</a>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items && items.length > 0 ? (
@@ -294,7 +296,7 @@ export default function Home() {
                   <CardTitle className="flex items-center justify-between">
                     <span>{item.name}</span>
                     {item.available === false && (
-                      <Badge variant="outline">Unavailable</Badge>
+                      <Badge variant="outline">{t('popular.unavailable')}</Badge>
                     )}
                   </CardTitle>
                 </CardHeader>
@@ -302,7 +304,7 @@ export default function Home() {
                   <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-                    <Button size="sm">Add to Order</Button>
+                    <Button size="sm">{t('popular.add')}</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -314,10 +316,10 @@ export default function Home() {
                   <CardTitle>Chef’s Special #{i + 1}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-2">A delicious selection coming soon.</p>
+                  <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
                   <div className="flex items-center justify-between">
                     <span className="font-medium">$12.{i}0</span>
-                    <Button size="sm">Notify me</Button>
+                    <Button size="sm">{t('popular.notify')}</Button>
                   </div>
                 </CardContent>
               </Card>
@@ -328,7 +330,7 @@ export default function Home() {
 
       {/* FAQ */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">Frequently asked questions</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('faq.heading')}</h2>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="q1">
             <AccordionTrigger>Do you offer vegetarian options?</AccordionTrigger>
@@ -353,14 +355,14 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Sparkles className="size-4 text-primary" />
-                  Limited‑time offer
+                  {t('cta.limited')}
                 </div>
-                <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">Free delivery on orders over $25</h3>
-                <p className="text-sm text-muted-foreground mt-1">Order in seconds or reserve instantly — no extra fees today.</p>
+                <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{t('cta.title')}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{t('cta.desc')}</p>
               </div>
               <div className="flex gap-3">
-                <Button className="px-6">Start an Order</Button>
-                <Button variant="outline" className="px-6">Reserve Now</Button>
+                <Button className="px-6">{t('cta.start')}</Button>
+                <Button variant="outline" className="px-6">{t('cta.reserve')}</Button>
               </div>
             </div>
           </CardContent>
@@ -370,8 +372,8 @@ export default function Home() {
       {/* Sticky mobile CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 sm:hidden">
         <div className="mx-4 mb-4 rounded-lg border bg-background shadow-md p-2 flex gap-2">
-          <Button className="flex-1">Order Now</Button>
-          <Button variant="outline" className="flex-1">Reserve</Button>
+          <Button className="flex-1">{t('sticky.order')}</Button>
+          <Button variant="outline" className="flex-1">{t('sticky.reserve')}</Button>
         </div>
       </div>
     </main>
