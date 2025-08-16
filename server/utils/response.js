@@ -30,9 +30,7 @@ export const createError = (res, status, message, type, details = {}, req = null
   
   // Translate status field
   let translatedStatus = 'error';
-  if (req && req.t) {
-    translatedStatus = req.t('statusError', {}, 'common');
-  }
+  // Keep status constant for API consumers; do not translate
 
   const response = {
     status: translatedStatus,
@@ -76,9 +74,7 @@ export const createResponse = (res, status, message, data = {}, req = null, inte
   
   // Translate status field
   let translatedStatus = 'success';
-  if (req && req.t) {
-    translatedStatus = req.t('statusSuccess', {}, 'common');
-  }
+  // Keep status constant for API consumers; do not translate
 
   return res.status(status).json({
     status: translatedStatus,
