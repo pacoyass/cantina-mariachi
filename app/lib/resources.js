@@ -184,6 +184,60 @@ export const uiResources = {
         title: '¡Ups!',
         notFound: 'La página solicitada no se pudo encontrar.',
       }
+    },
+    home: {
+      hero: {
+        badge: 'Nuevo: lanzamos recompensas — gana puntos con cada pedido',
+        title: 'Comida mexicana auténtica. <primary>Entrega rápida.</primary>',
+        desc: 'Desde tacos callejeros hasta especialidades cocinadas a fuego lento. Pide en segundos, reserva al instante y sigue tu entrega en tiempo real — todo en un solo lugar.',
+        orderNow: 'Pedir ahora',
+        reserve: 'Reservar mesa',
+        browseMenu: 'Ver menú completo',
+        rating: '4,9/5 de más de 2.400 comensales locales',
+        avgTime: 'Entrega en menos de 35 minutos de media'
+      },
+      explore: {
+        heading: 'Explora el menú',
+        tacos: 'Tacos',
+        bowls: 'Boles',
+        drinks: 'Bebidas',
+        coming: 'Próximamente.'
+      },
+      loyalty: {
+        heading: 'Fidelidad y recompensas',
+        membersSave: 'Los miembros ahorran más',
+        points: 'puntos',
+        nextAt: 'Siguiente recompensa a {{points}}',
+        freeDessert: 'Postre gratis',
+        join: 'Únete al programa',
+        perks: 'Ver beneficios'
+      },
+      why: {
+        heading: 'Por qué elegir Cantina',
+        faster: { title: 'Más rápido que las apps', desc: 'De la cocina a tu puerta, sin retrasos de terceros.' },
+        fees: { title: 'Tarifas transparentes', desc: 'Sin cargos sorpresa al pagar.' },
+        oneTap: { title: 'Reservas con un toque', desc: 'Disponibilità en vivo y confirmaciones por SMS.' },
+        tracking: { title: 'Seguimiento en vivo', desc: 'Mises à jour minute par minute.' },
+        chef: { title: 'Signé par nos chefs', desc: 'Ingrédients frais et menús de saison.' },
+        rewards: { title: 'Des récompenses utiles', desc: 'Des points à chaque commande, des avantages immédiats.' }
+      },
+      faq: { heading: 'Preguntas frecuentes' },
+      cta: {
+        limited: 'Oferta por tiempo limitado',
+        title: 'Envío gratis en pedidos superiores a $25',
+        desc: 'Pide en segundos o reserva al instante — sin cargos extra hoy.',
+        start: 'Comenzar pedido',
+        reserve: 'Reservar ahora'
+      },
+      sticky: { order: 'Pedir ahora', reserve: 'Reservar' },
+      popular: {
+        heading: 'Lo más popular esta semana',
+        seeMenu: 'Ver menú completo',
+        unavailable: 'No disponible',
+        add: 'Añadir al pedido',
+        notify: 'Avísame',
+        coming: 'Una selección deliciosa llegará pronto.'
+      }
     }
   },
   fr: {
@@ -197,7 +251,7 @@ export const uiResources = {
         profile: 'Profil',
         login: 'Connexion',
         register: "S'inscrire",
-        orderNow: 'Commander maintenant',
+        orderNow: 'Commander',
       },
       offer: {
         freeDelivery: "Aujourd'hui seulement : livraison gratuite pour les commandes de plus de 25 $",
@@ -206,6 +260,60 @@ export const uiResources = {
       errors: {
         title: 'Oups !',
         notFound: 'La page demandée est introuvable.',
+      }
+    },
+    home: {
+      hero: {
+        badge: 'Nouveau : programme de récompenses — gagnez des points à chaque commande',
+        title: 'Cuisine mexicaine authentique. <primary>Livraison rapide.</primary>',
+        desc: 'Des tacos de rue aux spécialités mijotées. Commandez en quelques secondes, réservez instantanément et suivez votre livraison en temps réel — tout au même endroit.',
+        orderNow: 'Commander',
+        reserve: 'Réserver une table',
+        browseMenu: 'Voir le menu complet',
+        rating: '4,9/5 de plus de 2 400 clients locaux',
+        avgTime: 'Livraison en moins de 35 minutes en moyenne'
+      },
+      explore: {
+        heading: 'Explorez le menu',
+        tacos: 'Tacos',
+        bowls: 'Bols',
+        drinks: 'Boissons',
+        coming: 'Bientôt disponible.'
+      },
+      loyalty: {
+        heading: 'Fidélité et récompenses',
+        membersSave: 'Les membres économisent davantage',
+        points: 'points',
+        nextAt: 'Prochaine récompense à {{points}}',
+        freeDessert: 'Dessert offert',
+        join: 'Rejoindre le programme',
+        perks: 'Voir les avantages'
+      },
+      why: {
+        heading: 'Pourquoi choisir Cantina',
+        faster: { title: 'Plus rapide que les apps', desc: 'De la cuisine à votre porte, sans retards tiers.' },
+        fees: { title: 'Frais transparents', desc: 'Aucune mauvaise surprise au paiement.' },
+        oneTap: { title: 'Réservations en un geste', desc: 'Disponibilité en direct et confirmations SMS.' },
+        tracking: { title: 'Suivi en direct', desc: 'Mises à jour minute par minute.' },
+        chef: { title: 'Signé par nos chefs', desc: 'Ingrédients frais et menús de saison.' },
+        rewards: { title: 'Des récompenses utiles', desc: 'Des points à chaque commande, des avantages immédiats.' }
+      },
+      faq: { heading: 'Foire aux questions' },
+      cta: {
+        limited: 'Offre à durée limitée',
+        title: 'Livraison gratuite pour les commandes de plus de 25 $',
+        desc: 'Commandez en quelques secondes ou réservez instantanément — sans frais supplémentaires aujourd’hui.',
+        start: 'Commencer une commande',
+        reserve: 'Réserver maintenant'
+      },
+      sticky: { order: 'Commander', reserve: 'Réserver' },
+      popular: {
+        heading: 'Populaire cette semaine',
+        seeMenu: 'Voir le menu complet',
+        unavailable: 'Indisponible',
+        add: 'Ajouter à la commande',
+        notify: 'Prévenez‑moi',
+        coming: 'Une délicieuse sélection arrive bientôt.'
       }
     }
   },
@@ -230,6 +338,60 @@ export const uiResources = {
         title: 'Ups!',
         notFound: 'Die angeforderte Seite wurde nicht gefunden.',
       }
+    },
+    home: {
+      hero: {
+        badge: 'Neu: Bonusprogramm — Punkte bei jeder Bestellung',
+        title: 'Authentische mexikanische Küche. <primary>Schnelle Lieferung.</primary>',
+        desc: 'Von Street‑Tacos bis zu langsam geschmorten Spezialitäten. In Sekunden bestellen, sofort reservieren und die Lieferung in Echtzeit verfolgen — alles an einem Ort.',
+        orderNow: 'Jetzt bestellen',
+        reserve: 'Tisch reservieren',
+        browseMenu: 'Gesamte Speisekarte ansehen',
+        rating: '4,9/5 von über 2.400 Gästen vor Ort',
+        avgTime: 'Lieferung im Schnitt unter 35 Minuten'
+      },
+      explore: {
+        heading: 'Entdecke die Speisekarte',
+        tacos: 'Tacos',
+        bowls: 'Bowls',
+        drinks: 'Getränke',
+        coming: 'Demnächst.'
+      },
+      loyalty: {
+        heading: 'Treue & Prämien',
+        membersSave: 'Mitglieder sparen mehr',
+        points: 'Punkte',
+        nextAt: 'Nächste Prämie bei {{points}}',
+        freeDessert: 'Dessert gratis',
+        join: 'Programm beitreten',
+        perks: 'Vorteile ansehen'
+      },
+      why: {
+        heading: 'Warum Cantina',
+        faster: { title: 'Schneller als Apps', desc: 'Direkt von der Küche zur Tür, ohne Drittanbieter‑Verzögerungen.' },
+        fees: { title: 'Transparente Gebühren', desc: 'Keine Überraschungen beim Checkout.' },
+        oneTap: { title: 'Reservierung mit einem Tipp', desc: 'Live‑Verfügbarkeit und SMS‑Bestätigungen.' },
+        tracking: { title: 'Live‑Tracking', desc: 'Minutengenaue Lieferupdates.' },
+        chef: { title: 'Von Köchen kreiert', desc: 'Frische Zutaten und saisonale Menüs.' },
+        rewards: { title: 'Sinnvolle Prämien', desc: 'Punkte bei jeder Bestellung, sofortige Vorteile.' }
+      },
+      faq: { heading: 'Häufig gestellte Fragen' },
+      cta: {
+        limited: 'Nur für kurze Zeit',
+        title: 'Kostenlose Lieferung ab 25 $ Bestellwert',
+        desc: 'In Sekunden bestellen oder sofort reservieren — heute ohne Zusatzgebühren.',
+        start: 'Bestellung starten',
+        reserve: 'Jetzt reservieren'
+      },
+      sticky: { order: 'Jetzt bestellen', reserve: 'Reservieren' },
+      popular: {
+        heading: 'Diese Woche beliebt',
+        seeMenu: 'Gesamte Speisekarte ansehen',
+        unavailable: 'Nicht verfügbar',
+        add: 'Zur Bestellung hinzufügen',
+        notify: 'Benachrichtige mich',
+        coming: 'Eine köstliche Auswahl folgt in Kürze.'
+      }
     }
   },
   it: {
@@ -253,6 +415,60 @@ export const uiResources = {
         title: 'Ops!',
         notFound: 'La pagina richiesta non è stata trovata.',
       }
+    },
+    home: {
+      hero: {
+        badge: 'Novità: programma ricompense — guadagna punti con ogni ordine',
+        title: 'Autentica cucina messicana. <primary>Consegna veloce.</primary>',
+        desc: 'Dai tacos di strada alle specialità a cottura lenta. Ordina in pochi secondi, prenota all’istante e segui la consegna in tempo reale — tutto in un unico posto.',
+        orderNow: 'Ordina ora',
+        reserve: 'Prenota un tavolo',
+        browseMenu: 'Vedi il menù completo',
+        rating: '4,9/5 da oltre 2.400 clienti locali',
+        avgTime: 'Consegna in meno di 35 minuti in media'
+      },
+      explore: {
+        heading: 'Esplora il menù',
+        tacos: 'Tacos',
+        bowls: 'Ciotole',
+        drinks: 'Bevande',
+        coming: 'Presto disponibile.'
+      },
+      loyalty: {
+        heading: 'Fidelizzazione e ricompense',
+        membersSave: 'I membri risparmiano di più',
+        points: 'punti',
+        nextAt: 'Prossima ricompensa a {{points}}',
+        freeDessert: 'Dessert gratuito',
+        join: 'Unisciti al programma',
+        perks: 'Vedi i vantaggi'
+      },
+      why: {
+        heading: 'Perché scegliere Cantina',
+        faster: { title: 'Più veloce delle app', desc: 'Dalla cucina alla porta, senza ritardi di terze parti.' },
+        fees: { title: 'Costi trasparenti', desc: 'Nessuna sorpresa al pagamento.' },
+        oneTap: { title: 'Prenotazioni in un tocco', desc: 'Disponibilità in tempo reale e conferme via SMS.' },
+        tracking: { title: 'Tracciamento live', desc: 'Aggiornamenti minuto per minuto.' },
+        chef: { title: 'Creato dagli chef', desc: 'Ingredienti freschi e menù stagionali.' },
+        rewards: { title: 'Ricompense utili', desc: 'Punti su ogni ordine, vantaggi immediati.' }
+      },
+      faq: { heading: 'Domande frequenti' },
+      cta: {
+        limited: 'Offerta a tempo limitato',
+        title: 'Consegna gratuita per ordini superiori a $25',
+        desc: 'Ordina in pochi secondi o prenota subito — senza costi aggiuntivi oggi.',
+        start: 'Inizia un ordine',
+        reserve: 'Prenota ora'
+      },
+      sticky: { order: 'Ordina ora', reserve: 'Prenota' },
+      popular: {
+        heading: 'Popolari questa settimana',
+        seeMenu: 'Vedi il menù completo',
+        unavailable: 'Non disponibile',
+        add: 'Aggiungi all’ordine',
+        notify: 'Avvisami',
+        coming: 'Una deliziosa selezione in arrivo.'
+      }
     }
   },
   pt: {
@@ -275,6 +491,60 @@ export const uiResources = {
       errors: {
         title: 'Ops!',
         notFound: 'A página solicitada não foi encontrada.',
+      }
+    },
+    home: {
+      hero: {
+        badge: 'Novo: programa de recompensas — ganhe pontos em cada pedido',
+        title: 'Autêntica comida mexicana. <primary>Entrega rápida.</primary>',
+        desc: 'De tacos de rua a especialidades cozidas lentamente. Faça o pedido em segundos, reserve instantaneamente e acompanhe a entrega em tempo real — tudo em um só lugar.',
+        orderNow: 'Peça agora',
+        reserve: 'Reservar mesa',
+        browseMenu: 'Ver menu completo',
+        rating: '4,9/5 de mais de 2.400 clientes locais',
+        avgTime: 'Entrega em menos de 35 minutos, em média'
+      },
+      explore: {
+        heading: 'Explore o menu',
+        tacos: 'Tacos',
+        bowls: 'Tigelas',
+        drinks: 'Bevidas',
+        coming: 'Em breve.'
+      },
+      loyalty: {
+        heading: 'Fidelidade e recompensas',
+        membersSave: 'Membros economizam mais',
+        points: 'pontos',
+        nextAt: 'Próxima recompensa em {{points}}',
+        freeDessert: 'Sobremesa grátis',
+        join: 'Participar do programa',
+        perks: 'Ver benefícios'
+      },
+      why: {
+        heading: 'Por que escolher a Cantina',
+        faster: { title: 'Mais rápido que apps', desc: 'Da cozinha à porta, sem atrasos de terceiros.' },
+        fees: { title: 'Taxas transparentes', desc: 'Sem surpresas no checkout.' },
+        oneTap: { title: 'Reservas em um toque', desc: 'Disponibilidade ao vivo e confirmações por SMS.' },
+        tracking: { title: 'Rastreamento ao vivo', desc: 'Atualizações minuto a minuto.' },
+        chef: { title: 'Feito por chefs', desc: 'Ingredientes frescos e menus sazonais.' },
+        rewards: { title: 'Recompensas que valem a pena', desc: 'Pontos em cada pedido, benefícios imediatos.' }
+      },
+      faq: { heading: 'Perguntas frequentes' },
+      cta: {
+        limited: 'Oferta por tempo limitado',
+        title: 'Entrega grátis em pedidos acima de $25',
+        desc: 'Peça em segundos ou reserve instantaneamente — sem taxas extras hoje.',
+        start: 'Iniciar pedido',
+        reserve: 'Reservar agora'
+      },
+      sticky: { order: 'Peça agora', reserve: 'Reservar' },
+      popular: {
+        heading: 'Populares desta semana',
+        seeMenu: 'Ver menu completo',
+        unavailable: 'Indisponível',
+        add: 'Adicionar ao pedido',
+        notify: 'Avise-me',
+        coming: 'Uma seleção deliciosa em breve.'
       }
     }
   }
