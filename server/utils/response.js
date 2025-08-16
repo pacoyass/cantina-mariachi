@@ -28,8 +28,17 @@ export const createError = (res, status, message, type, details = {}, req = null
     });
   }
   
+  // Translate status field
+  let translatedStatus = 'error';
+  if (req && req.t) {
+    translatedStatus = req.t('statusError', {}, 'common');
+  } else if (req) {
+    const language = TranslationService.getCurrentLanguage(req);
+    translatedStatus = TranslationService.t('common:statusError', { lng: language });
+  }
+
   const response = {
-    status: 'error',
+    status: translatedStatus,
     error: {
       type: type || 'UNKNOWN_ERROR',
       message: translatedMessage || 'Internal server error',
@@ -68,8 +77,17 @@ export const createResponse = (res, status, message, data = {}, req = null, inte
     });
   }
   
+  // Translate status field
+  let translatedStatus = 'success';
+  if (req && req.t) {
+    translatedStatus = req.t('statusSuccess', {}, 'common');
+  } else if (req) {
+    const language = TranslationService.getCurrentLanguage(req);
+    translatedStatus = TranslationService.t('common:statusSuccess', { lng: language });
+  }
+
   return res.status(status).json({
-    status: 'success',
+    status: translatedStatus,
     message: translatedMessage,
     data,
     timestamp: new Date().toISOString(),
