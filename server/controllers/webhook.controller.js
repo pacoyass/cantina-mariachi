@@ -12,7 +12,7 @@ export const triggerWebhook = async (req, res) => {
     const activeWebhooks = await databaseService.getActiveWebhooks();
 
     if (!activeWebhooks.length) {
-      return createError(res, 404, 'No active webhooks found', 'NO_ACTIVE_WEBHOOKS', {}, req);
+      return createError(res, 404, 'webhooks.noneActive', 'NO_ACTIVE_WEBHOOKS', {}, req, {}, 'business');
     }
 
     let results = [];
@@ -59,12 +59,12 @@ export const triggerWebhook = async (req, res) => {
       }
     }
 
-    return createResponse(res, 200, 'Webhook processing completed', { results }, req);
+    return createResponse(res, 200, 'webhooks.processingCompleted', { results }, req, {}, 'business');
   } catch (error) {
     await LoggerService.logError('Error in triggerWebhook', error.stack, { error: error.message });
-    return createError(res, 500, 'Internal server error', 'WEBHOOK_TRIGGER_ERROR', {
+    return createError(res, 500, 'internalError', 'WEBHOOK_TRIGGER_ERROR', {
       message: error.message,
-    });
+    }, req);
   }
 };
 
@@ -72,7 +72,7 @@ export const sendWebhook = async (event, payload) => {
   try {
     const activeWebhooks = await databaseService.getActiveWebhooks();
     if (!activeWebhooks.length) {
-      return { success: false, message: 'No active webhooks' };
+      return { success: false, message: 'webhooks.noneActive' };
     }
 
     for (const webhook of activeWebhooks) {

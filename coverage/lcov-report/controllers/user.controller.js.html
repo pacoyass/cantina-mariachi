@@ -451,36 +451,36 @@ function sanitizeUser(user) {
 export const getMe = async (req, res) =&gt; {
   try {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!req.user?.userId) {
-<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');</span>
+<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'unauthorized', 'UNAUTHORIZED', {}, req);</span>
     }
     const user = await databaseService.getUserById(req.user.userId, { password: false });
-    return createResponse(res, 200, 'Profile fetched', { user: sanitizeUser(user) });
+    return createResponse(res, 200, 'profile.profileFetched', { user: sanitizeUser(user) }, req, {}, 'business');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('getMe failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to fetch profile', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);</span>
   }
 };
 &nbsp;
 export const updateMe = async (req, res) =&gt; {
   try {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!req.user?.userId) {
-<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');</span>
+<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'unauthorized', 'UNAUTHORIZED', {}, req);</span>
     }
     const { name, phone } = req.body || <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
     const updated = await databaseService.updateUser(req.user.userId, { name, phone });
 &nbsp;
     await LoggerService.logAudit(req.user.userId, 'USER_UPDATE_PROFILE', req.user.userId, { name, phone });
-    return createResponse(res, 200, 'Profile updated', { user: sanitizeUser(updated) });
+    return createResponse(res, 200, 'profile.profileUpdated', { user: sanitizeUser(updated) }, req, {}, 'business');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('updateMe failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to update profile', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);</span>
   }
 };
 &nbsp;
 export const changePassword = async (req, res) =&gt; {
   try {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!req.user?.userId) {
-<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'Unauthorized', 'UNAUTHORIZED');</span>
+<span class="cstat-no" title="statement not covered" >      return createError(res, 401, 'unauthorized', 'UNAUTHORIZED', {}, req);</span>
     }
     const { currentPassword, newPassword } = req.body || <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
     const user = await databaseService.getUserById(req.user.userId, { password: true });
@@ -488,17 +488,17 @@ export const changePassword = async (req, res) =&gt; {
     const matches = await bcrypt.compare(currentPassword || <span class="branch-1 cbranch-no" title="branch not covered" >'',</span> user.password);
     if (!matches) {
       await LoggerService.logAudit(req.user.userId, 'USER_CHANGE_PASSWORD_DENY', req.user.userId, { reason: 'Invalid current password' });
-      return createError(res, 400, 'Invalid current password', 'INVALID_PASSWORD');
+      return createError(res, 400, 'profile.invalidCurrentPassword', 'INVALID_PASSWORD', {}, req, {}, 'business');
     }
 &nbsp;
     const hashed = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10));
     await databaseService.updateUser(req.user.userId, { password: hashed });
 &nbsp;
     await LoggerService.logAudit(req.user.userId, 'USER_CHANGE_PASSWORD', req.user.userId, {});
-    return createResponse(res, 200, 'Password updated successfully', {});
+    return createResponse(res, 200, 'profile.passwordChanged', {}, req, {}, 'business');
   } catch (error) {
 <span class="cstat-no" title="statement not covered" >    await LoggerService.logError('changePassword failed', error.stack, { userId: req.user?.userId });</span>
-<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'Failed to change password', 'SERVER_ERROR');</span>
+<span class="cstat-no" title="statement not covered" >    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);</span>
   }
 };
 &nbsp;
@@ -619,7 +619,7 @@ export default { getMe, updateMe, changePassword, cleanupUserData };</pre></td><
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-14T03:52:10.092Z
+                at 2025-08-16T05:58:21.329Z
             </div>
         <script src="../prettify.js"></script>
         <script>

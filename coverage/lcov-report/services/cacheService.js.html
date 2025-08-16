@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.22% </span>
+                <span class="strong">70.21% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>99/139</span>
+                <span class='fraction'>99/141</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">49.01% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>49/98</span>
+                <span class='fraction'>50/102</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.01% </span>
+                <span class="strong">70% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>98/138</span>
+                <span class='fraction'>98/140</span>
             </div>
         
             
@@ -381,7 +381,11 @@
 <a name='L316'></a><a href='#L316'>316</a>
 <a name='L317'></a><a href='#L317'>317</a>
 <a name='L318'></a><a href='#L318'>318</a>
-<a name='L319'></a><a href='#L319'>319</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -394,11 +398,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -407,11 +411,15 @@
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -713,7 +721,7 @@ class CacheService {
 &nbsp;
     this.#client.on('error', async (err) =&gt; {
       this.#isConnected = false;
-      const errorMessage = typeof err === 'string' ? <span class="branch-0 cbranch-no" title="branch not covered" >err </span>: err.message || err.code || <span class="branch-2 cbranch-no" title="branch not covered" >'Unknown Redis error';</span>
+      const errorMessage = typeof err === 'string' ? <span class="branch-0 cbranch-no" title="branch not covered" >err </span>: err.message || <span class="branch-1 cbranch-no" title="branch not covered" >err.code </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >'Unknown Redis error';</span>
       const errorStack = err.stack || <span class="branch-1 cbranch-no" title="branch not covered" >'No stack trace';</span>
       try {
         await LoggerService.logError(errorMessage, errorStack, { service: 'CacheService', errorCode: err.code || null });
@@ -724,13 +732,17 @@ class CacheService {
 &nbsp;
     this.#client.on('connect', () =&gt; {
       this.#isConnected = true;
-      console.log('Redis connected');
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV === 'development') {
+<span class="cstat-no" title="statement not covered" >        console.log('Redis connected');</span>
+      }
     });
 &nbsp;
-    this.#client.connect().catch(<span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
-      const errorMessage = <span class="cstat-no" title="statement not covered" >typeof err === 'string' ? err : err.message || err.code || 'Unknown error';</span>
-<span class="cstat-no" title="statement not covered" >      console.error('Redis connection failed:', errorMessage);</span>
-    });
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== 'test') {
+<span class="cstat-no" title="statement not covered" >      this.#client.connect().catch(<span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {</span>
+        const errorMessage = <span class="cstat-no" title="statement not covered" >typeof err === 'string' ? err : err.message || err.code || 'Unknown error';</span>
+<span class="cstat-no" title="statement not covered" >        console.error('Redis connection failed:', errorMessage);</span>
+      });
+    }
   }
 &nbsp;
   async get(key) {
@@ -1024,7 +1036,7 @@ export default new CacheService();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-14T03:52:10.092Z
+                at 2025-08-16T05:58:21.329Z
             </div>
         <script src="../prettify.js"></script>
         <script>

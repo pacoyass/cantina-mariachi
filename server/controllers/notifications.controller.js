@@ -11,10 +11,10 @@ export const dispatch = async (req, res) => {
   try {
     const { type, target, content, provider } = req.body;
     const result = await dispatchNotification({ type, target, content, provider });
-    if (!result.success) return createError(res, 502, 'Notification failed to send', 'NOTIFICATION_FAILED', { error: result.error });
-    return createResponse(res, 200, 'Notification dispatched', {}, req, {}, 'business:notifications');
+    if (!result.success) return createError(res, 502, 'notifications.notificationFailed', 'NOTIFICATION_FAILED', { error: result.error }, req, {}, 'business');
+    return createResponse(res, 200, 'notifications.notificationSent', {}, req, {}, 'business');
   } catch (error) {
-    return createError(res, 500, 'Failed to dispatch notification', 'SERVER_ERROR', {}, req, {}, 'business:notifications');
+    return createError(res, 500, 'operationFailed', 'SERVER_ERROR', {}, req);
   }
 };
 

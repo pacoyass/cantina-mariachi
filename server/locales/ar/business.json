@@ -83,10 +83,18 @@
   },
   "profile": {
     "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
-    "profileFetched": "تم استرداد الملف الشخصي بنجاح",
+    "profileFetched": "تم استرجاع الملف الشخصي بنجاح",
     "passwordChanged": "تم تغيير كلمة المرور بنجاح",
     "invalidCurrentPassword": "كلمة المرور الحالية غير صحيحة",
     "profilePictureUpdated": "تم تحديث صورة الملف الشخصي بنجاح",
     "preferencesUpdated": "تم تحديث تفضيلات المستخدم بنجاح"
+  },
+  "webhooks": {
+    "registered": "تم تسجيل الويب هوك",
+    "enabled": "تم تفعيل الويب هوك",
+    "disabled": "تم تعطيل الويب هوك",
+    "triggerProcessed": "تمت معالجة المُشغِّل",
+    "processingCompleted": "اكتملت معالجة الويب هوك",
+    "noneActive": "لا توجد ويب هوكس نشطة"
   }
 }

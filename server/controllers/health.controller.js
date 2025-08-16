@@ -21,10 +21,10 @@ export const getHealth = async (req, res) => {
   }
   
   const isHealthy = db.ok && cache.ok;
-  const messageKey = isHealthy ? 'systemHealthy' : 'systemDegraded';
+  const messageKey = isHealthy ? 'system.systemHealthy' : 'system.systemDegraded';
   
   return createResponse(res, isHealthy ? 200 : 503, messageKey, 
-    { db, cache, time: new Date().toISOString() }, req, {}, 'business:system');
+    { db, cache, time: new Date().toISOString() }, req, {}, 'business');
 };
 
 export const cleanupHealth = async () => {

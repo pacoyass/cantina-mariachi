@@ -84,9 +84,17 @@
   "profile": {
     "profileUpdated": "Profilo aggiornato con successo",
     "profileFetched": "Profilo recuperato con successo",
-    "passwordChanged": "Password cambiata con successo",
+    "passwordChanged": "Password modificata con successo",
     "invalidCurrentPassword": "La password attuale non è corretta",
-    "profilePictureUpdated": "Immagine profilo aggiornata con successo",
+    "profilePictureUpdated": "Immagine del profilo aggiornata con successo",
     "preferencesUpdated": "Preferenze utente aggiornate con successo"
+  },
+  "webhooks": {
+    "registered": "Webhook registrato",
+    "enabled": "Webhook abilitato",
+    "disabled": "Webhook disabilitato",
+    "triggerProcessed": "Trigger elaborato",
+    "processingCompleted": "Elaborazione dei webhook completata",
+    "noneActive": "Nessun webhook attivo trovato"
   }
 }
