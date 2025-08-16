@@ -164,6 +164,27 @@ export const uiResources = {
         coming: 'A delicious selection coming soon.',
         chefSpecial: 'Chef’s Special #{{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'Explore our menu',
+        subtitle: 'Chef‑crafted dishes, fresh ingredients, and seasonal specials.'
+      },
+      actions: {
+        searchPlaceholder: 'Search dishes…',
+        search: 'Search',
+        sortBy: 'Sort by',
+        sort: {
+          popular: 'Most popular',
+          priceLow: 'Price: low to high',
+          priceHigh: 'Price: high to low',
+          newest: 'Newest'
+        },
+        add: 'Add to Order',
+        unavailable: 'Unavailable',
+        noItems: 'No items found.'
+      },
+      categories: 'Categories'
     }
   },
   ar: {
@@ -326,6 +347,27 @@ export const uiResources = {
         coming: 'اختيارات لذيذة قادمة قريبًا.',
         chefSpecial: 'تشكيلة الشيف رقم {{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'استكشف قائمتنا',
+        subtitle: 'أطباق من إعداد الطهاة، مكونات طازجة، وعروض موسمية.'
+      },
+      actions: {
+        searchPlaceholder: 'ابحث عن الأطباق…',
+        search: 'بحث',
+        sortBy: 'ترتيب حسب',
+        sort: {
+          popular: 'الأكثر رواجًا',
+          priceLow: 'السعر: من الأقل إلى الأعلى',
+          priceHigh: 'السعر: من الأعلى إلى الأقل',
+          newest: 'الأحدث'
+        },
+        add: 'أضف إلى الطلب',
+        unavailable: 'غير متاح',
+        noItems: 'لا توجد عناصر.'
+      },
+      categories: 'الفئات'
     }
   },
   es: {
@@ -488,6 +530,27 @@ export const uiResources = {
         coming: 'Una selección deliciosa llegará pronto.',
         chefSpecial: 'Especial del chef #{{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'Explora nuestro menú',
+        subtitle: 'Platos elaborados por chefs, ingredientes frescos y especiales de temporada.'
+      },
+      actions: {
+        searchPlaceholder: 'Buscar platos…',
+        search: 'Buscar',
+        sortBy: 'Ordenar por',
+        sort: {
+          popular: 'Más populares',
+          priceLow: 'Precio: de menor a mayor',
+          priceHigh: 'Precio: de mayor a menor',
+          newest: 'Más nuevos'
+        },
+        add: 'Añadir al pedido',
+        unavailable: 'No disponible',
+        noItems: 'No se encontraron artículos.'
+      },
+      categories: 'Categorías'
     }
   },
   fr: {
@@ -650,6 +713,27 @@ export const uiResources = {
         coming: 'Une délicieuse sélection arrive bientôt.',
         chefSpecial: 'Spécial du chef n° {{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'Découvrez notre menu',
+        subtitle: 'Plats signés par nos chefs, ingrédients frais et spécialités de saison.'
+      },
+      actions: {
+        searchPlaceholder: 'Rechercher des plats…',
+        search: 'Rechercher',
+        sortBy: 'Trier par',
+        sort: {
+          popular: 'Les plus populaires',
+          priceLow: 'Prix : du plus bas au plus élevé',
+          priceHigh: 'Prix : du plus élevé au plus bas',
+          newest: 'Plus récents'
+        },
+        add: 'Ajouter à la commande',
+        unavailable: 'Indisponible',
+        noItems: 'Aucun élément trouvé.'
+      },
+      categories: 'Catégories'
     }
   },
   de: {
@@ -812,6 +896,27 @@ export const uiResources = {
         coming: 'Eine köstliche Auswahl folgt in Kürze.',
         chefSpecial: 'Spezial des Küchenchefs Nr. {{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'Entdecke unsere Speisekarte',
+        subtitle: 'Von Köchen kreierte Gerichte, frische Zutaten und saisonale Highlights.'
+      },
+      actions: {
+        searchPlaceholder: 'Gerichte suchen…',
+        search: 'Suchen',
+        sortBy: 'Sortieren nach',
+        sort: {
+          popular: 'Am beliebtesten',
+          priceLow: 'Preis: aufsteigend',
+          priceHigh: 'Preis: absteigend',
+          newest: 'Neueste'
+        },
+        add: 'Zur Bestellung hinzufügen',
+        unavailable: 'Nicht verfügbar',
+        noItems: 'Keine Einträge gefunden.'
+      },
+      categories: 'Kategorien'
     }
   },
   it: {
@@ -971,9 +1076,30 @@ export const uiResources = {
         unavailable: 'Non disponibile',
         add: 'Aggiungi all’ordine',
         notify: 'Avvisami',
-        coming: 'Una deliziosa selezione in arrivo.',
+        coming: 'Uma deliziosa selezione in arrivo.',
         chefSpecial: 'Speciale dello chef n. {{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'Esplora il nostro menù',
+        subtitle: 'Piatti creati dagli chef, ingredienti freschi e specialità stagionali.'
+      },
+      actions: {
+        searchPlaceholder: 'Cerca piatti…',
+        search: 'Cerca',
+        sortBy: 'Ordina per',
+        sort: {
+          popular: 'Più popolari',
+          priceLow: 'Prezzo: crescente',
+          priceHigh: 'Prezzo: decrescente',
+          newest: 'Più recenti'
+        },
+        add: 'Aggiungi all’ordine',
+        unavailable: 'Non disponibile',
+        noItems: 'Nessun elemento trovato.'
+      },
+      categories: 'Categorie'
     }
   },
   pt: {
@@ -1136,6 +1262,27 @@ export const uiResources = {
         coming: 'Uma seleção deliciosa em breve.',
         chefSpecial: 'Especial do chef nº {{num}}'
       }
+    },
+    menu: {
+      hero: {
+        title: 'Explore nosso menu',
+        subtitle: 'Pratos criados por chefs, ingredientes frescos e especiais sazonais.'
+      },
+      actions: {
+        searchPlaceholder: 'Buscar pratos…',
+        search: 'Buscar',
+        sortBy: 'Ordenar por',
+        sort: {
+          popular: 'Mais populares',
+          priceLow: 'Preço: menor para maior',
+          priceHigh: 'Preço: maior para menor',
+          newest: 'Mais recentes'
+        },
+        add: 'Adicionar ao pedido',
+        unavailable: 'Indisponível',
+        noItems: 'Nenhum item encontrado.'
+      },
+      categories: 'Categorias'
     }
   }
 };
