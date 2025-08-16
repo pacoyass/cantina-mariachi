@@ -1,5 +1,7 @@
 {
   "success": "Success",
+  "statusSuccess": "erfolg",
+  "statusError": "fehler",
   "error": "Error",
   "welcome": "Welcome",
   "loading": "Loading...",
