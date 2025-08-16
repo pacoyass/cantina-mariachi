@@ -17,6 +17,7 @@
   "missingRequiredField": "حقل مطلوب مفقود: {{field}}",
   "invalidFieldValue": "قيمة غير صحيحة للحقل: {{field}}",
   "duplicateEntry": "تم العثور على إدخال مكرر",
-  "constraintViolation": "انتهاك قيد قاعدة البيانات",
-  "connectionError": "خطأ في الاتصال بقاعدة البيانات"
+  "constraintViolation": "انتهاك في قيود قاعدة البيانات",
+  "connectionError": "خطأ في الاتصال بقاعدة البيانات",
+  "checkApiDocsAction": "تحقق من عنوان URL أو راجع وثائق واجهة برمجة التطبيقات للحصول على نقاط نهاية صحيحة."
 }

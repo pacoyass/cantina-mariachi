@@ -18,5 +18,6 @@
   "invalidFieldValue": "Invalid value for field: {{field}}",
   "duplicateEntry": "Duplicate entry found",
   "constraintViolation": "Database constraint violation",
-  "connectionError": "Database connection error"
+  "connectionError": "Database connection error",
+  "checkApiDocsAction": "Check the URL or refer to the API documentation for valid endpoints."
 }

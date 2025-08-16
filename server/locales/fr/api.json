@@ -16,7 +16,8 @@
   "jsonParseError": "Format JSON invalide",
   "missingRequiredField": "Champ requis manquant : {{field}}",
   "invalidFieldValue": "Valeur invalide pour le champ : {{field}}",
-  "duplicateEntry": "Entrée dupliquée trouvée",
+  "duplicateEntry": "Entrée en double trouvée",
   "constraintViolation": "Violation de contrainte de base de données",
-  "connectionError": "Erreur de connexion à la base de données"
+  "connectionError": "Erreur de connexion à la base de données",
+  "checkApiDocsAction": "Vérifiez l'URL ou consultez la documentation de l'API pour des points de terminaison valides."
 }

@@ -17,6 +17,7 @@
   "missingRequiredField": "Campo obbligatorio mancante: {{field}}",
   "invalidFieldValue": "Valore non valido per il campo: {{field}}",
   "duplicateEntry": "Voce duplicata trovata",
-  "constraintViolation": "Violazione del vincolo del database",
-  "connectionError": "Errore di connessione al database"
+  "constraintViolation": "Violazione dei vincoli del database",
+  "connectionError": "Errore di connessione al database",
+  "checkApiDocsAction": "Controlla l'URL o consulta la documentazione dell'API per endpoint validi."
 }
