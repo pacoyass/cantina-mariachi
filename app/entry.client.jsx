@@ -7,8 +7,19 @@ import { uiResources } from './lib/resources.js';
 
 startTransition(async () => {
   const params = new URLSearchParams(window.location.search);
-  const lng = params.get('lng') || document.documentElement.lang || 'en';
+  const stored = (() => { try { return localStorage.getItem('lng'); } catch { return null; } })();
+  const lng = stored || params.get('lng') || document.documentElement.lang || 'en';
   const i18n = await initI18n({ lng, resources: uiResources });
+
+  try {
+    document.documentElement.lang = i18n.language;
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    if (!params.get('lng')) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lng', i18n.language);
+      window.history.replaceState({}, '', url.toString());
+    }
+  } catch {}
 
   hydrateRoot(
     document,

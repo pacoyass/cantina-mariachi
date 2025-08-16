@@ -24,6 +24,9 @@ export function LangToggle() {
       document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`;
     } catch {}
     try {
+      localStorage.setItem('lng', code);
+    } catch {}
+    try {
       const url = new URL(window.location.href);
       url.searchParams.set('lng', code);
       window.history.replaceState({}, '', url.toString());
