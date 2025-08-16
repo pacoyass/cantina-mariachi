@@ -5,36 +5,36 @@ import axios from 'axios';
 export const register = async (req, res) => {
   try {
     const created = await registerWebhook(req.body);
-    return createResponse(res, 201, 'Webhook registered', { webhook: created }, req);
+    return createResponse(res, 201, 'webhooks.registered', { webhook: created }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 400, error.message || 'Failed to register webhook', 'WEBHOOK_REGISTER_FAILED');
+    return createError(res, 400, 'operationFailed', 'WEBHOOK_REGISTER_FAILED', {}, req);
   }
 };
 
 export const list = async (req, res) => {
   try {
     const webhooks = await listWebhooks();
-    return createResponse(res, 200, 'Webhooks fetched', { webhooks }, req);
+    return createResponse(res, 200, 'dataRetrieved', { webhooks }, req, {}, 'api');
   } catch (error) {
-    return createError(res, 500, 'Failed to list webhooks', 'SERVER_ERROR', {}, req);
+    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
   }
 };
 
 export const enable = async (req, res) => {
   try {
     const updated = await setWebhookStatus(req.params.id, 'ACTIVE');
-    return createResponse(res, 200, 'Webhook enabled', { webhook: updated }, req);
+    return createResponse(res, 200, 'webhooks.enabled', { webhook: updated }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 400, error.message || 'Failed to enable webhook', 'WEBHOOK_ENABLE_FAILED');
+    return createError(res, 400, 'operationFailed', 'WEBHOOK_ENABLE_FAILED', {}, req);
   }
 };
 
 export const disable = async (req, res) => {
   try {
     const updated = await setWebhookStatus(req.params.id, 'DISABLED');
-    return createResponse(res, 200, 'Webhook disabled', { webhook: updated }, req);
+    return createResponse(res, 200, 'webhooks.disabled', { webhook: updated }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 400, error.message || 'Failed to disable webhook', 'WEBHOOK_DISABLE_FAILED');
+    return createError(res, 400, 'operationFailed', 'WEBHOOK_DISABLE_FAILED', {}, req);
   }
 };
 
@@ -67,9 +67,9 @@ export const trigger = async (req, res) => {
         results.push({ webhookId: wh.id, status: 'SUCCESS' });
       }
     }
-    return createResponse(res, 200, 'Trigger processed', { results }, req);
+    return createResponse(res, 200, 'webhooks.triggerProcessed', { results }, req, {}, 'business');
   } catch (error) {
-    return createError(res, 500, 'Failed to trigger webhooks', 'WEBHOOK_TRIGGER_FAILED', {}, req);
+    return createError(res, 500, 'operationFailed', 'WEBHOOK_TRIGGER_FAILED', {}, req);
   }
 };
 

@@ -23,7 +23,7 @@ export const getMe = async (req, res) => {
       return createError(res, 401, 'unauthorized', 'UNAUTHORIZED', {}, req);
     }
     const user = await databaseService.getUserById(req.user.userId, { password: false });
-    return createResponse(res, 200, 'profileFetched', { user: sanitizeUser(user) }, req, {}, 'business:profile');
+    return createResponse(res, 200, 'profile.profileFetched', { user: sanitizeUser(user) }, req, {}, 'business');
   } catch (error) {
     await LoggerService.logError('getMe failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
@@ -39,7 +39,7 @@ export const updateMe = async (req, res) => {
     const updated = await databaseService.updateUser(req.user.userId, { name, phone });
 
     await LoggerService.logAudit(req.user.userId, 'USER_UPDATE_PROFILE', req.user.userId, { name, phone });
-    return createResponse(res, 200, 'profileUpdated', { user: sanitizeUser(updated) }, req, {}, 'business:profile');
+    return createResponse(res, 200, 'profile.profileUpdated', { user: sanitizeUser(updated) }, req, {}, 'business');
   } catch (error) {
     await LoggerService.logError('updateMe failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
@@ -57,14 +57,14 @@ export const changePassword = async (req, res) => {
     const matches = await bcrypt.compare(currentPassword || '', user.password);
     if (!matches) {
       await LoggerService.logAudit(req.user.userId, 'USER_CHANGE_PASSWORD_DENY', req.user.userId, { reason: 'Invalid current password' });
-      return createError(res, 400, 'invalidCurrentPassword', 'INVALID_PASSWORD', {}, req, {}, 'business:profile');
+      return createError(res, 400, 'profile.invalidCurrentPassword', 'INVALID_PASSWORD', {}, req, {}, 'business');
     }
 
     const hashed = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10));
     await databaseService.updateUser(req.user.userId, { password: hashed });
 
     await LoggerService.logAudit(req.user.userId, 'USER_CHANGE_PASSWORD', req.user.userId, {});
-    return createResponse(res, 200, 'passwordChanged', {}, req, {}, 'business:profile');
+    return createResponse(res, 200, 'profile.passwordChanged', {}, req, {}, 'business');
   } catch (error) {
     await LoggerService.logError('changePassword failed', error.stack, { userId: req.user?.userId });
     return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
