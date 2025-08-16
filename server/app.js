@@ -193,5 +193,5 @@ app.use( ( err, req, res, next ) => {
 			errorCode: err.code || null,
 		});
 	} catch {}
-	return createError(res, 500, 'Internal server error', 'UNHANDLED_ERROR', { message: errorMessage, errorCode: err.code || null });
+	return createError(res, 500, 'internalError', 'UNHANDLED_ERROR', { message: errorMessage, errorCode: err.code || null }, req);
 } );

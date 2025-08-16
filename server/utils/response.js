@@ -32,9 +32,6 @@ export const createError = (res, status, message, type, details = {}, req = null
   let translatedStatus = 'error';
   if (req && req.t) {
     translatedStatus = req.t('statusError', {}, 'common');
-  } else if (req) {
-    const language = TranslationService.getCurrentLanguage(req);
-    translatedStatus = TranslationService.t('common:statusError', { lng: language });
   }
 
   const response = {
@@ -81,9 +78,6 @@ export const createResponse = (res, status, message, data = {}, req = null, inte
   let translatedStatus = 'success';
   if (req && req.t) {
     translatedStatus = req.t('statusSuccess', {}, 'common');
-  } else if (req) {
-    const language = TranslationService.getCurrentLanguage(req);
-    translatedStatus = TranslationService.t('common:statusSuccess', { lng: language });
   }
 
   return res.status(status).json({

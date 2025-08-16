@@ -21,9 +21,9 @@ export const createOrder = async (req, res) => {
     await databaseService.setOrderTracking(order.id, code, expiresAt);
 
     await LoggerService.logAudit(req.user?.userId || null, 'ORDER_CREATED', order.id, { orderNumber: order.orderNumber, total: order.total });
-    return createResponse(res, 201, 'orderCreated', 
+    return createResponse(res, 201, 'orders.orderCreated', 
       { order: { ...order, trackingCode: code, trackingCodeExpiresAt: expiresAt } }, 
-      req, {}, 'business:orders');
+      req, {}, 'business');
   } catch (error) {
     await LoggerService.logError('createOrder failed', error.stack, { error: error.message });
     return createError(res, 400, error.message || 'operationFailed', 'ORDER_CREATE_FAILED', {}, req);
@@ -33,7 +33,7 @@ export const createOrder = async (req, res) => {
 export const getOrderByNumber = async (req, res) => {
   try {
     const order = await databaseService.getOrderByNumber(req.params.orderNumber);
-    if (!order) return createError(res, 404, 'orderNotFound', 'NOT_FOUND', {}, req, {}, 'business:orders');
+    if (!order) return createError(res, 404, 'orders.orderNotFound', 'NOT_FOUND', {}, req, {}, 'business');
     return createResponse(res, 200, 'dataRetrieved', { order }, req, {}, 'api');
   } catch (error) {
     return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
@@ -46,7 +46,7 @@ export const updateOrderStatus = async (req, res) => {
     await LoggerService.logAudit(req.user?.userId || null, 'ORDER_STATUS_UPDATED', updated.id, { status: req.body.status, orderNumber: updated.orderNumber });
     await LoggerService.logNotification(updated.userId || null, 'WEBHOOK', 'order_status', `Order ${updated.orderNumber} -> ${updated.status}`, 'SENT');
     await sendWebhook('ORDER_STATUS_UPDATED', { orderNumber: updated.orderNumber, status: updated.status });
-    return createResponse(res, 200, 'orderStatusUpdated', { order: updated }, req, {}, 'business:orders');
+    return createResponse(res, 200, 'orders.orderStatusUpdated', { order: updated }, req, {}, 'business');
   } catch (error) {
     return createError(res, 400, error.message || 'operationFailed', 'ORDER_STATUS_FAILED', {}, req);
   }
@@ -56,7 +56,7 @@ export const trackOrder = async (req, res) => {
   try {
     const { orderNumber, code } = req.validatedQuery || {};
     const order = await databaseService.getOrderForTracking(orderNumber, code);
-    if (!order) return createError(res, 404, 'orderNotFound', 'NOT_FOUND', {}, req, {}, 'business:orders');
+    if (!order) return createError(res, 404, 'orders.orderNotFound', 'NOT_FOUND', {}, req, {}, 'business');
     // mask PII
     const masked = { ...order, customerName: mask(order.customerName), customerEmail: mask(order.customerEmail), customerPhone: mask(order.customerPhone) };
     return createResponse(res, 200, 'dataRetrieved', { order: masked }, req, {}, 'api');
