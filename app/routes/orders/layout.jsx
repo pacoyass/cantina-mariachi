@@ -1,6 +1,10 @@
 import { Outlet, NavLink } from "react-router";
 import { useTranslation } from 'react-i18next';
 
+export const meta = () => [
+  { title: 'My Orders - Cantina' },
+];
+
 export default function OrdersLayout() {
   const { t } = useTranslation('orders');
   return (
