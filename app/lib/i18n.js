@@ -31,3 +31,22 @@ export async function initI18n({ lng = 'en', resources }) {
   });
   return i18n;
 }
+
+export function createServerI18n({ lng = 'en', resources }) {
+  const i18n = i18next.createInstance();
+  i18n.use(initReactI18next);
+  i18n.init({
+    lng,
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'ar'],
+    interpolation: { escapeValue: false },
+    resources,
+    ns: ['ui'],
+    defaultNS: 'ui',
+    react: { useSuspense: false },
+    returnEmptyString: false,
+    cleanCode: true,
+    initImmediate: false,
+  });
+  return i18n;
+}
