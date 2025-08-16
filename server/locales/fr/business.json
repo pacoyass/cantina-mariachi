@@ -1,0 +1,92 @@
+{
+  "menu": {
+    "itemCreated": "Article du menu créé avec succès",
+    "itemUpdated": "Article du menu mis à jour avec succès",
+    "itemDeleted": "Article du menu supprimé avec succès",
+    "itemNotFound": "Article du menu non trouvé",
+    "categoryCreated": "Catégorie du menu créée avec succès",
+    "categoryUpdated": "Catégorie du menu mise à jour avec succès",
+    "categoryDeleted": "Catégorie du menu supprimée avec succès",
+    "categoryNotFound": "Catégorie du menu non trouvée",
+    "itemOutOfStock": "L'article du menu est en rupture de stock",
+    "invalidPrice": "Prix invalide spécifié",
+    "duplicateItem": "L'article du menu existe déjà"
+  },
+  "orders": {
+    "orderCreated": "Commande créée avec succès",
+    "orderUpdated": "Commande mise à jour avec succès",
+    "orderCancelled": "Commande annulée avec succès",
+    "orderNotFound": "Commande non trouvée",
+    "orderStatusUpdated": "Statut de la commande mis à jour avec succès",
+    "invalidOrderStatus": "Statut de commande invalide",
+    "orderAlreadyCancelled": "La commande est déjà annulée",
+    "orderCannotBeCancelled": "La commande ne peut pas être annulée à cette étape",
+    "paymentRequired": "Le paiement est requis pour compléter la commande",
+    "insufficientInventory": "Stock insuffisant pour certains articles",
+    "orderTotal": "Total de la commande : {{amount}}",
+    "estimatedDelivery": "Temps de livraison estimé : {{time}} minutes"
+  },
+  "reservations": {
+    "reservationCreated": "Réservation créée avec succès",
+    "reservationUpdated": "Réservation mise à jour avec succès",
+    "reservationCancelled": "Réservation annulée avec succès",
+    "reservationNotFound": "Réservation non trouvée",
+    "reservationConfirmed": "Réservation confirmée",
+    "tableNotAvailable": "Table non disponible à l'heure demandée",
+    "invalidReservationTime": "Heure de réservation invalide",
+    "reservationTooEarly": "L'heure de réservation est trop à l'avance",
+    "reservationTooLate": "L'heure de réservation est déjà passée",
+    "capacityExceeded": "La taille du groupe dépasse la capacité de la table"
+  },
+  "drivers": {
+    "driverCreated": "Profil de chauffeur créé avec succès",
+    "driverUpdated": "Profil de chauffeur mis à jour avec succès",
+    "driverDeleted": "Profil de chauffeur supprimé avec succès",
+    "driverNotFound": "Chauffeur non trouvé",
+    "driverAssigned": "Chauffeur assigné à la commande",
+    "driverUnassigned": "Chauffeur désassigné de la commande",
+    "driverAvailable": "Le chauffeur est maintenant disponible",
+    "driverUnavailable": "Le chauffeur n'est maintenant plus disponible",
+    "invalidDriverStatus": "Statut de chauffeur invalide",
+    "driverBusy": "Le chauffeur est occupé avec une autre commande",
+    "locationUpdated": "Localisation du chauffeur mise à jour"
+  },
+  "cash": {
+    "transactionCreated": "Transaction en espèces enregistrée avec succès",
+    "transactionUpdated": "Transaction en espèces mise à jour avec succès",
+    "transactionDeleted": "Transaction en espèces supprimée avec succès",
+    "transactionNotFound": "Transaction en espèces non trouvée",
+    "cashBalanceUpdated": "Solde en espèces mis à jour avec succès",
+    "insufficientFunds": "Fonds en espèces insuffisants",
+    "invalidAmount": "Montant de transaction invalide",
+    "cashDrawerOpened": "Tiroir-caisse ouvert",
+    "cashDrawerClosed": "Tiroir-caisse fermé",
+    "balanceReconciled": "Solde en espèces réconcilié"
+  },
+  "notifications": {
+    "notificationSent": "Notification envoyée avec succès",
+    "notificationFailed": "Échec de l'envoi de la notification",
+    "notificationRead": "Notification marquée comme lue",
+    "notificationDeleted": "Notification supprimée avec succès",
+    "noNotifications": "Aucune notification trouvée",
+    "notificationPreferencesUpdated": "Préférences de notification mises à jour"
+  },
+  "system": {
+    "maintenanceMode": "Le système est actuellement en maintenance",
+    "serviceUnavailable": "Service temporairement indisponible",
+    "systemHealthy": "Tous les systèmes sont opérationnels",
+    "systemDegraded": "Certains systèmes rencontrent des problèmes",
+    "databaseConnected": "Connexion à la base de données établie",
+    "databaseError": "Erreur de connexion à la base de données",
+    "cacheConnected": "Service de cache connecté",
+    "cacheError": "Erreur du service de cache"
+  },
+  "profile": {
+    "profileUpdated": "Profil mis à jour avec succès",
+    "profileFetched": "Profil récupéré avec succès",
+    "passwordChanged": "Mot de passe changé avec succès",
+    "invalidCurrentPassword": "Le mot de passe actuel est incorrect",
+    "profilePictureUpdated": "Photo de profil mise à jour avec succès",
+    "preferencesUpdated": "Préférences utilisateur mises à jour avec succès"
+  }
+}
