@@ -86,7 +86,15 @@
     "profileFetched": "Perfil recuperado com sucesso",
     "passwordChanged": "Senha alterada com sucesso",
     "invalidCurrentPassword": "A senha atual está incorreta",
-    "profilePictureUpdated": "Foto do perfil atualizada com sucesso",
+    "profilePictureUpdated": "Foto de perfil atualizada com sucesso",
     "preferencesUpdated": "Preferências do usuário atualizadas com sucesso"
+  },
+  "webhooks": {
+    "registered": "Webhook registrado",
+    "enabled": "Webhook habilitado",
+    "disabled": "Webhook desabilitado",
+    "triggerProcessed": "Gatilho processado",
+    "processingCompleted": "Processamento de webhooks concluído",
+    "noneActive": "Nenhum webhook ativo encontrado"
   }
 }

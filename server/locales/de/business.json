@@ -88,5 +88,13 @@
     "invalidCurrentPassword": "Aktuelles Passwort ist falsch",
     "profilePictureUpdated": "Profilbild erfolgreich aktualisiert",
     "preferencesUpdated": "Benutzereinstellungen erfolgreich aktualisiert"
+  },
+  "webhooks": {
+    "registered": "Webhook registriert",
+    "enabled": "Webhook aktiviert",
+    "disabled": "Webhook deaktiviert",
+    "triggerProcessed": "Trigger verarbeitet",
+    "processingCompleted": "Webhook-Verarbeitung abgeschlossen",
+    "noneActive": "Keine aktiven Webhooks gefunden"
   }
 }
