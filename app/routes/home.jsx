@@ -333,16 +333,16 @@ export default function Home() {
         <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('faq.heading')}</h2>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="q1">
-            <AccordionTrigger>Do you offer vegetarian options?</AccordionTrigger>
-            <AccordionContent>Yes, plenty! Many of our tacos and bowls have vegetarian options.</AccordionContent>
+            <AccordionTrigger>{t('faq.q1.question')}</AccordionTrigger>
+            <AccordionContent>{t('faq.q1.answer')}</AccordionContent>
           </AccordionItem>
           <AccordionItem value="q2">
-            <AccordionTrigger>How long do deliveries take?</AccordionTrigger>
-            <AccordionContent>On average, under 35 minutes depending on time and distance.</AccordionContent>
+            <AccordionTrigger>{t('faq.q2.question')}</AccordionTrigger>
+            <AccordionContent>{t('faq.q2.answer')}</AccordionContent>
           </AccordionItem>
           <AccordionItem value="q3">
-            <AccordionTrigger>Can I change my reservation?</AccordionTrigger>
-            <AccordionContent>You can modify your reservation up to 2 hours before your time slot.</AccordionContent>
+            <AccordionTrigger>{t('faq.q3.question')}</AccordionTrigger>
+            <AccordionContent>{t('faq.q3.answer')}</AccordionContent>
           </AccordionItem>
         </Accordion>
       </section>
