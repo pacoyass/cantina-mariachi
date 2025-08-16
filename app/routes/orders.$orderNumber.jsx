@@ -1,4 +1,5 @@
 import { useParams } from "react-router";
+import { useTranslation } from 'react-i18next';
 
 export const meta = ({ params }) => [
   { title: `Order #${params.orderNumber} - Cantina` },
@@ -6,10 +7,11 @@ export const meta = ({ params }) => [
 
 export default function OrderDetailPage() {
   const { orderNumber } = useParams();
+  const { t } = useTranslation('orders');
   return (
-    <main className="p-4 container mx-auto">
-      <h1>Order #{orderNumber}</h1>
-      <p>Order details will appear here.</p>
-    </main>
+    <div className="p-4">
+      <h2 className="text-lg font-semibold">{t('detailTitle', { orderNumber })}</h2>
+      <p className="text-sm text-muted-foreground">Order details will appear here.</p>
+    </div>
   );
 }

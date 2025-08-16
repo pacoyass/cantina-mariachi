@@ -195,6 +195,17 @@ export const uiResources = {
       },
       results: 'Showing {{count}} items',
       badges: { new: 'New', popular: 'Popular' }
+    },
+    orders: {
+      title: 'My Orders',
+      nav: { mine: 'My Orders', track: 'Track' },
+      table: { order: 'Order #', status: 'Status', total: 'Total', date: 'Date', actions: 'Actions' },
+      empty: 'No orders yet.',
+      create: 'Create order',
+      trackTitle: 'Track Order',
+      trackDesc: 'Enter your order number and tracking code.',
+      detailTitle: 'Order #{{orderNumber}}',
+      statuses: { pending: 'Pending', preparing: 'Preparing', delivering: 'Delivering', completed: 'Completed', cancelled: 'Cancelled' }
     }
   },
   ar: {
@@ -356,6 +367,17 @@ export const uiResources = {
         notify: 'أعلمني',
         coming: 'اختيارات لذيذة قادمة قريبًا.',
         chefSpecial: 'تشكيلة الشيف رقم {{num}}'
+      },
+      orders: {
+        title: 'طلباتي',
+        nav: { mine: 'طلباتي', track: 'تتبع' },
+        table: { order: 'رقم الطلب', status: 'الحالة', total: 'الإجمالي', date: 'التاريخ', actions: 'إجراءات' },
+        empty: 'لا توجد طلبات بعد.',
+        create: 'إنشاء طلب',
+        trackTitle: 'تتبع الطلب',
+        trackDesc: 'أدخل رقم الطلب ورمز التتبع.',
+        detailTitle: 'الطلب #{{orderNumber}}',
+        statuses: { pending: 'قيد الانتظار', preparing: 'قيد التحضير', delivering: 'قيد التوصيل', completed: 'مكتمل', cancelled: 'ملغى' }
       }
     },
     menu: {
@@ -549,6 +571,17 @@ export const uiResources = {
         notify: 'Avísame',
         coming: 'Una selección deliciosa llegará pronto.',
         chefSpecial: 'Especial del chef #{{num}}'
+      },
+      orders: {
+        title: 'Mis pedidos',
+        nav: { mine: 'Mis pedidos', track: 'Rastrear' },
+        table: { order: 'Pedido #', status: 'Estado', total: 'Total', date: 'Fecha', actions: 'Acciones' },
+        empty: 'Aún no hay pedidos.',
+        create: 'Crear pedido',
+        trackTitle: 'Rastrear pedido',
+        trackDesc: 'Ingresa tu número de pedido y código de seguimiento.',
+        detailTitle: 'Pedido #{{orderNumber}}',
+        statuses: { pending: 'Pendiente', preparing: 'Preparando', delivering: 'En reparto', completed: 'Completado', cancelled: 'Cancelado' }
       }
     },
     menu: {
@@ -742,6 +775,17 @@ export const uiResources = {
         notify: 'Prévenez‑moi',
         coming: 'Une délicieuse sélection arrive bientôt.',
         chefSpecial: 'Spécial du chef n° {{num}}'
+      },
+      orders: {
+        title: 'Mes commandes',
+        nav: { mine: 'Mes commandes', track: 'Suivi' },
+        table: { order: 'Commande #', status: 'Statut', total: 'Total', date: 'Date', actions: 'Actions' },
+        empty: 'Aucune commande pour le moment.',
+        create: 'Créer une commande',
+        trackTitle: 'Suivre une commande',
+        trackDesc: 'Saisissez votre numéro de commande et le code de suivi.',
+        detailTitle: 'Commande #{{orderNumber}}',
+        statuses: { pending: 'En attente', preparing: 'En préparation', delivering: 'En livraison', completed: 'Terminée', cancelled: 'Annulée' }
       }
     },
     menu: {
@@ -935,6 +979,17 @@ export const uiResources = {
         notify: 'Benachrichtige mich',
         coming: 'Eine köstliche Auswahl folgt in Kürze.',
         chefSpecial: 'Spezial des Küchenchefs Nr. {{num}}'
+      },
+      orders: {
+        title: 'Meine Bestellungen',
+        nav: { mine: 'Meine Bestellungen', track: 'Verfolgen' },
+        table: { order: 'Bestellung #', status: 'Status', total: 'Summe', date: 'Datum', actions: 'Aktionen' },
+        empty: 'Noch keine Bestellungen.',
+        create: 'Bestellung erstellen',
+        trackTitle: 'Bestellung verfolgen',
+        trackDesc: 'Geben Sie Ihre Bestellnummer und den Tracking‑Code ein.',
+        detailTitle: 'Bestellung #{{orderNumber}}',
+        statuses: { pending: 'Ausstehend', preparing: 'In Vorbereitung', delivering: 'In Zustellung', completed: 'Abgeschlossen', cancelled: 'Storniert' }
       }
     },
     menu: {
@@ -967,199 +1022,6 @@ export const uiResources = {
       },
       results: '{{count}} Artikel',
       badges: { new: 'Neu', popular: 'Beliebt' }
-    }
-  },
-  it: {
-    ui: {
-      nav: {
-        home: 'Home',
-        menu: 'Menù',
-        orders: 'Ordini',
-        reservations: 'Prenotazioni',
-        account: 'Account',
-        profile: 'Profilo',
-        login: 'Accedi',
-        register: 'Registrati',
-        orderNow: 'Ordina ora',
-      },
-      offer: {
-        freeDelivery: 'Solo oggi: consegna gratuita per ordini superiori a $25',
-      },
-      brand: 'Cantina',
-      errors: {
-        title: 'Ops!',
-        notFound: 'La pagina richiesta non è stata trovata.',
-      },
-      a11y: {
-        toggleLanguage: 'Cambia lingua',
-        toggleTheme: 'Cambia tema',
-        close: 'Chiudi'
-      },
-      theme: {
-        toggle: 'Cambia tema',
-        light: 'Chiaro',
-        dark: 'Scuro',
-        system: 'Sistema'
-      },
-      footer: {
-        tagline: 'Sapori messicani autentici, esperienza moderna.',
-        quickLinks: 'Link rapidi',
-        contact: 'Contatti',
-        newsletter: 'Newsletter',
-        emailPlaceholder: 'Indirizzo e‑mail',
-        join: 'Iscriviti',
-        privacy: 'Privacy',
-        terms: 'Termini',
-        copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.'
-      }
-    },
-    home: {
-      hero: {
-        badge: 'Novità: programma ricompense — guadagna punti con ogni ordine',
-        title: 'Autentica cucina messicana. <primary>Consegna veloce.</primary>',
-        desc: 'Dai tacos di strada alle specialità a cottura lenta. Ordina in pochi secondi, prenota all’istante e segui la consegna in tempo reale — tutto in un unico posto.',
-        orderNow: 'Ordina ora',
-        reserve: 'Prenota un tavolo',
-        browseMenu: 'Vedi il menù completo',
-        rating: '4,9/5 da oltre 2.400 clienti locali',
-        avgTime: 'Consegna in meno di 35 minuti in media',
-        card: {
-          title: 'Scelta dello chef',
-          desc: 'Barbacoa cotta lentamente con salsa verde fresca e tortillas calde.'
-        }
-      },
-      logo: { heading: 'Apprezzato dai buongustai locali e menzionato in' },
-      explore: {
-        heading: 'Esplora il menù',
-        tacos: 'Tacos',
-        bowls: 'Ciotole',
-        drinks: 'Bevande',
-        coming: 'Presto disponibile.',
-        chefNotes: 'Note dello chef: preferito dal pubblico con coriandolo e lime freschi.'
-      },
-      loyalty: {
-        heading: 'Fidelizzazione e ricompense',
-        membersSave: 'I membri risparmiano di più',
-        points: 'punti',
-        nextAt: 'Prossima ricompensa a {{points}}',
-        freeDessert: 'Dessert gratuito',
-        join: 'Unisciti al programma',
-        perks: 'Vedi i vantaggi'
-      },
-      why: {
-        heading: 'Perché scegliere Cantina',
-        faster: { title: 'Più veloce delle app', desc: 'Dalla cucina alla porta, senza ritardi di terze parti.' },
-        fees: { title: 'Costi trasparenti', desc: 'Nessuna sorpresa al pagamento.' },
-        oneTap: { title: 'Prenotazioni in un tocco', desc: 'Disponibilità in tempo reale e conferme via SMS.' },
-        tracking: { title: 'Tracciamento live', desc: 'Aggiornamenti minuto per minuto.' },
-        chef: { title: 'Creato dagli chef', desc: 'Ingredienti freschi e menù stagionali.' },
-        rewards: { title: 'Ricompense utili', desc: 'Punti su ogni ordine, vantaggi immediati.' }
-      },
-      events: {
-        heading: 'Eventi di gruppo & catering',
-        desc: 'Prenota per 8+ ospiti o organizza il catering per uffici in pochi minuti.',
-        plan: 'Pianifica evento',
-        catering: 'Catering',
-        q1: { question: 'Avete menù fissi?', answer: 'Sì — menù per gruppi da 8 a 30, con opzioni vegetariane.' },
-        q2: { question: 'Con quanto anticipo devo prenotare?', answer: 'Consigliamo 48 ore; lo stesso giorno può essere possibile fuori orario di punta.' }
-      },
-      offers: {
-        heading: 'Offerte stagionali',
-        badge: 'A tempo limitato',
-        bundle: 'Bundle Taco Tuesday',
-        deal: '2 tacos + bevanda — $9,99',
-        endsIn: 'Termina tra',
-        orderBundle: 'Ordina il bundle',
-        viewDetails: 'Vedi dettagli'
-      },
-      testimonials: {
-        heading: 'Amore dei clienti',
-        t1: 'I migliori tacos in città. Ordinare è velocissimo e la consegna arriva spesso prima del previsto.',
-        t2: 'Prenotazioni che funzionano davvero. Prenotato alle 20h, seduto alle 20h02. Cinque stelle.',
-        t3: 'Il programma ricompense è reale. Guacamole gratis dopo il mio secondo ordine.'
-      },
-      values: {
-        heading: 'Approvvigionamento & valori',
-        desc: 'Ingredienti freschi e locali e pratiche sostenibili — dalla cucina alla tavola.',
-        badges: {
-          localProduce: 'Prodotti locali',
-          sustainableSeafood: 'Pesce sostenibile',
-          fairTrade: 'Commercio equo',
-          lowWaste: 'Bassi sprechi'
-        },
-        cards: {
-          dailyMarket: 'Scelte quotidiane del mercato',
-          houseSalsas: 'Salse fatte in casa',
-          localTortillas: 'Tortillas cotte localmente',
-          compostablePackaging: 'Imballaggi compostabili'
-        }
-      },
-      value: {
-        reorderDesc: 'Riordino con un tocco, preferiti salvati e Apple/Google Pay.',
-        trustedTitle: 'Affidabile & sicuro',
-        trustedDesc: 'Recensioni verificate, pagamenti sicuri, soddisfazione garantita.'
-      },
-      how: {
-        heading: 'Come funziona',
-        desc: 'Dalla voglia alla tavola in tre semplici passaggi.',
-        step1: { title: 'Scegli i tuoi preferiti', desc: 'Sfoglia categorie curate o cerca un piatto specifico.' },
-        step2: { title: 'Personalizza e paga', desc: 'Aggiungi contorni, scegli il livello di piccante e paga in pochi secondi.' },
-        step3: { title: 'Traccia e gusta', desc: 'Segui l’ordine in diretta o mostra la prenotazione all’ingresso.' }
-      },
-      faq: {
-        heading: 'Domande frequenti',
-        q1: { question: 'Avete opzioni vegetariane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetariane.' },
-        q2: { question: 'Quanto tempo impiega la consegna?', answer: 'In media, meno di 35 minuti a seconda dell’orario e della distanza.' },
-        q3: { question: 'Posso modificare la mia prenotazione?', answer: 'Puoi modificare la prenotazione fino a 2 ore prima dell’orario.' }
-      },
-      cta: {
-        limited: 'Offerta a tempo limitato',
-        title: 'Consegna gratuita per ordini superiori a $25',
-        desc: 'Ordina in pochi secondi o prenota subito — senza costi aggiuntivi oggi.',
-        start: 'Inizia un ordine',
-        reserve: 'Prenota ora'
-      },
-      sticky: { order: 'Ordina ora', reserve: 'Prenota' },
-      popular: {
-        heading: 'Popolari questa settimana',
-        seeMenu: 'Vedi il menù completo',
-        unavailable: 'Non disponibile',
-        add: 'Aggiungi all’ordine',
-        notify: 'Avvisami',
-        coming: 'Uma deliziosa selezione in arrivo.',
-        chefSpecial: 'Speciale dello chef n. {{num}}'
-      }
-    },
-    menu: {
-      hero: {
-        title: 'Esplora il nostro menù',
-        subtitle: 'Piatti creati dagli chef, ingredienti freschi e specialità stagionali.'
-      },
-      actions: {
-        searchPlaceholder: 'Cerca piatti…',
-        search: 'Cerca',
-        sortBy: 'Ordina per',
-        sort: {
-          popular: 'Più popolari',
-          priceLow: 'Prezzo: crescente',
-          priceHigh: 'Prezzo: decrescente',
-          newest: 'Più recenti'
-        },
-        add: 'Aggiungi all’ordine',
-        unavailable: 'Non disponibile',
-        noItems: 'Nessun elemento trovato.'
-      },
-      categories: 'Categorie',
-      categoriesAll: 'Tutte',
-      filters: {
-        dietary: 'Diete',
-        vegetarian: 'Vegetariano',
-        vegan: 'Vegano',
-        glutenFree: 'Senza glutine',
-        spicy: 'Piccante'
-      },
-      results: 'Mostrati {{count}} elementi',
-      badges: { new: 'Nuovo', popular: 'Popolare' }
     }
   },
   pt: {
@@ -1321,6 +1183,17 @@ export const uiResources = {
         notify: 'Avise-me',
         coming: 'Uma seleção deliciosa em breve.',
         chefSpecial: 'Especial do chef nº {{num}}'
+      },
+      orders: {
+        title: 'Meus pedidos',
+        nav: { mine: 'Meus pedidos', track: 'Rastrear' },
+        table: { order: 'Pedido #', status: 'Status', total: 'Total', date: 'Data', actions: 'Ações' },
+        empty: 'Nenhum pedido ainda.',
+        create: 'Criar pedido',
+        trackTitle: 'Rastrear pedido',
+        trackDesc: 'Digite o número do pedido e o código de rastreamento.',
+        detailTitle: 'Pedido #{{orderNumber}}',
+        statuses: { pending: 'Pendente', preparing: 'Preparando', delivering: 'Em entrega', completed: 'Concluído', cancelled: 'Cancelado' }
       }
     },
     menu: {
