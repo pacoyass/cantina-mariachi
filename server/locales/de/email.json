@@ -1,23 +1,23 @@
 {
   "subject": {
-    "welcome": "Welcome to {{appName}}",
-    "passwordReset": "Password Reset Request",
-    "emailVerification": "Verify Your Email Address",
-    "accountLocked": "Account Security Alert",
-    "loginAlert": "New Login Detected"
+    "welcome": "Willkommen bei {{appName}}",
+    "passwordReset": "Passwort zurücksetzen",
+    "emailVerification": "E-Mail-Adresse bestätigen",
+    "accountLocked": "Konto-Sicherheitswarnung",
+    "loginAlert": "Neue Anmeldung erkannt"
   },
-  "greeting": "Hello {{name}},",
-  "welcomeMessage": "Welcome to {{appName}}! We're excited to have you on board.",
-  "passwordResetMessage": "You have requested to reset your password. Click the link below to proceed:",
-  "verificationMessage": "Please verify your email address by clicking the link below:",
-  "accountLockedMessage": "Your account has been temporarily locked due to multiple failed login attempts.",
-  "loginAlertMessage": "We detected a new login to your account from {{location}} at {{time}}.",
-  "footer": "If you didn't request this, please ignore this email or contact support.",
+  "greeting": "Hallo {{name}},",
+  "welcomeMessage": "Willkommen bei {{appName}}! Wir freuen uns, Sie bei uns zu haben.",
+  "passwordResetMessage": "Sie haben eine Passwort-Zurücksetzung angefordert. Klicken Sie auf den Link unten, um fortzufahren:",
+  "verificationMessage": "Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den Link unten klicken:",
+  "accountLockedMessage": "Ihr Konto wurde aufgrund mehrerer fehlgeschlagener Anmeldeversuche vorübergehend gesperrt.",
+  "loginAlertMessage": "Wir haben eine neue Anmeldung in Ihr Konto von {{location}} um {{time}} erkannt.",
+  "footer": "Falls Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail oder kontaktieren Sie den Support.",
   "buttonText": {
-    "resetPassword": "Reset Password",
-    "verifyEmail": "Verify Email",
-    "contactSupport": "Contact Support"
+    "resetPassword": "Passwort zurücksetzen",
+    "verifyEmail": "E-Mail bestätigen",
+    "contactSupport": "Support kontaktieren"
   },
-  "expiryNotice": "This link will expire in {{hours}} hours.",
-  "supportContact": "If you need help, contact us at {{email}}"
+  "expiryNotice": "Dieser Link läuft in {{hours}} Stunden ab.",
+  "supportContact": "Wenn Sie Hilfe benötigen, kontaktieren Sie uns unter {{email}}"
 }

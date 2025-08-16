@@ -1,23 +1,23 @@
 {
   "subject": {
-    "welcome": "Welcome to {{appName}}",
-    "passwordReset": "Password Reset Request",
-    "emailVerification": "Verify Your Email Address",
-    "accountLocked": "Account Security Alert",
-    "loginAlert": "New Login Detected"
+    "welcome": "مرحباً بك في {{appName}}",
+    "passwordReset": "طلب إعادة تعيين كلمة المرور",
+    "emailVerification": "تحقق من عنوان بريدك الإلكتروني",
+    "accountLocked": "تنبيه أمان الحساب",
+    "loginAlert": "تم اكتشاف تسجيل دخول جديد"
   },
-  "greeting": "Hello {{name}},",
-  "welcomeMessage": "Welcome to {{appName}}! We're excited to have you on board.",
-  "passwordResetMessage": "You have requested to reset your password. Click the link below to proceed:",
-  "verificationMessage": "Please verify your email address by clicking the link below:",
-  "accountLockedMessage": "Your account has been temporarily locked due to multiple failed login attempts.",
-  "loginAlertMessage": "We detected a new login to your account from {{location}} at {{time}}.",
-  "footer": "If you didn't request this, please ignore this email or contact support.",
+  "greeting": "مرحباً {{name}}،",
+  "welcomeMessage": "مرحباً بك في {{appName}}! نحن متحمسون لانضمامك إلينا.",
+  "passwordResetMessage": "لقد طلبت إعادة تعيين كلمة المرور. انقر على الرابط أدناه للمتابعة:",
+  "verificationMessage": "يرجى التحقق من عنوان بريدك الإلكتروني بالنقر على الرابط أدناه:",
+  "accountLockedMessage": "تم حظر حسابك مؤقتاً بسبب محاولات تسجيل دخول فاشلة متعددة.",
+  "loginAlertMessage": "اكتشفنا تسجيل دخول جديد لحسابك من {{location}} في {{time}}.",
+  "footer": "إذا لم تطلب هذا، يرجى تجاهل هذا البريد الإلكتروني أو التواصل مع الدعم.",
   "buttonText": {
-    "resetPassword": "Reset Password",
-    "verifyEmail": "Verify Email",
-    "contactSupport": "Contact Support"
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "verifyEmail": "تحقق من البريد الإلكتروني",
+    "contactSupport": "التواصل مع الدعم"
   },
-  "expiryNotice": "This link will expire in {{hours}} hours.",
-  "supportContact": "If you need help, contact us at {{email}}"
+  "expiryNotice": "ستنتهي صلاحية هذا الرابط خلال {{hours}} ساعات.",
+  "supportContact": "إذا كنت بحاجة للمساعدة، تواصل معنا على {{email}}"
 }
