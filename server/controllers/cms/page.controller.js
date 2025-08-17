@@ -9,9 +9,9 @@ import crypto from 'node:crypto';
 export const getPage = async (req, res) => {
   try {
     const { slug } = req.params;
-    const { locale = 'en' } = req.query;
+    const { locale = 'en', status } = req.query;
     const page = await prisma.pageContent.findUnique({ where: { slug_locale: { slug, locale } } });
-    if (!page || page.status !== 'PUBLISHED') {
+    if (!page || (status !== 'ANY' && page.status !== 'PUBLISHED')) {
       return createError(res, 404, 'notFound', 'PAGE_NOT_FOUND', {}, req);
     }
     return createResponse(res, 200, 'dataRetrieved', { page }, req, {}, 'api');
