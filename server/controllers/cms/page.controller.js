@@ -1,5 +1,5 @@
-import prisma from '../config/database.js';
-import { createError, createResponse } from '../utils/response.js';
+import prisma from '../../config/database.js';
+import { createError, createResponse } from '../../utils/response.js';
 
 export const getPage = async (req, res) => {
   try {

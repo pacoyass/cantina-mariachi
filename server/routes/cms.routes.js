@@ -2,7 +2,7 @@ import express from 'express';
 import rateLimit from '../middleware/rateLimit.middleware.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 import { requireRole } from '../middleware/rbac.middleware.js';
-import { getPage, upsertPage } from '../controllers/cms.controller.js';
+import { getPage, upsertPage } from '../controllers/cms/page.controller.js';
 
 const router = express.Router();
 const rlLight = rateLimit({ windowMs: 60_000, max: 240 });
