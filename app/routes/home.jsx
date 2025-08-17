@@ -314,14 +314,15 @@ export default function Home() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items && items.length > 0 ? (
-            items.slice(0,3).map((item) => (
+            items.slice(0,3).map((item, idx) => (
               <Card key={item.id} className="overflow-hidden">
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle className="flex items-center gap-2">
                       <span>{item.name}</span>
                       <div className="flex gap-1">
-                        {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('badges.popular', { ns: 'menu' })}</Badge>}
+                        {idx === 0 && <Badge variant="secondary">{t('popular.numberOne')}</Badge>}
+                        {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('popular.trending')}</Badge>}
                       </div>
                     </CardTitle>
                     {item.available === false && (
@@ -337,10 +338,18 @@ export default function Home() {
                       ) : (
                         <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+                    <div className="text-xs text-muted-foreground">
+                      {t('popular.rating', { rating: (item.rating ?? 4.9).toFixed(1), reviews: item.reviews ?? 127 })}
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
                     <div className="flex items-center justify-between">
                       <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-                      <Button size="sm">{t('popular.add')}</Button>
+                      <div className="flex items-center gap-2">
+                        <div className="text-xs text-orange-600">
+                          {t('popular.onlyLeftToday', { count: Math.max(2, 10 - (item.orderCount ?? 3)) })}
+                        </div>
+                        <Button size="sm">{t('popular.orderNowDelivery', { mins: 25 })}</Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -397,10 +406,12 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Sparkles className="size-4 text-primary" />
-                  {t('cta.limited')}
+                  {t('cta.endsTonight')}
                 </div>
                 <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{t('cta.title')}</h3>
                 <p className="text-sm text-muted-foreground mt-1">{t('cta.desc')}</p>
+                <div className="text-xs text-muted-foreground mt-1">{t('cta.socialProof')}</div>
+                <div className="text-xs text-primary mt-1">{t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
               </div>
               <div className="flex gap-3">
                 <Button className="px-6">{t('cta.start')}</Button>

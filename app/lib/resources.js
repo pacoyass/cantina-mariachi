@@ -35,7 +35,7 @@ export const uiResources = {
         tagline: 'Authentic Mexican flavors, modern experience.',
         quickLinks: 'Quick Links',
         contact: 'Contact',
-        newsletter: 'Newsletter',
+        newsletter: 'Get 20% off your first order + exclusive deals 📧',
         emailPlaceholder: 'Email address',
         join: 'Join',
         privacy: 'Privacy',
@@ -147,8 +147,10 @@ export const uiResources = {
       },
       cta: {
         limited: 'Limited‑time offer',
-        title: 'Free delivery on orders over $25',
-        desc: 'Order in seconds or reserve instantly — no extra fees today.',
+        title: '🔥 FREE DELIVERY on $25+ Orders',
+        desc: 'Order in seconds or reserve instantly.',
+        endsTonight: 'Ends Tonight at Midnight!',
+        socialProof: 'Join 2,847+ customers who saved today',
         start: 'Start an Order',
         reserve: 'Reserve Now'
       },
@@ -161,9 +163,13 @@ export const uiResources = {
         seeMenu: 'See full menu',
         unavailable: 'Unavailable',
         add: 'Add to Order',
+        orderNowDelivery: 'Order Now - {{mins}} min delivery',
+        trending: '🔥 Trending',
+        numberOne: '⭐ #1 Ordered',
+        onlyLeftToday: 'Only {{count}} left today!',
+        rating: '★{{rating}} ({{reviews}} reviews)',
         notify: 'Notify me',
-        coming: 'A delicious selection coming soon.',
-        chefSpecial: 'Chef’s Special #{{num}}'
+        coming: 'A delicious selection coming soon.'
       }
     },
     menu: {
