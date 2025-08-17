@@ -213,6 +213,38 @@ export const uiResources = {
       },
       detailTitle: 'Order #{{orderNumber}}',
       statuses: { pending: 'Pending', preparing: 'Preparing', delivering: 'Delivering', completed: 'Completed', cancelled: 'Cancelled' }
+    },
+    reservations: {
+      title: 'Reservations',
+      subtitle: 'Book a table and check availability.',
+      form: {
+        name: 'Full name',
+        phone: 'Phone number',
+        date: 'Date',
+        time: 'Time',
+        guests: 'Guests',
+        notes: 'Notes (optional)',
+        placeholderName: 'e.g. Alex Carter',
+        placeholderPhone: 'e.g. +1 555 123-4567',
+        submit: 'Reserve'
+      }
+    },
+    account: {
+      title: 'My Account',
+      subtitle: 'Manage your profile and preferences.',
+      profile: {
+        name: 'Full name',
+        email: 'Email',
+        phone: 'Phone',
+        save: 'Save changes'
+      },
+      security: {
+        heading: 'Security',
+        current: 'Current password',
+        new: 'New password',
+        confirm: 'Confirm new password',
+        update: 'Update password'
+      }
     }
   },
   ar: {
@@ -392,6 +424,38 @@ export const uiResources = {
         },
         detailTitle: 'الطلب #{{orderNumber}}',
         statuses: { pending: 'قيد الانتظار', preparing: 'قيد التحضير', delivering: 'قيد التوصيل', completed: 'مكتمل', cancelled: 'ملغى' }
+      },
+      reservations: {
+        title: 'الحجوزات',
+        subtitle: 'احجز طاولة وتحقق من التوفر.',
+        form: {
+          name: 'الاسم الكامل',
+          phone: 'رقم الهاتف',
+          date: 'التاريخ',
+          time: 'الوقت',
+          guests: 'عدد الضيوف',
+          notes: 'ملاحظات (اختياري)',
+          placeholderName: 'مثال: أحمد علي',
+          placeholderPhone: 'مثال: +1 555 123-4567',
+          submit: 'احجز'
+        }
+      },
+      account: {
+        title: 'حسابي',
+        subtitle: 'إدارة ملفك الشخصي وتفضيلاتك.',
+        profile: {
+          name: 'الاسم الكامل',
+          email: 'البريد الإلكتروني',
+          phone: 'الهاتف',
+          save: 'حفظ التغييرات'
+        },
+        security: {
+          heading: 'الأمان',
+          current: 'كلمة المرور الحالية',
+          new: 'كلمة المرور الجديدة',
+          confirm: 'تأكيد كلمة المرور الجديدة',
+          update: 'تحديث كلمة المرور'
+        }
       }
     },
     menu: {
@@ -603,6 +667,38 @@ export const uiResources = {
         },
         detailTitle: 'Pedido #{{orderNumber}}',
         statuses: { pending: 'Pendiente', preparing: 'Preparando', delivering: 'En reparto', completed: 'Completado', cancelled: 'Cancelado' }
+      },
+      reservations: {
+        title: 'Reservas',
+        subtitle: 'Reserva una mesa y comprueba la disponibilidad.',
+        form: {
+          name: 'Nombre completo',
+          phone: 'Teléfono',
+          date: 'Fecha',
+          time: 'Hora',
+          guests: 'Comensales',
+          notes: 'Notas (opcional)',
+          placeholderName: 'p. ej. Alex Carter',
+          placeholderPhone: 'p. ej. +1 555 123-4567',
+          submit: 'Reservar'
+        }
+      },
+      account: {
+        title: 'Mi cuenta',
+        subtitle: 'Gestiona tu perfil y preferencias.',
+        profile: {
+          name: 'Nombre completo',
+          email: 'Correo electrónico',
+          phone: 'Teléfono',
+          save: 'Guardar cambios'
+        },
+        security: {
+          heading: 'Seguridad',
+          current: 'Contraseña actual',
+          new: 'Nueva contraseña',
+          confirm: 'Confirmar nueva contraseña',
+          update: 'Actualizar contraseña'
+        }
       }
     },
     menu: {
@@ -814,6 +910,38 @@ export const uiResources = {
         },
         detailTitle: 'Commande #{{orderNumber}}',
         statuses: { pending: 'En attente', preparing: 'En préparation', delivering: 'En livraison', completed: 'Terminée', cancelled: 'Annulée' }
+      },
+      reservations: {
+        title: 'Réservations',
+        subtitle: 'Réservez une table et vérifiez la disponibilité.',
+        form: {
+          name: 'Nom complet',
+          phone: 'Téléphone',
+          date: 'Date',
+          time: 'Heure',
+          guests: 'Convives',
+          notes: 'Notes (optionnel)',
+          placeholderName: 'ex. Alex Carter',
+          placeholderPhone: 'ex. +1 555 123-4567',
+          submit: 'Réserver'
+        }
+      },
+      account: {
+        title: 'Mon compte',
+        subtitle: 'Gérez votre profil et vos préférences.',
+        profile: {
+          name: 'Nom complet',
+          email: 'E‑mail',
+          phone: 'Téléphone',
+          save: 'Enregistrer'
+        },
+        security: {
+          heading: 'Sécurité',
+          current: 'Mot de passe actuel',
+          new: 'Nouveau mot de passe',
+          confirm: 'Confirmer le nouveau mot de passe',
+          update: 'Mettre à jour le mot de passe'
+        }
       }
     },
     menu: {
@@ -1025,6 +1153,38 @@ export const uiResources = {
         },
         detailTitle: 'Pedido #{{orderNumber}}',
         statuses: { pending: 'Pendente', preparing: 'Preparando', delivering: 'Em entrega', completed: 'Concluído', cancelled: 'Cancelado' }
+      },
+      reservations: {
+        title: 'Reservas',
+        subtitle: 'Reserve uma mesa e verifique a disponibilidade.',
+        form: {
+          name: 'Nome completo',
+          phone: 'Telefone',
+          date: 'Data',
+          time: 'Hora',
+          guests: 'Pessoas',
+          notes: 'Observações (opcional)',
+          placeholderName: 'ex.: Alex Carter',
+          placeholderPhone: 'ex.: +1 555 123-4567',
+          submit: 'Reservar'
+        }
+      },
+      account: {
+        title: 'Minha conta',
+        subtitle: 'Gerencie seu perfil e preferências.',
+        profile: {
+          name: 'Nome completo',
+          email: 'E‑mail',
+          phone: 'Telefone',
+          save: 'Salvar alterações'
+        },
+        security: {
+          heading: 'Segurança',
+          current: 'Senha atual',
+          new: 'Nova senha',
+          confirm: 'Confirmar nova senha',
+          update: 'Atualizar senha'
+        }
       }
     },
     menu: {
