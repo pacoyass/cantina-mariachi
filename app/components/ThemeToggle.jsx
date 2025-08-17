@@ -1,3 +1,4 @@
+"use client"
 
 // import { useEffect, useState } from "react";
 // import { useTheme } from "next-themes";
@@ -26,8 +27,6 @@
 //   );
 // }
 
-
-"use client"
 
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
