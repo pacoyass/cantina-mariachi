@@ -94,12 +94,23 @@ export async function loader({ request }) {
       return {};
     }
   })();
+  const cmsPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/cms/home?locale=${encodeURIComponent('en')}`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data?.data?.page?.data || {};
+    } catch {
+      return {};
+    }
+  })();
   return {
     items: itemsPromise,
     offers: offersPromise,
     testimonials: testimonialsPromise,
     drinks: drinksPromise,
     config: configPromise,
+    cms: cmsPromise,
   };
 }
 
@@ -108,7 +119,7 @@ const LazyTestimonials = lazy(() => import("../components/home/Testimonials.jsx"
 const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
 
 export default function Home() {
-  const { items, offers, testimonials, drinks, config } = useLoaderData();
+  const { items, offers, testimonials, drinks, config, cms } = useLoaderData();
   const { t, i18n } = useTranslation('home');
 
   return (
@@ -120,12 +131,12 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit" variant="secondary">{t('hero.badge')}</Badge>
+            <Badge className="w-fit" variant="secondary">{cms?.hero?.badge || t('hero.badge')}</Badge>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />
+              {cms?.hero?.title ? <span dangerouslySetInnerHTML={{ __html: cms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
             </h1>
             <p className="text-muted-foreground max-w-prose">
-              {t('hero.desc')}
+              {cms?.hero?.desc || t('hero.desc')}
             </p>
             <div className="flex items-center gap-3 text-sm" aria-live="polite">
               <Suspense fallback={null}>
@@ -439,16 +450,16 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Sparkles className="size-4 text-primary" />
-                  {t('cta.endsTonight')}
+                  {cms?.cta?.endsTonight || t('cta.endsTonight')}
                 </div>
-                <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{t('cta.title')}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{t('cta.desc')}</p>
-                <div className="text-xs text-muted-foreground mt-1">{t('cta.socialProof')}</div>
-                <div className="text-xs text-primary mt-1" aria-live="polite">{t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
+                <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{cms?.cta?.title || t('cta.title')}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{cms?.cta?.desc || t('cta.desc')}</p>
+                <div className="text-xs text-muted-foreground mt-1">{cms?.cta?.socialProof || t('cta.socialProof')}</div>
+                <div className="text-xs text-primary mt-1" aria-live="polite">{cms?.cta?.limited || t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
               </div>
               <div className="flex gap-3">
-                <Button className="px-6" onClick={() => track('click_start_cta')}>{t('cta.start')}</Button>
-                <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{t('cta.reserve')}</Button>
+                <Button className="px-6" onClick={() => track('click_start_cta')}>{cms?.cta?.start || t('cta.start')}</Button>
+                <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{cms?.cta?.reserve || t('cta.reserve')}</Button>
               </div>
             </div>
           </CardContent>
