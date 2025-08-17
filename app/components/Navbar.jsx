@@ -86,13 +86,21 @@ function OfferBar() {
   const [visible, setVisible] = useState(true)
   useEffect(() => {
     if (typeof window === 'undefined') return
+    let raf = 0
+    let lastY = -1
     const onScroll = () => {
-      const y = window.scrollY
-      setVisible(y <= 64)
+      if (raf) cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const y = window.scrollY || document.documentElement.scrollTop || 0
+        if (y !== lastY) {
+          lastY = y
+          setVisible(y <= 48)
+        }
+      })
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   return (
