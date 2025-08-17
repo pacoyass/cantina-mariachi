@@ -204,6 +204,13 @@ export const uiResources = {
       create: 'Create order',
       trackTitle: 'Track Order',
       trackDesc: 'Enter your order number and tracking code.',
+      trackForm: {
+        orderNumber: 'Order number',
+        trackingCode: 'Tracking code',
+        placeholderOrder: 'e.g. 12345',
+        placeholderTracking: 'e.g. ABCD-7890',
+        submit: 'Check status'
+      },
       detailTitle: 'Order #{{orderNumber}}',
       statuses: { pending: 'Pending', preparing: 'Preparing', delivering: 'Delivering', completed: 'Completed', cancelled: 'Cancelled' }
     }
@@ -376,6 +383,13 @@ export const uiResources = {
         create: 'إنشاء طلب',
         trackTitle: 'تتبع الطلب',
         trackDesc: 'أدخل رقم الطلب ورمز التتبع.',
+        trackForm: {
+          orderNumber: 'رقم الطلب',
+          trackingCode: 'رمز التتبع',
+          placeholderOrder: 'مثال: 12345',
+          placeholderTracking: 'مثال: ABCD-7890',
+          submit: 'تحقق من الحالة'
+        },
         detailTitle: 'الطلب #{{orderNumber}}',
         statuses: { pending: 'قيد الانتظار', preparing: 'قيد التحضير', delivering: 'قيد التوصيل', completed: 'مكتمل', cancelled: 'ملغى' }
       }
@@ -504,7 +518,7 @@ export const uiResources = {
         plan: 'Planear evento',
         catering: 'Catering',
         q1: { question: '¿Ofrecen menús fijos?', answer: 'Sí — menús para grupos de 8–30, con opciones vegetarianas.' },
-        q2: { question: '¿Con cuánta anticipación debo reservar?', answer: 'Recomendamos 48 horas, pero el mismo día puede ser posible fuera de horas pico.' }
+        q2: { question: '¿Con cuánta antecedencia debo reservar?', answer: 'Recomendamos 48 horas, pero el mismo día puede ser posible fuera de horas pico.' }
       },
       offers: {
         heading: 'Ofertas de temporada',
@@ -580,6 +594,13 @@ export const uiResources = {
         create: 'Crear pedido',
         trackTitle: 'Rastrear pedido',
         trackDesc: 'Ingresa tu número de pedido y código de seguimiento.',
+        trackForm: {
+          orderNumber: 'Número de pedido',
+          trackingCode: 'Código de seguimiento',
+          placeholderOrder: 'p. ej. 12345',
+          placeholderTracking: 'p. ej. ABCD-7890',
+          submit: 'Comprobar estado'
+        },
         detailTitle: 'Pedido #{{orderNumber}}',
         statuses: { pending: 'Pendiente', preparing: 'Preparando', delivering: 'En reparto', completed: 'Completado', cancelled: 'Cancelado' }
       }
@@ -784,6 +805,13 @@ export const uiResources = {
         create: 'Créer une commande',
         trackTitle: 'Suivre une commande',
         trackDesc: 'Saisissez votre numéro de commande et le code de suivi.',
+        trackForm: {
+          orderNumber: 'Numéro de commande',
+          trackingCode: 'Code de suivi',
+          placeholderOrder: 'ex. 12345',
+          placeholderTracking: 'ex. ABCD-7890',
+          submit: 'Vérifier le statut'
+        },
         detailTitle: 'Commande #{{orderNumber}}',
         statuses: { pending: 'En attente', preparing: 'En préparation', delivering: 'En livraison', completed: 'Terminée', cancelled: 'Annulée' }
       }
@@ -792,210 +820,6 @@ export const uiResources = {
       hero: {
         title: 'Découvrez notre menu',
         subtitle: 'Plats signés par nos chefs, ingrédients frais et spécialités de saison.'
-      },
-      actions: {
-        searchPlaceholder: 'Rechercher des plats…',
-        search: 'Rechercher',
-        sortBy: 'Trier par',
-        sort: {
-          popular: 'Les plus populaires',
-          priceLow: 'Prix : du plus bas au plus élevé',
-          priceHigh: 'Prix : du plus élevé au plus bas',
-          newest: 'Plus récents'
-        },
-        add: 'Ajouter à la commande',
-        unavailable: 'Indisponible',
-        noItems: 'Aucun élément trouvé.'
-      },
-      categories: 'Catégories',
-      categoriesAll: 'Toutes',
-      filters: {
-        dietary: 'Diete',
-        vegetarian: 'Vegetariano',
-        vegan: 'Vegano',
-        glutenFree: 'Senza glutine',
-        spicy: 'Piccante'
-      },
-      results: 'Mostrati {{count}} elementi',
-      badges: { new: 'Nuovo', popular: 'Popolare' }
-    }
-  },
-  de: {
-    ui: {
-      nav: {
-        home: 'Startseite',
-        menu: 'Speisekarte',
-        orders: 'Bestellungen',
-        reservations: 'Reservierungen',
-        account: 'Konto',
-        profile: 'Profil',
-        login: 'Anmelden',
-        register: 'Registrieren',
-        orderNow: 'Jetzt bestellen',
-      },
-      offer: {
-        freeDelivery: 'Nur heute: Kostenloser Versand für Bestellungen über 25 $',
-      },
-      brand: 'Cantina',
-      errors: {
-        title: 'Ups!',
-        notFound: 'Die angeforderte Seite wurde nicht gefunden.',
-      },
-      a11y: {
-        toggleLanguage: 'Sprache wechseln',
-        toggleTheme: 'Design wechseln',
-        close: 'Schließen'
-      },
-      theme: {
-        toggle: 'Design wechseln',
-        light: 'Hell',
-        dark: 'Dunkel',
-        system: 'System'
-      },
-      footer: {
-        tagline: 'Authentische mexikanische Aromen, modernes Erlebnis.',
-        quickLinks: 'Schnellzugriff',
-        contact: 'Kontakt',
-        newsletter: 'Newsletter',
-        emailPlaceholder: 'E‑Mail‑Adresse',
-        join: 'Abonnieren',
-        privacy: 'Datenschutz',
-        terms: 'Bedingungen',
-        copyright: '© {{year}} {{brand}}. Alle Rechte vorbehalten.'
-      }
-    },
-    home: {
-      hero: {
-        badge: 'Neu: Bonusprogramm — Punkte bei jeder Bestellung',
-        title: 'Authentische mexikanische Küche. <primary>Schnelle Lieferung.</primary>',
-        desc: 'Von Street‑Tacos bis zu langsam geschmorten Spezialitäten. In Sekunden bestellen, sofort reservieren und die Lieferung in Echtzeit verfolgen — alles an einem Ort.',
-        orderNow: 'Jetzt bestellen',
-        reserve: 'Tisch reservieren',
-        browseMenu: 'Gesamte Speisekarte ansehen',
-        rating: '4,9/5 von über 2.400 Gästen vor Ort',
-        avgTime: 'Lieferung im Schnitt unter 35 Minuten',
-        card: {
-          title: 'Wahl des Küchenchefs',
-          desc: 'Langsam geschmorte Barbacoa mit frischer Salsa Verde und warmen Tortillas.'
-        }
-      },
-      logo: { heading: 'Beliebt bei Feinschmeckern vor Ort und erwähnt in' },
-      explore: {
-        heading: 'Entdecke die Speisekarte',
-        tacos: 'Tacos',
-        bowls: 'Bowls',
-        drinks: 'Getränke',
-        coming: 'Demnächst.',
-        chefNotes: 'Notizen des Küchenchefs: Publikumsfavorit mit frischem Koriander und Limette.'
-      },
-      loyalty: {
-        heading: 'Treue & Prämien',
-        membersSave: 'Mitglieder sparen mehr',
-        points: 'Punkte',
-        nextAt: 'Nächste Prämie bei {{points}}',
-        freeDessert: 'Dessert gratis',
-        join: 'Programm beitreten',
-        perks: 'Vorteile ansehen'
-      },
-      why: {
-        heading: 'Warum Cantina',
-        faster: { title: 'Schneller als Apps', desc: 'Direkt von der Küche zur Tür, ohne Drittanbieter‑Verzögerungen.' },
-        fees: { title: 'Transparente Gebühren', desc: 'Keine Überraschungen beim Checkout.' },
-        oneTap: { title: 'Reservierung mit einem Tipp', desc: 'Live‑Verfügbarkeit und SMS‑Bestätigungen.' },
-        tracking: { title: 'Live‑Tracking', desc: 'Minutengenaue Lieferupdates.' },
-        chef: { title: 'Von Köchen kreiert', desc: 'Frische Zutaten und saisonale Menüs.' },
-        rewards: { title: 'Sinnvolle Prämien', desc: 'Punkte bei jeder Bestellung, sofortige Vorteile.' }
-      },
-      events: {
-        heading: 'Gruppen‑Events & Catering',
-        desc: 'Für 8+ Gäste reservieren oder Büro‑Catering in Minuten planen.',
-        plan: 'Event planen',
-        catering: 'Catering',
-        q1: { question: 'Bieten Sie Menüs an?', answer: 'Ja — Menüs für Gruppen von 8–30, mit vegetarischen Optionen.' },
-        q2: { question: 'Wie früh sollte ich buchen?', answer: 'Wir empfehlen 48 Stunden; am selben Tag ist außerhalb der Stoßzeiten evtl. möglich.' }
-      },
-      offers: {
-        heading: 'Saisonangebote',
-        badge: 'Nur kurze Zeit',
-        bundle: 'Taco‑Dienstag‑Bundle',
-        deal: '2 Tacos + Getränk — 9,99 $',
-        endsIn: 'Endet in',
-        orderBundle: 'Bundle bestellen',
-        viewDetails: 'Details ansehen'
-      },
-      testimonials: {
-        heading: 'Kundenliebe',
-        t1: 'Mit Abstand die besten Tacos der Stadt. Bestellen geht super schnell, Lieferung meist früher als erwartet.',
-        t2: 'Reservierungen, die wirklich funktionieren. 20:00 gebucht, 20:02 am Platz. Fünf Sterne.',
-        t3: 'Treueprogramm überzeugt. Gratis Guacamole nach meiner zweiten Bestellung.'
-      },
-      values: {
-        heading: 'Herkunft & Werte',
-        desc: 'Frische, lokale Zutaten und nachhaltige Praktiken — von der Küche bis zum Tisch.',
-        badges: {
-          localProduce: 'Regionale Produkte',
-          sustainableSeafood: 'Nachhaltige Meeresfrüchte',
-          fairTrade: 'Fairer Handel',
-          lowWaste: 'Wenig Abfall'
-        },
-        cards: {
-          dailyMarket: 'Tägliche Marktauswahl',
-          houseSalsas: 'Hausgemachte Salsas',
-          localTortillas: 'Lokal gebackene Tortillas',
-          compostablePackaging: 'Kompostierbare Verpackungen'
-        }
-      },
-      value: {
-        reorderDesc: 'Mit einem Tipp nachbestellen, Favoriten speichern und Apple/Google Pay.',
-        trustedTitle: 'Vertrauenswürdig & sicher',
-        trustedDesc: 'Verifizierte Bewertungen, sichere Zahlungen, Zufriedenheitsgarantie.'
-      },
-      how: {
-        heading: 'So funktioniert’s',
-        desc: 'Vom Appetit bis zum Tisch in drei einfachen Schritten.',
-        step1: { title: 'Wähle deine Favoriten', desc: 'Durchsuche kuratierte Kategorien oder suche nach einem Gericht.' },
-        step2: { title: 'Anpassen & bezahlen', desc: 'Beilagen hinzufügen, Schärfe wählen und in Sekunden sicher bezahlen.' },
-        step3: { title: 'Verfolgen & genießen', desc: 'Bestellung live verfolgen oder Reservierung an der Tür zeigen.' }
-      },
-      faq: {
-        heading: 'Häufig gestellte Fragen',
-        q1: { question: 'Bieten Sie vegetarische Optionen an?', answer: 'Ja, viele! Viele unserer Tacos und Bowls gibt es in vegetarischen Varianten.' },
-        q2: { question: 'Wie lange dauern Lieferungen?', answer: 'Im Durchschnitt unter 35 Minuten, je nach Uhrzeit und Entfernung.' },
-        q3: { question: 'Kann ich meine Reservierung ändern?', answer: 'Sie können Ihre Reservierung bis zu 2 Stunden vor Ihrem Termin ändern.' }
-      },
-      cta: {
-        limited: 'Nur für kurze Zeit',
-        title: 'Kostenlose Lieferung ab 25 $ Bestellwert',
-        desc: 'In Sekunden bestellen oder sofort reservieren — heute ohne Zusatzgebühren.',
-        start: 'Bestellung starten',
-        reserve: 'Jetzt reservieren'
-      },
-      sticky: { order: 'Jetzt bestellen', reserve: 'Reservieren' },
-      popular: {
-        heading: 'Diese Woche beliebt',
-        seeMenu: 'Gesamte Speisekarte ansehen',
-        unavailable: 'Nicht verfügbar',
-        add: 'Zur Bestellung hinzufügen',
-        notify: 'Benachrichtige mich',
-        coming: 'Eine köstliche Auswahl folgt in Kürze.',
-        chefSpecial: 'Spezial des Küchenchefs Nr. {{num}}'
-      },
-      orders: {
-        title: 'Meine Bestellungen',
-        nav: { mine: 'Meine Bestellungen', track: 'Verfolgen' },
-        table: { order: 'Bestellung #', status: 'Status', total: 'Summe', date: 'Datum', actions: 'Aktionen' },
-        empty: 'Noch keine Bestellungen.',
-        create: 'Bestellung erstellen',
-        trackTitle: 'Bestellung verfolgen',
-        trackDesc: 'Geben Sie Ihre Bestellnummer und den Tracking‑Code ein.',
-        detailTitle: 'Bestellung #{{orderNumber}}',
-        statuses: { pending: 'Ausstehend', preparing: 'In Vorbereitung', delivering: 'In Zustellung', completed: 'Abgeschlossen', cancelled: 'Storniert' }
-      }
-    },
-    menu: {
-      hero: {
-        title: 'Entdecke unsere Speisekarte',
-        subtitle: 'Von Köchen kreierte Gerichte, frische Zutaten und saisonale Highlights.'
       },
       actions: {
         searchPlaceholder: 'Gerichte suchen…',
@@ -1192,6 +1016,13 @@ export const uiResources = {
         create: 'Criar pedido',
         trackTitle: 'Rastrear pedido',
         trackDesc: 'Digite o número do pedido e o código de rastreamento.',
+        trackForm: {
+          orderNumber: 'Número do pedido',
+          trackingCode: 'Código de rastreamento',
+          placeholderOrder: 'ex.: 12345',
+          placeholderTracking: 'ex.: ABCD-7890',
+          submit: 'Verificar status'
+        },
         detailTitle: 'Pedido #{{orderNumber}}',
         statuses: { pending: 'Pendente', preparing: 'Preparando', delivering: 'Em entrega', completed: 'Concluído', cancelled: 'Cancelado' }
       }
