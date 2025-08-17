@@ -114,16 +114,34 @@ function OfferBar() {
 
 function DesktopOrderBar({ isOpen, eta }) {
   const { t } = useTranslation('ui')
+  const [visible, setVisible] = useState(true)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    let raf = 0
+    const onScroll = () => {
+      if (raf) cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const y = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0)
+        setVisible(y <= 0)
+      })
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
+  }, [])
+
   return (
-    <div className="hidden lg:block border-b bg-background">
-      <div className="container mx-auto h-10 px-4 flex items-center justify-between text-sm">
-        <div aria-live="polite">
-          {isOpen ? t('topbar.open') : t('topbar.closed')} · {t('topbar.eta', { mins: eta })}
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="text-muted-foreground hidden md:block">{t('topbar.noSignup')}</div>
-          <NavLink to="/menu" className="underline">{t('topbar.browse')}</NavLink>
-          <Button onClick={() => track('click_order_now_topbar')}>{t('nav.orderNow')}</Button>
+    <div className={`hidden lg:block overflow-hidden transition-[height] duration-300 ${visible ? 'h-10' : 'h-0'}`}>
+      <div className="border-b bg-background">
+        <div className="container mx-auto h-10 px-4 flex items-center justify-between text-sm">
+          <div aria-live="polite">
+            {isOpen ? t('topbar.open') : t('topbar.closed')} · {t('topbar.eta', { mins: eta })}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-muted-foreground hidden md:block">{t('topbar.noSignup')}</div>
+            <NavLink to="/menu" className="underline">{t('topbar.browse')}</NavLink>
+            <Button onClick={() => track('click_order_now_topbar')}>{t('nav.orderNow')}</Button>
+          </div>
         </div>
       </div>
     </div>
