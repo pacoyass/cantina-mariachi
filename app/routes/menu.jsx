@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, Link } from "react-router";
 import { useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -22,17 +22,20 @@ export async function loader({ request }) {
     try { return await res.json(); } catch { return null; }
   }
 
-  const [catRes, itemsRes] = await Promise.all([
+  const [catRes, itemsRes, cmsRes] = await Promise.all([
     fetch(`${url.origin}/api/menu/categories`, { headers: { cookie } }),
     fetch(`${url.origin}/api/menu/items${categoryId ? `?categoryId=${encodeURIComponent(categoryId)}` : ""}`, { headers: { cookie } }),
+    fetch(`${url.origin}/api/cms/menu?locale=${encodeURIComponent('en')}`, { headers: { cookie } }),
   ]);
   const cats = await jsonOrNull(catRes);
   const items = await jsonOrNull(itemsRes);
+  const cmsJson = await jsonOrNull(cmsRes);
 
   return {
     categories: cats?.data?.categories ?? [],
     items: items?.data?.items ?? [],
     activeCategoryId: categoryId,
+    cms: cmsJson?.data?.page?.data || {},
   };
 }
 
@@ -44,7 +47,7 @@ function isNew(createdAt) {
 }
 
 export default function MenuPage() {
-  const { categories, items, activeCategoryId } = useLoaderData();
+  const { categories, items, activeCategoryId, cms } = useLoaderData();
   const { t } = useTranslation('menu');
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("popular");
@@ -89,16 +92,16 @@ export default function MenuPage() {
       <section className="rounded-xl border bg-card p-8 shadow-sm relative overflow-hidden">
         <div className="grid gap-6 md:grid-cols-2 md:items-center">
           <div className="space-y-4">
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{t('hero.title')}</h1>
-            <p className="text-muted-foreground max-w-prose">{t('hero.subtitle')}</p>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{cms?.hero?.title || t('hero.title')}</h1>
+            <p className="text-muted-foreground max-w-prose">{cms?.hero?.subtitle || t('hero.subtitle')}</p>
             <div className="flex flex-wrap gap-2">
               <Button className="px-6" onClick={() => { try { searchRef.current?.focus(); } catch {} }}>{t('nav.orderNow', { ns: 'ui' })}</Button>
               <a href="#menu-items" className="px-6 inline-flex items-center justify-center rounded-md border bg-secondary text-secondary-foreground text-sm font-medium">
-                {t('hero.browseMenu', { ns: 'home' })}
+                {cms?.hero?.browseMenu || t('hero.browseMenu', { ns: 'home' })}
               </a>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <Badge variant="secondary">{categories.length} {t('categories')}</Badge>
+              <Badge variant="secondary">{categories.length} {cms?.categories?.label || t('categories')}</Badge>
               <Badge variant="secondary">{t('results', { count: resultsCount })}</Badge>
             </div>
           </div>
@@ -112,7 +115,7 @@ export default function MenuPage() {
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center gap-2">
                       <span>{featured.name}</span>
-                      <Badge variant="secondary">{t('badges.popular')}</Badge>
+                      <Badge variant="secondary">{cms?.badges?.popular || t('badges.popular')}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -139,15 +142,15 @@ export default function MenuPage() {
       <section className="grid gap-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="space-y-1 w-full">
-            <h2 className="text-xl font-semibold tracking-tight">{t('categories')}</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{cms?.categories?.heading || t('categories')}</h2>
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
-              <a href={`/menu`}>
-                <Badge variant={!activeCategoryId ? "default" : "outline"}>{t('categoriesAll', { defaultValue: 'All' })}</Badge>
-              </a>
+              <Link to={`/menu`}>
+                <Badge variant={!activeCategoryId ? "default" : "outline"}>{cms?.categories?.all || t('categoriesAll', { defaultValue: 'All' })}</Badge>
+              </Link>
               {categories.map((c) => (
-                <a key={c.id} href={`/menu?categoryId=${encodeURIComponent(c.id)}`}>
+                <Link key={c.id} to={`/menu?categoryId=${encodeURIComponent(c.id)}`}>
                   <Badge variant={activeCategoryId === c.id ? "default" : "outline"}>{c.name}</Badge>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -184,11 +187,11 @@ export default function MenuPage() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">{t('filters.dietary')}</span>
-              <FilterChip active={filters.vegetarian} onClick={() => setFilters((f) => ({ ...f, vegetarian: !f.vegetarian }))}>{t('filters.vegetarian')}</FilterChip>
-              <FilterChip active={filters.vegan} onClick={() => setFilters((f) => ({ ...f, vegan: !f.vegan }))}>{t('filters.vegan')}</FilterChip>
-              <FilterChip active={filters.glutenFree} onClick={() => setFilters((f) => ({ ...f, glutenFree: !f.glutenFree }))}>{t('filters.glutenFree')}</FilterChip>
-              <FilterChip active={filters.spicy} onClick={() => setFilters((f) => ({ ...f, spicy: !f.spicy }))}>{t('filters.spicy')}</FilterChip>
+              <span className="text-sm text-muted-foreground">{cms?.filters?.heading || t('filters.dietary')}</span>
+              <FilterChip active={filters.vegetarian} onClick={() => setFilters((f) => ({ ...f, vegetarian: !f.vegetarian }))}>{cms?.filters?.vegetarian || t('filters.vegetarian')}</FilterChip>
+              <FilterChip active={filters.vegan} onClick={() => setFilters((f) => ({ ...f, vegan: !f.vegan }))}>{cms?.filters?.vegan || t('filters.vegan')}</FilterChip>
+              <FilterChip active={filters.glutenFree} onClick={() => setFilters((f) => ({ ...f, glutenFree: !f.glutenFree }))}>{cms?.filters?.glutenFree || t('filters.glutenFree')}</FilterChip>
+              <FilterChip active={filters.spicy} onClick={() => setFilters((f) => ({ ...f, spicy: !f.spicy }))}>{cms?.filters?.spicy || t('filters.spicy')}</FilterChip>
               <span className="ml-auto text-xs text-muted-foreground">{t('results', { count: resultsCount, defaultValue: `Showing ${resultsCount} items` })}</span>
             </div>
           </div>
@@ -241,7 +244,7 @@ export default function MenuPage() {
             </Card>
           ))}
           {displayedItems.length === 0 && (
-            <div className="col-span-full text-muted-foreground">{t('actions.noItems')}</div>
+            <div className="col-span-full text-muted-foreground">{cms?.actions?.noItems || t('actions.noItems')}</div>
           )}
         </div>
       </section>
