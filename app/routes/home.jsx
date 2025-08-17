@@ -1,12 +1,11 @@
-import { useLoaderData } from "react-router";
-import { useEffect, useState } from "react";
+import { useLoaderData, Link, Await, defer, ScrollRestoration } from "react-router";
+import { Suspense, useEffect, useMemo, useRef, useState, lazy } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Separator } from "../components/ui/separator";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "../components/ui/hover-card";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../components/ui/accordion";
 import { Star, Clock, Truck, Smartphone, UtensilsCrossed, ShieldCheck, Sparkles } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
@@ -21,18 +20,68 @@ export function meta() {
 export async function loader({ request }) {
   const url = new URL(request.url);
   const cookie = request.headers.get("cookie") || "";
-  try {
-    const res = await fetch(`${url.origin}/api/menu/items`, { headers: { cookie } });
-    const data = await res.json().catch(() => ({}));
-    const items = Array.isArray(data?.data?.items) ? data.data.items.slice(0, 6) : [];
-    return { items };
-  } catch {
-    return { items: [] };
-  }
+  const headers = { cookie };
+  const itemsPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/menu/items`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const items = Array.isArray(data?.data?.items) ? data.data.items.slice(0, 6) : [];
+      return items;
+    } catch {
+      return [];
+    }
+  })();
+  const offersPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/home/offers`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return Array.isArray(data?.data?.offers) ? data.data.offers : [];
+    } catch {
+      return [];
+    }
+  })();
+  const testimonialsPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/home/testimonials`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return Array.isArray(data?.data?.testimonials) ? data.data.testimonials : [];
+    } catch {
+      return [];
+    }
+  })();
+  const drinksPromise = (async () => {
+    try {
+      const catRes = await fetch(`${url.origin}/api/menu/categories`, { headers });
+      if (!catRes.ok) throw new Error(`HTTP ${catRes.status}`);
+      const catJson = await catRes.json();
+      const categories = Array.isArray(catJson?.data?.categories) ? catJson.data.categories : [];
+      const drinksCat = categories.find(c => c.name.toLowerCase() === 'drinks');
+      if (!drinksCat?.id) return [];
+      const itemsRes = await fetch(`${url.origin}/api/menu/items?categoryId=${encodeURIComponent(drinksCat.id)}&available=true`, { headers });
+      if (!itemsRes.ok) throw new Error(`HTTP ${itemsRes.status}`);
+      const itemsJson = await itemsRes.json();
+      return Array.isArray(itemsJson?.data?.items) ? itemsJson.data.items.slice(0, 6) : [];
+    } catch {
+      return [];
+    }
+  })();
+  return defer({
+    items: itemsPromise,
+    offers: offersPromise,
+    testimonials: testimonialsPromise,
+    drinks: drinksPromise,
+  });
 }
 
+const LazyFAQ = lazy(() => import("../components/home/FAQ.jsx"));
+const LazyTestimonials = lazy(() => import("../components/home/Testimonials.jsx"));
+const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
+
 export default function Home() {
-  const { items } = useLoaderData();
+  const { items, offers, testimonials, drinks } = useLoaderData();
   const { t } = useTranslation('home');
 
   return (
@@ -51,20 +100,25 @@ export default function Home() {
             <div className="flex flex-wrap gap-3">
               <Button className="px-6" aria-label={t('hero.orderNow')}>{t('hero.orderNow')}</Button>
               <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')}>{t('hero.reserve')}</Button>
-              <a className="underline text-sm self-center" href="/menu" aria-label={t('hero.browseMenu')}>{t('hero.browseMenu')}</a>
+              <Link className="underline text-sm self-center" to="/menu" aria-label={t('hero.browseMenu')}>{t('hero.browseMenu')}</Link>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div className="flex items-center gap-1 text-yellow-500">
+              <div className="flex items-center gap-1 text-yellow-500" aria-label={t('hero.rating')}>
                 {[...Array(5)].map((_, i) => (<Star key={i} className="size-4 fill-current" />))}
               </div>
-              <div className="text-muted-foreground">{t('hero.rating')}</div>
+              <div className="text-muted-foreground" aria-live="polite">{t('hero.avgTime')}</div>
               <Separator className="hidden md:block w-px h-5" orientation="vertical" />
               <div className="text-muted-foreground">{t('hero.avgTime')}</div>
             </div>
           </div>
 
           <div className="relative">
-            <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm hero-pattern" />
+            <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+              <picture>
+                <source srcSet="/hero.mp4" type="video/mp4" />
+                <img src="/hero.jpg" alt="Hero" loading="eager" className="w-full h-full object-cover" />
+              </picture>
+            </div>
             <div className="absolute -bottom-6 -right-6 hidden md:block">
               <Card className="w-64">
                 <CardHeader className="pb-2">
@@ -103,7 +157,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Explore menu (Tabs + HoverCard) */}
+      {/* Explore menu (Tabs) */}
       <section className="container mx-auto px-6 py-14">
         <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('explore.heading')}</h2>
         <Tabs defaultValue="tacos" className="w-full">
@@ -114,44 +168,40 @@ export default function Home() {
           </TabsList>
           <div className="mt-3">
           <TabsContent value="tacos" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {items.slice(0,3).map((item) => (
-                <Card key={item.id} className="overflow-hidden">
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>{item.name}</span>
-                      {item.available === false && (
-                        <Badge variant="outline">{t('popular.unavailable')}</Badge>
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 gap-3">
-                      <div className="rounded-md overflow-hidden border bg-muted">
-                        {item.imageUrl ? (
-                          <img src={item.imageUrl} alt={item.name} loading="lazy" className="w-full h-full object-cover aspect-video" />
-                        ) : (
-                          <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-                        <Button size="sm">{t('popular.add')}</Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <Suspense fallback={<MenuItemsSkeleton count={3} />}>
+              <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
+                {(resolvedItems) => (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {resolvedItems.slice(0,3).map((item) => (
+                      <MenuItemCard key={item.id} item={item} t={t} />
+                    ))}
+                  </div>
+                )}
+              </Await>
+            </Suspense>
             <div className="mt-3">
-              <a className="text-sm underline" href="/menu" aria-label={t('explore.viewMore')}>{t('explore.viewMore')}</a>
+              <Link className="text-sm underline" to="/menu" aria-label={t('explore.viewMore')}>{t('explore.viewMore')}</Link>
             </div>
           </TabsContent>
           <TabsContent value="bowls" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
             <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
           </TabsContent>
           <TabsContent value="drinks" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
-            <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
+            <Suspense fallback={<MenuItemsSkeleton count={3} />}>
+              <Await resolve={drinks} errorElement={<MenuItemsError message={t('explore.coming')} />}>
+                {(resolvedDrinks) => (
+                  resolvedDrinks?.length ? (
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {resolvedDrinks.slice(0,3).map((item) => (
+                        <MenuItemCard key={item.id} item={item} t={t} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
+                  )
+                )}
+              </Await>
+            </Suspense>
           </TabsContent>
                     </div>
           </Tabs>
@@ -223,44 +273,27 @@ export default function Home() {
         </Card>
       </section>
 
-      {/* Seasonal offers */}
+      {/* Seasonal offers (lazy) */}
       <section className="container mx-auto px-6 py-14">
-        <Card>
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{t('offers.heading')}</CardTitle>
-              <Badge variant="secondary">{t('offers.badge')}</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-[320px_1fr] md:items-center">
-              <div className="rounded-md overflow-hidden border bg-muted">
-                <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
-              </div>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <div className="text-sm text-muted-foreground">{t('offers.bundle')}</div>
-                  <div className="text-xl font-semibold">{t('offers.deal')}</div>
-                  <div className="text-xs text-muted-foreground">{t('offers.endsIn')} <Countdown to={Date.now() + 1000 * 60 * 60 * 24 * 2} /></div>
-                </div>
-                <div className="flex gap-2">
-                  <Button>{t('offers.orderBundle')}</Button>
-                  <Button variant="outline">{t('offers.viewDetails')}</Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Suspense fallback={<SectionSkeleton title={t('offers.heading')} />}> 
+          <Await resolve={offers} errorElement={<SectionError title={t('offers.heading')} />}> 
+            {(resolvedOffers) => (
+              <LazyOffers offers={resolvedOffers} t={t} />
+            )}
+          </Await>
+        </Suspense>
       </section>
 
-      {/* Customer love (testimonials) */}
+      {/* Customer love (testimonials) lazy */}
       <section className="container mx-auto px-6 py-14">
         <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('testimonials.heading')}</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          <Testimonial name="A. Rivera" initials="AR">{t('testimonials.t1')}</Testimonial>
-          <Testimonial name="M. Santos" initials="MS">{t('testimonials.t2')}</Testimonial>
-          <Testimonial name="L. Chen" initials="LC">{t('testimonials.t3')}</Testimonial>
-        </div>
+        <Suspense fallback={<SectionSkeleton title={t('testimonials.heading')} />}> 
+          <Await resolve={testimonials} errorElement={<SectionError title={t('testimonials.heading')} />}> 
+            {(resolvedTestimonials) => (
+              <LazyTestimonials testimonials={resolvedTestimonials} />
+            )}
+          </Await>
+        </Suspense>
       </section>
 
       {/* Sourcing & values */}
@@ -310,92 +343,48 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-semibold tracking-tight">{t('popular.heading')}</h2>
-          <a className="text-sm underline" href="/menu">{t('popular.seeMenu')}</a>
+          <Link className="text-sm underline" to="/menu">{t('popular.seeMenu')}</Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items && items.length > 0 ? (
-            items.slice(0,3).map((item, idx) => (
-              <Card key={item.id} className="overflow-hidden">
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="flex items-center gap-2">
-                      <span>{item.name}</span>
-                      <div className="flex gap-1">
-                        {idx === 0 && <Badge variant="secondary">{t('popular.numberOne')}</Badge>}
-                        {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('popular.trending')}</Badge>}
-                      </div>
-                    </CardTitle>
-                    {item.available === false && (
-                      <Badge variant="outline">{t('popular.unavailable')}</Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="rounded-md overflow-hidden border bg-muted">
-                      {item.imageUrl ? (
-                        <img src={item.imageUrl} alt={item.name} loading="lazy" className="w-full h-full object-cover aspect-video" />
-                      ) : (
-                        <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t('popular.rating', { rating: (item.rating ?? 4.9).toFixed(1), reviews: item.reviews ?? 127 })}
-                    </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-                      <div className="flex items-center gap-2">
-                        <div className="text-xs text-orange-600">
-                          {t('popular.onlyLeftToday', { count: Math.max(2, 10 - (item.orderCount ?? 3)) })}
+        <Suspense fallback={<MenuItemsSkeleton count={3} />}>
+          <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
+            {(resolvedItems) => (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {resolvedItems && resolvedItems.length > 0 ? (
+                  resolvedItems.slice(0,3).map((item, idx) => (
+                    <PopularItemCard key={item.id} item={item} idx={idx} t={t} />
+                  ))
+                ) : (
+                  [...Array(3)].map((_, i) => (
+                    <Card key={i} className="overflow-hidden">
+                      <CardHeader>
+                        <CardTitle>{t('popular.chefSpecial', { num: i + 1 })}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 gap-3">
+                          <div className="rounded-md overflow-hidden border bg-muted">
+                            <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">$12.{i}0</span>
+                            <Button size="sm">{t('popular.notify')}</Button>
+                          </div>
                         </div>
-                        <Button size="sm">{t('popular.orderNowDelivery', { mins: 25 })}</Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            [...Array(3)].map((_, i) => (
-              <Card key={i} className="overflow-hidden">
-                <CardHeader>
-                  <CardTitle>{t('popular.chefSpecial', { num: i + 1 })}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="rounded-md overflow-hidden border bg-muted">
-                      <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">$12.{i}0</span>
-                      <Button size="sm">{t('popular.notify')}</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+          </Await>
+        </Suspense>
       </section>
 
-      {/* FAQ */}
+      {/* FAQ (lazy) */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('faq.heading')}</h2>
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="q1">
-            <AccordionTrigger>{t('faq.q1.question')}</AccordionTrigger>
-            <AccordionContent>{t('faq.q1.answer')}</AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="q2">
-            <AccordionTrigger>{t('faq.q2.question')}</AccordionTrigger>
-            <AccordionContent>{t('faq.q2.answer')}</AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="q3">
-            <AccordionTrigger>{t('faq.q3.question')}</AccordionTrigger>
-            <AccordionContent>{t('faq.q3.answer')}</AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <Suspense fallback={<SectionSkeleton title={t('faq.heading')} />}> 
+          <LazyFAQ t={t} />
+        </Suspense>
       </section>
 
       {/* CTA banner */}
@@ -429,12 +418,87 @@ export default function Home() {
           <Button variant="outline" className="flex-1">{t('sticky.reserve')}</Button>
         </div>
       </div>
+      <ScrollRestoration />
     </main>
   );
 }
 
+function MenuItemCard({ item, t }) {
+  return (
+    <Card key={item.id} className="overflow-hidden">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <span>{item.name}</span>
+          {item.available === false && (
+            <Badge variant="outline">{t('popular.unavailable')}</Badge>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 gap-3">
+          <div className="rounded-md overflow-hidden border bg-muted">
+            {item.imageUrl ? (
+              <img src={item.imageUrl} alt={item.name} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+            ) : (
+              <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
+          </div>
+          <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+          <div className="flex items-center justify-between">
+            <span className="font-medium">${Number(item.price).toFixed(2)}</span>
+            <Button size="sm">{t('popular.add')}</Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PopularItemCard({ item, idx, t }) {
+  return (
+    <Card key={item.id} className="overflow-hidden">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="flex items-center gap-2">
+            <span>{item.name}</span>
+            <div className="flex gap-1">
+              {idx === 0 && <Badge variant="secondary">{t('popular.numberOne')}</Badge>}
+              {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('popular.trending')}</Badge>}
+            </div>
+          </CardTitle>
+          {item.available === false && (
+            <Badge variant="outline">{t('popular.unavailable')}</Badge>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 gap-3">
+          <div className="rounded-md overflow-hidden border bg-muted">
+            {item.imageUrl ? (
+              <img src={item.imageUrl} alt={item.name} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+            ) : (
+              <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {t('popular.rating', { rating: (item.rating ?? 4.9).toFixed(1), reviews: item.reviews ?? 127 })}
+          </div>
+          <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
+          <div className="flex items-center justify-between">
+            <span className="font-medium">${Number(item.price).toFixed(2)}</span>
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-orange-600">
+                {t('popular.onlyLeftToday', { count: Math.max(2, 10 - (item.orderCount ?? 3)) })}
+              </div>
+              <Button size="sm">{t('popular.orderNowDelivery', { mins: 25 })}</Button>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function ProgressBar({ value, max }) {
-  const pct = Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+  const pct = useMemo(() => Math.max(0, Math.min(100, Math.round((value / max) * 100))), [value, max]);
   return (
     <div className="mt-3 h-2 w-full rounded-full bg-secondary">
       <div className="h-2 rounded-full bg-primary transition-[width] duration-500" style={{ width: `${pct}%` }} />
@@ -443,7 +507,12 @@ function ProgressBar({ value, max }) {
 }
 
 function Countdown({ to }) {
-  const [ms, setMs] = useState(Math.max(0, to - Date.now()));
+  const targetRef = useRef(to);
+  const [ms, setMs] = useState(Math.max(0, targetRef.current - Date.now()));
+  useEffect(() => {
+    targetRef.current = to;
+    setMs(Math.max(0, targetRef.current - Date.now()));
+  }, [to]);
   useEffect(() => {
     const id = setInterval(() => setMs((prev) => Math.max(0, prev - 1000)), 1000);
     return () => clearInterval(id);
@@ -498,7 +567,7 @@ function Step({ number, title, children }) {
   );
 }
 
-function Testimonial({ name, initials, children }) {
+function Testimonial({ name, initials, rating, date, children }) {
   return (
     <Card className="overflow-hidden">
       <CardContent className="pt-6">
@@ -507,10 +576,62 @@ function Testimonial({ name, initials, children }) {
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <div className="text-sm font-medium">{name}</div>
+            <div className="flex items-center gap-2">
+              <div className="text-sm font-medium">{name}</div>
+              <div className="flex items-center gap-1 text-yellow-500" aria-label={`${rating} stars`}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className={`size-3 ${i < Number(rating || 0) ? 'fill-current' : ''}`} />
+                ))}
+              </div>
+              <div className="text-xs text-muted-foreground">{new Date(date).toLocaleDateString()}</div>
+            </div>
             <div className="text-sm text-muted-foreground mt-1">{children}</div>
           </div>
         </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function MenuItemsSkeleton({ count = 3 }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: count }).map((_, i) => (
+        <Card key={i} className="overflow-hidden">
+          <CardContent>
+            <div className="animate-pulse space-y-3">
+              <div className="w-full aspect-video bg-muted rounded" />
+              <div className="h-4 bg-muted rounded w-2/3" />
+              <div className="h-3 bg-muted rounded w-1/2" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function MenuItemsError({ message }) {
+  return <div className="text-sm text-destructive">{message}</div>;
+}
+
+function SectionSkeleton({ title }) {
+  return (
+    <Card>
+      <CardHeader><CardTitle>{title}</CardTitle></CardHeader>
+      <CardContent>
+        <div className="animate-pulse h-24 bg-muted rounded" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function SectionError({ title }) {
+  return (
+    <Card>
+      <CardHeader><CardTitle>{title}</CardTitle></CardHeader>
+      <CardContent>
+        <div className="text-sm text-destructive">Failed to load content.</div>
       </CardContent>
     </Card>
   );

@@ -12,6 +12,7 @@ import reservationsRoutes from './reservations.routes.js';
 import notificationsRoutes from './notifications.routes.js';
 import webhooksAdminRoutes from './webhooks.routes.js';
 import metricsRoutes from './metrics.routes.js';
+import homeRoutes from './home.routes.js';
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.use('/cash', cashRoutes);
 router.use('/reservations', reservationsRoutes);
 router.use('/notifications', notificationsRoutes);
 router.use('/webhooks', webhooksAdminRoutes);
+router.use('/home', homeRoutes);
 
 router.use((req, res, next) => {
   createError(
