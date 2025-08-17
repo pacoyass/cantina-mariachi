@@ -15,6 +15,13 @@ export const uiResources = {
       offer: {
         freeDelivery: 'Today only: free delivery on orders over $25',
       },
+      topbar: {
+        open: 'Open now',
+        closed: 'Closed now',
+        eta: 'ETA ~ {{mins}}m',
+        noSignup: 'No sign-up needed',
+        browse: 'Browse menu',
+      },
       brand: 'Cantina',
       errors: {
         title: 'Oops!',
@@ -270,6 +277,13 @@ export const uiResources = {
       offer: {
         freeDelivery: 'اليوم فقط: توصيل مجاني للطلبات التي تزيد عن $25',
       },
+      topbar: {
+        open: 'مفتوح الآن',
+        closed: 'مغلق الآن',
+        eta: 'الوقت المتوقع ~ {{mins}} د',
+        noSignup: 'لا حاجة للتسجيل',
+        browse: 'تصفح القائمة',
+      },
       brand: 'كانتينـا',
       errors: {
         title: 'عذرًا!',
@@ -343,11 +357,11 @@ export const uiResources = {
       },
       events: {
         heading: 'الفعاليات الجماعية والتموين',
-        desc: 'احجز لـ 8 ضيوف فأكثر أو خطّط تموين المكاتب خلال دقائق.',
+        desc: 'احجز لـ 8+ guests or plan office catering in minutes.',
         plan: 'خطّط فعالية',
         catering: 'تموين',
-        q1: { question: 'هل لديكم قوائم ثابتة؟', answer: 'نعم — قوائم للمجموعات من 8–30 شخصًا، مع خيارات نباتية.' },
-        q2: { question: 'قبل كم من الوقت يجب أن أحجز؟', answer: 'نوصي بـ 48 ساعة، وقد يتوفر نفس اليوم خارج أوقات الذروة.' }
+        q1: { question: 'Do you offer set menus?', answer: 'Yes — set menus for groups of 8–30, with vegetarian options.' },
+        q2: { question: 'How far in advance should I book?', answer: 'We recommend 48 hours, but same‑day may be possible off‑peak.' }
       },
       offers: {
         heading: 'عروض موسمية',
@@ -512,35 +526,17 @@ export const uiResources = {
         orderNow: 'Pedir ahora',
       },
       offer: {
-        freeDelivery: 'Solo hoy: envío gratis en pedidos superiores a $25',
+        freeDelivery: 'Solo hoy: envío gratis en pedidos de más de $25',
+      },
+      topbar: {
+        open: 'Abierto ahora',
+        closed: 'Cerrado ahora',
+        eta: 'Entrega estimada ~ {{mins}} min',
+        noSignup: 'No requiere registro',
+        browse: 'Ver menú',
       },
       brand: 'Cantina',
-      errors: {
-        title: '¡Ups!',
-        notFound: 'La página solicitada no se pudo encontrar.',
-      },
-      a11y: {
-        toggleLanguage: 'Cambiar idioma',
-        toggleTheme: 'Cambiar tema',
-        close: 'Cerrar'
-      },
-      theme: {
-        toggle: 'Cambiar tema',
-        light: 'Claro',
-        dark: 'Oscuro',
-        system: 'Sistema'
-      },
-      footer: {
-        tagline: 'Sabores mexicanos auténticos, experiencia moderna.',
-        quickLinks: 'Enlaces rápidos',
-        contact: 'Contacto',
-        newsletter: 'Boletín',
-        emailPlaceholder: 'Correo electrónico',
-        join: 'Unirse',
-        privacy: 'Privacidad',
-        terms: 'Términos',
-        copyright: '© {{year}} {{brand}}. Todos los derechos reservados.'
-      }
+      footer: { quickLinks: 'Enlaces rápidos', contact: 'Contacto', newsletter: 'Boletín', emailPlaceholder: 'Correo electrónico', join: 'Unirse', privacy: 'Privacidad', terms: 'Términos', copyright: '© {{year}} {{brand}}. Todos los derechos reservados.' }
     },
     home: {
       hero: {
@@ -756,35 +752,17 @@ export const uiResources = {
         orderNow: 'Commander',
       },
       offer: {
-        freeDelivery: "Aujourd'hui seulement : livraison gratuite pour les commandes de plus de 25 $",
+        freeDelivery: 'Aujourd’huionly: livraison gratuite sur 25$+',
+      },
+      topbar: {
+        open: 'Ouvert',
+        closed: 'Fermé',
+        eta: 'Arrivée estimée ~ {{mins}} min',
+        noSignup: 'Sans inscription',
+        browse: 'Voir le menu',
       },
       brand: 'Cantina',
-      errors: {
-        title: 'Oups !',
-        notFound: 'La page demandée est introuvable.',
-      },
-      a11y: {
-        toggleLanguage: 'Changer de langue',
-        toggleTheme: 'Changer le thème',
-        close: 'Fermer'
-      },
-      theme: {
-        toggle: 'Changer le thème',
-        light: 'Clair',
-        dark: 'Sombre',
-        system: 'Système'
-      },
-      footer: {
-        tagline: 'Saveurs mexicaines authentiques, expérience moderne.',
-        quickLinks: 'Liens rapides',
-        contact: 'Contact',
-        newsletter: 'Newsletter',
-        emailPlaceholder: 'Adresse e‑mail',
-        join: 'S’inscrire',
-        privacy: 'Confidentialité',
-        terms: 'Conditions',
-        copyright: '© {{year}} {{brand}}. Tous droits réservés.'
-      }
+      footer: { quickLinks: 'Liens rapides', contact: 'Contact', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Rejoindre', privacy: 'Confidentialité', terms: 'Conditions', copyright: '© {{year}} {{brand}}. Tous droits réservés.' }
     },
     home: {
       hero: {
@@ -999,36 +977,16 @@ export const uiResources = {
         register: 'Registrar',
         orderNow: 'Peça agora',
       },
-      offer: {
-        freeDelivery: 'Somente hoje: entrega gratuita em pedidos acima de $25',
+      offer: { freeDelivery: 'Hoje apenas: entrega grátis em pedidos acima de $25' },
+      topbar: {
+        open: 'Aberto agora',
+        closed: 'Fechado agora',
+        eta: 'Entrega em ~ {{mins}} min',
+        noSignup: 'Sem cadastro',
+        browse: 'Ver menu',
       },
       brand: 'Cantina',
-      errors: {
-        title: 'Ops!',
-        notFound: 'A página solicitada não foi encontrada.',
-      },
-      a11y: {
-        toggleLanguage: 'Alterar idioma',
-        toggleTheme: 'Alterar tema',
-        close: 'Fechar'
-      },
-      theme: {
-        toggle: 'Alterar tema',
-        light: 'Claro',
-        dark: 'Escuro',
-        system: 'Sistema'
-      },
-      footer: {
-        tagline: 'Sabores mexicanos autênticos, experiência moderna.',
-        quickLinks: 'Links rápidos',
-        contact: 'Contato',
-        newsletter: 'Newsletter',
-        emailPlaceholder: 'E‑mail',
-        join: 'Assinar',
-        privacy: 'Privacidade',
-        terms: 'Termos',
-        copyright: '© {{year}} {{brand}}. Todos os direitos reservados.'
-      }
+      footer: { quickLinks: 'Links rápidos', contact: 'Contato', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Participar', privacy: 'Privacidade', terms: 'Termos', copyright: '© {{year}} {{brand}}. Todos os direitos reservados.' }
     },
     home: {
       hero: {

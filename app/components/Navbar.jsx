@@ -118,11 +118,11 @@ function DesktopOrderBar({ isOpen, eta }) {
     <div className="hidden lg:block border-b bg-background">
       <div className="container mx-auto h-10 px-4 flex items-center justify-between text-sm">
         <div aria-live="polite">
-          {isOpen ? 'Open now' : 'Closed now'} · ETA ~ {eta}m
+          {isOpen ? t('topbar.open') : t('topbar.closed')} · {t('topbar.eta', { mins: eta })}
         </div>
         <div className="flex items-center gap-3">
-          <div className="text-muted-foreground hidden md:block">No sign-up needed</div>
-          <NavLink to="/menu" className="underline">Browse menu</NavLink>
+          <div className="text-muted-foreground hidden md:block">{t('topbar.noSignup')}</div>
+          <NavLink to="/menu" className="underline">{t('topbar.browse')}</NavLink>
           <Button onClick={() => track('click_order_now_topbar')}>{t('nav.orderNow')}</Button>
         </div>
       </div>
