@@ -169,9 +169,9 @@ export default function Home() {
           <div className="relative">
             <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
               <picture>
-                <source srcSet="/hero.avif" type="image/avif" />
-                <source srcSet="/hero.webp" type="image/webp" />
-                <img src="/hero.jpg" alt="Colorful tacos platter with fresh ingredients" loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
+                {cms?.hero?.image?.avif ? <source srcSet={cms.hero.image.avif} type="image/avif" /> : null}
+                {cms?.hero?.image?.webp ? <source srcSet={cms.hero.image.webp} type="image/webp" /> : null}
+                <img src={cms?.hero?.image?.jpg || "/hero.jpg"} alt={cms?.hero?.imageAlt || "Colorful tacos platter with fresh ingredients"} loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
               </picture>
             </div>
             <div className="absolute -bottom-6 -right-6 hidden md:block">
@@ -204,9 +204,9 @@ export default function Home() {
 
       {/* Logo cloud */}
       <section className="container mx-auto px-6 py-8">
-        <div className="text-center text-xs text-muted-foreground">{t('logo.heading')}</div>
+        <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading || t('logo.heading')}</div>
         <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
-          {['FlavorMag','EatHub','CityEats','DineNow','LocalBest'].map((name) => (
+          {(cms?.logo?.brands || ['FlavorMag','EatHub','CityEats','DineNow','LocalBest']).map((name) => (
             <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
           ))}
         </div>
@@ -214,12 +214,12 @@ export default function Home() {
 
       {/* Explore menu (Tabs) */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('explore.heading')}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.explore?.heading || t('explore.heading')}</h2>
         <Tabs defaultValue="tacos" className="w-full">
           <TabsList>
-            <TabsTrigger value="tacos">{t('explore.tacos')}</TabsTrigger>
-            <TabsTrigger value="bowls">{t('explore.bowls')}</TabsTrigger>
-            <TabsTrigger value="drinks">{t('explore.drinks')}</TabsTrigger>
+            <TabsTrigger value="tacos">{cms?.explore?.tabs?.tacos || t('explore.tacos')}</TabsTrigger>
+            <TabsTrigger value="bowls">{cms?.explore?.tabs?.bowls || t('explore.bowls')}</TabsTrigger>
+            <TabsTrigger value="drinks">{cms?.explore?.tabs?.drinks || t('explore.drinks')}</TabsTrigger>
           </TabsList>
           <div className="mt-3">
           <TabsContent value="tacos" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
@@ -333,7 +333,7 @@ export default function Home() {
         <Suspense fallback={<SectionSkeleton title={t('offers.heading')} />}> 
           <Await resolve={offers} errorElement={<SectionError title={t('offers.heading')} />}> 
             {(resolvedOffers) => (
-              <LazyOffers offers={resolvedOffers} t={t} />
+              <LazyOffers offers={resolvedOffers} t={t} cmsOffers={cms?.offers?.items || []} heading={cms?.offers?.heading} badge={cms?.offers?.badge} />
             )}
           </Await>
         </Suspense>
@@ -341,11 +341,11 @@ export default function Home() {
 
       {/* Customer love (testimonials) lazy */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('testimonials.heading')}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.testimonials?.heading || t('testimonials.heading')}</h2>
         <Suspense fallback={<SectionSkeleton title={t('testimonials.heading')} />}> 
           <Await resolve={testimonials} errorElement={<SectionError title={t('testimonials.heading')} />}> 
             {(resolvedTestimonials) => (
-              <CarouselTestimonials testimonials={resolvedTestimonials} />
+              <CarouselTestimonials testimonials={(cms?.testimonials?.items && cms.testimonials.items.length) ? cms.testimonials.items : resolvedTestimonials} />
             )}
           </Await>
         </Suspense>
@@ -355,20 +355,23 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold tracking-tight">{t('values.heading')}</h3>
-            <p className="text-sm text-muted-foreground">{t('values.desc')}</p>
+            <h3 className="text-xl font-semibold tracking-tight">{cms?.values?.heading || t('values.heading')}</h3>
+            <p className="text-sm text-muted-foreground">{cms?.values?.desc || t('values.desc')}</p>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{t('values.badges.localProduce')}</Badge>
-              <Badge variant="secondary">{t('values.badges.sustainableSeafood')}</Badge>
-              <Badge variant="secondary">{t('values.badges.fairTrade')}</Badge>
-              <Badge variant="secondary">{t('values.badges.lowWaste')}</Badge>
+              {(cms?.values?.badges || [t('values.badges.localProduce'), t('values.badges.sustainableSeafood'), t('values.badges.fairTrade'), t('values.badges.lowWaste')]).map((b) => (
+                <Badge key={b} variant="secondary">{b}</Badge>
+              ))}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.dailyMarket')}</div></CardContent></Card>
-            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.houseSalsas')}</div></CardContent></Card>
-            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.localTortillas')}</div></CardContent></Card>
-            <Card className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{t('values.cards.compostablePackaging')}</div></CardContent></Card>
+            {(cms?.values?.cards || [
+              { text: t('values.cards.dailyMarket') },
+              { text: t('values.cards.houseSalsas') },
+              { text: t('values.cards.localTortillas') },
+              { text: t('values.cards.compostablePackaging') },
+            ]).map((c, i) => (
+              <Card key={i} className="overflow-hidden"><CardContent className="p-0"><div className="w-full aspect-video bg-muted border" /><div className="p-3 text-sm text-muted-foreground">{c.text}</div></CardContent></Card>
+            ))}
           </div>
         </div>
       </section>
@@ -384,21 +387,25 @@ export default function Home() {
       {/* How it works */}
       <section className="container mx-auto px-6 py-14">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('how.heading')}</h2>
-          <p className="text-sm text-muted-foreground">{t('how.desc')}</p>
+          <h2 className="text-2xl font-semibold tracking-tight">{cms?.how?.heading || t('how.heading')}</h2>
+          <p className="text-sm text-muted-foreground">{cms?.how?.desc || t('how.desc')}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          <Step number={1} title={t('how.step1.title')}>{t('how.step1.desc')}</Step>
-          <Step number={2} title={t('how.step2.title')}>{t('how.step2.desc')}</Step>
-          <Step number={3} title={t('how.step3.title')}>{t('how.step3.desc')}</Step>
+          {(cms?.how?.steps || [
+            { title: t('how.step1.title'), desc: t('how.step1.desc') },
+            { title: t('how.step2.title'), desc: t('how.step2.desc') },
+            { title: t('how.step3.title'), desc: t('how.step3.desc') },
+          ]).map((s, i) => (
+            <Step key={i} number={i+1} title={s.title}>{s.desc}</Step>
+          ))}
         </div>
       </section>
 
       {/* Popular this week */}
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold tracking-tight">{t('popular.heading')}</h2>
-          <Link className="text-sm underline" to="/menu" onClick={() => track('click_view_menu_popular')}>{t('popular.seeMenu')}</Link>
+          <h2 className="text-2xl font-semibold tracking-tight">{cms?.popular?.heading || t('popular.heading')}</h2>
+          <Link className="text-sm underline" to="/menu" onClick={() => track('click_view_menu_popular')}>{cms?.popular?.seeMenu || t('popular.seeMenu')}</Link>
         </div>
         <Suspense fallback={<MenuItemsSkeleton count={3} />}>
           <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
@@ -438,7 +445,21 @@ export default function Home() {
       {/* FAQ (lazy) */}
       <section className="container mx-auto px-6 py-14">
         <Suspense fallback={<SectionSkeleton title={t('faq.heading')} />}> 
-          <LazyFAQ t={t} />
+          {cms?.faq?.items ? (
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.faq?.heading || t('faq.heading')}</h2>
+              <Accordion type="single" collapsible className="w-full">
+                {cms.faq.items.map((q, i) => (
+                  <AccordionItem key={i} value={`q${i}`}>
+                    <AccordionTrigger>{q.q}</AccordionTrigger>
+                    <AccordionContent>{q.a}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          ) : (
+            <LazyFAQ t={t} />
+          )}
         </Suspense>
       </section>
 

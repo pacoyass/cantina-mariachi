@@ -3,14 +3,15 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useMemo } from "react";
 
-export default function Offers({ offers, t }) {
-  const primary = offers?.[0];
+export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
+  const list = (cmsOffers && cmsOffers.length) ? cmsOffers : offers;
+  const primary = list?.[0];
   const expiry = useMemo(() => (primary?.expiresAt ? new Date(primary.expiresAt).getTime() : Date.now() + 1000 * 60 * 60 * 24), [primary?.expiresAt]);
   if (!primary) {
     return (
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg">{t('offers.heading')}</CardTitle>
+          <CardTitle className="text-lg">{heading || t('offers.heading')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-muted-foreground">{t('offers.coming') || 'New offers are coming soon.'}</div>
@@ -22,8 +23,8 @@ export default function Offers({ offers, t }) {
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{t('offers.heading')}</CardTitle>
-          {primary.badge ? <Badge variant="secondary">{primary.badge}</Badge> : null}
+          <CardTitle className="text-lg">{heading || t('offers.heading')}</CardTitle>
+          {(primary.badge || badge) ? <Badge variant="secondary">{primary.badge || badge}</Badge> : null}
         </div>
       </CardHeader>
       <CardContent>
