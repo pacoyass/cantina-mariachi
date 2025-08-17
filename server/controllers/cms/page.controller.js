@@ -1,5 +1,10 @@
 import prisma from '../../config/database.js';
 import { createError, createResponse } from '../../utils/response.js';
+import { acquireLock, releaseLock } from '../../utils/lock.js';
+import { LoggerService } from '../../utils/logger.js';
+import { toZonedTime } from 'date-fns-tz';
+import { subDays } from 'date-fns';
+import crypto from 'node:crypto';
 
 export const getPage = async (req, res) => {
   try {
@@ -30,4 +35,31 @@ export const upsertPage = async (req, res) => {
   }
 };
 
-export default { getPage, upsertPage };
+export const cleanupCmsDrafts = async (retentionDays = Number(process.env.CMS_DRAFT_RETENTION_DAYS || '30')) => {
+  const taskName = 'cms_draft_cleanup';
+  const instanceId = process.env.INSTANCE_ID || crypto.randomUUID();
+  const timestamp = toZonedTime(new Date(), 'Europe/London').toISOString();
+  try {
+    await prisma.$transaction(async (tx) => {
+      const locked = await acquireLock(tx, taskName, instanceId);
+      if (!locked) {
+        await LoggerService.logCronRun(taskName, 'SKIPPED', { reason: 'Lock held', timestamp });
+        return;
+      }
+      try {
+        const cutoff = subDays(new Date(), retentionDays);
+        const deleted = await tx.pageContent.deleteMany({ where: { status: { not: 'PUBLISHED' }, updatedAt: { lt: cutoff } } });
+        await LoggerService.logCronRun(taskName, 'SUCCESS', { retentionDays, deleted: deleted.count, cutoff: cutoff.toISOString(), timestamp });
+      } finally {
+        await releaseLock(tx, taskName);
+        await LoggerService.logAudit(null, 'CMS_DRAFT_CLEANUP_LOCK_RELEASED', null, { instanceId, timestamp });
+      }
+    });
+  } catch (error) {
+    await LoggerService.logError('CMS draft cleanup failed', error.stack, { taskName, error: error.message, retentionDays, timestamp });
+    await LoggerService.logCronRun(taskName, 'FAILED', { error: error.message, retentionDays, timestamp });
+    throw error;
+  }
+};
+
+export default { getPage, upsertPage, cleanupCmsDrafts };

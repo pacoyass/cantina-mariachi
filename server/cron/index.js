@@ -16,6 +16,7 @@ import { cleanupInactiveDrivers } from '../controllers/drivers.controller.js';
 import { cleanupCashData } from '../controllers/cash.controller.js';
 import { cleanupOldReservations } from '../controllers/reservations.controller.js';
 import { cleanupNotifications } from '../controllers/notifications.controller.js';
+import { cleanupCmsDrafts } from '../controllers/cms/page.controller.js';
 
 const runningJobs = new Set();
 
@@ -205,6 +206,16 @@ export const registerCronJobs = () => {
     timezone: 'Europe/London',
   });
 
+  // CMS draft cleanup daily at 04:40
+  cron.schedule('40 4 * * *', async () => {
+    await runJobSafely('cms_draft_cleanup', async () => {
+      await cleanupCmsDrafts();
+    });
+  }, {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+
   LoggerService.logSystemEvent('cron', 'CRON_JOBS_REGISTERED', {
     timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
   });
@@ -231,6 +242,7 @@ export const runInitialCleanup = async () => {
     { name: 'cash_cleanup', fn: cleanupCashData, delay: 80000 },
     { name: 'reservations_cleanup', fn: cleanupOldReservations, delay: 85000 },
     { name: 'notifications_cleanup', fn: cleanupNotifications, delay: 90000 },
+    { name: 'cms_draft_cleanup', fn: cleanupCmsDrafts, delay: 95000 },
   ];
 
   for (const task of cleanupTasks) {
