@@ -116,22 +116,31 @@ export default function Home() {
           <TabsContent value="tacos" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.slice(0,3).map((item) => (
-                <HoverCard key={item.id}>
-                  <HoverCardTrigger asChild>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
-                          <span>{item.name}</span>
-                          <Badge variant="outline">${Number(item.price).toFixed(2)}</Badge>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="text-sm text-muted-foreground line-clamp-2">{item.description}</CardContent>
-                    </Card>
-                  </HoverCardTrigger>
-                  <HoverCardContent>
-                    <div className="text-sm text-muted-foreground">{t('explore.chefNotes')}</div>
-                  </HoverCardContent>
-                </HoverCard>
+                <Card key={item.id} className="overflow-hidden">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>{item.name}</span>
+                      {item.available === false && (
+                        <Badge variant="outline">{t('popular.unavailable')}</Badge>
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="rounded-md overflow-hidden border bg-muted">
+                        {item.imageUrl ? (
+                          <img src={item.imageUrl} alt={item.name} loading="lazy" className="w-full h-full object-cover aspect-video" />
+                        ) : (
+                          <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">${Number(item.price).toFixed(2)}</span>
+                        <Button size="sm">{t('popular.add')}</Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
             <div className="mt-3">
