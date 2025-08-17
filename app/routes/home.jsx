@@ -112,8 +112,8 @@ export default function Home() {
             <TabsTrigger value="bowls">{t('explore.bowls')}</TabsTrigger>
             <TabsTrigger value="drinks">{t('explore.drinks')}</TabsTrigger>
           </TabsList>
-          <div className="relative min-h-[150px] mt-3">
-          <TabsContent value="tacos" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
+          <div className="mt-3">
+          <TabsContent value="tacos" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.slice(0,3).map((item) => (
                 <Card key={item.id} className="overflow-hidden">
@@ -147,10 +147,10 @@ export default function Home() {
               <a className="text-sm underline" href="/menu" aria-label={t('explore.viewMore')}>{t('explore.viewMore')}</a>
             </div>
           </TabsContent>
-          <TabsContent value="bowls" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
+          <TabsContent value="bowls" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
             <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
           </TabsContent>
-          <TabsContent value="drinks" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
+          <TabsContent value="drinks" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
             <div className="h-full flex items-center justify-center text-sm text-muted-foreground bg-card rounded-md border">{t('explore.coming')}</div>
           </TabsContent>
                     </div>
@@ -314,7 +314,7 @@ export default function Home() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items && items.length > 0 ? (
-            items.map((item) => (
+            items.slice(0,3).map((item) => (
               <Card key={item.id} className="overflow-hidden">
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
@@ -355,7 +355,7 @@ export default function Home() {
                 <CardContent>
                   <div className="grid grid-cols-1 gap-3">
                     <div className="rounded-md overflow-hidden border bg-muted">
-                      <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
+                      <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
                     <div className="flex items-center justify-between">
