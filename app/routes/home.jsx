@@ -1,4 +1,4 @@
-import { useLoaderData, Link, Await, defer, ScrollRestoration } from "react-router";
+import { useLoaderData, Link, Await, ScrollRestoration } from "react-router";
 import { Suspense, useEffect, useMemo, useRef, useState, lazy } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
@@ -68,12 +68,12 @@ export async function loader({ request }) {
       return [];
     }
   })();
-  return defer({
+  return {
     items: itemsPromise,
     offers: offersPromise,
     testimonials: testimonialsPromise,
     drinks: drinksPromise,
-  });
+  };
 }
 
 const LazyFAQ = lazy(() => import("../components/home/FAQ.jsx"));
