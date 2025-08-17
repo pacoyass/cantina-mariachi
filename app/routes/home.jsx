@@ -49,9 +49,9 @@ export default function Home() {
               {t('hero.desc')}
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button className="px-6">{t('hero.orderNow')}</Button>
-              <Button variant="secondary" className="px-6">{t('hero.reserve')}</Button>
-              <a className="underline text-sm self-center" href="/menu">{t('hero.browseMenu')}</a>
+              <Button className="px-6" aria-label={t('hero.orderNow')}>{t('hero.orderNow')}</Button>
+              <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')}>{t('hero.reserve')}</Button>
+              <a className="underline text-sm self-center" href="/menu" aria-label={t('hero.browseMenu')}>{t('hero.browseMenu')}</a>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-1 text-yellow-500">
@@ -133,6 +133,9 @@ export default function Home() {
                   </HoverCardContent>
                 </HoverCard>
               ))}
+            </div>
+            <div className="mt-3">
+              <a className="text-sm underline" href="/menu" aria-label={t('explore.viewMore')}>{t('explore.viewMore')}</a>
             </div>
           </TabsContent>
           <TabsContent value="bowls" forceMount className="absolute inset-0 data-[state=inactive]:opacity-0 data-[state=active]:opacity-100 transition-opacity">
@@ -321,9 +324,9 @@ export default function Home() {
                   <div className="grid grid-cols-1 gap-3">
                     <div className="rounded-md overflow-hidden border bg-muted">
                       {item.imageUrl ? (
-                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover aspect-video" />
+                        <img src={item.imageUrl} alt={item.name} loading="lazy" className="w-full h-full object-cover aspect-video" />
                       ) : (
-                        <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />)}
+                        <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
                     </div>
                     <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
                     <div className="flex items-center justify-between">

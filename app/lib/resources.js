@@ -67,7 +67,8 @@ export const uiResources = {
         bowls: 'Bowls',
         drinks: 'Drinks',
         coming: 'Coming soon.',
-        chefNotes: 'Chef notes: crowd favorite with fresh cilantro and lime.'
+        chefNotes: 'Chef notes: crowd favorite with fresh cilantro and lime.',
+        viewMore: 'View more'
       },
       loyalty: {
         heading: 'Loyalty & rewards',
@@ -313,7 +314,8 @@ export const uiResources = {
         bowls: 'أطباق',
         drinks: 'مشروبات',
         coming: 'قريبًا.',
-        chefNotes: 'ملاحظات الشيف: المفضل لدى الجميع مع كزبرة طازجة وعصير ليمون.'
+        chefNotes: 'ملاحظات الشيف: المفضل لدى الجميع مع كزبرة طازجة وعصير ليمون.',
+        viewMore: 'عرض المزيد'
       },
       loyalty: {
         heading: 'الولاء والمكافآت',
@@ -556,7 +558,8 @@ export const uiResources = {
         bowls: 'Boles',
         drinks: 'Bebidas',
         coming: 'Próximamente.',
-        chefNotes: 'Notas del chef: favorito del público con cilantro y lima frescos.'
+        chefNotes: 'Notas del chef: favorito del público con cilantro y lima frescos.',
+        viewMore: 'Ver más'
       },
       loyalty: {
         heading: 'Fidelidad y recompensas',
@@ -799,7 +802,8 @@ export const uiResources = {
         bowls: 'Bols',
         drinks: 'Boissons',
         coming: 'Bientôt disponible.',
-        chefNotes: 'Notes du chef : un favori du public, coriandolo et citron vert frais.'
+        chefNotes: 'Notes du chef : un favori du public, coriandolo et citron vert frais.',
+        viewMore: 'Voir plus'
       },
       loyalty: {
         heading: 'Fidélité et récompenses',
@@ -1037,12 +1041,13 @@ export const uiResources = {
       },
       logo: { heading: 'Confiado por amantes de comida locais e destaque em' },
       explore: {
-        heading: 'Explore o menu',
+        heading: 'Esplora o menu',
         tacos: 'Tacos',
         bowls: 'Tigelas',
         drinks: 'Bevidas',
         coming: 'Em breve.',
-        chefNotes: 'Notas do chef: favorito do público com coentro e limão frescos.'
+        chefNotes: 'Notas do chef: favorito do público com coentro e limão frescos.',
+        viewMore: 'Ver mais'
       },
       loyalty: {
         heading: 'Fidelidade e recompensas',
