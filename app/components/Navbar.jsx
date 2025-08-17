@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { LangToggle } from './LangToggle'
 import { track } from '../lib/utils'
@@ -75,40 +75,8 @@ export function Navbar() {
         </div>
       </nav>
       <div className="mex-divider" />
-      <OfferBar />
       <DesktopOrderBar isOpen={status.isOpen} eta={status.etaMins} />
     </header>
-  )
-}
-
-function OfferBar() {
-  const { t } = useTranslation('ui')
-  const [visible, setVisible] = useState(true)
-  const sentinelRef = useRef(null)
-
-  useEffect(() => {
-    if (!sentinelRef.current || typeof IntersectionObserver === 'undefined') return
-    const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0]
-      setVisible(entry.isIntersecting)
-    }, { root: null, threshold: 0.01 })
-    observer.observe(sentinelRef.current)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <div>
-      <div ref={sentinelRef} aria-hidden className="h-2" />
-      <div className={`overflow-hidden transition-[height] duration-300 ${visible ? 'h-8' : 'h-0'}`} aria-hidden={!visible}>
-        <div className={`will-change-transform transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
-          <div className="bg-card/90 backdrop-blur text-card-foreground text-xs border-b">
-            <div className="container mx-auto px-4 h-8 flex items-center justify-center">
-              <span>{t('offer.freeDelivery')}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   )
 }
 
