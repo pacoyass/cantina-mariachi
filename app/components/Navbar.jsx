@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { LangToggle } from './LangToggle'
 import { track } from '../lib/utils'
@@ -109,7 +109,7 @@ function OfferBar() {
 }
 
 function DesktopOrderBar({ isOpen, eta }) {
-  if (typeof window !== 'undefined' && window.innerWidth < 1024) return null
+  const { t } = useTranslation('ui')
   return (
     <div className="hidden lg:block border-b bg-background">
       <div className="container mx-auto h-10 px-4 flex items-center justify-between text-sm">
@@ -119,7 +119,7 @@ function DesktopOrderBar({ isOpen, eta }) {
         <div className="flex items-center gap-3">
           <div className="text-muted-foreground hidden md:block">No sign-up needed</div>
           <NavLink to="/menu" className="underline">Browse menu</NavLink>
-          <Button onClick={() => track('click_order_now_topbar')}>Order Now</Button>
+          <Button onClick={() => track('click_order_now_topbar')}>{t('nav.orderNow')}</Button>
         </div>
       </div>
     </div>
