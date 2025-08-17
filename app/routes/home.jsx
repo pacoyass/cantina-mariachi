@@ -9,12 +9,28 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../components/ui/accordion";
 import { Star, Clock, Truck, Smartphone, UtensilsCrossed, ShieldCheck, Sparkles } from "lucide-react";
 import { useTranslation, Trans } from 'react-i18next';
+import { formatCurrency, track } from '../lib/utils'
 
 export function meta() {
   return [
     { title: "Cantina Mariachi – Authentic Mexican, Modern Experience" },
     { name: "description", content: "Order online in seconds, reserve instantly, and track your delivery live." },
+    { property: 'og:title', content: 'Cantina Mariachi – Authentic Mexican, Modern Experience' },
+    { property: 'og:description', content: 'Order online in seconds, reserve instantly, and track your delivery live.' },
+    { property: 'og:type', content: 'website' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { rel: 'canonical', href: '/' },
   ];
+}
+
+// JSON-LD for LocalBusiness + Product snippets
+function JsonLd({ items }) {
+  const business = {
+    '@context': 'https://schema.org', '@type': 'Restaurant', name: 'Cantina Mariachi', url: '/', servesCuisine: 'Mexican', priceRange: '$$'
+  };
+  const products = (items || []).slice(0,3).map(i => ({ '@context': 'https://schema.org', '@type': 'Product', name: i.name, description: i.description, offers: { '@type': 'Offer', price: Number(i.price || 0), priceCurrency: 'USD', availability: i.isAvailable === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock' } }));
+  const json = [business, ...products];
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />
 }
 
 export async function loader({ request }) {
@@ -35,7 +51,7 @@ export async function loader({ request }) {
   const offersPromise = (async () => {
     try {
       const res = await fetch(`${url.origin}/api/home/offers`, { headers });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       return Array.isArray(data?.data?.offers) ? data.data.offers : [];
     } catch {
@@ -68,11 +84,22 @@ export async function loader({ request }) {
       return [];
     }
   })();
+  const configPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/config/public`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data?.data || {};
+    } catch {
+      return {};
+    }
+  })();
   return {
     items: itemsPromise,
     offers: offersPromise,
     testimonials: testimonialsPromise,
     drinks: drinksPromise,
+    config: configPromise,
   };
 }
 
@@ -81,11 +108,14 @@ const LazyTestimonials = lazy(() => import("../components/home/Testimonials.jsx"
 const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
 
 export default function Home() {
-  const { items, offers, testimonials, drinks } = useLoaderData();
-  const { t } = useTranslation('home');
+  const { items, offers, testimonials, drinks, config } = useLoaderData();
+  const { t, i18n } = useTranslation('home');
 
   return (
     <main className="space-y-0">
+      <Suspense>
+        <Await resolve={items}>{(resolved) => <JsonLd items={resolved} />}</Await>
+      </Suspense>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
@@ -97,10 +127,23 @@ export default function Home() {
             <p className="text-muted-foreground max-w-prose">
               {t('hero.desc')}
             </p>
+            <div className="flex items-center gap-3 text-sm" aria-live="polite">
+              <Suspense fallback={null}>
+                <Await resolve={config}>{(c) => (
+                  <>
+                    <span className={c?.status?.isOpen ? 'text-green-600' : 'text-red-600'}>
+                      {c?.status?.isOpen ? t('hero.openNow', { defaultValue: 'Open now' }) : t('hero.closedNow', { defaultValue: 'Closed now' })}
+                    </span>
+                    <Separator className="w-px h-4" orientation="vertical" />
+                    <span>{t('hero.eta', { defaultValue: 'ETA ~ {{m}}m', m: c?.status?.etaMins ?? 25 })}</span>
+                  </>
+                )}</Await>
+              </Suspense>
+            </div>
             <div className="flex flex-wrap gap-3">
-              <Button className="px-6" aria-label={t('hero.orderNow')}>{t('hero.orderNow')}</Button>
-              <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')}>{t('hero.reserve')}</Button>
-              <Link className="underline text-sm self-center" to="/menu" aria-label={t('hero.browseMenu')}>{t('hero.browseMenu')}</Link>
+              <Button className="px-6" aria-label={t('hero.orderNow')} onClick={() => track('click_order_now_hero')}>{t('hero.orderNow')}</Button>
+              <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')} onClick={() => track('click_reserve_hero')}>{t('hero.reserve')}</Button>
+              <Link className="underline text-sm self-center" to="/menu" aria-label={t('hero.browseMenu')} onClick={() => track('click_browse_menu_hero')}>{t('hero.browseMenu')}</Link>
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-1 text-yellow-500" aria-label={t('hero.rating')}>
@@ -115,8 +158,9 @@ export default function Home() {
           <div className="relative">
             <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
               <picture>
-                <source srcSet="/hero.mp4" type="video/mp4" />
-                <img src="/hero.jpg" alt="Hero" loading="eager" className="w-full h-full object-cover" />
+                <source srcSet="/hero.avif" type="image/avif" />
+                <source srcSet="/hero.webp" type="image/webp" />
+                <img src="/hero.jpg" alt="Colorful tacos platter with fresh ingredients" loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
               </picture>
             </div>
             <div className="absolute -bottom-6 -right-6 hidden md:block">
@@ -173,14 +217,14 @@ export default function Home() {
                 {(resolvedItems) => (
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {resolvedItems.slice(0,3).map((item) => (
-                      <MenuItemCard key={item.id} item={item} t={t} />
+                      <MenuItemCard key={item.id} item={item} t={t} locale={i18n.language} />
                     ))}
                   </div>
                 )}
               </Await>
             </Suspense>
             <div className="mt-3">
-              <Link className="text-sm underline" to="/menu" aria-label={t('explore.viewMore')}>{t('explore.viewMore')}</Link>
+              <Link className="text-sm underline" to="/menu" aria-label={t('explore.viewMore')} onClick={() => track('click_view_more_explore')}>{t('explore.viewMore')}</Link>
             </div>
           </TabsContent>
           <TabsContent value="bowls" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
@@ -193,7 +237,7 @@ export default function Home() {
                   resolvedDrinks?.length ? (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {resolvedDrinks.slice(0,3).map((item) => (
-                        <MenuItemCard key={item.id} item={item} t={t} />
+                        <MenuItemCard key={item.id} item={item} t={t} locale={i18n.language} />
                       ))}
                     </div>
                   ) : (
@@ -290,7 +334,7 @@ export default function Home() {
         <Suspense fallback={<SectionSkeleton title={t('testimonials.heading')} />}> 
           <Await resolve={testimonials} errorElement={<SectionError title={t('testimonials.heading')} />}> 
             {(resolvedTestimonials) => (
-              <LazyTestimonials testimonials={resolvedTestimonials} />
+              <CarouselTestimonials testimonials={resolvedTestimonials} />
             )}
           </Await>
         </Suspense>
@@ -343,7 +387,7 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-semibold tracking-tight">{t('popular.heading')}</h2>
-          <Link className="text-sm underline" to="/menu">{t('popular.seeMenu')}</Link>
+          <Link className="text-sm underline" to="/menu" onClick={() => track('click_view_menu_popular')}>{t('popular.seeMenu')}</Link>
         </div>
         <Suspense fallback={<MenuItemsSkeleton count={3} />}>
           <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
@@ -351,7 +395,7 @@ export default function Home() {
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {resolvedItems && resolvedItems.length > 0 ? (
                   resolvedItems.slice(0,3).map((item, idx) => (
-                    <PopularItemCard key={item.id} item={item} idx={idx} t={t} />
+                    <PopularItemCard key={item.id} item={item} idx={idx} t={t} locale={i18n.language} />
                   ))
                 ) : (
                   [...Array(3)].map((_, i) => (
@@ -400,11 +444,11 @@ export default function Home() {
                 <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{t('cta.title')}</h3>
                 <p className="text-sm text-muted-foreground mt-1">{t('cta.desc')}</p>
                 <div className="text-xs text-muted-foreground mt-1">{t('cta.socialProof')}</div>
-                <div className="text-xs text-primary mt-1">{t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
+                <div className="text-xs text-primary mt-1" aria-live="polite">{t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
               </div>
               <div className="flex gap-3">
-                <Button className="px-6">{t('cta.start')}</Button>
-                <Button variant="outline" className="px-6">{t('cta.reserve')}</Button>
+                <Button className="px-6" onClick={() => track('click_start_cta')}>{t('cta.start')}</Button>
+                <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{t('cta.reserve')}</Button>
               </div>
             </div>
           </CardContent>
@@ -414,8 +458,8 @@ export default function Home() {
       {/* Sticky mobile CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 sm:hidden">
         <div className="mx-4 mb-4 rounded-lg border bg-background shadow-md p-2 flex gap-2">
-          <Button className="flex-1">{t('sticky.order')}</Button>
-          <Button variant="outline" className="flex-1">{t('sticky.reserve')}</Button>
+          <Button className="flex-1" onClick={() => track('click_order_now_mobile_sticky')}>{t('sticky.order')}</Button>
+          <Button variant="outline" className="flex-1" onClick={() => track('click_reserve_mobile_sticky')}>{t('sticky.reserve')}</Button>
         </div>
       </div>
       <ScrollRestoration />
@@ -423,29 +467,28 @@ export default function Home() {
   );
 }
 
-function MenuItemCard({ item, t }) {
+function MenuItemCard({ item, t, locale }) {
+  const tags = [item.isVegetarian ? 'Vegetarian' : null, item.isVegan ? 'Vegan' : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>{item.name}</span>
-          {item.available === false && (
-            <Badge variant="outline">{t('popular.unavailable')}</Badge>
-          )}
+          <span className="flex gap-1">{tags.map(tag => (<Badge key={tag} variant="outline">{tag}</Badge>))}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 gap-3">
           <div className="rounded-md overflow-hidden border bg-muted">
             {item.imageUrl ? (
-              <img src={item.imageUrl} alt={item.name} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+              <img src={item.imageUrl} alt={`${item.name} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
             ) : (
               <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
           </div>
           <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
           <div className="flex items-center justify-between">
-            <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-            <Button size="sm">{t('popular.add')}</Button>
+            <span className="font-medium">{formatCurrency(item.price, locale)}</span>
+            <Button size="sm" onClick={() => track('click_add_from_explore', { itemId: item.id })}>{t('popular.add')}</Button>
           </div>
         </div>
       </CardContent>
@@ -453,7 +496,8 @@ function MenuItemCard({ item, t }) {
   );
 }
 
-function PopularItemCard({ item, idx, t }) {
+function PopularItemCard({ item, idx, t, locale }) {
+  const tags = [item.isVegetarian ? 'Vegetarian' : null, item.isVegan ? 'Vegan' : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
@@ -463,6 +507,7 @@ function PopularItemCard({ item, idx, t }) {
             <div className="flex gap-1">
               {idx === 0 && <Badge variant="secondary">{t('popular.numberOne')}</Badge>}
               {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('popular.trending')}</Badge>}
+              {tags.map(tag => (<Badge key={tag} variant="outline">{tag}</Badge>))}
             </div>
           </CardTitle>
           {item.available === false && (
@@ -474,27 +519,65 @@ function PopularItemCard({ item, idx, t }) {
         <div className="grid grid-cols-1 gap-3">
           <div className="rounded-md overflow-hidden border bg-muted">
             {item.imageUrl ? (
-              <img src={item.imageUrl} alt={item.name} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+              <img src={item.imageUrl} alt={`${item.name} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
             ) : (
               <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
           </div>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-muted-foreground" aria-live="polite">
             {t('popular.rating', { rating: (item.rating ?? 4.9).toFixed(1), reviews: item.reviews ?? 127 })}
           </div>
           <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
           <div className="flex items-center justify-between">
-            <span className="font-medium">${Number(item.price).toFixed(2)}</span>
+            <span className="font-medium">{formatCurrency(item.price, locale)}</span>
             <div className="flex items-center gap-2">
               <div className="text-xs text-orange-600">
                 {t('popular.onlyLeftToday', { count: Math.max(2, 10 - (item.orderCount ?? 3)) })}
               </div>
-              <Button size="sm">{t('popular.orderNowDelivery', { mins: 25 })}</Button>
+              <Button size="sm" onClick={() => track('click_order_delivery_popular', { itemId: item.id })}>{t('popular.orderNowDelivery', { mins: 25 })}</Button>
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+}
+
+function CarouselTestimonials({ testimonials }) {
+  const [idx, setIdx] = useState(0)
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : true
+  useEffect(() => {
+    if (!isMobile) return
+    const id = setInterval(() => setIdx(i => (i + 1) % Math.max(testimonials.length, 1)), 4000)
+    return () => clearInterval(id)
+  }, [isMobile, testimonials?.length])
+  const slice = isMobile ? testimonials.slice(idx, idx + 1) : testimonials
+  return (
+    <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-3'}`}>
+      {slice.map((t) => (
+        <Card key={t.id} className="overflow-hidden">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <Avatar>
+                <AvatarFallback>{t.initials || (t.name || '?').slice(0,2).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-medium">{t.name} <span className="ml-1 text-xs text-green-600">Verified</span></div>
+                  <div className="flex items-center gap-1 text-yellow-500" aria-label={`${t.rating} stars`}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className={`size-3 ${i < Number(t.rating || 0) ? 'fill-current' : ''}`} />
+                    ))}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{new Date(t.date).toLocaleDateString()}</div>
+                </div>
+                <div className="text-sm text-muted-foreground mt-1">{t.content} <Link to="/reviews" className="underline">Read more</Link></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  )
 }
 
 function ProgressBar({ value, max }) {
