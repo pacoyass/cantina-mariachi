@@ -36,7 +36,7 @@ export const getOffers = async (req, res) => {
           title: 'Summer Fiesta Bundle',
           bundleName: 'Taco Trio + 2 Drinks',
           description: 'Perfect for sharing. Choose any 3 tacos with two refreshing drinks.',
-          badge: 'Limited Time',
+          badge: req.t ? req.t('offers.badge', {}, 'home') : 'Limited Time',
           expiresAt: new Date(now + 1000 * 60 * 60 * 36).toISOString(),
           imageUrl: null,
         },
