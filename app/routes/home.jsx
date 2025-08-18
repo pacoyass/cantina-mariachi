@@ -474,7 +474,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Sparkles className="size-4 text-primary" />
-                  {cms?.cta?.endsTonight || t('cta.endsTonight')}
+                  {t('cta.endsTonight')}
                 </div>
                 <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{cms?.cta?.title || t('cta.title')}</h3>
                 <p className="text-sm text-muted-foreground mt-1">{cms?.cta?.desc || t('cta.desc')}</p>
