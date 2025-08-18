@@ -33,10 +33,13 @@ function JsonLd({ items }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />
 }
 
-export async function loader({ request }) {
+export async function loader({ request, context }) {
   const url = new URL(request.url);
   const cookie = request.headers.get("cookie") || "";
   const headers = { cookie };
+  const urlLng = url.searchParams.get('lng');
+  const cookieLng = (() => { try { return (cookie.match(/(?:^|; )i18next=([^;]+)/) || [])[1] && decodeURIComponent((cookie.match(/(?:^|; )i18next=([^;]+)/) || [])[1]); } catch { return null; } })();
+  const lng = context?.lng || urlLng || cookieLng || 'en';
   const itemsPromise = (async () => {
     try {
       const res = await fetch(`${url.origin}/api/menu/items`, { headers });
@@ -96,7 +99,7 @@ export async function loader({ request }) {
   })();
   const cmsPromise = (async () => {
     try {
-      const res = await fetch(`${url.origin}/api/cms/home?locale=${encodeURIComponent('en')}`, { headers });
+      const res = await fetch(`${url.origin}/api/cms/home?locale=${encodeURIComponent(lng)}`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       return data?.data?.page?.data || {};
