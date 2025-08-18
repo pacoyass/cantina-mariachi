@@ -139,6 +139,7 @@ const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
 export default function Home() {
   const { items, offers, testimonials, drinks, config, cms } = useLoaderData();
   const { t, i18n } = useTranslation('home');
+  const safeCms = cms || {};
 
   return (
     <main className="space-y-0">
@@ -149,12 +150,12 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit" variant="secondary">{cms?.hero?.badge || <span className="animate-pulse bg-muted">Loading...</span>}</Badge>
+            <Badge className="w-fit" variant="secondary">{safeCms.hero?.badge || 'New'}</Badge>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              {cms?.hero?.title ? <span dangerouslySetInnerHTML={{ __html: cms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
+              {safeCms.hero?.title ? <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
             </h1>
             <p className="text-muted-foreground max-w-prose">
-              {cms?.hero?.desc || <span className="animate-pulse bg-muted h-4 w-full rounded">Loading...</span>}
+              {safeCms.hero?.desc || t('hero.desc')}
             </p>
             <div className="flex items-center gap-3 text-sm" aria-live="polite">
               <Suspense fallback={null}>
@@ -187,9 +188,9 @@ export default function Home() {
           <div className="relative">
             <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
               <picture>
-                {cms?.hero?.image?.avif ? <source srcSet={cms.hero.image.avif} type="image/avif" /> : null}
-                {cms?.hero?.image?.webp ? <source srcSet={cms.hero.image.webp} type="image/webp" /> : null}
-                <img src={cms?.hero?.image?.jpg || "/hero.jpg"} alt={cms?.hero?.imageAlt || "Colorful tacos platter with fresh ingredients"} loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
+                {safeCms.hero?.image?.avif ? <source srcSet={safeCms.hero.image.avif} type="image/avif" /> : null}
+                {safeCms.hero?.image?.webp ? <source srcSet={safeCms.hero.image.webp} type="image/webp" /> : null}
+                <img src={safeCms.hero?.image?.jpg || "/hero.jpg"} alt={safeCms.hero?.imageAlt || t('hero.imageAlt')} loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
               </picture>
             </div>
             <div className="absolute -bottom-6 -right-6 hidden md:block">
