@@ -119,7 +119,9 @@ export const uiResources = {
         heading: 'Customer love',
         t1: 'Hands‑down the best tacos in town. Ordering is so fast, and delivery always lands earlier than expected.',
         t2: 'Reservations that actually work. I booked for 8pm and was seated at 8:02. Five stars.',
-        t3: 'The rewards program is legit. Free guac after my second order — say less.'
+        t3: 'The rewards program is legit. Free guac after my second order — say less.',
+        verified: 'Verified',
+        readMore: 'Read more'
       },
       values: {
         heading: 'Sourcing & values',
@@ -382,7 +384,9 @@ export const uiResources = {
         heading: 'آراء العملاء',
         t1: 'بلا منازع أفضل تاكو في المدينة. الطلب سريع والتوصيل يصل قبل المتوقع غالبًا.',
         t2: 'حجوزات تعمل فعلًا. حجزت 8 مساءً وجلست 8:02. خمس نجوم.',
-        t3: 'برنامج المكافآت رائع. حصلت على غواكامولي مجاني بعد طلبي الثاني — كفى.'
+        t3: 'برنامج المكافآت رائع. حصلت على غواكامولي مجاني بعد طلبي الثاني — كفى.',
+        verified: 'موثق',
+        readMore: 'اقرأ المزيد'
       },
       values: {
         heading: 'المصادر والقيم',
@@ -611,7 +615,9 @@ export const uiResources = {
         heading: 'Amor de clientes',
         t1: 'Los mejores tacos de la ciudad. Pedir es rapidísimo y la entrega suele llegar antes de lo esperado.',
         t2: 'Reservas que de verdad funcionan. Reservé a las 20:00 y me senté a las 20:02. Cinco estrellas.',
-        t3: 'El programa de recompensas es real. Guacamole gratis tras mi segundo pedido.'
+        t3: 'El programa de recompensas es real. Guacamole gratis tras mi segundo pedido.',
+        verified: 'Verificado',
+        readMore: 'Leer más'
       },
       values: {
         heading: 'Origen y valores',
@@ -838,9 +844,11 @@ export const uiResources = {
       },
       testimonials: {
         heading: 'Avis des clients',
-        t1: 'Les meilleurs tacos de la ville. Commander est ultra rapide, la livraison arrive souvent plus tôt que prévu.',
-        t2: 'Des réservations qui fonctionnent vraiment. Réservé à 20 h, assis à 20 h 02. Cinq étoiles.',
-        t3: 'Programme de récompenses sérieux. Guacamole offert après ma deuxième commande.'
+        t1: 'De loin les meilleurs tacos de la ville. Commande ultra rapide, livraison souvent en avance.',
+        t2: 'Des réservations qui fonctionnent vraiment. Réservé pour 20h, installé à 20h02. Cinq étoiles.',
+        t3: 'Le programme de fidélité est top. Guacamole offert dès ma deuxième commande.',
+        verified: 'Vérifié',
+        readMore: 'Lire la suite'
       },
       values: {
         heading: 'Approvisionnements & valeurs',
@@ -1065,9 +1073,11 @@ export const uiResources = {
       },
       testimonials: {
         heading: 'Amor dos clientes',
-        t1: 'Os melhores tacos da cidade. Pedir é muito rápido e a entrega chega antes do esperado.',
+        t1: 'Sem dúvida os melhores tacos da cidade. O pedido é super rápido e a entrega chega ainda quente.',
         t2: 'Reservas que realmente funcionam. Reservei para as 20h e sentei às 20h02. Cinco estrelas.',
-        t3: 'O programa de recompensas é de verdade. Guacamole grátis após meu segundo pedido.'
+        t3: 'O programa de recompensas é excelente. Guacamole grátis após meu segundo pedido.',
+        verified: 'Verificado',
+        readMore: 'Ler mais'
       },
       values: {
         heading: 'Origem & valores',

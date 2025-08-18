@@ -31,6 +31,7 @@ export default function Testimonials({ testimonials = [] }) {
               <div>
                 <div className="flex items-center gap-2">
                   <div className="text-sm font-medium">{tst.name || ''}</div>
+                  <div className="text-xs text-muted-foreground">{t('testimonials.verified')}</div>
                   <div className="flex items-center gap-1 text-yellow-500" aria-label={`${tst.rating || 5} stars`}>
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className={`size-3 ${i < Number(tst.rating || 5) ? 'fill-current' : ''}`} />
@@ -38,7 +39,9 @@ export default function Testimonials({ testimonials = [] }) {
                   </div>
                   {tst.date && <div className="text-xs text-muted-foreground">{new Date(tst.date).toLocaleDateString()}</div>}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">{tst.content || fallbacks[idx % fallbacks.length]}</div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {tst.content || fallbacks[idx % fallbacks.length]} <button className="underline text-xs">{t('testimonials.readMore')}</button>
+                </div>
               </div>
             </div>
           </CardContent>
