@@ -613,9 +613,9 @@ export const uiResources = {
       },
       testimonials: {
         heading: 'Amor de clientes',
-        t1: 'Los mejores tacos de la ciudad. Pedir es rapidísimo y la entrega suele llegar antes de lo esperado.',
-        t2: 'Reservas que de verdad funcionan. Reservé a las 20:00 y me senté a las 20:02. Cinco estrellas.',
-        t3: 'El programa de recompensas es real. Guacamole gratis tras mi segundo pedido.',
+        t1: 'Los mejores tacos de la ciudad. Pedido rapidísimo y la entrega llegó caliente.',
+        t2: 'Reservas que sí funcionan. Reservé a las 20:00 y me senté a las 20:02. Cinco estrellas.',
+        t3: 'El programa de recompensas es genial. Guacamole gratis tras mi segundo pedido.',
         verified: 'Verificado',
         readMore: 'Leer más'
       },
@@ -888,6 +888,7 @@ export const uiResources = {
         limited: 'Offre à durée limitée',
         title: 'Livraison gratuite pour les commandes de plus de 25 $',
         desc: 'Commandez en quelques secondes ou réservez instantanément — sans frais supplémentaires aujourd’hui.',
+        socialProof: 'Rejoignez 2 847+ clients qui ont économisé aujourd’hui',
         start: 'Commencer une commande',
         reserve: 'Réserver maintenant'
       },
@@ -1117,7 +1118,8 @@ export const uiResources = {
         limited: 'Oferta por tempo limitado',
         title: 'Entrega grátis em pedidos acima de $25',
         desc: 'Peça em segundos ou reserve instantaneamente — sem taxas extras hoje.',
-        start: 'Iniciar pedido',
+        socialProof: 'Junte-se a 2.847+ clientes que economizaram hoje',
+        start: 'Começar um pedido',
         reserve: 'Reservar agora'
       },
       sticky: { order: 'Peça agora', reserve: 'Reservar' },
