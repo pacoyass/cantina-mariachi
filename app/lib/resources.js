@@ -288,7 +288,7 @@ export const uiResources = {
         browse: 'Vedi menu',
       },
       brand: 'Cantina',
-      footer: { quickLinks: 'Link rapidi', contact: 'Contatti', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Iscriviti', privacy: 'Privacy', terms: 'Termini', copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.' }
+      footer: { tagline: 'Sapori messicani autentici, esperienza moderna.', quickLinks: 'Link rapidi', contact: 'Contatti', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Iscriviti', privacy: 'Privacy', terms: 'Termini', copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.' }
     },
     home: {
       hero: {
@@ -419,6 +419,23 @@ export const uiResources = {
         onlyLeftToday: 'Solo {{count}} rimasti oggi!',
         orderNowDelivery: 'Ordina ora — consegna in {{mins}} min'
       }
+    },
+    menu: {
+      hero: { title: 'Esplora il nostro menu', subtitle: 'Piatti creati dagli chef, ingredienti freschi e speciali stagionali.' },
+      actions: {
+        searchPlaceholder: 'Cerca piatti…',
+        search: 'Cerca',
+        sortBy: 'Ordina per',
+        sort: { popular: 'Più popolari', priceLow: 'Prezzo: crescente', priceHigh: 'Prezzo: decrescente', newest: 'Più recenti' },
+        add: 'Aggiungi all’ordine',
+        unavailable: 'Non disponibile',
+        noItems: 'Nessun elemento trovato.'
+      },
+      categories: 'Categorie',
+      categoriesAll: 'Tutte',
+      filters: { dietary: 'Diete', vegetarian: 'Vegetariano', vegan: 'Vegano', glutenFree: 'Senza glutine', spicy: 'Piccante' },
+      results: 'Mostrati {{count}} elementi',
+      badges: { new: 'Nuovo', popular: 'Popolare' }
     }
   },
   ar: {

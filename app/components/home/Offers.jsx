@@ -24,7 +24,7 @@ export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">{heading || t('offers.heading')}</CardTitle>
-          {(primary.badge || badge) ? <Badge variant="secondary">{primary.badge || badge}</Badge> : null}
+          <Badge variant="secondary">{t('offers.badge')}</Badge>
         </div>
       </CardHeader>
       <CardContent>
