@@ -102,7 +102,9 @@ function DesktopOrderBar({ isOpen, eta }) {
     <div className={`hidden lg:block overflow-hidden transition-[height] duration-300 ${visible ? 'h-12' : 'h-0'}`}>
       <div className="border-b bg-background/95 backdrop-blur">
         <div className="container mx-auto h-12 px-4 grid grid-cols-3 items-center text-sm">
-          <div />
+          <div className="flex items-center whitespace-nowrap">
+            {isOpen ? t('topbar.open') : t('topbar.closed')} · {t('topbar.eta', { mins: eta })}
+          </div>
           <div className="flex items-center justify-center">
             <span className="relative px-3 py-1 rounded-md text-xs font-medium">
               <span className="absolute inset-0 rounded-md bg-gradient-to-r from-[var(--mex-green)] via-[var(--mex-gold)] to-[var(--mex-red)] opacity-20 blur-[2px]" />
@@ -114,9 +116,6 @@ function DesktopOrderBar({ isOpen, eta }) {
           <div className="flex items-center justify-end gap-3">
             <div className="text-muted-foreground hidden md:block whitespace-nowrap">{t('topbar.noSignup')}</div>
             <NavLink to="/menu" className="underline whitespace-nowrap">{t('topbar.browse')}</NavLink>
-            <div className="text-muted-foreground whitespace-nowrap">
-              {isOpen ? t('topbar.open') : t('topbar.closed')} · {t('topbar.eta', { mins: eta })}
-            </div>
           </div>
         </div>
       </div>
