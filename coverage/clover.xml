@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1755505474747" clover="3.2.0">
-  <project timestamp="1755505474747" name="All files">
-    <metrics statements="1774" coveredstatements="1373" conditionals="946" coveredconditionals="591" methods="277" coveredmethods="221" elements="2997" coveredelements="2185" complexity="0" loc="1774" ncloc="1774" packages="8" files="34" classes="34"/>
+<coverage generated="1755534048459" clover="3.2.0">
+  <project timestamp="1755534048459" name="All files">
+    <metrics statements="1774" coveredstatements="1373" conditionals="946" coveredconditionals="592" methods="277" coveredmethods="221" elements="2997" coveredelements="2186" complexity="0" loc="1774" ncloc="1774" packages="8" files="34" classes="34"/>
     <package name="config">
       <metrics statements="19" coveredstatements="11" conditionals="12" coveredconditionals="7" methods="5" coveredmethods="2"/>
       <file name="database.js" path="/workspace/server/config/database.js">
@@ -34,9 +34,9 @@
       </file>
     </package>
     <package name="controllers">
-      <metrics statements="785" coveredstatements="650" conditionals="279" coveredconditionals="200" methods="82" coveredmethods="78"/>
+      <metrics statements="785" coveredstatements="650" conditionals="279" coveredconditionals="201" methods="82" coveredmethods="78"/>
       <file name="auth.controller.js" path="/workspace/server/controllers/auth.controller.js">
-        <metrics statements="233" coveredstatements="200" conditionals="124" coveredconditionals="96" methods="14" coveredmethods="13"/>
+        <metrics statements="233" coveredstatements="200" conditionals="124" coveredconditionals="97" methods="14" coveredmethods="13"/>
         <line num="16" count="7" type="stmt"/>
         <line num="17" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="18" count="4" type="stmt"/>
@@ -128,7 +128,7 @@
         <line num="225" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="228" count="1" type="stmt"/>
         <line num="229" count="1" type="stmt"/>
-        <line num="230" count="1" type="cond" truecount="1" falsecount="3"/>
+        <line num="230" count="1" type="cond" truecount="2" falsecount="2"/>
         <line num="231" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="232" count="1" type="stmt"/>
         <line num="242" count="1" type="stmt"/>

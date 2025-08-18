@@ -151,6 +151,18 @@ function ensureRequiredFields(content, locale) {
       ...content?.hero
     },
     
+    // CTA section
+    cta: {
+      limited: content?.cta?.limited || defaultContent.cta?.limited,
+      title: content?.cta?.title || defaultContent.cta?.title,
+      desc: content?.cta?.desc || defaultContent.cta?.desc,
+      endsTonight: content?.cta?.endsTonight || defaultContent.cta?.endsTonight,
+      socialProof: content?.cta?.socialProof || defaultContent.cta?.socialProof,
+      start: content?.cta?.start || defaultContent.cta?.start,
+      reserve: content?.cta?.reserve || defaultContent.cta?.reserve,
+      ...(content?.cta || {})
+    },
+
     // Features section
     features: content?.features || defaultContent.features,
     
