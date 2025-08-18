@@ -12,6 +12,87 @@ export class TmsService {
     this.deepLApiUrl = process.env.DEEPL_API_URL || 'https://api-free.deepl.com/v2';
     this.tmsWebhookUrl = process.env.TMS_WEBHOOK_URL;
     this.tmsApiKey = process.env.TMS_API_KEY;
+
+    // LibreTranslate config (free/self-hostable)
+    this.libreTranslateUrl = process.env.LIBRETRANSLATE_URL; // e.g., http://localhost:5000
+    this.mtProvider = (process.env.TMS_MT_PROVIDER || '').toLowerCase(); // 'libretranslate' | 'deepl'
+  }
+
+  /**
+   * Pre-fill translations using configured MT provider (LibreTranslate preferred when set)
+   */
+  async prefill(sourceText, sourceLocale, targetLocale, options = {}) {
+    const provider = this.resolveMtProvider();
+    if (provider === 'libretranslate') {
+      return this.prefillWithLibreTranslate(sourceText, sourceLocale, targetLocale, options);
+    }
+    return this.prefillWithDeepL(sourceText, sourceLocale, targetLocale, options);
+  }
+
+  resolveMtProvider() {
+    if (this.mtProvider === 'libretranslate') return 'libretranslate';
+    if (this.mtProvider === 'deepl') return 'deepl';
+    // Auto-detect: prefer LibreTranslate if URL is configured, otherwise DeepL
+    if (this.libreTranslateUrl) return 'libretranslate';
+    return 'deepl';
+  }
+
+  /**
+   * Pre-fill translations using LibreTranslate API (free/self-hostable)
+   * @see https://github.com/LibreTranslate/LibreTranslate
+   */
+  async prefillWithLibreTranslate(sourceText, sourceLocale, targetLocale, options = {}) {
+    if (!this.libreTranslateUrl) {
+      throw new Error('LibreTranslate URL not configured (set LIBRETRANSLATE_URL)');
+    }
+
+    const sourceLang = this.mapLocaleToLibre(sourceLocale);
+    const targetLang = this.mapLocaleToLibre(targetLocale);
+
+    if (!sourceLang || !targetLang) {
+      throw new Error(`Unsupported locale pair for LibreTranslate: ${sourceLocale} → ${targetLocale}`);
+    }
+
+    try {
+      const response = await fetch(`${this.libreTranslateUrl.replace(/\/$/, '')}/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          q: sourceText,
+          source: sourceLang,
+          target: targetLang,
+          format: options.format || 'html',
+          api_key: options.apiKey || process.env.LIBRETRANSLATE_API_KEY || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`LibreTranslate error: ${response.status} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      const translatedText = data?.translatedText;
+      if (!translatedText) {
+        throw new Error('No translation returned from LibreTranslate');
+      }
+
+      await LoggerService.logAudit(null, 'LIBRE_TRANSLATE_SUCCESS', null, {
+        sourceLocale,
+        targetLocale,
+        sourcePreview: sourceText.slice(0, 100),
+        targetPreview: translatedText.slice(0, 100),
+      });
+
+      return translatedText;
+    } catch (error) {
+      await LoggerService.logError('LibreTranslate translation failed', error.stack, {
+        sourceLocale,
+        targetLocale,
+        error: error.message,
+      });
+      throw error;
+    }
   }
 
   /**
@@ -215,17 +296,10 @@ export class TmsService {
 
   /**
    * Update translation memory with new content
-   * @param {string} sourceLocale - Source language
-   * @param {string} targetLocale - Target language
-   * @param {string} sourceText - Source text
-   * @param {string} targetText - Target text
-   * @param {Object} metadata - Additional metadata
    */
   async updateTranslationMemory(sourceLocale, targetLocale, sourceText, targetText, metadata = {}) {
     try {
       // TODO: Implement translation memory storage
-      // This would typically store in a database or external service
-      
       await LoggerService.logAudit(null, 'TRANSLATION_MEMORY_UPDATED', null, {
         sourceLocale,
         targetLocale,
@@ -245,14 +319,10 @@ export class TmsService {
 
   /**
    * Get translation statistics for a project
-   * @param {string} projectId - TMS project identifier
-   * @returns {Promise<Object>} Translation statistics
    */
   async getTranslationStats(projectId) {
     try {
       // TODO: Implement translation statistics
-      // This would typically query the TMS API or database
-      
       return {
         projectId,
         totalStrings: 0,
@@ -274,8 +344,6 @@ export class TmsService {
 
   /**
    * Map application locales to DeepL language codes
-   * @param {string} locale - Application locale
-   * @returns {string} DeepL language code
    */
   mapLocaleToDeepL(locale) {
     const localeMap = {
@@ -295,20 +363,35 @@ export class TmsService {
   }
 
   /**
+   * Map application locales to LibreTranslate language codes
+   */
+  mapLocaleToLibre(locale) {
+    const normalized = (locale || '').toLowerCase();
+    const base = normalized.split('-')[0];
+    const supported = ['en','de','fr','es','it','pt','ar'];
+    return supported.includes(base) ? base : null;
+  }
+
+  /**
    * Validate TMS configuration
-   * @returns {boolean} Configuration validity
    */
   isConfigured() {
-    return !!(this.deepLApiKey && this.tmsWebhookUrl && this.tmsApiKey);
+    const provider = this.resolveMtProvider();
+    if (provider === 'libretranslate') {
+      return !!this.libreTranslateUrl;
+    }
+    return !!this.deepLApiKey;
   }
 
   /**
    * Get TMS configuration status
-   * @returns {Object} Configuration status
    */
   getConfigStatus() {
+    const provider = this.resolveMtProvider();
     return {
+      provider,
       deepL: !!this.deepLApiKey,
+      libreTranslate: !!this.libreTranslateUrl,
       tmsWebhook: !!this.tmsWebhookUrl,
       tmsApiKey: !!this.tmsApiKey,
       fullyConfigured: this.isConfigured()
