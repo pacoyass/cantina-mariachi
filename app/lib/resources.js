@@ -752,7 +752,7 @@ export const uiResources = {
         orderNow: 'Commander',
       },
       offer: {
-        freeDelivery: 'Aujourd’huionly: livraison gratuite sur 25$+',
+        freeDelivery: 'Aujourd’hui seulement : livraison gratuite dès 25 $',
       },
       topbar: {
         open: 'Ouvert',
