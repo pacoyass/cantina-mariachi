@@ -1,0 +1,9 @@
+{
+  "hero": {
+    "badge": "Neu: Prämien gestartet — Punkte bei jeder Bestellung",
+    "title": "Authentisches Mexikanisch. <primary>Schnell geliefert.</primary>",
+    "desc": "Von Street‑Tacos bis zu langsam geschmorten Spezialitäten. In Sekunden bestellen, sofort reservieren und die Lieferung in Echtzeit verfolgen — alles an einem Ort.",
+    "imageAlt": "Bunte Tacos mit frischen Zutaten"
+  },
+  "offers": { "heading": "Saisonangebote", "badge": "Begrenzt", "bundle": "Taco Tuesday Bundle", "deal": "2 Tacos + Getränk — 9,99 $", "endsIn": "Endet in", "orderBundle": "Bundle bestellen", "viewDetails": "Details ansehen" }
+}
