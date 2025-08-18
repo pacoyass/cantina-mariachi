@@ -1,3 +1,47 @@
 {
-  "offers": { "heading": "Ofertas sazonais", "badge": "Tempo limitado", "bundle": "Combo Taco Tuesday", "deal": "2 tacos + bebida — $9.99", "endsIn": "Termina em", "orderBundle": "Pedir combo", "viewDetails": "Ver detalhes" }
+  "hero": {
+    "badge": "Novo: Lançamento de recompensas — ganhe pontos em cada pedido",
+    "title": "Comida mexicana autêntica. <primary>Entrega rápida.</primary>",
+    "desc": "De tacos de rua a especialidades cozidas lentamente. Peça em segundos, reserve instantaneamente e acompanhe sua entrega em tempo real — tudo em um lugar.",
+    "imageAlt": "Prato colorido de tacos com ingredientes frescos e salsa vibrante"
+  },
+  "features": {
+    "title": "Por que escolher a Cantina",
+    "quality": {
+      "title": "Qualidade criada pelo chef",
+      "desc": "Ingredientes frescos e cardápios sazonais preparados por chefs especialistas."
+    },
+    "speed": {
+      "title": "Entrega ultra-rápida",
+      "desc": "Direto da cozinha para sua porta, sem atrasos de terceiros."
+    },
+    "service": {
+      "title": "Serviço excepcional",
+      "desc": "Rastreamento ao vivo, confirmações instantâneas e suporte 24/7."
+    }
+  },
+  "about": {
+    "title": "Nossa História",
+    "content": "Fundados com paixão pela culinária mexicana autêntica, trazemos os sabores do México para sua mesa com conveniência moderna e receitas tradicionais."
+  },
+  "contact": {
+    "title": "Entre em Contato",
+    "address": "123 Rua Mexicana, Cidade Gastronômica, CG 12345",
+    "phone": "+1 (555) 123-4567",
+    "email": "ola@cantina.com"
+  },
+  "offers": {
+    "heading": "Ofertas sazonais",
+    "badge": "Tempo limitado",
+    "bundle": "Pacote Taco Tuesday",
+    "deal": "2 tacos + bebida — R$ 9,99",
+    "endsIn": "Termina em",
+    "orderBundle": "Pedir pacote",
+    "viewDetails": "Ver detalhes"
+  },
+  "seo": {
+    "title": "Cantina Mariachi – Mexicano Autêntico, Experiência Moderna",
+    "description": "Peça online em segundos, reserve instantaneamente e acompanhe sua entrega ao vivo.",
+    "keywords": "comida mexicana, tacos, entrega, restaurante"
+  }
 }
