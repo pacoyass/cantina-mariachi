@@ -65,6 +65,19 @@ export function Layout( { children } )
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta nonce={nonce} />
         <Links  nonce={nonce}/>
+        
+        {/* SEO: Language alternatives */}
+        <link rel="alternate" hrefLang="en" href="/" />
+        <link rel="alternate" hrefLang="es" href="/?lng=es" />
+        <link rel="alternate" hrefLang="fr" href="/?lng=fr" />
+        <link rel="alternate" hrefLang="de" href="/?lng=de" />
+        <link rel="alternate" hrefLang="it" href="/?lng=it" />
+        <link rel="alternate" hrefLang="pt" href="/?lng=pt" />
+        <link rel="alternate" hrefLang="ar" href="/?lng=ar" />
+        <link rel="alternate" hrefLang="x-default" href="/" />
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={lang === 'en' ? '/' : `/?lng=${lang}`} />
       </head>
       <body className="antialiased">
       {/* <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" nonce={nonce}> */}

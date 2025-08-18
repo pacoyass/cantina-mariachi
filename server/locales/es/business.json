@@ -96,5 +96,43 @@
     "triggerProcessed": "Disparador procesado",
     "processingCompleted": "Procesamiento de webhooks completado",
     "noneActive": "No se encontraron webhooks activos"
+  },
+  "home": {
+    "hero": {
+      "badge": "Nuevo: Lanzamiento de recompensas — gana puntos en cada pedido",
+      "title": "Mexicano auténtico. <primary>Entregado rápido.</primary>",
+      "desc": "Desde tacos estilo callejero hasta especialidades cocinadas lentamente. Pide en segundos, reserva una mesa al instante y rastrea tu entrega en tiempo real — todo en un solo lugar.",
+      "imageAlt": "Plato colorido de tacos con ingredientes frescos y salsa vibrante"
+    },
+    "features": {
+      "title": "Por qué elegir Cantina",
+      "quality": {
+        "title": "Calidad de chef",
+        "desc": "Ingredientes frescos y menús estacionales preparados por chefs expertos."
+      },
+      "speed": {
+        "title": "Entrega súper rápida",
+        "desc": "Directo de la cocina a tu puerta, sin demoras de terceros."
+      },
+      "service": {
+        "title": "Servicio excepcional",
+        "desc": "Seguimiento en vivo, confirmaciones instantáneas y soporte 24/7."
+      }
+    },
+    "about": {
+      "title": "Nuestra Historia",
+      "content": "Fundados con pasión por la cocina mexicana auténtica, llevamos los sabores de México a tu mesa con conveniencia moderna y recetas tradicionales."
+    },
+    "contact": {
+      "title": "Ponte en Contacto",
+      "address": "123 Calle Mexicana, Ciudad Foodie, FC 12345",
+      "phone": "+1 (555) 123-4567",
+      "email": "hola@cantina.com"
+    },
+    "seo": {
+      "title": "Cantina Mariachi – Experiencia Mexicana Auténtica y Moderna",
+      "description": "Pide en línea en segundos, reserva al instante y rastrea tu entrega en vivo. Cocina mexicana auténtica entregada rápido.",
+      "keywords": "comida mexicana, tacos, entrega, restaurante, pedidos en línea, reserva de mesa"
+    }
   }
 }

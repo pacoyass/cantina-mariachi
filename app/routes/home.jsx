@@ -134,12 +134,12 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit" variant="secondary">{cms?.hero?.badge || t('hero.badge')}</Badge>
+            <Badge className="w-fit" variant="secondary">{cms?.hero?.badge || <span className="animate-pulse bg-muted">Loading...</span>}</Badge>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               {cms?.hero?.title ? <span dangerouslySetInnerHTML={{ __html: cms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
             </h1>
             <p className="text-muted-foreground max-w-prose">
-              {cms?.hero?.desc || t('hero.desc')}
+              {cms?.hero?.desc || <span className="animate-pulse bg-muted h-4 w-full rounded">Loading...</span>}
             </p>
             <div className="flex items-center gap-3 text-sm" aria-live="polite">
               <Suspense fallback={null}>
@@ -207,7 +207,7 @@ export default function Home() {
 
       {/* Logo cloud */}
       <section className="container mx-auto px-6 py-8">
-        <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading || t('logo.heading')}</div>
+        <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading || <span className="animate-pulse bg-muted h-3 w-32 rounded mx-auto">Loading...</span>}</div>
         <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
           {(cms?.logo?.brands || ['FlavorMag','EatHub','CityEats','DineNow','LocalBest']).map((name) => (
             <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
@@ -450,7 +450,7 @@ export default function Home() {
         <Suspense fallback={<SectionSkeleton title={t('faq.heading')} />}> 
           {cms?.faq?.items ? (
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.faq?.heading || t('faq.heading')}</h2>
+              <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.faq?.heading || <span className="animate-pulse bg-muted h-8 w-48 rounded">Loading...</span>}</h2>
               <Accordion type="single" collapsible className="w-full">
                 {cms.faq.items.map((q, i) => (
                   <AccordionItem key={i} value={`q${i}`}>
@@ -476,14 +476,14 @@ export default function Home() {
                   <Sparkles className="size-4 text-primary" />
                   {t('cta.endsTonight')}
                 </div>
-                <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{cms?.cta?.title || t('cta.title')}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{cms?.cta?.desc || t('cta.desc')}</p>
-                <div className="text-xs text-muted-foreground mt-1">{cms?.cta?.socialProof || t('cta.socialProof')}</div>
-                <div className="text-xs text-primary mt-1" aria-live="polite">{cms?.cta?.limited || t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
+                              <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{cms?.cta?.title || <span className="animate-pulse bg-muted h-6 w-64 rounded">Loading...</span>}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{cms?.cta?.desc || <span className="animate-pulse bg-muted h-4 w-80 rounded">Loading...</span>}</p>
+              <div className="text-xs text-muted-foreground mt-1">{cms?.cta?.socialProof || <span className="animate-pulse bg-muted h-3 w-48 rounded">Loading...</span>}</div>
+              <div className="text-xs text-primary mt-1" aria-live="polite">{cms?.cta?.limited || <span className="animate-pulse bg-muted h-3 w-32 rounded">Loading...</span>} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
               </div>
               <div className="flex gap-3">
-                <Button className="px-6" onClick={() => track('click_start_cta')}>{cms?.cta?.start || t('cta.start')}</Button>
-                <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{cms?.cta?.reserve || t('cta.reserve')}</Button>
+                                  <Button className="px-6" onClick={() => track('click_start_cta')}>{cms?.cta?.start || <span className="animate-pulse bg-muted h-4 w-16 rounded">Loading...</span>}</Button>
+                  <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{cms?.cta?.reserve || <span className="animate-pulse bg-muted h-4 w-20 rounded">Loading...</span>}</Button>
               </div>
             </div>
           </CardContent>

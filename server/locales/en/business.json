@@ -96,5 +96,43 @@
     "triggerProcessed": "Trigger processed",
     "processingCompleted": "Webhook processing completed",
     "noneActive": "No active webhooks found"
+  },
+  "home": {
+    "hero": {
+      "badge": "New: Rewards launch — earn points on every order",
+      "title": "Authentic Mexican. <primary>Delivered fast.</primary>",
+      "desc": "From street‑style tacos to slow‑cooked specialties. Order in seconds, reserve a table instantly, and track your delivery in real time — all in one place.",
+      "imageAlt": "Colorful tacos platter with fresh ingredients and vibrant salsa"
+    },
+    "features": {
+      "title": "Why choose Cantina",
+      "quality": {
+        "title": "Chef‑crafted quality",
+        "desc": "Fresh ingredients and seasonal menus prepared by expert chefs."
+      },
+      "speed": {
+        "title": "Lightning fast delivery",
+        "desc": "Direct kitchen to doorstep, no third‑party delays."
+      },
+      "service": {
+        "title": "Exceptional service",
+        "desc": "Live tracking, instant confirmations, and 24/7 support."
+      }
+    },
+    "about": {
+      "title": "Our Story",
+      "content": "Founded with a passion for authentic Mexican cuisine, we bring the flavors of Mexico to your table with modern convenience and traditional recipes."
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "address": "123 Mexican Street, Foodie City, FC 12345",
+      "phone": "+1 (555) 123-4567",
+      "email": "hello@cantina.com"
+    },
+    "seo": {
+      "title": "Cantina Mariachi – Authentic Mexican, Modern Experience",
+      "description": "Order online in seconds, reserve instantly, and track your delivery live. Authentic Mexican cuisine delivered fast.",
+      "keywords": "Mexican food, tacos, delivery, restaurant, online ordering, table reservation"
+    }
   }
 }
