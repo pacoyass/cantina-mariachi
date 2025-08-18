@@ -96,5 +96,52 @@
     "triggerProcessed": "Déclencheur traité",
     "processingCompleted": "Traitement des webhooks terminé",
     "noneActive": "Aucun webhook actif trouvé"
+  },
+  "home": {
+    "hero": {
+      "badge": "Nouveau : Lancement des récompenses — gagnez des points à chaque commande",
+      "title": "Cuisine mexicaine authentique. <primary>Livraison rapide.</primary>",
+      "desc": "Des tacos de rue aux spécialités mijotées. Commandez en quelques secondes, réservez instantanément et suivez votre livraison en temps réel — le tout au même endroit.",
+      "imageAlt": "Assortiment de tacos colorés avec ingrédients frais et salsa vibrante"
+    },
+    "features": {
+      "title": "Pourquoi choisir Cantina",
+      "quality": {
+        "title": "Qualité de chef",
+        "desc": "Ingrédients frais et menus de saison préparés par des chefs experts."
+      },
+      "speed": {
+        "title": "Livraison ultra-rapide",
+        "desc": "De la cuisine à votre porte, sans retards de tiers."
+      },
+      "service": {
+        "title": "Service exceptionnel",
+        "desc": "Suivi en direct, confirmations instantanées et support 24/7."
+      }
+    },
+    "about": {
+      "title": "Notre Histoire",
+      "content": "Fondés avec une passion pour la cuisine mexicaine authentique, nous apportons les saveurs du Mexique à votre table avec la commodité moderne et les recettes traditionnelles."
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "address": "123 Rue Mexicaine, Ville Gastronomique, FG 12345",
+      "phone": "+1 (555) 123-4567",
+      "email": "bonjour@cantina.com"
+    },
+    "cta": {
+      "limited": "Offre à durée limitée",
+      "title": "Prêt à découvrir l'authentique mexicain ?",
+      "desc": "Rejoignez des milliers de clients satisfaits qui choisissent Cantina pour la qualité, la rapidité et le service.",
+      "endsTonight": "Se termine ce soir à minuit",
+      "socialProof": "2 400+ clients heureux ce mois-ci",
+      "start": "Commencer à Commander",
+      "reserve": "Réserver une Table"
+    },
+    "seo": {
+      "title": "Cantina Mariachi – Mexicain Authentique, Expérience Moderne",
+      "description": "Commandez en ligne en quelques secondes, réservez instantanément et suivez votre livraison en direct. Cuisine mexicaine authentique livrée rapidement.",
+      "keywords": "cuisine mexicaine, tacos, livraison, restaurant, commande en ligne, réservation de table"
+    }
   }
 }

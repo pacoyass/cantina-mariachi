@@ -1,3 +1,47 @@
 {
-  "offers": { "heading": "Offerte stagionali", "badge": "Tempo limitato", "bundle": "Taco Tuesday Bundle", "deal": "2 tacos + bevanda — $9.99", "endsIn": "Termina tra", "orderBundle": "Ordina bundle", "viewDetails": "Vedi dettagli" }
+  "hero": {
+    "badge": "Novità: Lancio ricompense — guadagna punti con ogni ordine",
+    "title": "Cucina messicana autentica. <primary>Consegna veloce.</primary>",
+    "desc": "Dai tacos di strada alle specialità cotte lentamente. Ordina in pochi secondi, prenota istantaneamente e segui la tua consegna in tempo reale — tutto in un unico posto.",
+    "imageAlt": "Piatto colorato di tacos con ingredienti freschi e salsa vivace"
+  },
+  "features": {
+    "title": "Perché scegliere Cantina",
+    "quality": {
+      "title": "Qualità creata dallo chef",
+      "desc": "Ingredienti freschi e menu stagionali preparati da chef esperti."
+    },
+    "speed": {
+      "title": "Consegna fulminea",
+      "desc": "Direttamente dalla cucina alla porta, senza ritardi di terze parti."
+    },
+    "service": {
+      "title": "Servizio eccezionale",
+      "desc": "Tracciamento dal vivo, conferme istantanee e supporto 24/7."
+    }
+  },
+  "about": {
+    "title": "La Nostra Storia",
+    "content": "Fondati con una passione per la cucina messicana autentica, portiamo i sapori del Messico sulla vostra tavola con comodità moderna e ricette tradizionali."
+  },
+  "contact": {
+    "title": "Contattaci",
+    "address": "123 Via Messicana, Città Gastronomica, CG 12345",
+    "phone": "+1 (555) 123-4567",
+    "email": "ciao@cantina.com"
+  },
+  "offers": {
+    "heading": "Offerte stagionali",
+    "badge": "Tempo limitato",
+    "bundle": "Pacchetto Taco Tuesday",
+    "deal": "2 tacos + bevanda — 9,99 $",
+    "endsIn": "Termina tra",
+    "orderBundle": "Ordina pacchetto",
+    "viewDetails": "Vedi dettagli"
+  },
+  "seo": {
+    "title": "Cantina Mariachi – Messicano Autentico, Esperienza Moderna",
+    "description": "Ordina online in pochi secondi, prenota istantaneamente e segui la tua consegna dal vivo.",
+    "keywords": "cibo messicano, tacos, consegna, ristorante"
+  }
 }
