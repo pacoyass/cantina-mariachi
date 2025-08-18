@@ -503,7 +503,7 @@ export default function Home() {
 }
 
 function MenuItemCard({ item, t, locale }) {
-  const tags = [item.isVegetarian ? 'Vegetarian' : null, item.isVegan ? 'Vegan' : null].filter(Boolean)
+  const tags = [item.isVegetarian ? t('filters.vegetarian') : null, item.isVegan ? t('filters.vegan') : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
@@ -532,7 +532,7 @@ function MenuItemCard({ item, t, locale }) {
 }
 
 function PopularItemCard({ item, idx, t, locale }) {
-  const tags = [item.isVegetarian ? 'Vegetarian' : null, item.isVegan ? 'Vegan' : null].filter(Boolean)
+  const tags = [item.isVegetarian ? t('filters.vegetarian') : null, item.isVegan ? t('filters.vegan') : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
