@@ -1045,6 +1045,103 @@ export const uiResources = {
         limited: 'Zeitlich begrenztes Angebot',
         start: 'Bestellung starten',
         reserve: 'Jetzt reservieren'
+      },
+      logo: { heading: 'Beliebt bei Foodies und vorgestellt in' },
+      explore: {
+        heading: 'Entdecke die Speisekarte',
+        tacos: 'Tacos',
+        bowls: 'Bowls',
+        drinks: 'Getränke',
+        coming: 'Demnächst.',
+        chefNotes: 'Notizen des Küchenchefs: Publikumsfavorit mit frischem Koriander und Limette.',
+        viewMore: 'Mehr ansehen'
+      },
+      loyalty: {
+        heading: 'Treue & Prämien',
+        membersSave: 'Mitglieder sparen mehr',
+        points: 'Punkte',
+        nextAt: 'Nächste Prämie bei {{points}}',
+        freeDessert: 'Gratis Dessert',
+        join: 'Dem Programm beitreten',
+        perks: 'Vorteile ansehen'
+      },
+      why: {
+        heading: 'Warum Cantina wählen',
+        faster: { title: 'Schneller als Apps', desc: 'Direkt aus der Küche zur Tür, ohne Drittanbieter‑Verzögerungen.' },
+        fees: { title: 'Transparente Gebühren', desc: 'Keine Überraschungen an der Kasse.' },
+        oneTap: { title: 'Reservieren mit einem Tipp', desc: 'Verfügbarkeit in Echtzeit und SMS‑Bestätigungen.' },
+        tracking: { title: 'Live‑Tracking', desc: 'Minutengenaue Updates.' },
+        chef: { title: 'Von Köchen kreiert', desc: 'Frische Zutaten und saisonale Menüs.' },
+        rewards: { title: 'Prämien, die zählen', desc: 'Punkte bei jeder Bestellung, Vorteile sofort.' }
+      },
+      events: {
+        heading: 'Gruppen‑Events & Catering',
+        desc: 'Für 8+ Personen buchen oder Office‑Catering in Minuten planen.',
+        plan: 'Event planen',
+        catering: 'Catering',
+        q1: { question: 'Bieten Sie fixe Menüs an?', answer: 'Ja — Menüs für Gruppen von 8–30, mit vegetarischen Optionen.' },
+        q2: { question: 'Wie früh soll ich buchen?', answer: 'Wir empfehlen 48 Stunden; am selben Tag evtl. außerhalb der Stoßzeiten möglich.' }
+      },
+      offers: {
+        heading: 'Saisonangebote',
+        badge: 'Begrenzt',
+        bundle: 'Taco‑Tuesday‑Bundle',
+        deal: '2 Tacos + Getränk — $9.99',
+        endsIn: 'Endet in',
+        orderBundle: 'Bundle bestellen',
+        viewDetails: 'Details ansehen'
+      },
+      values: {
+        heading: 'Beschaffung & Werte',
+        desc: 'Wir setzen auf frische, lokale Zutaten und nachhaltige Praktiken — von der Küche bis zum Tisch.',
+        badges: {
+          localProduce: 'Regionale Produkte',
+          sustainableSeafood: 'Nachhaltige Meeresfrüchte',
+          fairTrade: 'Fairer Handel',
+          lowWaste: 'Wenig Abfall'
+        },
+        cards: {
+          dailyMarket: 'Tägliche Marktauswahl',
+          houseSalsas: 'Hausgemachte Salsas',
+          localTortillas: 'Lokal gebackene Tortillas',
+          compostablePackaging: 'Kompostierbare Verpackung'
+        }
+      },
+      value: {
+        reorderDesc: 'Wiederbestellen mit einem Tipp, gespeicherte Favoriten und Apple/Google Pay.',
+        trustedTitle: 'Vertrauenswürdig & sicher',
+        trustedDesc: 'Verifizierte Bewertungen, sichere Zahlungen, Zufriedenheitsgarantie.'
+      },
+      how: {
+        heading: 'So funktioniert’s',
+        desc: 'Vom Appetit zum Tisch in drei einfachen Schritten.',
+        step1: { title: 'Favoriten wählen', desc: 'Kuratiere Kategorien durchsuchen oder nach einem Gericht suchen.' },
+        step2: { title: 'Anpassen & bezahlen', desc: 'Beilagen hinzufügen, Schärfe wählen und in Sekunden sicher zahlen.' },
+        step3: { title: 'Verfolgen & genießen', desc: 'Bestellung live verfolgen oder Reservierung am Eingang vorzeigen.' }
+      },
+      faq: {
+        heading: 'Häufige Fragen',
+        q1: { question: 'Bietet ihr vegetarische Optionen?', answer: 'Ja, viele! Viele unserer Tacos und Bowls haben vegetarische Optionen.' },
+        q2: { question: 'Wie lange dauern Lieferungen?', answer: 'Im Schnitt unter 35 Minuten, je nach Zeit und Entfernung.' },
+        q3: { question: 'Kann ich meine Reservierung ändern?', answer: 'Du kannst deine Reservierung bis 2 Stunden vor deinem Termin ändern.' }
+      },
+      popular: {
+        heading: 'Diese Woche beliebt',
+        seeMenu: 'Gesamte Speisekarte ansehen',
+        unavailable: 'Nicht verfügbar',
+        add: 'Zur Bestellung hinzufügen',
+        notify: 'Benachrichtige mich',
+        coming: 'Eine köstliche Auswahl kommt bald.',
+        chefSpecial: 'Chef‑Empfehlung #{{num}}',
+        numberOne: '⭐ Nr. 1 bestellt',
+        trending: '🔥 Im Trend',
+        rating: '★{{rating}} ({{reviews}} Bewertungen)',
+        onlyLeftToday: 'Nur noch {{count}} heute!',
+        orderNowDelivery: 'Jetzt bestellen – Lieferung in {{mins}} Min'
+      },
+      sticky: {
+        order: 'Jetzt bestellen',
+        reserve: 'Reservieren'
       }
     },
     menu: {
