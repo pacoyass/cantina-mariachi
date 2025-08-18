@@ -266,6 +266,161 @@ export const uiResources = {
       }
     }
   },
+  it: {
+    ui: {
+      nav: {
+        home: 'Home',
+        menu: 'Menu',
+        orders: 'Ordini',
+        reservations: 'Prenotazioni',
+        account: 'Account',
+        profile: 'Profilo',
+        login: 'Accedi',
+        register: 'Registrati',
+        orderNow: 'Ordina ora',
+      },
+      offer: { freeDelivery: 'Solo oggi: consegna gratuita per ordini superiori a 25 $' },
+      topbar: {
+        open: 'Aperto ora',
+        closed: 'Chiuso ora',
+        eta: 'Arrivo stimato ~ {{mins}} min',
+        noSignup: 'Nessuna registrazione richiesta',
+        browse: 'Vedi menu',
+      },
+      brand: 'Cantina',
+      footer: { quickLinks: 'Link rapidi', contact: 'Contatti', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Iscriviti', privacy: 'Privacy', terms: 'Termini', copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.' }
+    },
+    home: {
+      hero: {
+        badge: 'Novità: programma fedeltà — guadagna punti a ogni ordine',
+        title: 'Autentica cucina messicana. <primary>Consegna rapida.</primary>',
+        desc: 'Dai tacos di strada alle specialità a lenta cottura. Ordina in pochi secondi, prenota all’istante e segui la consegna in tempo reale — tutto in un unico posto.',
+        orderNow: 'Ordina ora',
+        reserve: 'Prenota un tavolo',
+        browseMenu: 'Vedi menu completo',
+        rating: '4,9/5 da oltre 2.400 clienti locali',
+        avgTime: 'Consegna in meno di 35 minuti in media',
+        openNow: 'Aperto ora',
+        closedNow: 'Chiuso ora',
+        eta: 'Arrivo stimato ~ {{m}} min',
+        card: {
+          title: 'Scelta dello chef',
+          desc: 'Barbacoa a lenta cottura con salsa verde fresca e tortillas calde.'
+        }
+      },
+      logo: { heading: 'Apprezzato dai buongustai locali e presente su' },
+      explore: {
+        heading: 'Esplora il menu',
+        tacos: 'Tacos',
+        bowls: 'Bowl',
+        drinks: 'Bevande',
+        coming: 'Prossimamente.',
+        chefNotes: 'Note dello chef: preferito dal pubblico con coriandolo e lime freschi.',
+        viewMore: 'Vedi altro'
+      },
+      loyalty: {
+        heading: 'Fedeltà e premi',
+        membersSave: 'I membri risparmiano di più',
+        points: 'punti',
+        nextAt: 'Prossima ricompensa a {{points}}',
+        freeDessert: 'Dessert omaggio',
+        join: 'Unisciti al programma',
+        perks: 'Vedi vantaggi'
+      },
+      why: {
+        heading: 'Perché scegliere Cantina',
+        faster: { title: 'Più veloce delle app', desc: 'Dalla cucina alla porta, senza ritardi di terze parti.' },
+        fees: { title: 'Costi trasparenti', desc: 'Nessuna sorpresa al checkout.' },
+        oneTap: { title: 'Prenotazioni con un tocco', desc: 'Disponibilità in tempo reale e conferme via SMS.' },
+        tracking: { title: 'Tracking live', desc: 'Aggiornamenti minuto per minuto.' },
+        chef: { title: 'Creato dagli chef', desc: 'Ingredienti freschi e menu stagionali.' },
+        rewards: { title: 'Premi che contano', desc: 'Punti su ogni ordine e vantaggi immediati.' }
+      },
+      events: {
+        heading: 'Eventi di gruppo & catering',
+        desc: 'Prenota per 8+ persone o organizza il catering per l’ufficio in pochi minuti.',
+        plan: 'Organizza evento',
+        catering: 'Catering',
+        q1: { question: 'Offrite menu fissi?', answer: 'Sì — menu per gruppi da 8 a 30 persone, con opzioni vegetariane.' },
+        q2: { question: 'Con quanto anticipo prenotare?', answer: 'Consigliamo 48 ore; in giornata può essere possibile fuori dalle ore di punta.' }
+      },
+      offers: {
+        heading: 'Offerte stagionali',
+        badge: 'Tempo limitato',
+        bundle: 'Bundle Taco Tuesday',
+        deal: '2 tacos + bevanda — $9,99',
+        endsIn: 'Termina tra',
+        orderBundle: 'Ordina il bundle',
+        viewDetails: 'Vedi dettagli'
+      },
+      testimonials: {
+        heading: 'Recensioni dei clienti',
+        t1: 'I migliori tacos in città. Ordine velocissimo e consegna arrivata ancora calda.',
+        t2: 'Prenotazioni che funzionano davvero. Prenotato per le 20:00, seduto alle 20:02. Cinque stelle.',
+        t3: 'Il programma fedeltà è ottimo. Guacamole gratis già al secondo ordine.',
+        verified: 'Verificato',
+        readMore: 'Leggi di più'
+      },
+      values: {
+        heading: 'Forniture & valori',
+        desc: 'Crediamo in ingredienti freschi e locali e in pratiche sostenibili — dalla cucina alla tavola.',
+        badges: {
+          localProduce: 'Prodotti locali',
+          sustainableSeafood: 'Pesce sostenibile',
+          fairTrade: 'Commercio equo',
+          lowWaste: 'Bassi sprechi'
+        },
+        cards: {
+          dailyMarket: 'Scelte dal mercato del giorno',
+          houseSalsas: 'Salse fatte in casa',
+          localTortillas: 'Tortillas cotte localmente',
+          compostablePackaging: 'Imballaggi compostabili'
+        }
+      },
+      value: {
+        reorderDesc: 'Riordino con un tocco, preferiti salvati e Apple/Google Pay.',
+        trustedTitle: 'Affidabile & sicuro',
+        trustedDesc: 'Recensioni verificate, pagamenti sicuri, soddisfazione garantita.'
+      },
+      how: {
+        heading: 'Come funziona',
+        desc: 'Dalla voglia alla tavola in tre semplici passi.',
+        step1: { title: 'Scegli i tuoi preferiti', desc: 'Sfoglia categorie curate o cerca un piatto specifico.' },
+        step2: { title: 'Personalizza & paga', desc: 'Aggiungi contorni, scegli il livello di piccantezza e paga in pochi secondi.' },
+        step3: { title: 'Segui & gusta', desc: 'Segui l’ordine dal vivo o mostra la prenotazione all’ingresso.' }
+      },
+      faq: {
+        heading: 'Domande frequenti',
+        q1: { question: 'Offrite opzioni vegetariane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetariane.' },
+        q2: { question: 'Quanto impiega la consegna?', answer: 'In media, meno di 35 minuti a seconda di orario e distanza.' },
+        q3: { question: 'Posso modificare la prenotazione?', answer: 'Puoi modificarla fino a 2 ore prima dell’orario.' }
+      },
+      cta: {
+        endsTonight: 'Termina questa notte a mezzanotte!',
+        title: 'Consegna gratuita per ordini superiori a 25 $',
+        desc: 'Ordina in pochi secondi o prenota all’istante — nessun costo aggiuntivo oggi.',
+        socialProof: 'Unisciti a oltre 2.847 clienti che hanno risparmiato oggi',
+        limited: 'Offerta a tempo limitato',
+        start: 'Inizia un ordine',
+        reserve: 'Prenota ora'
+      },
+      sticky: { order: 'Ordina ora', reserve: 'Prenota' },
+      popular: {
+        heading: 'Popolare questa settimana',
+        seeMenu: 'Vedi il menu completo',
+        unavailable: 'Non disponibile',
+        add: 'Aggiungi all’ordine',
+        notify: 'Avvisami',
+        coming: 'Una deliziosa selezione in arrivo.',
+        chefSpecial: 'Speciale dello chef #{{num}}',
+        numberOne: '⭐ #1 più ordinato',
+        trending: '🔥 Di tendenza',
+        rating: '★{{rating}} ({{reviews}} recensioni)',
+        onlyLeftToday: 'Solo {{count}} rimasti oggi!',
+        orderNowDelivery: 'Ordina ora — consegna in {{mins}} min'
+      }
+    }
+  },
   ar: {
     ui: {
       nav: {
