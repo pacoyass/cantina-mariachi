@@ -11,10 +11,10 @@ export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
     return (
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg">{heading || t('offers.heading')}</CardTitle>
+          <CardTitle className="text-lg">{heading || t?.('home:offers.heading') || 'Seasonal offers'}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-muted-foreground">{t('offers.coming') || 'New offers are coming soon.'}</div>
+          <div className="text-sm text-muted-foreground">{t?.('home:offers.coming') || 'New offers are coming soon.'}</div>
         </CardContent>
       </Card>
     );
@@ -23,8 +23,8 @@ export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{heading || t('offers.heading')}</CardTitle>
-          <Badge variant="secondary">{t('offers.badge')}</Badge>
+          <CardTitle className="text-lg">{heading || t?.('home:offers.heading') || 'Seasonal offers'}</CardTitle>
+          <Badge variant="secondary">{badge || t?.('home:offers.badge') || 'Limited time'}</Badge>
         </div>
       </CardHeader>
       <CardContent>
@@ -34,13 +34,13 @@ export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="text-sm text-muted-foreground">{primary.bundleName || t('offers.bundle')}</div>
-              <div className="text-xl font-semibold">{primary.title || t('offers.deal')}</div>
-              <div className="text-xs text-muted-foreground">{t('offers.endsIn')} <span data-offer-id={primary.id}>{formatCountdown(expiry)}</span></div>
+              <div className="text-sm text-muted-foreground">{primary.bundleName || t?.('home:offers.bundle') || 'Taco Tuesday Bundle'}</div>
+              <div className="text-xl font-semibold">{primary.title || t?.('home:offers.deal') || '2 tacos + drink — $9.99'}</div>
+              <div className="text-xs text-muted-foreground">{t?.('home:offers.endsIn') || 'Ends in'} <span data-offer-id={primary.id}>{formatCountdown(expiry)}</span></div>
             </div>
             <div className="flex gap-2">
-              <Button>{t('offers.orderBundle')}</Button>
-              <Button variant="outline">{t('offers.viewDetails')}</Button>
+              <Button>{t?.('home:offers.orderBundle') || 'Order bundle'}</Button>
+              <Button variant="outline">{t?.('home:offers.viewDetails') || 'View details'}</Button>
             </div>
           </div>
         </div>

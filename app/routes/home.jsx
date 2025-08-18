@@ -333,8 +333,8 @@ export default function Home() {
 
       {/* Seasonal offers (lazy) */}
       <section className="container mx-auto px-6 py-14">
-        <Suspense fallback={<SectionSkeleton title={t('offers.heading')} />}> 
-          <Await resolve={offers} errorElement={<SectionError title={t('offers.heading')} />}> 
+        <Suspense fallback={<SectionSkeleton title={t?.('home:offers.heading') || 'Seasonal offers'} />}> 
+          <Await resolve={offers} errorElement={<SectionError title={t?.('home:offers.heading') || 'Seasonal offers'} />}> 
             {(resolvedOffers) => (
               <LazyOffers offers={resolvedOffers} t={t} cmsOffers={cms?.offers?.items || []} heading={cms?.offers?.heading} badge={cms?.offers?.badge} />
             )}
