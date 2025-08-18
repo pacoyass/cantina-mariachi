@@ -1508,7 +1508,68 @@ export const uiResources = {
         spicy: 'Apimentado'
       },
       results: 'Mostrando {{count}} itens',
-      badges: { new: 'Novo', popular: 'Popular' }
+      badges: { new: 'Novo', popular: 'Popular'       }
+    },
+    home: {
+      hero: {
+        badge: 'New: Rewards launch — earn points on every order',
+        title: 'Authentic Mexican. <primary>Delivered fast.</primary>',
+        desc: 'From street‑style tacos to slow‑cooked specialties. Order in seconds, reserve a table instantly, and track your delivery in real time — all in one place.',
+        orderNow: 'Order Now',
+        reserve: 'Reserve a Table',
+        browseMenu: 'Browse full menu',
+        rating: '4.9/5 from 2,400+ local diners',
+        avgTime: 'Delivery under 35 minutes on average',
+        openNow: 'Open now',
+        closedNow: 'Closed now',
+        eta: 'ETA ~ {{m}}m',
+        card: {
+          title: 'Chef\'s Pick',
+          desc: 'Slow-braised barbacoa with fresh salsa verde and warm tortillas.'
+        }
+      },
+      logo: {
+        heading: 'Trusted by local foodies and featured in'
+      },
+      explore: {
+        heading: 'Explore the menu',
+        tacos: 'Tacos',
+        bowls: 'Bowls',
+        drinks: 'Drinks',
+        coming: 'Coming soon.',
+        chefNotes: 'Chef notes: crowd favorite with fresh cilantro and lime.',
+        viewMore: 'View more'
+      },
+      loyalty: {
+        heading: 'Loyalty & rewards',
+        membersSave: 'Members save more',
+        points: 'points',
+        nextAt: 'Next reward at {{points}}',
+        freeDessert: 'Free dessert',
+        join: 'Join rewards',
+        perks: 'View perks'
+      },
+      why: {
+        heading: 'Why choose Cantina',
+        faster: { title: 'Faster than apps', desc: 'Direct kitchen to doorstep, no third‑party delays.' },
+        fees: { title: 'Transparent fees', desc: 'No surprise charges at checkout.' },
+        oneTap: { title: 'One‑tap reservations', desc: 'Live availability and SMS confirmations.' },
+        tracking: { title: 'Live tracking', desc: 'Minute‑by‑minute delivery updates.' },
+        chef: { title: 'Chef‑crafted', desc: 'Fresh ingredients and seasonal menus.' },
+        rewards: { title: 'Rewards that matter', desc: 'Points on every order, instant perks.' }
+      },
+      faq: {
+        heading: 'Frequently asked questions'
+      },
+      cta: {
+        title: 'Ready to experience authentic Mexican?',
+        desc: 'Join thousands of satisfied customers who choose Cantina for quality, speed, and service.',
+        socialProof: '2,400+ happy customers this month',
+        limited: 'Limited time offer',
+        start: 'Start Ordering',
+        reserve: 'Reserve Table',
+        endsTonight: 'Ends tonight at midnight'
+      }
     }
   }
 };
