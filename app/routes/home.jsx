@@ -217,12 +217,12 @@ export default function Home() {
 
       {/* Explore menu (Tabs) */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.explore?.heading || t('explore.heading')}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.explore?.heading ?? t('explore.heading')}</h2>
         <Tabs defaultValue="tacos" className="w-full">
           <TabsList>
-            <TabsTrigger value="tacos">{cms?.explore?.tabs?.tacos || t('explore.tacos')}</TabsTrigger>
-            <TabsTrigger value="bowls">{cms?.explore?.tabs?.bowls || t('explore.bowls')}</TabsTrigger>
-            <TabsTrigger value="drinks">{cms?.explore?.tabs?.drinks || t('explore.drinks')}</TabsTrigger>
+            <TabsTrigger value="tacos">{cms?.explore?.tabs?.tacos ?? t('explore.tacos')}</TabsTrigger>
+            <TabsTrigger value="bowls">{cms?.explore?.tabs?.bowls ?? t('explore.bowls')}</TabsTrigger>
+            <TabsTrigger value="drinks">{cms?.explore?.tabs?.drinks ?? t('explore.drinks')}</TabsTrigger>
           </TabsList>
           <div className="mt-3">
           <TabsContent value="tacos" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
@@ -344,7 +344,7 @@ export default function Home() {
 
       {/* Customer love (testimonials) lazy */}
       <section className="container mx-auto px-6 py-14">
-        <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.testimonials?.heading || t('testimonials.heading')}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{cms?.testimonials?.heading ?? t('testimonials.heading')}</h2>
         <Suspense fallback={<SectionSkeleton title={t('testimonials.heading')} />}> 
           <Await resolve={testimonials} errorElement={<SectionError title={t('testimonials.heading')} />}> 
             {(resolvedTestimonials) => (
@@ -358,8 +358,8 @@ export default function Home() {
       <section className="container mx-auto px-6 py-14">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold tracking-tight">{cms?.values?.heading || t('values.heading')}</h3>
-            <p className="text-sm text-muted-foreground">{cms?.values?.desc || t('values.desc')}</p>
+            <h3 className="text-xl font-semibold tracking-tight">{cms?.values?.heading ?? t('values.heading')}</h3>
+            <p className="text-sm text-muted-foreground">{cms?.values?.desc ?? t('values.desc')}</p>
             <div className="flex flex-wrap gap-2">
               {(cms?.values?.badges || [t('values.badges.localProduce'), t('values.badges.sustainableSeafood'), t('values.badges.fairTrade'), t('values.badges.lowWaste')]).map((b) => (
                 <Badge key={b} variant="secondary">{b}</Badge>
@@ -390,8 +390,8 @@ export default function Home() {
       {/* How it works */}
       <section className="container mx-auto px-6 py-14">
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold tracking-tight">{cms?.how?.heading || t('how.heading')}</h2>
-          <p className="text-sm text-muted-foreground">{cms?.how?.desc || t('how.desc')}</p>
+          <h2 className="text-2xl font-semibold tracking-tight">{cms?.how?.heading ?? t('how.heading')}</h2>
+          <p className="text-sm text-muted-foreground">{cms?.how?.desc ?? t('how.desc')}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {(cms?.how?.steps || [
@@ -407,8 +407,8 @@ export default function Home() {
       {/* Popular this week */}
       <section className="container mx-auto px-6 py-14">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold tracking-tight">{cms?.popular?.heading || t('popular.heading')}</h2>
-          <Link className="text-sm underline" to="/menu" onClick={() => track('click_view_menu_popular')}>{cms?.popular?.seeMenu || t('popular.seeMenu')}</Link>
+          <h2 className="text-2xl font-semibold tracking-tight">{cms?.popular?.heading ?? t('popular.heading')}</h2>
+          <Link className="text-sm underline" to="/menu" onClick={() => track('click_view_menu_popular')}>{cms?.popular?.seeMenu ?? t('popular.seeMenu')}</Link>
         </div>
         <Suspense fallback={<MenuItemsSkeleton count={3} />}>
           <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
