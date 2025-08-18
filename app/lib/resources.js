@@ -60,6 +60,9 @@ export const uiResources = {
         browseMenu: 'Browse full menu',
         rating: '4.9/5 from 2,400+ local diners',
         avgTime: 'Delivery under 35 minutes on average',
+        openNow: 'Open now',
+        closedNow: 'Closed now',
+        eta: 'ETA ~ {{m}}m',
         card: {
           title: 'Chef’s Pick',
           desc: 'Slow-braised barbacoa with fresh salsa verde and warm tortillas.'
@@ -322,6 +325,9 @@ export const uiResources = {
         browseMenu: 'تصفح القائمة كاملة',
         rating: '4.9/5 من أكثر من 2400 زائر محلي',
         avgTime: 'التوصيل في أقل من 35 دقيقة في المتوسط',
+        openNow: 'مفتوح الآن',
+        closedNow: 'مغلق الآن',
+        eta: 'الوقت المتوقع ~ {{m}} د',
         card: {
           title: 'اختيار الشيف',
           desc: 'بارباكوا مطهية ببطء مع صلصة خضراء طازجة وتورتيلا دافئة.'
@@ -531,7 +537,7 @@ export const uiResources = {
       topbar: {
         open: 'Abierto ahora',
         closed: 'Cerrado ahora',
-        eta: 'Entrega estimada ~ {{mins}} min',
+        eta: 'Entrega estimada ~ {{m}} min',
         noSignup: 'No requiere registro',
         browse: 'Ver menú',
       },
@@ -548,6 +554,9 @@ export const uiResources = {
         browseMenu: 'Ver menú completo',
         rating: '4,9/5 de más de 2.400 comensales locales',
         avgTime: 'Entrega en menos de 35 minutos de media',
+        openNow: 'Abierto ahora',
+        closedNow: 'Cerrado ahora',
+        eta: 'Entrega estimada ~ {{m}} min',
         card: {
           title: 'Elección del chef',
           desc: 'Barbacoa cocinada a fuego lento con salsa verde fresca y tortillas calientes.'
@@ -599,7 +608,7 @@ export const uiResources = {
         viewDetails: 'Ver detalles'
       },
       testimonials: {
-        heading: 'Lo que dicen nuestros clientes',
+        heading: 'Amor de clientes',
         t1: 'Los mejores tacos de la ciudad. Pedir es rapidísimo y la entrega suele llegar antes de lo esperado.',
         t2: 'Reservas que de verdad funcionan. Reservé a las 20:00 y me senté a las 20:02. Cinco estrellas.',
         t3: 'El programa de recompensas es real. Guacamole gratis tras mi segundo pedido.'
@@ -774,6 +783,9 @@ export const uiResources = {
         browseMenu: 'Voir le menu complet',
         rating: '4,9/5 de plus de 2 400 clients locaux',
         avgTime: 'Livraison en moins de 35 minutes en moyenne',
+        openNow: 'Ouvert',
+        closedNow: 'Fermé',
+        eta: 'Arrivée estimée ~ {{m}} min',
         card: {
           title: 'Sélection du chef',
           desc: 'Barbacoa mijotée avec salsa verde fraîche et tortillas chaudes.'
@@ -825,7 +837,7 @@ export const uiResources = {
         viewDetails: 'Voir les détails'
       },
       testimonials: {
-        heading: 'Ils nous aiment',
+        heading: 'Avis des clients',
         t1: 'Les meilleurs tacos de la ville. Commander est ultra rapide, la livraison arrive souvent plus tôt que prévu.',
         t2: 'Des réservations qui fonctionnent vraiment. Réservé à 20 h, assis à 20 h 02. Cinq étoiles.',
         t3: 'Programme de récompenses sérieux. Guacamole offert après ma deuxième commande.'
@@ -981,7 +993,7 @@ export const uiResources = {
       topbar: {
         open: 'Aberto agora',
         closed: 'Fechado agora',
-        eta: 'Entrega em ~ {{mins}} min',
+        eta: 'Entrega em ~ {{m}} min',
         noSignup: 'Sem cadastro',
         browse: 'Ver menu',
       },
@@ -998,6 +1010,9 @@ export const uiResources = {
         browseMenu: 'Ver menu completo',
         rating: '4,9/5 de mais de 2.400 clientes locais',
         avgTime: 'Entrega em menos de 35 minutos, em média',
+        openNow: 'Aberto agora',
+        closedNow: 'Fechado agora',
+        eta: 'Entrega em ~ {{m}} min',
         card: {
           title: 'Escolha do chef',
           desc: 'Barbacoa cozida lentamente com salsa verde fresca e tortillas quentes.'

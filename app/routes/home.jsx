@@ -143,10 +143,10 @@ export default function Home() {
                 <Await resolve={config}>{(c) => (
                   <>
                     <span className={c?.status?.isOpen ? 'text-green-600' : 'text-red-600'}>
-                      {c?.status?.isOpen ? t('hero.openNow', { defaultValue: 'Open now' }) : t('hero.closedNow', { defaultValue: 'Closed now' })}
+                      {c?.status?.isOpen ? t('hero.openNow') : t('hero.closedNow')}
                     </span>
                     <Separator className="w-px h-4" orientation="vertical" />
-                    <span>{t('hero.eta', { defaultValue: 'ETA ~ {{m}}m', m: c?.status?.etaMins ?? 25 })}</span>
+                    <span>{t('hero.eta', { m: c?.status?.etaMins ?? 25 })}</span>
                   </>
                 )}</Await>
               </Suspense>

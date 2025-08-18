@@ -1,8 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Star } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export default function Testimonials({ testimonials = [] }) {
+  const { t } = useTranslation('home');
   if (!testimonials.length) {
     return (
       <div className="grid gap-4 md:grid-cols-3">
@@ -16,26 +18,27 @@ export default function Testimonials({ testimonials = [] }) {
       </div>
     );
   }
+  const fallbacks = [t('testimonials.t1'), t('testimonials.t2'), t('testimonials.t3')];
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {testimonials.map((t) => (
-        <Card key={t.id} className="overflow-hidden">
+      {testimonials.map((tst, idx) => (
+        <Card key={tst.id || idx} className="overflow-hidden">
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
               <Avatar>
-                <AvatarFallback>{t.initials || (t.name || '?').slice(0,2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>{tst.initials || (tst.name || '?').slice(0,2).toUpperCase()}</AvatarFallback>
               </Avatar>
               <div>
                 <div className="flex items-center gap-2">
-                  <div className="text-sm font-medium">{t.name}</div>
-                  <div className="flex items-center gap-1 text-yellow-500" aria-label={`${t.rating} stars`}>
+                  <div className="text-sm font-medium">{tst.name || ''}</div>
+                  <div className="flex items-center gap-1 text-yellow-500" aria-label={`${tst.rating || 5} stars`}>
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className={`size-3 ${i < Number(t.rating || 0) ? 'fill-current' : ''}`} />
+                      <Star key={i} className={`size-3 ${i < Number(tst.rating || 5) ? 'fill-current' : ''}`} />
                     ))}
                   </div>
-                  <div className="text-xs text-muted-foreground">{new Date(t.date).toLocaleDateString()}</div>
+                  {tst.date && <div className="text-xs text-muted-foreground">{new Date(tst.date).toLocaleDateString()}</div>}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">{t.content}</div>
+                <div className="text-sm text-muted-foreground mt-1">{tst.content || fallbacks[idx % fallbacks.length]}</div>
               </div>
             </div>
           </CardContent>
