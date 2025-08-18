@@ -173,6 +173,15 @@ function getDefaultHomeContent(locale) {
       },
       imageAlt: TranslationService.t('home:hero.imageAlt', { lng: locale })
     },
+    cta: {
+      limited: TranslationService.t('business:home.cta.limited', { lng: locale }),
+      title: TranslationService.t('business:home.cta.title', { lng: locale }),
+      desc: TranslationService.t('business:home.cta.desc', { lng: locale }),
+      endsTonight: TranslationService.t('business:home.cta.endsTonight', { lng: locale }),
+      socialProof: TranslationService.t('business:home.cta.socialProof', { lng: locale }),
+      start: TranslationService.t('business:home.cta.start', { lng: locale }),
+      reserve: TranslationService.t('business:home.cta.reserve', { lng: locale })
+    },
     features: {
       title: TranslationService.t('home:features.title', { lng: locale }),
       items: [
