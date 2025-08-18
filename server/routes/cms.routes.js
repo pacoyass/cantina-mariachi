@@ -11,8 +11,8 @@ const rlLight = rateLimit({ windowMs: 60_000, max: 240 });
 const rlStrict = rateLimit({ windowMs: 60_000, max: 60 });
 
 // Public routes
-router.get('/:slug', rlLight, getPage);
 router.get('/home', rlLight, getHomePage); // Special route for home page
+router.get('/:slug', rlLight, getPage);
 
 // Protected routes
 router.put('/:slug', authMiddleware, requireRole('ADMIN','OWNER'), rlStrict, upsertPage);
