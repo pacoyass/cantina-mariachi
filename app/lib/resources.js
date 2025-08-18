@@ -985,6 +985,89 @@ export const uiResources = {
       badges: { new: 'Neu', popular: 'Beliebt' }
     }
   },
+  de: {
+    ui: {
+      nav: {
+        home: 'Startseite',
+        menu: 'Speisekarte',
+        orders: 'Bestellungen',
+        reservations: 'Reservierungen',
+        account: 'Konto',
+        profile: 'Profil',
+        login: 'Anmelden',
+        register: 'Registrieren',
+        orderNow: 'Jetzt bestellen',
+      },
+      offer: {
+        freeDelivery: 'Nur heute: Gratis‑Lieferung ab 25 $',
+      },
+      topbar: {
+        open: 'Jetzt geöffnet',
+        closed: 'Jetzt geschlossen',
+        eta: 'Ankunft ~ {{mins}} Min',
+        noSignup: 'Keine Registrierung nötig',
+        browse: 'Speisekarte ansehen',
+      },
+      brand: 'Cantina',
+      footer: { quickLinks: 'Schnellzugriff', contact: 'Kontakt', newsletter: 'Newsletter', emailPlaceholder: 'E‑Mail‑Adresse', join: 'Mitmachen', privacy: 'Datenschutz', terms: 'AGB', copyright: '© {{year}} {{brand}}. Alle Rechte vorbehalten.' }
+    },
+    home: {
+      hero: {
+        badge: 'Neu: Rewards gestartet — Punkte bei jeder Bestellung',
+        title: 'Echte mexikanische Küche. <primary>Schnell geliefert.</primary>',
+        desc: 'Von Street‑Tacos bis zu langsam geschmorten Spezialitäten. In Sekunden bestellen, sofort reservieren und die Lieferung in Echtzeit verfolgen — alles an einem Ort.',
+        orderNow: 'Jetzt bestellen',
+        reserve: 'Tisch reservieren',
+        browseMenu: 'Gesamte Speisekarte ansehen',
+        rating: '4,9/5 von 2.400+ Gästen',
+        avgTime: 'Lieferung im Schnitt unter 35 Minuten',
+        openNow: 'Jetzt geöffnet',
+        closedNow: 'Jetzt geschlossen',
+        eta: 'Ankunft ~ {{m}} Min',
+        card: {
+          title: 'Empfehlung des Küchenchefs',
+          desc: 'Langsam geschmorte Barbacoa mit frischer Salsa Verde und warmen Tortillas.'
+        }
+      },
+      testimonials: {
+        heading: 'Kundenstimmen',
+        t1: 'Mit Abstand die besten Tacos der Stadt. Bestellung super schnell, Lieferung oft früher als erwartet.',
+        t2: 'Reservierungen, die wirklich funktionieren. Für 20 Uhr gebucht, um 20:02 saß ich. Fünf Sterne.',
+        t3: 'Das Treueprogramm ist top. Gratis Guacamole nach meiner zweiten Bestellung.',
+        verified: 'Verifiziert',
+        readMore: 'Mehr lesen'
+      },
+      cta: {
+        endsTonight: 'Endet heute um Mitternacht!',
+        title: 'Gratis‑Lieferung für Bestellungen über 25 $',
+        desc: 'In Sekunden bestellen oder sofort reservieren — heute ohne zusätzliche Gebühren.',
+        socialProof: 'Schließe dich 2.847+ Kunden an, die heute gespart haben',
+        limited: 'Zeitlich begrenztes Angebot',
+        start: 'Bestellung starten',
+        reserve: 'Jetzt reservieren'
+      }
+    },
+    menu: {
+      hero: {
+        title: 'Entdecke unsere Speisekarte',
+        subtitle: 'Von Köchen kreierte Gerichte, frische Zutaten und saisonale Specials.'
+      },
+      actions: {
+        searchPlaceholder: 'Gerichte suchen…',
+        search: 'Suchen',
+        sortBy: 'Sortieren nach',
+        sort: { popular: 'Am beliebtesten', priceLow: 'Preis: aufsteigend', priceHigh: 'Preis: absteigend', newest: 'Neueste' },
+        add: 'Zur Bestellung hinzufügen',
+        unavailable: 'Nicht verfügbar',
+        noItems: 'Keine Einträge gefunden.'
+      },
+      categories: 'Kategorien',
+      categoriesAll: 'Alle',
+      filters: { dietary: 'Ernährung', vegetarian: 'Vegetarisch', vegan: 'Vegan', glutenFree: 'Glutenfrei', spicy: 'Scharf' },
+      results: '{{count}} Artikel',
+      badges: { new: 'Neu', popular: 'Beliebt' }
+    }
+  },
   pt: {
     ui: {
       nav: {
