@@ -1,9 +1,47 @@
 {
   "hero": {
-    "badge": "Neu: Prämien gestartet — Punkte bei jeder Bestellung",
-    "title": "Authentisches Mexikanisch. <primary>Schnell geliefert.</primary>",
-    "desc": "Von Street‑Tacos bis zu langsam geschmorten Spezialitäten. In Sekunden bestellen, sofort reservieren und die Lieferung in Echtzeit verfolgen — alles an einem Ort.",
-    "imageAlt": "Bunte Tacos mit frischen Zutaten"
+    "badge": "Neu: Belohnungen gestartet — sammeln Sie Punkte bei jeder Bestellung",
+    "title": "Authentische mexikanische Küche. <primary>Schnell geliefert.</primary>",
+    "desc": "Von Straßen-Tacos bis zu langsam geschmorten Spezialitäten. Bestellen Sie in Sekunden, reservieren Sie sofort und verfolgen Sie Ihre Lieferung in Echtzeit — alles an einem Ort.",
+    "imageAlt": "Bunte Tacos-Platte mit frischen Zutaten und lebendiger Salsa"
   },
-  "offers": { "heading": "Saisonangebote", "badge": "Begrenzt", "bundle": "Taco Tuesday Bundle", "deal": "2 Tacos + Getränk — 9,99 $", "endsIn": "Endet in", "orderBundle": "Bundle bestellen", "viewDetails": "Details ansehen" }
+  "features": {
+    "title": "Warum Cantina wählen",
+    "quality": {
+      "title": "Von Köchen kreierte Qualität",
+      "desc": "Frische Zutaten und saisonale Menüs, zubereitet von erfahrenen Köchen."
+    },
+    "speed": {
+      "title": "Blitzschnelle Lieferung",
+      "desc": "Direkt von der Küche zur Haustür, ohne Verzögerungen durch Dritte."
+    },
+    "service": {
+      "title": "Außergewöhnlicher Service",
+      "desc": "Live-Verfolgung, sofortige Bestätigungen und 24/7-Support."
+    }
+  },
+  "about": {
+    "title": "Unsere Geschichte",
+    "content": "Gegründet mit einer Leidenschaft für authentische mexikanische Küche, bringen wir die Aromen Mexikos mit moderner Bequemlichkeit und traditionellen Rezepten auf Ihren Tisch."
+  },
+  "contact": {
+    "title": "Kontakt aufnehmen",
+    "address": "123 Mexikanische Straße, Feinschmecker-Stadt, FS 12345",
+    "phone": "+1 (555) 123-4567",
+    "email": "hallo@cantina.com"
+  },
+  "offers": {
+    "heading": "Saisonangebote",
+    "badge": "Begrenzte Zeit",
+    "bundle": "Taco-Dienstag-Paket",
+    "deal": "2 Tacos + Getränk — 9,99 $",
+    "endsIn": "Endet in",
+    "orderBundle": "Paket bestellen",
+    "viewDetails": "Details anzeigen"
+  },
+  "seo": {
+    "title": "Cantina Mariachi – Authentisches Mexikanisch, Moderne Erfahrung",
+    "description": "Online bestellen in Sekunden, sofort reservieren und Lieferung live verfolgen.",
+    "keywords": "mexikanisches Essen, Tacos, Lieferung, Restaurant"
+  }
 }

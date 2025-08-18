@@ -11,7 +11,10 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "jest --watchAll --coverage --notify",
     "ggshield": "ggshield secret scan repo .",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "i18n:validate": "node scripts/validate-translations.js",
+    "i18n:check": "npm run i18n:validate",
+    "pretest": "npm run i18n:validate"
   },
   "dependencies": {
     "@prisma/extension-accelerate": "^2.0.2",
