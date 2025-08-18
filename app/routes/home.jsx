@@ -104,7 +104,22 @@ export async function loader({ request, context }) {
       const data = await res.json();
       return data?.data?.page?.data || {};
     } catch {
-      return {};
+      // Return minimal defaults so UI doesn't skeleton forever
+      return {
+        hero: {
+          badge: t ? t('home:hero.badge') : 'New',
+          title: t ? t('home:hero.title') : 'Authentic Mexican. <primary>Delivered fast.</primary>',
+          desc: t ? t('home:hero.desc') : 'Order in seconds, reserve instantly, track live.'
+        },
+        cta: {
+          limited: t ? t('home:cta.limited') : 'Limited-time offer',
+          title: t ? t('home:cta.title') : '🔥 FREE DELIVERY on $25+ Orders',
+          desc: t ? t('home:cta.desc') : 'Order in seconds or reserve instantly.',
+          socialProof: t ? t('home:cta.socialProof') : 'Join 2,847+ customers who saved today',
+          start: t ? t('home:cta.start') : 'Start an Order',
+          reserve: t ? t('home:cta.reserve') : 'Reserve Now'
+        }
+      };
     }
   })();
   return {
