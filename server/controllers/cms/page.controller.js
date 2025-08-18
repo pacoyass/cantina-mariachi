@@ -10,11 +10,28 @@ export const getPage = async (req, res) => {
   try {
     const { slug } = req.params;
     const { locale = 'en', status } = req.query;
-    const page = await prisma.pageContent.findUnique({ where: { slug_locale: { slug, locale } } });
-    if (!page || (status !== 'ANY' && page.status !== 'PUBLISHED')) {
+    const fallbackChain = Array.from(new Set([
+      String(locale || 'en'),
+      ...(String(locale || 'en').includes('-') ? [String(locale).split('-')[0]] : []),
+      'en'
+    ]));
+
+    // Fetch available locales for this slug in one query
+    const candidates = await prisma.pageContent.findMany({
+      where: { slug, locale: { in: fallbackChain } },
+      orderBy: { updatedAt: 'desc' },
+    });
+    // Pick first locale in fallback order that is published (unless status=ANY)
+    let page = null;
+    for (const lng of fallbackChain) {
+      const candidate = candidates.find(c => c.locale === lng);
+      if (!candidate) continue;
+      if (status === 'ANY' || candidate.status === 'PUBLISHED') { page = candidate; break; }
+    }
+    if (!page) {
       return createError(res, 404, 'notFound', 'PAGE_NOT_FOUND', {}, req);
     }
-    return createResponse(res, 200, 'dataRetrieved', { page }, req, {}, 'api');
+    return createResponse(res, 200, 'dataRetrieved', { page, localeResolved: page.locale }, req, {}, 'api');
   } catch (e) {
     return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
   }
