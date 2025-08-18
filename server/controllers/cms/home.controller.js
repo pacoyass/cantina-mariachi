@@ -37,7 +37,25 @@ export const getHomePage = async (req, res) => {
     }
 
     if (!page) {
-      return createError(res, 404, 'notFound', 'HOME_PAGE_NOT_FOUND', {}, req);
+      // No CMS record; return sane defaults so frontend doesn't skeleton
+      const defaultContent = getDefaultHomeContent(fallbackChain[0]);
+      const synthetic = {
+        slug: 'home',
+        locale: fallbackChain[0],
+        data: defaultContent,
+        status: 'PUBLISHED',
+        updatedAt: new Date()
+      };
+      res.set({
+        'Content-Language': fallbackChain[0],
+        'Vary': 'Accept-Language',
+        'Cache-Control': 'public, max-age=300, s-maxage=3600'
+      });
+      return createResponse(res, 200, 'dataRetrieved', {
+        page: synthetic,
+        localeResolved: fallbackChain[0],
+        fallbackChain
+      }, req, {}, 'api');
     }
 
     // Apply field-level fallbacks for missing content
