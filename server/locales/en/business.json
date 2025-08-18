@@ -129,6 +129,15 @@
       "phone": "+1 (555) 123-4567",
       "email": "hello@cantina.com"
     },
+    "cta": {
+      "limited": "Limited time offer",
+      "title": "Ready to experience authentic Mexican?",
+      "desc": "Join thousands of satisfied customers who choose Cantina for quality, speed, and service.",
+      "endsTonight": "Ends tonight at midnight",
+      "socialProof": "2,400+ happy customers this month",
+      "start": "Start Ordering",
+      "reserve": "Reserve Table"
+    },
     "seo": {
       "title": "Cantina Mariachi – Authentic Mexican, Modern Experience",
       "description": "Order online in seconds, reserve instantly, and track your delivery live. Authentic Mexican cuisine delivered fast.",

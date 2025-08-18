@@ -54,7 +54,7 @@ i18next
     },
     
     // Namespace options
-    ns: ['common', 'auth', 'api', 'validation', 'email', 'business'],
+    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home'],
     defaultNS: 'common',
     
     // Resource loading options

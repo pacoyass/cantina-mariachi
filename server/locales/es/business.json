@@ -129,6 +129,15 @@
       "phone": "+1 (555) 123-4567",
       "email": "hola@cantina.com"
     },
+    "cta": {
+      "limited": "Oferta por tiempo limitado",
+      "title": "¿Listo para vivir la auténtica experiencia mexicana?",
+      "desc": "Únete a miles de clientes satisfechos que eligen Cantina por su calidad, rapidez y servicio.",
+      "endsTonight": "¡Termina esta noche a medianoche!",
+      "socialProof": "Más de 2.400 clientes satisfechos este mes",
+      "start": "Empezar pedido",
+      "reserve": "Reservar mesa"
+    },
     "seo": {
       "title": "Cantina Mariachi – Experiencia Mexicana Auténtica y Moderna",
       "description": "Pide en línea en segundos, reserva al instante y rastrea tu entrega en vivo. Cocina mexicana auténtica entregada rápido.",
