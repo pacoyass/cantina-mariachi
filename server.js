@@ -68,13 +68,18 @@ if (DEVELOPMENT) {
           port: hmrPort,
         },
       },
+      // Exclude server files from Vite processing
+      optimizeDeps: {
+        exclude: ['server/**/*'],
+      },
     })
   );
   app.use(viteDevServer.middlewares);
   app.use(async (req, res, next) => {
     try {
-      const source = await viteDevServer.ssrLoadModule('./server/app.js');
-      return await source.app(req, res, next);
+      // Import the server app directly without Vite processing
+      const { app: serverApp } = await import('./server/app.js');
+      return serverApp(req, res, next);
     } catch (error) {
       if (typeof error === 'object' && error instanceof Error) {
         viteDevServer.ssrFixStacktrace(error);
