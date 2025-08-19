@@ -75,7 +75,51 @@ if (DEVELOPMENT) {
     try {
       // Import the server app directly without Vite processing
       const { app: serverApp } = await import('./server/app.js');
-      return serverApp(req, res, next);
+      
+      // Create a mock request handler for development that provides language context
+      const mockReq = {
+        ...req,
+        cookies: req.cookies || {},
+        query: req.query || {},
+        headers: req.headers || {}
+      };
+      
+      // Add language context to the request
+      const urlLang = req.query.lng;
+      const cookieLang = req.cookies?.i18next;
+      const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
+      
+      let lng = urlLang || cookieLang || headerLang || 'en';
+      
+      // Validate language is supported
+      if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
+        lng = 'en';
+      }
+      
+      // Add language context to response locals
+      res.locals.lng = lng;
+      res.locals.supportedLngs = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'];
+      
+      return serverApp(mockReq, res, next);
+    } catch (error) {
+      if (typeof error === 'object' && error instanceof Error) {
+        viteDevServer.ssrFixStacktrace(error);
+      }
+      next(error);
+    }
+  });
+  
+  // Add React Router handler for development mode
+  app.use(async (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    
+    try {
+      // Use Vite's ssrLoadModule for the React Router app
+      const source = await viteDevServer.ssrLoadModule('./app/entry.server.jsx');
+      return await source.default(req, res, next);
     } catch (error) {
       if (typeof error === 'object' && error instanceof Error) {
         viteDevServer.ssrFixStacktrace(error);

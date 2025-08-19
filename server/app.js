@@ -168,32 +168,37 @@ if (process.env.NODE_ENV !== 'test') {
 	registerCronJobs(); // Register all cron jobs
 	console.log('✅ Registered cron jobs');
 }
-app.use(
-	createRequestHandler({
-		build: () => import("virtual:react-router/server-build"),
-		getLoadContext(req,res) {
-			// Get language from multiple sources with proper fallback
-			const urlLang = req.query.lng;
-			const cookieLang = req.cookies?.i18next;
-			const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
-			
-			let lng = urlLang || cookieLang || headerLang || 'en';
-			
-			// Validate language is supported
-			if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
-				lng = 'en';
-			}
-			
-			return {
-				VALUE_FROM_EXPRESS: "Hello from Express",
-				nonce: res.locals.nonce,
-				csrfToken: res.locals.csrfToken,
-				lng: lng,
-				supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
-			};
-		},
-	}),
-);
+
+// Only handle React Router in production mode
+// In development mode, this is handled by the main server.js
+if (process.env.NODE_ENV === 'production') {
+	app.use(
+		createRequestHandler({
+			build: () => import("virtual:react-router/server-build"),
+			getLoadContext(req,res) {
+				// Get language from multiple sources with proper fallback
+				const urlLang = req.query.lng;
+				const cookieLang = req.cookies?.i18next;
+				const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
+				
+				let lng = urlLang || cookieLang || headerLang || 'en';
+				
+				// Validate language is supported
+				if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
+					lng = 'en';
+				}
+				
+				return {
+					VALUE_FROM_EXPRESS: "Hello from Express",
+					nonce: res.locals.nonce,
+					csrfToken: res.locals.csrfToken,
+					lng: lng,
+					supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
+				};
+			},
+		}),
+	);
+}
 
 // General Error Handler
 app.use( ( err, req, res, next ) => {
