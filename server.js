@@ -89,27 +89,72 @@ if (DEVELOPMENT) {
   
   // In development mode, let Vite handle all frontend routes
   // This is simpler and avoids the React Router SSR complexity
-  app.use((req, res, next) => {
+  app.use(async (req, res, next) => {
     // Skip API routes
     if (req.path.startsWith('/api/')) {
       return next();
     }
     
-    // For any other route, serve the basic HTML template
-    // This lets Vite handle the frontend routing
-    res.status(200).send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Cantina App</title>
-        </head>
-        <body>
-          <div id="root"></div>
-          <script type="module" src="/app/entry.client.jsx"></script>
-        </body>
-      </html>
-    `);
+    try {
+      // Import React Router's createRequestHandler
+      const { createRequestHandler } = await import('@react-router/express');
+      
+      // Create the request handler with Vite's build
+      const handler = createRequestHandler({
+        build: async () => {
+          try {
+            // Load the routes configuration
+            const routes = await viteDevServer.ssrLoadModule('./app/routes.js');
+            return routes.default || routes;
+          } catch (error) {
+            console.error('Error loading routes:', error);
+            throw error;
+          }
+        },
+        getLoadContext(req, res) {
+          // Get language from multiple sources with proper fallback
+          const urlLang = req.query.lng;
+          const cookieLang = req.cookies?.i18next;
+          const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
+          
+          let lng = urlLang || cookieLang || headerLang || 'en';
+          
+          // Validate language is supported
+          if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
+            lng = 'en';
+          }
+          
+          return {
+            lng: lng,
+            supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
+          };
+        },
+      });
+      
+      return handler(req, res, next);
+    } catch (error) {
+      console.error('React Router handler error:', error);
+      // Fallback to basic HTML if React Router fails
+      res.status(200).send(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Cantina App</title>
+          </head>
+          <body>
+            <div id="root">
+              <h1>Loading...</h1>
+              <p>If you see this message, there was an error loading the React app.</p>
+              <p>Error: ${error.message}</p>
+            </div>
+            <script type="module" src="/@vite/client"></script>
+            <script type="module" src="/app/entry.client.jsx"></script>
+          </body>
+        </html>
+      `);
+    }
   });
 } else {
   console.log('Starting production server');
