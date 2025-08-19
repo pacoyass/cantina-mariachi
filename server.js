@@ -10,8 +10,6 @@ dotenv.config();
 
 import { LoggerService } from './server/utils/logger.js';
 import cacheService from './server/services/cacheService.js';
-import cookieParser from 'cookie-parser';
-import apiRoutes from './server/routes/index.routes.js';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const BASE_PORT = Number.parseInt(process.env.PORT || '3333');
@@ -73,34 +71,10 @@ if (DEVELOPMENT) {
     })
   );
   app.use(viteDevServer.middlewares);
-  
-  // In development mode, handle server setup directly without importing server/app.js
-  // This avoids Vite trying to process server files
-  
-  // Add basic middleware for development
-  app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
-  if (process.env.ALLOW_URLENCODED === '1') {
-    app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
-  }
-  
-  // Configure cookie parser for development
-  const cookieSecret = process.env.COOKIE_SECRET || 'your-fallback-secret';
-  app.use(cookieParser(cookieSecret));
-  
-  // Add basic API routes for development
-  app.use("/api", apiRoutes);
-  
-  // Add React Router handler for development mode
   app.use(async (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) {
-      return next();
-    }
-    
     try {
-      // Use Vite's ssrLoadModule for the React Router app
-      const source = await viteDevServer.ssrLoadModule('./app/entry.server.jsx');
-      return await source.default(req, res, next);
+      const source = await viteDevServer.ssrLoadModule('./server/app.js');
+      return await source.app(req, res, next);
     } catch (error) {
       if (typeof error === 'object' && error instanceof Error) {
         viteDevServer.ssrFixStacktrace(error);
