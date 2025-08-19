@@ -123,7 +123,7 @@ export function ErrorBoundary( { error } )
     message = error.status === 404 ? `${error.status}-${error.statusText}` : t('errors.title', { ns: 'ui' });
     details =
       error.status === 404
-        ? t('errors.notFound', { ns: 'ui' })}
+        ? t('errors.notFound', { ns: 'ui' })
         : error.statusText || details;
   } else if ( import.meta.env.DEV && error && error instanceof Error ) {
     details = error.message;
