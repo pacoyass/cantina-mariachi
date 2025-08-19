@@ -32,6 +32,11 @@ export const uiResources = {
         toggleTheme: 'Toggle theme',
         close: 'Close'
       },
+      language: {
+        reset: 'Reset to Default',
+        select: 'Select Language',
+        current: 'Current Language'
+      },
       theme: {
         toggle: 'Toggle theme',
         light: 'Light',
@@ -64,7 +69,7 @@ export const uiResources = {
         closedNow: 'Closed now',
         eta: 'ETA ~ {{m}}m',
         card: {
-          title: 'Chef’s Pick',
+          title: 'Chef's Pick',
           desc: 'Slow-braised barbacoa with fresh salsa verde and warm tortillas.'
         }
       },
@@ -288,13 +293,18 @@ export const uiResources = {
         browse: 'Vedi menu',
       },
       brand: 'Cantina',
-      footer: { tagline: 'Sapori messicani autentici, esperienza moderna.', quickLinks: 'Link rapidi', contact: 'Contatti', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Iscriviti', privacy: 'Privacy', terms: 'Termini', copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.' }
+      footer: { tagline: 'Sapori messicani autentici, esperienza moderna.', quickLinks: 'Link rapidi', contact: 'Contatti', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Iscriviti', privacy: 'Privacy', terms: 'Termini', copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.' },
+      language: {
+        reset: 'Ripristina predefinito',
+        select: 'Seleziona lingua',
+        current: 'Lingua corrente'
+      }
     },
     home: {
       hero: {
         badge: 'Novità: programma fedeltà — guadagna punti a ogni ordine',
         title: 'Autentica cucina messicana. <primary>Consegna rapida.</primary>',
-        desc: 'Dai tacos di strada alle specialità a lenta cottura. Ordina in pochi secondi, prenota all’istante e segui la consegna in tempo reale — tutto in un unico posto.',
+        desc: 'Dai tacos di strada alle specialità a lenta cottura. Ordina in pochi secondi, prenota all'istante e segui la consegna in tempo reale — tutto in un unico posto.',
         orderNow: 'Ordina ora',
         reserve: 'Prenota un tavolo',
         browseMenu: 'Vedi menu completo',
@@ -338,7 +348,7 @@ export const uiResources = {
       },
       events: {
         heading: 'Eventi di gruppo & catering',
-        desc: 'Prenota per 8+ persone o organizza il catering per l’ufficio in pochi minuti.',
+        desc: 'Prenota per 8+ persone o organizza il catering per l'ufficio in pochi minuti.',
         plan: 'Organizza evento',
         catering: 'Catering',
         q1: { question: 'Offrite menu fissi?', answer: 'Sì — menu per gruppi da 8 a 30 persone, con opzioni vegetariane.' },
@@ -387,18 +397,18 @@ export const uiResources = {
         desc: 'Dalla voglia alla tavola in tre semplici passi.',
         step1: { title: 'Scegli i tuoi preferiti', desc: 'Sfoglia categorie curate o cerca un piatto specifico.' },
         step2: { title: 'Personalizza & paga', desc: 'Aggiungi contorni, scegli il livello di piccantezza e paga in pochi secondi.' },
-        step3: { title: 'Segui & gusta', desc: 'Segui l’ordine dal vivo o mostra la prenotazione all’ingresso.' }
+        step3: { title: 'Segui & gusta', desc: 'Segui l'ordine dal vivo o mostra la prenotazione all'ingresso.' }
       },
       faq: {
         heading: 'Domande frequenti',
         q1: { question: 'Offrite opzioni vegetariane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetariane.' },
         q2: { question: 'Quanto impiega la consegna?', answer: 'In media, meno di 35 minuti a seconda di orario e distanza.' },
-        q3: { question: 'Posso modificare la prenotazione?', answer: 'Puoi modificarla fino a 2 ore prima dell’orario.' }
+        q3: { question: 'Posso modificare la prenotazione?', answer: 'Puoi modificarla fino a 2 ore prima dell'orario.' }
       },
       cta: {
         endsTonight: 'Termina questa notte a mezzanotte!',
         title: 'Consegna gratuita per ordini superiori a 25 $',
-        desc: 'Ordina in pochi secondi o prenota all’istante — nessun costo aggiuntivo oggi.',
+        desc: 'Ordina in pochi secondi o prenota all'istante — nessun costo aggiuntivo oggi.',
         socialProof: 'Unisciti a oltre 2.847 clienti che hanno risparmiato oggi',
         limited: 'Offerta a tempo limitato',
         start: 'Inizia un ordine',
@@ -409,7 +419,7 @@ export const uiResources = {
         heading: 'Popolare questa settimana',
         seeMenu: 'Vedi il menu completo',
         unavailable: 'Non disponibile',
-        add: 'Aggiungi all’ordine',
+        add: 'Aggiungi all'ordine',
         notify: 'Avvisami',
         coming: 'Una deliziosa selezione in arrivo.',
         chefSpecial: 'Speciale dello chef #{{num}}',
@@ -427,7 +437,7 @@ export const uiResources = {
         search: 'Cerca',
         sortBy: 'Ordina per',
         sort: { popular: 'Più popolari', priceLow: 'Prezzo: crescente', priceHigh: 'Prezzo: decrescente', newest: 'Più recenti' },
-        add: 'Aggiungi all’ordine',
+        add: 'Aggiungi all'ordine',
         unavailable: 'Non disponibile',
         noItems: 'Nessun elemento trovato.'
       },
@@ -471,22 +481,22 @@ export const uiResources = {
         toggleTheme: 'تبديل السمة',
         close: 'إغلاق'
       },
+      language: {
+        reset: 'إعادة الإفتراض',
+        select: 'حالة اللغة',
+        current: 'اللغة الحالية'
+      },
       theme: {
         toggle: 'تبديل السمة',
         light: 'فاتح',
         dark: 'داكن',
         system: 'النظام'
       },
-      footer: {
-        tagline: 'نكهات مكسيكية أصيلة بتجربة عصرية.',
-        quickLinks: 'روابط سريعة',
-        contact: 'تواصل',
-        newsletter: 'النشرة البريدية',
-        emailPlaceholder: 'عنوان البريد الإلكتروني',
-        join: 'انضم',
-        privacy: 'الخصوصية',
-        terms: 'الشروط',
-        copyright: '© {{year}} {{brand}}. جميع الحقوق محفوظة.'
+      footer: { tagline: 'نكهات مكسيكية أصيلة بتجربة عصرية.', quickLinks: 'روابط سريعة', contact: 'تواصل', newsletter: 'النشرة البريدية', emailPlaceholder: 'عنوان البريد الإلكتروني', join: 'انضم', privacy: 'الخصوصية', terms: 'الشروط', copyright: '© {{year}} {{brand}}. جميع الحقوق محفوظة.' },
+      language: {
+        reset: 'إعادة الإفتراض',
+        select: 'حالة اللغة',
+        current: 'اللغة الحالية'
       }
     },
     home: {
@@ -662,7 +672,12 @@ export const uiResources = {
         browse: 'Ver menú',
       },
       brand: 'Cantina',
-      footer: { quickLinks: 'Enlaces rápidos', contact: 'Contacto', newsletter: 'Boletín', emailPlaceholder: 'Correo electrónico', join: 'Unirse', privacy: 'Privacidad', terms: 'Términos', copyright: '© {{year}} {{brand}}. Todos los derechos reservados.' }
+      footer: { quickLinks: 'Enlaces rápidos', contact: 'Contacto', newsletter: 'Boletín', emailPlaceholder: 'Correo electrónico', join: 'Unirse', privacy: 'Privacidad', terms: 'Términos', copyright: '© {{year}} {{brand}}. Todos los derechos reservados.' },
+      language: {
+        reset: 'Restablecer por defecto',
+        select: 'Seleccionar idioma',
+        current: 'Idioma actual'
+      }
     },
     home: {
       hero: {
@@ -883,7 +898,7 @@ export const uiResources = {
         orderNow: 'Commander',
       },
       offer: {
-        freeDelivery: 'Aujourd’hui seulement : livraison gratuite dès 25 $',
+        freeDelivery: 'Aujourd'hui seulement : livraison gratuite dès 25 $',
       },
       topbar: {
         open: 'Ouvert',
@@ -893,7 +908,12 @@ export const uiResources = {
         browse: 'Voir le menu',
       },
       brand: 'Cantina',
-      footer: { quickLinks: 'Liens rapides', contact: 'Contact', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Rejoindre', privacy: 'Confidentialité', terms: 'Conditions', copyright: '© {{year}} {{brand}}. Tous droits réservés.' }
+      footer: { quickLinks: 'Liens rapides', contact: 'Contact', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Rejoindre', privacy: 'Confidentialité', terms: 'Conditions', copyright: '© {{year}} {{brand}}. Tous droits réservés.' },
+      language: {
+        reset: 'Réinitialiser par défaut',
+        select: 'Sélectionner la langue',
+        current: 'Langue actuelle'
+      }
     },
     home: {
       hero: {
@@ -943,11 +963,11 @@ export const uiResources = {
       },
       events: {
         heading: 'Événements de groupe & traiteur',
-        desc: 'Réservez pour 8+ personnes ou organisez un traiteur d’entreprise en quelques minutes.',
+        desc: 'Réservez pour 8+ personnes ou organisez un traiteur d'entreprise en quelques minutes.',
         plan: 'Planifier',
         catering: 'Traiteur',
         q1: { question: 'Proposez‑vous des menus fixes ?', answer: 'Oui — menus pour groupes de 8 à 30, avec options végétariennes.' },
-        q2: { question: 'Combien de temps à l’avance réserver ?', answer: 'Nous recommandons 48 h, mais le jour même peut être possible hors pointe.' }
+        q2: { question: 'Combien de temps à l'avance réserver ?', answer: 'Nous recommandons 48 h, mais le jour même peut être possible hors pointe.' }
       },
       offers: {
         heading: 'Offres saisonnières',
@@ -955,7 +975,7 @@ export const uiResources = {
         bundle: 'Offre Taco Tuesday',
         deal: '2 tacos + boisson — 9,99 $',
         endsIn: 'Se termine dans',
-        orderBundle: 'Commander l’offre',
+        orderBundle: 'Commander l'offre',
         viewDetails: 'Voir les détails'
       },
       testimonials: {
@@ -989,22 +1009,22 @@ export const uiResources = {
       },
       how: {
         heading: 'Comment ça marche',
-        desc: 'De l’envie à l’assiette en trois étapes simples.',
+        desc: 'De l'envie à l'assiette en trois étapes simples.',
         step1: { title: 'Choisissez vos favoris', desc: 'Parcourez des catégories sélectionnées ou recherchez un plat.' },
         step2: { title: 'Personnalisez & payez', desc: 'Ajoutez des accompagnements, choisissez le piquant et payez en quelques secondes.' },
-        step3: { title: 'Suivez & savourez', desc: 'Suivez votre commande en direct ou présentez votre réservation à l’entrée.' }
+        step3: { title: 'Suivez & savourez', desc: 'Suivez votre commande en direct ou présentez votre réservation à l'entrée.' }
       },
       faq: {
         heading: 'Foire aux questions',
         q1: { question: 'Proposez‑vous des options végétariennes ?', answer: 'Oui, beaucoup ! Beaucoup de nos tacos et bols ont des options végétariennes.' },
-        q2: { question: 'Combien de temps durent les livraisons ?', answer: 'En moyenne, moins de 35 minutes selon l’heure et la distance.' },
-        q3: { question: 'Puis‑je modifier ma réservation ?', answer: 'Vous pouvez modifier votre réservation jusqu’à 2 heures avant votre créneau.' }
+        q2: { question: 'Combien de temps durent les livraisons ?', answer: 'En moyenne, moins de 35 minutes selon l'heure et la distance.' },
+        q3: { question: 'Puis‑je modifier ma réservation ?', answer: 'Vous pouvez modifier votre réservation jusqu'à 2 heures avant votre créneau.' }
       },
       cta: {
         limited: 'Offre à durée limitée',
         title: 'Livraison gratuite pour les commandes de plus de 25 $',
-        desc: 'Commandez en quelques secondes ou réservez instantanément — sans frais supplémentaires aujourd’hui.',
-        socialProof: 'Rejoignez 2 847+ clients qui ont économisé aujourd’hui',
+        desc: 'Commandez en quelques secondes ou réservez instantanément — sans frais supplémentaires aujourd'hui.',
+        socialProof: 'Rejoignez 2 847+ clients qui ont économisé aujourd'hui',
         start: 'Commencer une commande',
         reserve: 'Réserver maintenant'
       },
@@ -1125,7 +1145,12 @@ export const uiResources = {
         browse: 'Speisekarte ansehen',
       },
       brand: 'Cantina',
-      footer: { quickLinks: 'Schnellzugriff', contact: 'Kontakt', newsletter: 'Newsletter', emailPlaceholder: 'E‑Mail‑Adresse', join: 'Mitmachen', privacy: 'Datenschutz', terms: 'AGB', copyright: '© {{year}} {{brand}}. Alle Rechte vorbehalten.' }
+      footer: { quickLinks: 'Schnellzugriff', contact: 'Kontakt', newsletter: 'Newsletter', emailPlaceholder: 'E‑Mail‑Adresse', join: 'Mitmachen', privacy: 'Datenschutz', terms: 'AGB', copyright: '© {{year}} {{brand}}. Alle Rechte vorbehalten.' },
+      language: {
+        reset: 'Auf Standard zurücksetzen',
+        select: 'Sprache auswählen',
+        current: 'Aktuelle Sprache'
+      }
     },
     home: {
       hero: {
@@ -1229,7 +1254,7 @@ export const uiResources = {
         trustedDesc: 'Verifizierte Bewertungen, sichere Zahlungen, Zufriedenheitsgarantie.'
       },
       how: {
-        heading: 'So funktioniert’s',
+        heading: 'So funktioniert's',
         desc: 'Vom Appetit zum Tisch in drei einfachen Schritten.',
         step1: { title: 'Favoriten wählen', desc: 'Kuratiere Kategorien durchsuchen oder nach einem Gericht suchen.' },
         step2: { title: 'Anpassen & bezahlen', desc: 'Beilagen hinzufügen, Schärfe wählen und in Sekunden sicher zahlen.' },
@@ -1303,7 +1328,12 @@ export const uiResources = {
         browse: 'Ver menu',
       },
       brand: 'Cantina',
-      footer: { quickLinks: 'Links rápidos', contact: 'Contato', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Participar', privacy: 'Privacidade', terms: 'Termos', copyright: '© {{year}} {{brand}}. Todos os direitos reservados.' }
+      footer: { quickLinks: 'Links rápidos', contact: 'Contato', newsletter: 'Newsletter', emailPlaceholder: 'Email', join: 'Participar', privacy: 'Privacidade', terms: 'Termos', copyright: '© {{year}} {{brand}}. Todos os direitos reservados.' },
+      language: {
+        reset: 'Redefinir para padrão',
+        select: 'Selecionar idioma',
+        current: 'Idioma atual'
+      }
     },
     home: {
       hero: {
