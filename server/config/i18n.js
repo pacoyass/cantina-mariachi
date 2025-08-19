@@ -3,6 +3,7 @@ import Backend from 'i18next-fs-backend';
 import middleware from 'i18next-http-middleware';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { supportedLngs } from '../../i18n.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,7 +20,7 @@ i18next
     lng: 'en',
     
     // Supported languages
-    supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'],
+    supportedLngs,
     
     // Debug mode (disable in production)
     debug: process.env.NODE_ENV === 'development',
@@ -61,7 +62,7 @@ i18next
     load: 'languageOnly', // Load 'en' instead of 'en-US'
     
     // Preload languages
-    preload: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'],
+    preload: supportedLngs,
     
     // Clean code options
     cleanCode: true,

@@ -17,6 +17,7 @@ import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigg
 import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useTranslation } from 'react-i18next';
+import { supportedLngs, rtlLngs } from '../i18n.config.js';
 
 export async function loader( { request, context } )
 {
@@ -55,11 +56,12 @@ export function Layout( { children } )
   const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
   const lang = i18n?.language || initialLang;
+  const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
 
   // console.log( "🛠 Nonce inside Layout:", nonce );
 
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -67,13 +69,9 @@ export function Layout( { children } )
         <Links  nonce={nonce}/>
         
         {/* SEO: Language alternatives */}
-        <link rel="alternate" hrefLang="en" href="/" />
-        <link rel="alternate" hrefLang="es" href="/?lng=es" />
-        <link rel="alternate" hrefLang="fr" href="/?lng=fr" />
-        <link rel="alternate" hrefLang="de" href="/?lng=de" />
-        <link rel="alternate" hrefLang="it" href="/?lng=it" />
-        <link rel="alternate" hrefLang="pt" href="/?lng=pt" />
-        <link rel="alternate" hrefLang="ar" href="/?lng=ar" />
+        {supportedLngs.map(code => (
+          <link key={code} rel="alternate" hrefLang={code} href={code === 'en' ? '/' : `/?lng=${code}`} />
+        ))}
         <link rel="alternate" hrefLang="x-default" href="/" />
         
         {/* Canonical URL */}
