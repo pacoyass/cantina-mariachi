@@ -95,80 +95,26 @@ if (DEVELOPMENT) {
       return next();
     }
     
-    try {
-      // Import React Router's createRequestHandler
-      const { createRequestHandler } = await import('@react-router/express');
-      
-      // Create the request handler with a simpler build approach
-      const handler = createRequestHandler({
-        build: async () => {
-          try {
-            // Load routes directly from the routes file
-            const routesModule = await viteDevServer.ssrLoadModule('./app/routes.js');
-            console.log('Routes module loaded:', routesModule);
-            
-            if (!routesModule) {
-              throw new Error('Routes module is undefined');
-            }
-            
-            const routes = routesModule.default || routesModule;
-            console.log('Routes extracted:', routes);
-            
-            if (!Array.isArray(routes)) {
-              throw new Error(`Routes is not an array: ${typeof routes}`);
-            }
-            
-            // Return the routes array in the format React Router expects
-            return { routes };
-          } catch (routesError) {
-            console.error('Error loading routes:', routesError);
-            throw routesError;
-          }
-        },
-        getLoadContext(req, res) {
-          // Get language from multiple sources with proper fallback
-          const urlLang = req.query.lng;
-          const cookieLang = req.cookies?.i18next;
-          const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
-          
-          let lng = urlLang || cookieLang || headerLang || 'en';
-          
-          // Validate language is supported
-          if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
-            lng = 'en';
-          }
-          
-          return {
-            lng: lng,
-            supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
-          };
-        },
-      });
-      
-      return handler(req, res, next);
-    } catch (error) {
-      console.error('React Router handler error:', error);
-      // Fallback to basic HTML if React Router fails
-      res.status(200).send(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Cantina App</title>
-          </head>
-          <body>
-            <div id="root">
-              <h1>Loading...</h1>
-              <p>If you see this message, there was an error loading the React app.</p>
-              <p>Error: ${error.message}</p>
-            </div>
-            <script type="module" src="/@vite/client"></script>
-            <script type="module" src="/app/entry.client.jsx"></script>
-          </body>
-        </html>
-      `);
-    }
+    // Temporarily bypass React Router SSR in development to isolate the issue
+    // Serve a simple HTML page that loads the client-side React app
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Cantina App</title>
+        </head>
+        <body>
+          <div id="root">
+            <h1>Loading Cantina App...</h1>
+            <p>Client-side React app is loading...</p>
+          </div>
+          <script type="module" src="/@vite/client"></script>
+          <script type="module" src="/app/entry.client.jsx"></script>
+        </body>
+      </html>
+    `);
   });
 } else {
   console.log('Starting production server');
