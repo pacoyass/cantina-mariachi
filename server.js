@@ -87,47 +87,23 @@ if (DEVELOPMENT) {
   // Add basic API routes for development
   app.use("/api", apiRoutes);
   
-  // Add React Router handler for development mode using createRequestHandler
-  app.use(async (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) {
-      return next();
-    }
-    
-    try {
-      // Import React Router's createRequestHandler
-      const { createRequestHandler } = await import('@react-router/express');
-      
-      // Create the request handler with Vite's build
-      const handler = createRequestHandler({
-        build: () => viteDevServer.ssrLoadModule('./app/entry.server.jsx'),
-        getLoadContext(req, res) {
-          // Get language from multiple sources with proper fallback
-          const urlLang = req.query.lng;
-          const cookieLang = req.cookies?.i18next;
-          const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
-          
-          let lng = urlLang || cookieLang || headerLang || 'en';
-          
-          // Validate language is supported
-          if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
-            lng = 'en';
-          }
-          
-          return {
-            lng: lng,
-            supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
-          };
-        },
-      });
-      
-      return handler(req, res, next);
-    } catch (error) {
-      if (typeof error === 'object' && error instanceof Error) {
-        viteDevServer.ssrFixStacktrace(error);
-      }
-      next(error);
-    }
+  // In development mode, let Vite handle all frontend routes
+  // This is simpler and avoids the React Router SSR complexity
+  app.use('*', (req, res) => {
+    // For any non-API route, let Vite handle it
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Cantina App</title>
+        </head>
+        <body>
+          <div id="root"></div>
+          <script type="module" src="/app/entry.client.jsx"></script>
+        </body>
+      </html>
+    `);
   });
 } else {
   console.log('Starting production server');
