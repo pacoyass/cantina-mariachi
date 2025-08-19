@@ -172,11 +172,24 @@ app.use(
 	createRequestHandler({
 		build: () => import("virtual:react-router/server-build"),
 		getLoadContext(req,res) {
+			// Get language from multiple sources with proper fallback
+			const urlLang = req.query.lng;
+			const cookieLang = req.cookies?.i18next;
+			const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
+			
+			let lng = urlLang || cookieLang || headerLang || 'en';
+			
+			// Validate language is supported
+			if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
+				lng = 'en';
+			}
+			
 			return {
 				VALUE_FROM_EXPRESS: "Hello from Express",
-        nonce: res.locals.nonce,
-        csrfToken: res.locals.csrfToken,
-        lng: req.language || req.lng || 'en'
+				nonce: res.locals.nonce,
+				csrfToken: res.locals.csrfToken,
+				lng: lng,
+				supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
 			};
 		},
 	}),

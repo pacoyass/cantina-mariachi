@@ -19,5 +19,8 @@
   "serverError": "Server error occurred",
   "maintenance": "Server is under maintenance",
   "rateLimited": "Too many requests. Please try again later.",
-  "timeout": "Request timeout"
+  "timeout": "Request timeout",
+  "dataRetrieved": "Data retrieved successfully",
+  "languageUpdated": "Language updated successfully",
+  "languageReset": "Language reset to default successfully"
 }

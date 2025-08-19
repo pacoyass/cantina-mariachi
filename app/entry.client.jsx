@@ -9,6 +9,19 @@ import { rtlLngs } from '../i18n.config.js';
 startTransition(async () => {
   const params = new URLSearchParams(window.location.search);
   const stored = (() => { try { return localStorage.getItem('lng'); } catch { return null; } })();
+  
+  // Check if server has restarted by looking for server timestamp
+  const serverTimestamp = document.querySelector('meta[name="server-start-time"]')?.content;
+  const lastServerRestart = localStorage.getItem('lastServerRestart');
+  
+  // If server has restarted, reset language to default
+  if (serverTimestamp && serverTimestamp !== lastServerRestart) {
+    localStorage.removeItem('lng');
+    localStorage.setItem('lastServerRestart', serverTimestamp);
+    // Clear i18next cookie
+    try { document.cookie = 'i18next=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'; } catch {}
+  }
+  
   const lng = params.get('lng') || stored || document.documentElement.lang || 'en';
   const i18n = await initI18n({ lng, resources: uiResources });
 

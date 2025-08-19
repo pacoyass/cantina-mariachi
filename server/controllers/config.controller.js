@@ -41,4 +41,56 @@ export const getPublicConfig = async (req, res) => {
   }
 };
 
+export const getLanguages = async (req, res) => {
+  try {
+    const languages = [
+      { code: 'en', name: 'English', nativeName: 'English' },
+      { code: 'es', name: 'Spanish', nativeName: 'Español' },
+      { code: 'fr', name: 'French', nativeName: 'Français' },
+      { code: 'de', name: 'German', nativeName: 'Deutsch' },
+      { code: 'it', name: 'Italian', nativeName: 'Italiano' },
+      { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
+      { code: 'ar', name: 'Arabic', nativeName: 'العربية' }
+    ];
+    
+    return createResponse(res, 200, 'dataRetrieved', { languages }, req);
+  } catch (error) {
+    return createError(res, 500, 'internalError', 'INTERNAL_ERROR', {}, req);
+  }
+};
+
+export const setLanguage = async (req, res) => {
+  try {
+    const { language } = req.body;
+    
+    if (!language || !['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(language)) {
+      return createError(res, 400, 'badRequest', 'INVALID_LANGUAGE', {}, req);
+    }
+    
+    // Set language cookie
+    res.cookie('i18next', language, {
+      path: '/',
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
+    });
+    
+    return createResponse(res, 200, 'languageUpdated', { language }, req);
+  } catch (error) {
+    return createError(res, 500, 'internalError', 'INTERNAL_ERROR', {}, req);
+  }
+};
+
+export const resetLanguage = async (req, res) => {
+  try {
+    // Clear language cookie
+    res.clearCookie('i18next', { path: '/' });
+    
+    return createResponse(res, 200, 'languageReset', { language: 'en' }, req);
+  } catch (error) {
+    return createError(res, 500, 'internalError', 'INTERNAL_ERROR', {}, req);
+  }
+};
+
 export default { getPublicConfig };

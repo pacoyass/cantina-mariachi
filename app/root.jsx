@@ -77,6 +77,7 @@ export function Layout( { children } )
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="server-start-time" content={Date.now().toString()} />
         <Meta nonce={nonce} />
         <Links  nonce={nonce}/>
         
@@ -149,6 +150,38 @@ export function ErrorBoundary( { error } )
                     <NavLink to="/orders">{t('nav.orders', { ns: 'ui' })}</NavLink>
                     <NavLink to="/reservations">{t('nav.reservations', { ns: 'ui' })}</NavLink>
                     <NavLink to="/account">{t('nav.account', { ns: 'ui' })}</NavLink>
+                    <div className="border-t pt-2">
+                      <div className="text-sm font-medium text-muted-foreground mb-2">Language</div>
+                      {supportedLngs.map(code => (
+                        <button
+                          key={code}
+                          className="block w-full text-left px-2 py-1 text-sm hover:bg-muted rounded"
+                          onClick={() => {
+                            i18n.changeLanguage(code);
+                            localStorage.setItem('lng', code);
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('lng', code);
+                            window.history.replaceState({}, '', url.toString());
+                            try { document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
+                          }}
+                        >
+                          {code.toUpperCase()}
+                        </button>
+                      ))}
+                      <button
+                        className="block w-full text-left px-2 py-1 text-sm text-red-600 hover:bg-muted rounded"
+                        onClick={() => {
+                          i18n.changeLanguage('en');
+                          localStorage.removeItem('lng');
+                          const url = new URL(window.location.href);
+                          url.searchParams.delete('lng');
+                          window.history.replaceState({}, '', url.toString());
+                          try { document.cookie = 'i18next=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'; } catch {}
+                        }}
+                      >
+                        Reset to Default
+                      </button>
+                    </div>
                   </div>
                 </SheetContent>
               </Sheet>
@@ -169,6 +202,45 @@ export function ErrorBoundary( { error } )
               <NavLink to="/account">{t('nav.account', { ns: 'ui' })}</NavLink>
             </div>
             <ModeToggle />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" aria-label="Language menu">🌐</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {supportedLngs.map(code => (
+                  <DropdownMenuItem 
+                    key={code} 
+                    onClick={() => {
+                      i18n.changeLanguage(code);
+                      localStorage.setItem('lng', code);
+                      // Update URL
+                      const url = new URL(window.location.href);
+                      url.searchParams.set('lng', code);
+                      window.history.replaceState({}, '', url.toString());
+                      // Update cookie
+                      try { document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
+                    }}
+                  >
+                    {code.toUpperCase()}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuItem 
+                  onClick={() => {
+                    // Reset to default language
+                    i18n.changeLanguage('en');
+                    localStorage.removeItem('lng');
+                    // Clear URL parameter
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('lng');
+                    window.history.replaceState({}, '', url.toString());
+                    // Clear cookie
+                    try { document.cookie = 'i18next=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'; } catch {}
+                  }}
+                >
+                  Reset to Default
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" aria-label="Account menu">☰</Button>
