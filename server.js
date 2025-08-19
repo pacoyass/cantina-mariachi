@@ -99,40 +99,30 @@ if (DEVELOPMENT) {
       // Import React Router's createRequestHandler
       const { createRequestHandler } = await import('@react-router/express');
       
-      // Create the request handler with Vite's build
+      // Create the request handler with a simpler build approach
       const handler = createRequestHandler({
         build: async () => {
           try {
-            // Try to use the virtual build that React Router expects
-            // This is the same approach used in production
-            const build = await viteDevServer.ssrLoadModule('virtual:react-router/server-build');
-            console.log('Virtual build loaded:', build);
-            return build;
-          } catch (error) {
-            console.error('Error loading virtual build:', error);
+            // Load routes directly from the routes file
+            const routesModule = await viteDevServer.ssrLoadModule('./app/routes.js');
+            console.log('Routes module loaded:', routesModule);
             
-            // Fallback: try to load routes directly
-            try {
-              const routesModule = await viteDevServer.ssrLoadModule('./app/routes.js');
-              console.log('Routes module loaded:', routesModule);
-              
-              if (!routesModule) {
-                throw new Error('Routes module is undefined');
-              }
-              
-              const routes = routesModule.default || routesModule;
-              console.log('Routes extracted:', routes);
-              
-              if (!Array.isArray(routes)) {
-                throw new Error(`Routes is not an array: ${typeof routes}`);
-              }
-              
-              // Return the routes array in the format React Router expects
-              return { routes };
-            } catch (routesError) {
-              console.error('Error loading routes fallback:', routesError);
-              throw routesError;
+            if (!routesModule) {
+              throw new Error('Routes module is undefined');
             }
+            
+            const routes = routesModule.default || routesModule;
+            console.log('Routes extracted:', routes);
+            
+            if (!Array.isArray(routes)) {
+              throw new Error(`Routes is not an array: ${typeof routes}`);
+            }
+            
+            // Return the routes array in the format React Router expects
+            return { routes };
+          } catch (routesError) {
+            console.error('Error loading routes:', routesError);
+            throw routesError;
           }
         },
         getLoadContext(req, res) {
