@@ -22,9 +22,9 @@ export default defineConfig(({ isSsrBuild }) => ({
     },
   },
   
-  // Exclude server files from Vite processing
+  // Exclude server files from Vite processing using a different approach
   optimizeDeps: {
-    exclude: ['server/**/*'],
+    exclude: ['express', 'prisma', 'i18next', 'i18next-fs-backend', 'i18next-http-middleware'],
   },
   
   // Ensure server files are not processed

@@ -68,10 +68,6 @@ if (DEVELOPMENT) {
           port: hmrPort,
         },
       },
-      // Exclude server files from Vite processing
-      optimizeDeps: {
-        exclude: ['server/**/*'],
-      },
     })
   );
   app.use(viteDevServer.middlewares);
