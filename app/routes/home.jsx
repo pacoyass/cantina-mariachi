@@ -483,7 +483,7 @@ export default function Home() {
       </section>
 
       {/* CTA banner */}
-      <section className="container mx-auto px-6 py-16">
+      <section className="container mx-auto px-6 py-16" key={i18n.language}>
         <Card>
           <CardContent className="p-6 md:p-8">
             <Suspense

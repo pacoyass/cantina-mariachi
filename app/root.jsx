@@ -1,4 +1,3 @@
-
 import
 {
   isRouteErrorResponse,
@@ -18,21 +17,22 @@ import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useTranslation } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
+import { useEffect } from 'react';
 
 export async function loader( { request, context } )
 {
-  // console.log("🔍 loader() context:", context); // Debugging
+  
 
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
   const lng = context?.lng || 'en';
   if ( nonce ) {
-    // console.log("✅ Nonce found in loader:", context.nonce);
+    
 
     return { nonce: nonce, csrfToken: csrfToken, lng };
   }
-  // console.warn("🚨 Nonce is missing in loader!");
-  return { nonce: "", lng }; // Avoid undefined issues
+  
+  return { nonce: "", lng }; 
 }
 export const links = () => [
 
@@ -51,14 +51,26 @@ export const links = () => [
 
 export function Layout( { children } )
 {
-  const loaderData = useLoaderData() || {}; // ✅ Prevents undefined error
-  const nonce = loaderData.nonce || ""; // Get nonce from server
+  const loaderData = useLoaderData() || {}; 
+  const nonce = loaderData.nonce || ""; 
   const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
-  const lang = i18n?.language || initialLang;
+  const urlLang = (() => { try { return new URLSearchParams(window.location.search).get('lng'); } catch { return null; } })();
+  const lang = urlLang || i18n?.language || initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
 
-  // console.log( "🛠 Nonce inside Layout:", nonce );
+  
+
+  // Sync i18n and html attrs when URL language changes
+  useEffect(() => {
+    try {
+      if (urlLang && i18n?.changeLanguage) {
+        i18n.changeLanguage(urlLang);
+      }
+      document.documentElement.lang = lang;
+      document.documentElement.dir = dir;
+    } catch {}
+  }, [urlLang]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
@@ -78,7 +90,7 @@ export function Layout( { children } )
         <link rel="canonical" href={lang === 'en' ? '/' : `/?lng=${lang}`} />
       </head>
       <body className="antialiased">
-      {/* <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" nonce={nonce}> */}
+      
 
           <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
 
@@ -111,7 +123,7 @@ export function ErrorBoundary( { error } )
     message = error.status === 404 ? `${error.status}-${error.statusText}` : t('errors.title', { ns: 'ui' });
     details =
       error.status === 404
-        ? t('errors.notFound', { ns: 'ui' })
+        ? t('errors.notFound', { ns: 'ui' })}
         : error.statusText || details;
   } else if ( import.meta.env.DEV && error && error instanceof Error ) {
     details = error.message;
@@ -188,5 +200,3 @@ export function ErrorBoundary( { error } )
 
   );
 }
-
-

@@ -9,16 +9,14 @@ import { rtlLngs } from '../i18n.config.js';
 startTransition(async () => {
   const params = new URLSearchParams(window.location.search);
   const stored = (() => { try { return localStorage.getItem('lng'); } catch { return null; } })();
-  const lng = stored || params.get('lng') || document.documentElement.lang || 'en';
+  const lng = params.get('lng') || stored || document.documentElement.lang || 'en';
   const i18n = await initI18n({ lng, resources: uiResources });
 
   try {
     document.documentElement.lang = i18n.language;
     document.documentElement.dir = rtlLngs.includes(i18n.language) ? 'rtl' : 'ltr';
-    if (!stored) {
-      try { localStorage.setItem('lng', i18n.language); } catch {}
-      try { document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
-    }
+    try { localStorage.setItem('lng', i18n.language); } catch {}
+    try { document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
     if (!params.get('lng')) {
       const url = new URL(window.location.href);
       url.searchParams.set('lng', i18n.language);
