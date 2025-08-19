@@ -92,7 +92,10 @@ app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 if (process.env.ALLOW_URLENCODED === '1') {
 	app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 }
-app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
+
+// Configure cookie parser with proper secret for signed cookies
+const cookieSecret = process.env.COOKIE_SECRET || 'your-fallback-secret';
+app.use(cookieParser(cookieSecret));
 
 // Add i18next middleware for translation support
 app.use(i18nextMiddleware.handle(i18next));
@@ -129,8 +132,10 @@ try {
 } catch (e) {
 	console.warn('OpenAPI docs not served:', e?.message || e);
 }
-const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf( {
-	getSecret: () => process.env.CSRF_SECRET || 'your-fallback-secret',
+
+// Configure CSRF protection with proper cookie handling
+const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
+	getSecret: () => process.env.CSRF_SECRET || cookieSecret,
 	getSessionIdentifier: (req) => req.session?.id || req.signedCookies?.csrfSession || req.headers['x-session-id'] || req.ip,
 	cookieName: "__Host-csrf-token",
 	cookieOptions: {
@@ -139,29 +144,32 @@ const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf( {
 		sameSite: "lax",
 		path: "/",
 		signed: true,
-		expires: new Date( Date.now() + 24 * 60 * 60 * 1000 ),
+		expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
 		maxAge: 24 * 60 * 60 * 1000,
-
 	},
 	size: 128,
 	ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-	getTokenFromRequest: ( req ) => req.headers["x-csrf-token"],
+	getTokenFromRequest: (req) => req.headers["x-csrf-token"],
 	isThrowingErrors: false,
-} );
-app.use( ( req, res, next ) =>
-	{
-		const csrf = generateCsrfToken( req, res );
-		res.locals.csrfToken = csrf; // Attach the nonce to the response object
-	
-		next();
-	} );
+});
 
-	// Example protected route
-app.post( '/protected-route', doubleCsrfProtection, ( req, res ) =>
-	{
-		res.json( { message: 'This route is protected by CSRF' } );
-	} );
-app.use( "/api", apiRoutes );
+app.use((req, res, next) => {
+	try {
+		const csrf = generateCsrfToken(req, res);
+		res.locals.csrfToken = csrf; // Attach the nonce to the response object
+	} catch (error) {
+		console.warn('CSRF token generation failed:', error.message);
+		res.locals.csrfToken = null;
+	}
+	next();
+});
+
+// Example protected route
+app.post('/protected-route', doubleCsrfProtection, (req, res) => {
+	res.json({ message: 'This route is protected by CSRF' });
+});
+
+app.use("/api", apiRoutes);
 
 // ✅ Start system maintenance cron jobs (only in non-test environments)
 if (process.env.NODE_ENV !== 'test') {
