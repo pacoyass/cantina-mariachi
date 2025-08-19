@@ -14,9 +14,9 @@ export default [
 
     // Orders group (use layout for compatibility)
     layout("routes/orders/layout.jsx", [
-      route("orders","routes/orders/index.jsx"),
-      route("orders/:orderNumber", "routes/orders/$orderNumber.jsx"),
-      route("orders/track", "routes/orders/track.jsx"),
+      index("routes/orders/index.jsx"),
+      route(":orderNumber", "routes/orders/$orderNumber.jsx"),
+      route("track", "routes/orders/track.jsx"),
     ]),
 
     route("reservations", "routes/reservations.jsx"),
