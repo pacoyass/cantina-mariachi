@@ -74,9 +74,6 @@ if (DEVELOPMENT) {
   );
   app.use(viteDevServer.middlewares);
   
-  // In development mode, handle server setup directly without importing server/app.js
-  // This avoids Vite trying to process server files
-  
   // Add basic middleware for development
   app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
   if (process.env.ALLOW_URLENCODED === '1') {
@@ -90,7 +87,7 @@ if (DEVELOPMENT) {
   // Add basic API routes for development
   app.use("/api", apiRoutes);
   
-  // Add React Router handler for development mode
+  // Add React Router handler for development mode using createRequestHandler
   app.use(async (req, res, next) => {
     // Skip API routes
     if (req.path.startsWith('/api/')) {
@@ -98,9 +95,33 @@ if (DEVELOPMENT) {
     }
     
     try {
-      // Use Vite's ssrLoadModule for the React Router app
-      const source = await viteDevServer.ssrLoadModule('./app/entry.server.jsx');
-      return await source.default(req, res, next);
+      // Import React Router's createRequestHandler
+      const { createRequestHandler } = await import('@react-router/express');
+      
+      // Create the request handler with Vite's build
+      const handler = createRequestHandler({
+        build: () => viteDevServer.ssrLoadModule('./app/entry.server.jsx'),
+        getLoadContext(req, res) {
+          // Get language from multiple sources with proper fallback
+          const urlLang = req.query.lng;
+          const cookieLang = req.cookies?.i18next;
+          const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
+          
+          let lng = urlLang || cookieLang || headerLang || 'en';
+          
+          // Validate language is supported
+          if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
+            lng = 'en';
+          }
+          
+          return {
+            lng: lng,
+            supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
+          };
+        },
+      });
+      
+      return handler(req, res, next);
     } catch (error) {
       if (typeof error === 'object' && error instanceof Error) {
         viteDevServer.ssrFixStacktrace(error);
