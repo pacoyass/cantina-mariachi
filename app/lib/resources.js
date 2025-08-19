@@ -1602,6 +1602,7 @@ export const uiResources = {
         spicy: 'Apimentado'
       },
       results: 'Mostrando {{count}} itens',
-      badges: { new: 'Novo', popular: 'Popular'       }
+      badges: { new: 'Novo', popular: 'Popular' }
+    }
   }
 };
