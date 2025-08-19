@@ -103,6 +103,7 @@ if (DEVELOPMENT) {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="server-start-time" content="${Date.now().toString()}">
           <title>Cantina App</title>
         </head>
         <body>
