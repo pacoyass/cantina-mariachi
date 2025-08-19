@@ -89,8 +89,14 @@ if (DEVELOPMENT) {
   
   // In development mode, let Vite handle all frontend routes
   // This is simpler and avoids the React Router SSR complexity
-  app.use('*', (req, res) => {
-    // For any non-API route, let Vite handle it
+  app.use((req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    
+    // For any other route, serve the basic HTML template
+    // This lets Vite handle the frontend routing
     res.status(200).send(`
       <!DOCTYPE html>
       <html>
