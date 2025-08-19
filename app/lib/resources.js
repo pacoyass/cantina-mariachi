@@ -406,11 +406,11 @@ export const uiResources = {
         q3: { question: 'Posso modificare la prenotazione?', answer: 'Puoi modificarla fino a 2 ore prima dell\'orario.' }
       },
       cta: {
-        endsTonight: 'Termina questa notte a mezzanotte!',
+        limited: 'Offerta a tempo limitato',
         title: 'Consegna gratuita per ordini superiori a 25 $',
         desc: 'Ordina in pochi secondi o prenota all\'istante — nessun costo aggiuntivo oggi.',
+        endsTonight: 'Termina questa notte a mezzanotte!',
         socialProof: 'Unisciti a oltre 2.847 clienti che hanno risparmiato oggi',
-        limited: 'Offerta a tempo limitato',
         start: 'Inizia un ordine',
         reserve: 'Prenota ora'
       },
@@ -576,6 +576,8 @@ export const uiResources = {
         limited: 'عرض لفترة محدودة',
         title: 'توصيل مجاني للطلبات التي تزيد عن $25',
         desc: 'اطلب خلال ثوانٍ أو احجز فورًا — بدون رسوم إضافية اليوم.',
+        endsTonight: 'ينتهي الليلة عند منتصف الليل!',
+        socialProof: 'انضم إلى أكثر من 2,847 عميل وفر اليوم',
         start: 'ابدأ الطلب',
         reserve: 'احجز الآن'
       },
@@ -587,7 +589,12 @@ export const uiResources = {
         add: 'أضف إلى الطلب',
         notify: 'أعلمني',
         coming: 'اختيارات لذيذة قادمة قريبًا.',
-        chefSpecial: 'تشكيلة الشيف رقم {{num}}'
+        chefSpecial: 'تشكيلة الشيف رقم {{num}}',
+        numberOne: '⭐ #1 الأكثر طلبًا',
+        trending: '🔥 رائج',
+        rating: '★{{rating}} ({{reviews}} تقييم)',
+        onlyLeftToday: 'فقط {{count}} متبقي اليوم!',
+        orderNowDelivery: 'اطلب الآن — توصيل في {{mins}} د'
       },
       orders: {
         title: 'طلباتي',
@@ -801,6 +808,8 @@ export const uiResources = {
         limited: 'Oferta por tiempo limitado',
         title: 'Envío gratis en pedidos superiores a $25',
         desc: 'Pide en segundos o reserva al instante — sin cargos extra hoy.',
+        endsTonight: '¡Termina esta noche a medianoche!',
+        socialProof: 'Únete a más de 2,847 clientes que ahorraron hoy',
         start: 'Comenzar pedido',
         reserve: 'Reservar ahora'
       },
@@ -812,7 +821,12 @@ export const uiResources = {
         add: 'Añadir al pedido',
         notify: 'Avísame',
         coming: 'Una selección deliciosa llegará pronto.',
-        chefSpecial: 'Especial del chef #{{num}}'
+        chefSpecial: 'Especial del chef #{{num}}',
+        numberOne: '⭐ #1 Más pedido',
+        trending: '🔥 Tendencia',
+        rating: '★{{rating}} ({{reviews}} reseñas)',
+        onlyLeftToday: '¡Solo {{count}} quedan hoy!',
+        orderNowDelivery: 'Pedir ahora — entrega en {{mins}} min'
       },
       orders: {
         title: 'Mis pedidos',
@@ -894,7 +908,7 @@ export const uiResources = {
         spicy: 'Picante'
       },
       results: 'Mostrando {{count}} artículos',
-      badges: { new: 'Nuevo', popular: 'Popular' }
+      badges: { new: 'Nuevo', popular: 'Popular'       }
     }
   },
   fr: {
@@ -1037,7 +1051,8 @@ export const uiResources = {
         limited: 'Offre à durée limitée',
         title: 'Livraison gratuite pour les commandes de plus de 25 $',
         desc: 'Commandez en quelques secondes ou réservez instantanément — sans frais supplémentaires aujourd\'hui.',
-        socialProof: 'Rejoignez 2 847+ clients qui ont économisé aujourd\'hui',
+        endsTonight: 'Se termine cette nuit à minuit !',
+        socialProof: 'Rejoignez 2 847+ clients qui ont économisé aujourd\'hui',
         start: 'Commencer une commande',
         reserve: 'Réserver maintenant'
       },
@@ -1049,7 +1064,12 @@ export const uiResources = {
         add: 'Ajouter à la commande',
         notify: 'Prévenez‑moi',
         coming: 'Une délicieuse sélection arrive bientôt.',
-        chefSpecial: 'Spécial du chef n° {{num}}'
+        chefSpecial: 'Spécial du chef n° {{num}}',
+        numberOne: '⭐ #1 Plus commandé',
+        trending: '🔥 Tendance',
+        rating: '★{{rating}} ({{reviews}} avis)',
+        onlyLeftToday: 'Plus que {{count}} aujourd\'hui !',
+        orderNowDelivery: 'Commander maintenant — livraison en {{mins}} min'
       },
       orders: {
         title: 'Mes commandes',
@@ -1457,6 +1477,7 @@ export const uiResources = {
         limited: 'Oferta por tempo limitado',
         title: 'Entrega grátis em pedidos acima de $25',
         desc: 'Peça em segundos ou reserve instantaneamente — sem taxas extras hoje.',
+        endsTonight: 'Termina esta noite à meia-noite!',
         socialProof: 'Junte-se a 2.847+ clientes que economizaram hoje',
         start: 'Começar um pedido',
         reserve: 'Reservar agora'
@@ -1469,7 +1490,12 @@ export const uiResources = {
         add: 'Adicionar ao pedido',
         notify: 'Avise-me',
         coming: 'Uma seleção deliciosa em breve.',
-        chefSpecial: 'Especial do chef nº {{num}}'
+        chefSpecial: 'Especial do chef nº {{num}}',
+        numberOne: '⭐ #1 Mais pedido',
+        trending: '🔥 Tendência',
+        rating: '★{{rating}} ({{reviews}} avaliações)',
+        onlyLeftToday: 'Só {{count}} restam hoje!',
+        orderNowDelivery: 'Peça agora — entrega em {{mins}} min'
       },
       orders: {
         title: 'Meus pedidos',
