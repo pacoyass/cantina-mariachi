@@ -105,6 +105,7 @@ export async function loader({ request, context }) {
       return data?.data?.page?.data || {};
     } catch {
       // Return minimal defaults so UI doesn't skeleton forever
+      // These will be translated by the t() function in the component
       return {
         hero: {
           badge: 'New',
@@ -514,14 +515,26 @@ export default function Home() {
                         <Sparkles className="size-4 text-primary" />
                         {t('cta.endsTonight')}
                       </div>
-                      <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{data?.cta?.title || <span className="animate-pulse bg-muted h-6 w-64 rounded">Loading...</span>}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{data?.cta?.desc || <span className="animate-pulse bg-muted h-4 w-80 rounded">Loading...</span>}</p>
-                      <div className="text-xs text-muted-foreground mt-1">{data?.cta?.socialProof || <span className="animate-pulse bg-muted h-3 w-48 rounded">Loading...</span>}</div>
-                      <div className="text-xs text-primary mt-1" aria-live="polite">{data?.cta?.limited || <span className="animate-pulse bg-muted h-3 w-32 rounded">Loading...</span>} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
+                      <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">
+                        {data?.cta?.title || t('cta.title')}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {data?.cta?.desc || t('cta.desc')}
+                      </p>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {data?.cta?.socialProof || t('cta.socialProof')}
+                      </div>
+                      <div className="text-xs text-primary mt-1" aria-live="polite">
+                        {data?.cta?.limited || t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} />
+                      </div>
                     </div>
                     <div className="flex gap-3">
-                      <Button className="px-6" onClick={() => track('click_start_cta')}>{data?.cta?.start || <span className="animate-pulse bg-muted h-4 w-16 rounded">Loading...</span>}</Button>
-                      <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{data?.cta?.reserve || <span className="animate-pulse bg-muted h-4 w-20 rounded">Loading...</span>}</Button>
+                      <Button className="px-6" onClick={() => track('click_start_cta')}>
+                        {data?.cta?.start || t('cta.start')}
+                      </Button>
+                      <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>
+                        {data?.cta?.reserve || t('cta.reserve')}
+                      </Button>
                     </div>
                   </div>
                 )}
