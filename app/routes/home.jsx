@@ -486,22 +486,47 @@ export default function Home() {
       <section className="container mx-auto px-6 py-16">
         <Card>
           <CardContent className="p-6 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Sparkles className="size-4 text-primary" />
-                  {t('cta.endsTonight')}
+            <Suspense
+              fallback={
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Sparkles className="size-4 text-primary" />
+                      {t('cta.endsTonight')}
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight"><span className="animate-pulse bg-muted h-6 w-64 rounded">Loading...</span></h3>
+                    <p className="text-sm text-muted-foreground mt-1"><span className="animate-pulse bg-muted h-4 w-80 rounded">Loading...</span></p>
+                    <div className="text-xs text-muted-foreground mt-1"><span className="animate-pulse bg-muted h-3 w-48 rounded">Loading...</span></div>
+                    <div className="text-xs text-primary mt-1" aria-live="polite"><span className="animate-pulse bg-muted h-3 w-32 rounded">Loading...</span> · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button className="px-6"><span className="animate-pulse bg-muted h-4 w-16 rounded">Loading...</span></Button>
+                    <Button variant="outline" className="px-6"><span className="animate-pulse bg-muted h-4 w-20 rounded">Loading...</span></Button>
+                  </div>
                 </div>
-                              <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{cms?.cta?.title || <span className="animate-pulse bg-muted h-6 w-64 rounded">Loading...</span>}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{cms?.cta?.desc || <span className="animate-pulse bg-muted h-4 w-80 rounded">Loading...</span>}</p>
-              <div className="text-xs text-muted-foreground mt-1">{cms?.cta?.socialProof || <span className="animate-pulse bg-muted h-3 w-48 rounded">Loading...</span>}</div>
-              <div className="text-xs text-primary mt-1" aria-live="polite">{cms?.cta?.limited || <span className="animate-pulse bg-muted h-3 w-32 rounded">Loading...</span>} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
-              </div>
-              <div className="flex gap-3">
-                                  <Button className="px-6" onClick={() => track('click_start_cta')}>{cms?.cta?.start || <span className="animate-pulse bg-muted h-4 w-16 rounded">Loading...</span>}</Button>
-                  <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{cms?.cta?.reserve || <span className="animate-pulse bg-muted h-4 w-20 rounded">Loading...</span>}</Button>
-              </div>
-            </div>
+              }
+            >
+              <Await resolve={cms}>
+                {(data) => (
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Sparkles className="size-4 text-primary" />
+                        {t('cta.endsTonight')}
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-semibold mt-1 tracking-tight">{data?.cta?.title || <span className="animate-pulse bg-muted h-6 w-64 rounded">Loading...</span>}</h3>
+                      <p className="text-sm text-muted-foreground mt-1">{data?.cta?.desc || <span className="animate-pulse bg-muted h-4 w-80 rounded">Loading...</span>}</p>
+                      <div className="text-xs text-muted-foreground mt-1">{data?.cta?.socialProof || <span className="animate-pulse bg-muted h-3 w-48 rounded">Loading...</span>}</div>
+                      <div className="text-xs text-primary mt-1" aria-live="polite">{data?.cta?.limited || <span className="animate-pulse bg-muted h-3 w-32 rounded">Loading...</span>} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} /></div>
+                    </div>
+                    <div className="flex gap-3">
+                      <Button className="px-6" onClick={() => track('click_start_cta')}>{data?.cta?.start || <span className="animate-pulse bg-muted h-4 w-16 rounded">Loading...</span>}</Button>
+                      <Button variant="outline" className="px-6" onClick={() => track('click_reserve_cta')}>{data?.cta?.reserve || <span className="animate-pulse bg-muted h-4 w-20 rounded">Loading...</span>}</Button>
+                    </div>
+                  </div>
+                )}
+              </Await>
+            </Suspense>
           </CardContent>
         </Card>
       </section>
