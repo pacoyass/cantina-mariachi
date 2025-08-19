@@ -4,6 +4,7 @@ import { HydratedRouter } from "react-router/dom";
 import { I18nextProvider } from 'react-i18next';
 import { initI18n } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
+import { rtlLngs } from '../i18n.config.js';
 
 startTransition(async () => {
   const params = new URLSearchParams(window.location.search);
@@ -13,7 +14,7 @@ startTransition(async () => {
 
   try {
     document.documentElement.lang = i18n.language;
-    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = rtlLngs.includes(i18n.language) ? 'rtl' : 'ltr';
     if (!stored) {
       try { localStorage.setItem('lng', i18n.language); } catch {}
       try { document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`; } catch {}

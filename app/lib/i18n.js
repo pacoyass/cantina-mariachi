@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { supportedLngs } from '../../i18n.config.js';
 
 let initialized = false;
 
@@ -20,7 +21,7 @@ export async function initI18n({ lng = 'en', resources }) {
   await i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
+    supportedLngs,
     interpolation: { escapeValue: false },
     resources,
     ns: ['ui','home','menu','orders'],
@@ -38,7 +39,7 @@ export function createServerI18n({ lng = 'en', resources }) {
   i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
+    supportedLngs,
     interpolation: { escapeValue: false },
     resources,
     ns: ['ui','home','menu','orders'],
