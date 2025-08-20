@@ -3,7 +3,7 @@
 import { useDynamicTranslation } from '../lib/useDynamicTranslation';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Globe, Languages, FileText, RefreshCw } from 'lucide-react';
+import { Globe, Languages, FileText, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from './ui/button';
 
 export function TranslationStatus() {
@@ -38,13 +38,22 @@ export function TranslationStatus() {
       <Card className="w-full max-w-2xl mx-auto border-destructive">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-destructive">
-            <Globe className="h-5 w-5" />
+            <AlertCircle className="h-5 w-5" />
             Translation Configuration Error
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-destructive mb-4">Failed to load dynamic translation configuration:</p>
           <p className="text-sm text-muted-foreground mb-4">{error}</p>
+          <div className="bg-muted p-3 rounded mb-4">
+            <p className="text-sm font-medium mb-2">Debug Information:</p>
+            <p className="text-xs text-muted-foreground">
+              • Backend API endpoints may not be available<br/>
+              • Database may not be initialized<br/>
+              • Dynamic translation tables may not exist<br/>
+              • Check if backend is running and migrations are applied
+            </p>
+          </div>
           <Button onClick={refreshConfig} variant="outline" size="sm">
             <RefreshCw className="h-4 w-4 mr-2" />
             Retry
@@ -56,6 +65,29 @@ export function TranslationStatus() {
 
   return (
     <div className="space-y-4 w-full max-w-4xl mx-auto">
+      {/* Configuration Source */}
+      <Card className="border-green-200 bg-green-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-green-800">
+            <Globe className="h-5 w-5" />
+            Configuration Source
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-2">
+            <Badge variant="default" className="bg-green-600">
+              {languages.length > 0 ? 'Dynamic (Backend)' : 'Static (Fallback)'}
+            </Badge>
+            <span className="text-sm text-green-700">
+              {languages.length > 0 
+                ? `Loaded ${languages.length} languages and ${namespaces.length} namespaces from backend`
+                : 'Using static fallback configuration'
+              }
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Current Language Status */}
       <Card>
         <CardHeader>
@@ -159,6 +191,36 @@ export function TranslationStatus() {
           </CardContent>
         </Card>
       )}
+
+      {/* API Status */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Globe className="h-5 w-5" />
+            API Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Badge variant={languages.length > 0 ? "default" : "destructive"}>
+                {languages.length > 0 ? '✅' : '❌'}
+              </Badge>
+              <span className="text-sm">
+                Languages API: {languages.length > 0 ? 'Working' : 'Not responding'}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant={namespaces.length > 0 ? "default" : "destructive"}>
+                {namespaces.length > 0 ? '✅' : '❌'}
+              </Badge>
+              <span className="text-sm">
+                Namespaces API: {namespaces.length > 0 ? 'Working' : 'Not responding'}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Refresh Button */}
       <div className="flex justify-center">

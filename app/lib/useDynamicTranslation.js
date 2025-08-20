@@ -13,6 +13,19 @@ export function useDynamicTranslation() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Static fallback configuration
+  const staticLanguages = [
+    { code: 'en', name: 'English', rtl: false, priority: 0, isActive: true },
+    { code: 'es', name: 'Spanish', rtl: false, priority: 1, isActive: true },
+    { code: 'fr', name: 'French', rtl: false, priority: 2, isActive: true },
+    { code: 'de', name: 'German', rtl: false, priority: 3, isActive: true },
+    { code: 'it', name: 'Italian', rtl: false, priority: 4, isActive: true },
+    { code: 'pt', name: 'Portuguese', rtl: false, priority: 5, isActive: true },
+    { code: 'ar', name: 'Arabic', rtl: true, priority: 6, isActive: true },
+  ];
+
+  const staticNamespaces = ['ui', 'home', 'menu', 'orders', 'common', 'auth', 'api', 'validation', 'email', 'business'];
+
   // Fetch dynamic translation configuration
   const fetchConfig = useCallback(async () => {
     try {
@@ -23,39 +36,45 @@ export function useDynamicTranslation() {
       const languagesResponse = await fetch('/api/cms/admin/languages');
       if (languagesResponse.ok) {
         const { languages: backendLanguages } = await languagesResponse.json();
-        const activeLanguages = backendLanguages
-          .filter(lang => lang.isActive)
-          .sort((a, b) => a.priority - b.priority);
-        
-        setLanguages(activeLanguages);
-        setRtlLanguages(activeLanguages.filter(lang => lang.rtl).map(lang => lang.code));
+        if (Array.isArray(backendLanguages) && backendLanguages.length > 0) {
+          const activeLanguages = backendLanguages
+            .filter(lang => lang.isActive)
+            .sort((a, b) => a.priority - b.priority);
+          
+          setLanguages(activeLanguages);
+          setRtlLanguages(activeLanguages.filter(lang => lang.rtl).map(lang => lang.code));
+          console.log('✅ Loaded dynamic languages from backend:', activeLanguages.length);
+        } else {
+          throw new Error('No languages returned from backend');
+        }
+      } else {
+        throw new Error(`Backend responded with ${languagesResponse.status}`);
       }
 
       // Fetch namespaces for current language
       const namespacesResponse = await fetch(`/api/cms/admin/namespaces?locale=${i18n.language || 'en'}`);
       if (namespacesResponse.ok) {
         const { namespaces: backendNamespaces } = await namespacesResponse.json();
-        const activeNamespaces = backendNamespaces
-          .filter(ns => ns.isActive)
-          .map(ns => ns.name);
-        setNamespaces(activeNamespaces);
+        if (Array.isArray(backendNamespaces) && backendNamespaces.length > 0) {
+          const activeNamespaces = backendNamespaces
+            .filter(ns => ns.isActive)
+            .map(ns => ns.name);
+          setNamespaces(activeNamespaces);
+          console.log('✅ Loaded dynamic namespaces from backend:', activeNamespaces.length);
+        } else {
+          throw new Error('No namespaces returned from backend');
+        }
+      } else {
+        throw new Error(`Backend responded with ${namespacesResponse.status}`);
       }
 
     } catch (err) {
-      console.warn('Failed to fetch dynamic translation config:', err.message);
+      console.warn('Failed to fetch dynamic translation config, using static fallback:', err.message);
       setError(err.message);
       
-      // Fallback to static configuration
-      setLanguages([
-        { code: 'en', name: 'English', rtl: false, priority: 0 },
-        { code: 'es', name: 'Spanish', rtl: false, priority: 1 },
-        { code: 'fr', name: 'French', rtl: false, priority: 2 },
-        { code: 'de', name: 'German', rtl: false, priority: 3 },
-        { code: 'it', name: 'Italian', rtl: false, priority: 4 },
-        { code: 'pt', name: 'Portuguese', rtl: false, priority: 5 },
-        { code: 'ar', name: 'Arabic', rtl: true, priority: 6 },
-      ]);
-      setNamespaces(['ui', 'home', 'menu', 'orders', 'common', 'auth', 'api', 'validation', 'email', 'business']);
+      // Use static configuration as fallback
+      setLanguages(staticLanguages);
+      setNamespaces(staticNamespaces);
       setRtlLanguages(['ar']);
     } finally {
       setLoading(false);
