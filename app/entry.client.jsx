@@ -6,79 +6,32 @@ import { initI18n } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
 
 startTransition(async () => {
-  // Improved language detection with better priority order
+  // Simple language detection
   const params = new URLSearchParams(window.location.search);
-  const urlLang = params.get('lng');
-  
-  // Get stored language preference
-  let storedLang = null;
-  try {
-    storedLang = localStorage.getItem('lng');
-  } catch {}
-  
-  // Get language from cookie
-  let cookieLang = null;
-  try {
-    const cookieMatch = document.cookie.match(/(?:^|; )i18next=([^;]+)/);
-    if (cookieMatch) {
-      cookieLang = decodeURIComponent(cookieMatch[1]);
-    }
-  } catch {}
-  
-  // Get language from document
-  const docLang = document.documentElement.lang;
-  
-  // Priority order: URL > Stored > Cookie > Document > Default
-  const lng = urlLang || storedLang || cookieLang || docLang || 'en';
-  
-  console.log('🌍 Language detection:', {
-    url: urlLang,
-    stored: storedLang,
-    cookie: cookieLang,
-    document: docLang,
-    selected: lng
-  });
+  const stored = localStorage.getItem('lng');
+  const lng = params.get('lng') || stored || 'en';
 
+  // Initialize i18n with the detected language
   const i18n = await initI18n({ lng, resources: uiResources });
 
+  // Update preferences
   try {
-    // Update document attributes immediately
     document.documentElement.lang = i18n.language;
-    
-    // Set RTL direction based on language
-    const isRTL = ['ar', 'he', 'fa'].includes(i18n.language);
-    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-    
-    // Store language preference if not already stored
-    if (!storedLang) {
-      try { 
-        localStorage.setItem('lng', i18n.language); 
-      } catch {}
-    }
-    
-    // Set cookie if not already set
-    if (!cookieLang) {
-      try { 
-        document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`; 
-      } catch {}
-    }
-    
-    // Update URL if no language parameter
-    if (!urlLang) {
+    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    if (!stored) localStorage.setItem('lng', i18n.language);
+    if (!params.get('lng')) {
       const url = new URL(window.location.href);
       url.searchParams.set('lng', i18n.language);
       window.history.replaceState({}, '', url.toString());
     }
-  } catch (error) {
-    console.warn('Failed to update language preferences:', error);
-  }
+  } catch {}
 
   hydrateRoot(
     document,
     <StrictMode>
       <I18nextProvider i18n={i18n}>
         <HydratedRouter />
-      </I18nextProvider>
+      </HydratedRouter>
     </StrictMode>
   );
 });

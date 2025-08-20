@@ -8,10 +8,9 @@ import { useLanguageSwitcher } from '../lib/useDynamicTranslation';
 
 export function LangToggle() {
   const { t } = useTranslation('ui');
-  const { changeLanguage, loading, availableLanguages, currentLanguage } = useLanguageSwitcher();
+  const { changeLanguage, availableLanguages, currentLanguage } = useLanguageSwitcher();
 
-  // Fallback languages that will always be available
-  const fallbackLanguages = [
+  const languages = [
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
     { code: 'fr', label: 'Français' },
@@ -20,9 +19,6 @@ export function LangToggle() {
     { code: 'pt', label: 'Português' },
     { code: 'ar', label: 'العربية' },
   ];
-
-  // Use backend languages if available, otherwise use fallbacks
-  const displayLanguages = availableLanguages.length > 0 ? availableLanguages : fallbackLanguages;
 
   const handleLanguageChange = async (code) => {
     const success = await changeLanguage(code);
@@ -42,21 +38,15 @@ export function LangToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="flex items-center mx-auto">
-        {displayLanguages.map((lang) => {
-          // Handle both backend format and fallback format
-          const code = lang.code || lang;
-          const label = lang.label || lang;
-          
-          return (
-            <DropdownMenuItem 
-              key={code} 
-              onClick={() => handleLanguageChange(code)}
-              className={code === currentLanguage ? 'bg-accent' : ''}
-            >
-              {label}
-            </DropdownMenuItem>
-          );
-        })}
+        {languages.map((lang) => (
+          <DropdownMenuItem 
+            key={lang.code} 
+            onClick={() => handleLanguageChange(lang.code)}
+            className={lang.code === currentLanguage ? 'bg-accent' : ''}
+          >
+            {lang.label}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
