@@ -17,12 +17,18 @@ startTransition(async () => {
 
     console.log('🌍 Detected language:', lng);
 
-    // Initialize i18n
-    const i18n = await initI18n({ lng, resources: uiResources });
-
-    // Set document attributes
+    // Set document attributes IMMEDIATELY to prevent flash
     document.documentElement.lang = lng;
     document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+
+    // Initialize i18n with the detected language
+    const i18n = await initI18n({ lng, resources: uiResources });
+
+    // Ensure the language is actually set correctly
+    if (i18n.language !== lng) {
+      console.log(`🔄 Correcting i18n language from ${i18n.language} to ${lng}`);
+      await i18n.changeLanguage(lng);
+    }
 
     // Hydrate the React app
     hydrateRoot(
@@ -39,6 +45,10 @@ startTransition(async () => {
     
     // Fallback to basic initialization
     const fallbackI18n = await initI18n({ lng: 'en', resources: uiResources });
+    
+    // Set fallback document attributes
+    document.documentElement.lang = 'en';
+    document.documentElement.dir = 'ltr';
     
     hydrateRoot(
       document,
