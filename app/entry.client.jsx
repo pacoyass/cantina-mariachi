@@ -70,7 +70,7 @@ startTransition(async () => {
       <StrictMode>
         <I18nextProvider i18n={i18n}>
           <HydratedRouter />
-        </HydratedRouter>
+        </I18nextProvider>
       </StrictMode>
     );
 
@@ -88,7 +88,7 @@ startTransition(async () => {
       <StrictMode>
         <I18nextProvider i18n={fallbackI18n}>
           <HydratedRouter />
-        </HydratedRouter>
+        </I18nextProvider>
       </StrictMode>
     );
   }
