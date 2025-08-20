@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -93,9 +93,23 @@ export function useDynamicTranslation() {
  */
 export function useLanguageSwitcher() {
   const { i18n, languages } = useDynamicTranslation();
+  const isChangingLanguage = useRef(false);
+  const lastChangedLanguage = useRef(i18n.language);
 
-  const changeLanguage = async (code) => {
+  const changeLanguage = useCallback(async (code) => {
     try {
+      // Prevent multiple simultaneous language changes
+      if (isChangingLanguage.current) {
+        console.log('Language change already in progress, skipping...');
+        return false;
+      }
+
+      // Prevent changing to the same language
+      if (code === lastChangedLanguage.current) {
+        console.log('Language already set to', code);
+        return true;
+      }
+
       // Check if language is supported
       const isSupported = languages.some(lang => lang.code === code);
       if (!isSupported) {
@@ -103,36 +117,60 @@ export function useLanguageSwitcher() {
         return false;
       }
 
+      // Set flag to prevent multiple changes
+      isChangingLanguage.current = true;
+      lastChangedLanguage.current = code;
+
+      console.log(`Changing language from ${i18n.language} to ${code}`);
+
       // Change language
       await i18n.changeLanguage(code);
       
-      // Update URL
-      const url = new URL(window.location.href);
-      url.searchParams.set('lng', code);
-      window.history.replaceState({}, '', url.toString());
+      // Update URL only if it's different
+      const currentUrl = new URL(window.location.href);
+      const currentLng = currentUrl.searchParams.get('lng');
+      if (currentLng !== code) {
+        currentUrl.searchParams.set('lng', code);
+        window.history.replaceState({}, '', currentUrl.toString());
+      }
       
-      // Update localStorage
-      try {
-        localStorage.setItem('lng', code);
-      } catch {}
+      // Update localStorage only if it's different
+      const storedLng = localStorage.getItem('lng');
+      if (storedLng !== code) {
+        try {
+          localStorage.setItem('lng', code);
+        } catch {}
+      }
       
-      // Update document attributes
-      try {
+      // Update document attributes only if they're different
+      const currentLang = document.documentElement.lang;
+      const currentDir = document.documentElement.dir;
+      const selectedLang = languages.find(l => l.code === code);
+      const newDir = selectedLang?.rtl ? 'rtl' : 'ltr';
+      
+      if (currentLang !== code) {
         document.documentElement.lang = code;
-        const selectedLang = languages.find(l => l.code === code);
-        document.documentElement.dir = selectedLang?.rtl ? 'rtl' : 'ltr';
-      } catch {}
+      }
+      if (currentDir !== newDir) {
+        document.documentElement.dir = newDir;
+      }
       
+      console.log(`Language changed successfully to ${code}`);
       return true;
     } catch (error) {
       console.error('Failed to change language:', error);
       return false;
+    } finally {
+      // Reset flag after a short delay to prevent rapid changes
+      setTimeout(() => {
+        isChangingLanguage.current = false;
+      }, 100);
     }
-  };
+  }, [i18n, languages]);
 
   return {
     changeLanguage,
-    loading: false,
+    loading: isChangingLanguage.current,
     availableLanguages: languages.map(lang => lang.code),
     currentLanguage: i18n.language
   };
