@@ -86,6 +86,7 @@ export async function initI18n({ lng = 'en', resources }) {
   
   console.log('✅ Using i18n configuration:', {
     type: 'dynamic',
+    detectedLanguage: lng,
     supportedLngs: dynamicConfig.supportedLngs,
     rtlLngs: dynamicConfig.rtlLngs,
     namespaces: dynamicConfig.ns,
@@ -94,7 +95,7 @@ export async function initI18n({ lng = 'en', resources }) {
   });
 
   await i18n.init({
-    lng,
+    lng, // Use the detected language directly
     fallbackLng: dynamicConfig.fallbackLng,
     supportedLngs: dynamicConfig.supportedLngs,
     interpolation: { escapeValue: false },
@@ -122,6 +123,12 @@ export async function initI18n({ lng = 'en', resources }) {
       return fallbackValue;
     }
   });
+
+  // Ensure the language is set correctly after initialization
+  if (i18n.language !== lng) {
+    console.log(`🔄 Correcting i18n language from ${i18n.language} to ${lng}`);
+    await i18n.changeLanguage(lng);
+  }
 
   return i18n;
 }
