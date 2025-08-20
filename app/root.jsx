@@ -17,7 +17,6 @@ import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useTranslation } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
-import { useEffect } from 'react';
 
 export async function loader( { request, context } )
 {
@@ -58,19 +57,6 @@ export function Layout( { children } )
   const urlLang = (() => { try { return new URLSearchParams(window.location.search).get('lng'); } catch { return null; } })();
   const lang = urlLang || i18n?.language || initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
-
-  
-
-  // Sync i18n and html attrs when URL language changes
-  useEffect(() => {
-    try {
-      if (urlLang && i18n?.changeLanguage) {
-        i18n.changeLanguage(urlLang);
-      }
-      document.documentElement.lang = lang;
-      document.documentElement.dir = dir;
-    } catch {}
-  }, [urlLang]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
