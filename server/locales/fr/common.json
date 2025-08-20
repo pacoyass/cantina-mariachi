@@ -19,5 +19,8 @@
   "serverError": "Erreur du serveur",
   "maintenance": "Le serveur est en maintenance",
   "rateLimited": "Trop de requêtes. Veuillez réessayer plus tard.",
-  "timeout": "Délai d'attente dépassé"
+  "timeout": "Délai d'attente dépassé",
+  "dataRetrieved": "Données récupérées avec succès",
+  "languageUpdated": "Langue mise à jour avec succès",
+  "languageReset": "Langue réinitialisée par défaut avec succès"
 }
