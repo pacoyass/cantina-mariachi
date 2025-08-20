@@ -10,8 +10,6 @@ dotenv.config();
 
 import { LoggerService } from './server/utils/logger.js';
 import cacheService from './server/services/cacheService.js';
-import cookieParser from 'cookie-parser';
-import apiRoutes from './server/routes/index.routes.js';
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 const BASE_PORT = Number.parseInt(process.env.PORT || '3333');
@@ -73,49 +71,16 @@ if (DEVELOPMENT) {
     })
   );
   app.use(viteDevServer.middlewares);
-  
-  // Add basic middleware for development
-  app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
-  if (process.env.ALLOW_URLENCODED === '1') {
-    app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
-  }
-  
-  // Configure cookie parser for development
-  const cookieSecret = process.env.COOKIE_SECRET || 'your-fallback-secret';
-  app.use(cookieParser(cookieSecret));
-  
-  // Add basic API routes for development
-  app.use("/api", apiRoutes);
-  
-  // In development mode, let Vite handle all frontend routes
-  // This is simpler and avoids the React Router SSR complexity
   app.use(async (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) {
-      return next();
+    try {
+      const source = await viteDevServer.ssrLoadModule('./server/app.js');
+      return await source.app(req, res, next);
+    } catch (error) {
+      if (typeof error === 'object' && error instanceof Error) {
+        viteDevServer.ssrFixStacktrace(error);
+      }
+      next(error);
     }
-    
-    // Temporarily bypass React Router SSR in development to isolate the issue
-    // Serve a simple HTML page that loads the client-side React app
-    res.status(200).send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <meta name="server-start-time" content="${Date.now().toString()}">
-          <title>Cantina App</title>
-        </head>
-        <body>
-          <div id="root">
-            <h1>Loading Cantina App...</h1>
-            <p>Client-side React app is loading...</p>
-          </div>
-          <script type="module" src="/@vite/client"></script>
-          <script type="module" src="/app/entry.client.jsx"></script>
-        </body>
-      </html>
-    `);
   });
 } else {
   console.log('Starting production server');
