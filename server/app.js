@@ -92,10 +92,7 @@ app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 if (process.env.ALLOW_URLENCODED === '1') {
 	app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 }
-
-// Configure cookie parser with proper secret for signed cookies
-const cookieSecret = process.env.COOKIE_SECRET || 'your-fallback-secret';
-app.use(cookieParser(cookieSecret));
+app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
 
 // Add i18next middleware for translation support
 app.use(i18nextMiddleware.handle(i18next));
@@ -132,10 +129,8 @@ try {
 } catch (e) {
 	console.warn('OpenAPI docs not served:', e?.message || e);
 }
-
-// Configure CSRF protection with proper cookie handling
-const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
-	getSecret: () => process.env.CSRF_SECRET || cookieSecret,
+const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf( {
+	getSecret: () => process.env.CSRF_SECRET || 'your-fallback-secret',
 	getSessionIdentifier: (req) => req.session?.id || req.signedCookies?.csrfSession || req.headers['x-session-id'] || req.ip,
 	cookieName: "__Host-csrf-token",
 	cookieOptions: {
@@ -144,69 +139,48 @@ const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
 		sameSite: "lax",
 		path: "/",
 		signed: true,
-		expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+		expires: new Date( Date.now() + 24 * 60 * 60 * 1000 ),
 		maxAge: 24 * 60 * 60 * 1000,
+
 	},
 	size: 128,
 	ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-	getTokenFromRequest: (req) => req.headers["x-csrf-token"],
+	getTokenFromRequest: ( req ) => req.headers["x-csrf-token"],
 	isThrowingErrors: false,
-});
-
-app.use((req, res, next) => {
-	try {
-		const csrf = generateCsrfToken(req, res);
+} );
+app.use( ( req, res, next ) =>
+	{
+		const csrf = generateCsrfToken( req, res );
 		res.locals.csrfToken = csrf; // Attach the nonce to the response object
-	} catch (error) {
-		console.warn('CSRF token generation failed:', error.message);
-		res.locals.csrfToken = null;
-	}
-	next();
-});
+	
+		next();
+	} );
 
-// Example protected route
-app.post('/protected-route', doubleCsrfProtection, (req, res) => {
-	res.json({ message: 'This route is protected by CSRF' });
-});
-
-app.use("/api", apiRoutes);
+	// Example protected route
+app.post( '/protected-route', doubleCsrfProtection, ( req, res ) =>
+	{
+		res.json( { message: 'This route is protected by CSRF' } );
+	} );
+app.use( "/api", apiRoutes );
 
 // ✅ Start system maintenance cron jobs (only in non-test environments)
 if (process.env.NODE_ENV !== 'test') {
 	registerCronJobs(); // Register all cron jobs
 	console.log('✅ Registered cron jobs');
 }
-
-// Only handle React Router in production mode
-// In development mode, this is handled by the main server.js
-if (process.env.NODE_ENV === 'production') {
-	app.use(
-		createRequestHandler({
-			build: () => import("virtual:react-router/server-build"),
-			getLoadContext(req,res) {
-				// Get language from multiple sources with proper fallback
-				const urlLang = req.query.lng;
-				const cookieLang = req.cookies?.i18next;
-				const headerLang = req.headers['accept-language']?.split(',')[0]?.split('-')[0];
-				
-				let lng = urlLang || cookieLang || headerLang || 'en';
-				
-				// Validate language is supported
-				if (!['en', 'es', 'fr', 'de', 'it', 'pt', 'ar'].includes(lng)) {
-					lng = 'en';
-				}
-				
-				return {
-					VALUE_FROM_EXPRESS: "Hello from Express",
-					nonce: res.locals.nonce,
-					csrfToken: res.locals.csrfToken,
-					lng: lng,
-					supportedLngs: ['en', 'es', 'fr', 'de', 'it', 'pt', 'ar']
-				};
-			},
-		}),
-	);
-}
+app.use(
+	createRequestHandler({
+		build: () => import("virtual:react-router/server-build"),
+		getLoadContext(req,res) {
+			return {
+				VALUE_FROM_EXPRESS: "Hello from Express",
+        nonce: res.locals.nonce,
+        csrfToken: res.locals.csrfToken,
+        lng: req.language || req.lng || 'en'
+			};
+		},
+	}),
+);
 
 // General Error Handler
 app.use( ( err, req, res, next ) => {
