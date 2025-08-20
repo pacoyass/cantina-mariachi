@@ -100,10 +100,15 @@ function initializeI18n() {
         initImmediate: false,
         
         // Wait for backend to load resources
-        wait: true
+        wait: true,
+        
+        // Ensure proper initialization
+        initImmediate: false,
+        compatibilityJSON: 'v4'
       });
 
   } catch (error) {
+    console.error('❌ i18n initialization failed:', error);
     console.warn('⚠️ i18n initialization failed, using minimal config:', error.message);
     
     // Minimal fallback configuration
