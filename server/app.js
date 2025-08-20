@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 	const cookieLang = req.cookies?.i18next || req.cookies?.lng;
 	const acceptLang = req.headers['accept-language'];
 	
-	let detectedLang = 'en'; // Default
+	let detectedLang = 'en'; // Default to English
 	
 	if (urlLang) {
 		detectedLang = urlLang;
@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 		}
 	}
 	
-	// Ensure language is supported
+	// Ensure language is supported, default to English
 	const supportedLangs = ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'];
 	if (!supportedLangs.includes(detectedLang)) {
 		detectedLang = 'en';
@@ -58,8 +58,8 @@ app.use((req, res, next) => {
 	req.language = detectedLang;
 	req.lng = detectedLang;
 	
-	// Set cookie if not already set
-	if (!req.cookies?.i18next && !req.cookies?.lng) {
+	// Set cookie if not already set or if language changed
+	if (!req.cookies?.i18next || req.cookies?.i18next !== detectedLang) {
 		res.cookie('i18next', detectedLang, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
@@ -141,12 +141,22 @@ if (process.env.ALLOW_URLENCODED === '1') {
 app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Add i18next middleware for translation support
-// Check if i18next is properly initialized before using middleware
-if (i18next && i18next.isInitialized) {
+// Wait for i18next to be fully initialized
+i18next.on('initialized', () => {
   app.use(i18nextMiddleware.handle(i18next));
   console.log('✅ i18next middleware enabled');
+});
+
+i18next.on('failedLoading', (lng, ns, msg) => {
+  console.warn(`⚠️ Failed to load translation: ${lng}/${ns} - ${msg}`);
+});
+
+// Check if already initialized
+if (i18next.isInitialized) {
+  app.use(i18nextMiddleware.handle(i18next));
+  console.log('✅ i18next middleware enabled (already initialized)');
 } else {
-  console.warn('⚠️ i18next not initialized, skipping middleware');
+  console.log('⏳ Waiting for i18next initialization...');
 }
 
 // Import and add translation helpers to request object
