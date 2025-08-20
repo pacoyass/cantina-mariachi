@@ -46,10 +46,19 @@ export async function loader({ request, context }) {
   const skeleton = url.searchParams.get('skeleton') === '1';
   const delayMs = skeleton ? Number(url.searchParams.get('delay') || 1500) : 0;
   const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+  
+  // Dev-only: choose which sections to delay via ?skeleton=items,offers,drinks,config,cms
+  const skParam = url.searchParams.get('skeleton') || '';
+  const delayTargets = new Set(
+    skParam === '1' || skParam === 'all'
+      ? ['items', 'offers', 'testimonials', 'drinks', 'config', 'cms']
+      : skParam.split(',').map(s => s.trim()).filter(Boolean)
+  );
+  const maybeDelay = async (key) => { if (delayMs && delayTargets.has(key)) await delay(delayMs); };
 
   const itemsPromise = (async () => {
     try {
-      if (delayMs) await delay(delayMs);
+      await maybeDelay('items');
       const res = await fetch(`${url.origin}/api/menu/items`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -61,7 +70,7 @@ export async function loader({ request, context }) {
   })();
   const offersPromise = (async () => {
     try {
-      if (delayMs) await delay(delayMs);
+      await maybeDelay('offers');
       const res = await fetch(`${url.origin}/api/home/offers`, { headers });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -72,7 +81,7 @@ export async function loader({ request, context }) {
   })();
   const testimonialsPromise = (async () => {
     try {
-      if (delayMs) await delay(delayMs);
+      await maybeDelay('testimonials');
       const res = await fetch(`${url.origin}/api/home/testimonials`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -83,7 +92,7 @@ export async function loader({ request, context }) {
   })();
   const drinksPromise = (async () => {
     try {
-      if (delayMs) await delay(delayMs);
+      await maybeDelay('drinks');
       const catRes = await fetch(`${url.origin}/api/menu/categories`, { headers });
       if (!catRes.ok) throw new Error(`HTTP ${catRes.status}`);
       const catJson = await catRes.json();
@@ -100,7 +109,7 @@ export async function loader({ request, context }) {
   })();
   const configPromise = (async () => {
     try {
-      if (delayMs) await delay(delayMs);
+      await maybeDelay('config');
       const res = await fetch(`${url.origin}/api/config/public`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -111,7 +120,7 @@ export async function loader({ request, context }) {
   })();
   const cmsPromise = (async () => {
     try {
-      if (delayMs) await delay(delayMs);
+      await maybeDelay('cms');
       const res = await fetch(`${url.origin}/api/cms/home?locale=${encodeURIComponent(lng)}`, { headers });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
