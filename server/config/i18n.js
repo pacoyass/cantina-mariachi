@@ -30,6 +30,9 @@ function initializeI18n() {
     });
 
     console.log('🔄 Calling i18next.init...');
+    console.log('📁 Backend loadPath:', join(__dirname, '../locales/{{lng}}/{{ns}}.json'));
+    console.log('🌍 Will attempt to load languages:', staticConfig.supportedLngs);
+    console.log('📚 Will attempt to load namespaces:', staticConfig.namespaces);
     
     return i18next
       .use(Backend)
@@ -48,7 +51,19 @@ function initializeI18n() {
           loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
           addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json'),
           // Debug backend loading
-          debug: process.env.NODE_ENV === 'development'
+          debug: true,
+          // Add more verbose logging
+          parse: (data, url, callback) => {
+            console.log('🔍 Backend loading:', url);
+            try {
+              const result = JSON.parse(data);
+              console.log('✅ Backend loaded successfully:', url);
+              callback(null, result);
+            } catch (error) {
+              console.error('❌ Backend parse error:', url, error.message);
+              callback(error, null);
+            }
+          }
         },
         
         // Language detection options
