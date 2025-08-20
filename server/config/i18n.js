@@ -92,7 +92,10 @@ function initializeI18n() {
         returnNull: false,
         
         // Return objects for missing keys
-        returnObjects: false
+        returnObjects: false,
+        
+        // Force synchronous initialization
+        initImmediate: false
       });
 
   } catch (error) {
