@@ -141,7 +141,7 @@ if (process.env.ALLOW_URLENCODED === '1') {
 app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Add i18next middleware for translation support
-if (i18next && i18next.isInitialized) {
+if (i18next && typeof i18next.t === 'function') {
   app.use(i18nextMiddleware.handle(i18next));
   console.log('✅ i18next middleware enabled');
 } else {
