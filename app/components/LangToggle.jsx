@@ -26,18 +26,22 @@ export function LangToggle() {
     }
     
     try {
-      await changeLanguage(code);
+      const success = await changeLanguage(code);
+      if (success) {
+        console.log(`✅ Language switched to ${code}`);
+      } else {
+        console.warn(`⚠️ Failed to switch to ${code}`);
+      }
     } catch (error) {
-      console.error('Error changing language:', error);
+      console.error('❌ Error changing language:', error);
     }
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label={t('a11y.toggleLanguage')}>
           <Globe className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">{t('a11y.toggleLanguage')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="flex items-center mx-auto">

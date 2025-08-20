@@ -21,19 +21,63 @@ export const app = express();
 if (process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', 1);
 }
-function generateNonce()
-{
-	return crypto.randomBytes( 24 ).toString( 'base64' );
-}
-app.use( ( req, res, next ) =>
-	{
-		const nonce = generateNonce();
-		res.locals.nonce = nonce; // Attach the nonce to the response object
-	
-		next();
-	} );
-// // Helmet security headers
 
+function generateNonce() {
+	return crypto.randomBytes(24).toString('base64');
+}
+
+// Language detection middleware - must come before other middleware
+app.use((req, res, next) => {
+	// Language detection priority: URL > Cookie > Accept-Language > Default
+	const urlLang = req.query.lng;
+	const cookieLang = req.cookies?.i18next || req.cookies?.lng;
+	const acceptLang = req.headers['accept-language'];
+	
+	let detectedLang = 'en'; // Default
+	
+	if (urlLang) {
+		detectedLang = urlLang;
+	} else if (cookieLang) {
+		detectedLang = cookieLang;
+	} else if (acceptLang) {
+		// Parse Accept-Language header
+		const preferredLang = acceptLang.split(',')[0].split('-')[0];
+		const supportedLangs = ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'];
+		if (supportedLangs.includes(preferredLang)) {
+			detectedLang = preferredLang;
+		}
+	}
+	
+	// Ensure language is supported
+	const supportedLangs = ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'];
+	if (!supportedLangs.includes(detectedLang)) {
+		detectedLang = 'en';
+	}
+	
+	// Attach language to request object
+	req.language = detectedLang;
+	req.lng = detectedLang;
+	
+	// Set cookie if not already set
+	if (!req.cookies?.i18next && !req.cookies?.lng) {
+		res.cookie('i18next', detectedLang, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			sameSite: 'lax',
+			maxAge: 365 * 24 * 60 * 60 * 1000 // 1 year
+		});
+	}
+	
+	next();
+});
+
+app.use((req, res, next) => {
+	const nonce = generateNonce();
+	res.locals.nonce = nonce; // Attach the nonce to the response object
+	next();
+});
+
+// Helmet security headers
 helmet({
   contentSecurityPolicy: {
     useDefaults: true,
@@ -64,11 +108,13 @@ helmet({
   },
   frameguard: false,
 })
-app.use( helmet.hsts( {
+
+app.use(helmet.hsts({
 	maxAge: 31536000,
 	includeSubDomains: true,
 	preload: true
-} ) );
+}));
+
 app.use(cors({
 	origin: (origin, cb) => {
 		const origins = (process.env.CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -80,7 +126,6 @@ app.use(cors({
 }));
 
 if (process.env.ENABLE_EXPRESS_SESSION === 'true') {
-
 	app.use(session({
 		secret: process.env.SESSION_SECRET || process.env.COOKIE_SECRET || 'dev-session-secret',
 		resave: false,
@@ -88,11 +133,12 @@ if (process.env.ENABLE_EXPRESS_SESSION === 'true') {
 		cookie: { secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' },
 	}));
 }
+
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 if (process.env.ALLOW_URLENCODED === '1') {
 	app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
 }
-app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
+app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Add i18next middleware for translation support
 // Check if i18next is properly initialized before using middleware
@@ -135,7 +181,8 @@ try {
 } catch (e) {
 	console.warn('OpenAPI docs not served:', e?.message || e);
 }
-const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf( {
+
+const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
 	getSecret: () => process.env.CSRF_SECRET || 'your-fallback-secret',
 	getSessionIdentifier: (req) => req.session?.id || req.signedCookies?.csrfSession || req.headers['x-session-id'] || req.ip,
 	cookieName: "__Host-csrf-token",
@@ -145,51 +192,50 @@ const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf( {
 		sameSite: "lax",
 		path: "/",
 		signed: true,
-		expires: new Date( Date.now() + 24 * 60 * 60 * 1000 ),
+		expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
 		maxAge: 24 * 60 * 60 * 1000,
-
 	},
 	size: 128,
 	ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-	getTokenFromRequest: ( req ) => req.headers["x-csrf-token"],
+	getTokenFromRequest: (req) => req.headers["x-csrf-token"],
 	isThrowingErrors: false,
-} );
-app.use( ( req, res, next ) =>
-	{
-		const csrf = generateCsrfToken( req, res );
-		res.locals.csrfToken = csrf; // Attach the nonce to the response object
-	
-		next();
-	} );
+});
 
-	// Example protected route
-app.post( '/protected-route', doubleCsrfProtection, ( req, res ) =>
-	{
-		res.json( { message: 'This route is protected by CSRF' } );
-	} );
-app.use( "/api", apiRoutes );
+app.use((req, res, next) => {
+	const csrf = generateCsrfToken(req, res);
+	res.locals.csrfToken = csrf; // Attach the nonce to the response object
+	next();
+});
+
+// Example protected route
+app.post('/protected-route', doubleCsrfProtection, (req, res) => {
+	res.json({ message: 'This route is protected by CSRF' });
+});
+
+app.use("/api", apiRoutes);
 
 // ✅ Start system maintenance cron jobs (only in non-test environments)
 if (process.env.NODE_ENV !== 'test') {
 	registerCronJobs(); // Register all cron jobs
 	console.log('✅ Registered cron jobs');
 }
+
 app.use(
 	createRequestHandler({
 		build: () => import("virtual:react-router/server-build"),
-		getLoadContext(req,res) {
+		getLoadContext(req, res) {
 			return {
 				VALUE_FROM_EXPRESS: "Hello from Express",
-        nonce: res.locals.nonce,
-        csrfToken: res.locals.csrfToken,
-        lng: req.language || req.lng || 'en'
+				nonce: res.locals.nonce,
+				csrfToken: res.locals.csrfToken,
+				lng: req.language || req.lng || 'en' // Pass detected language to React
 			};
 		},
 	}),
 );
 
 // General Error Handler
-app.use( ( err, req, res, next ) => {
+app.use((err, req, res, next) => {
 	const errorMessage = typeof err === 'string' ? err : err.message || 'Unknown server error';
 	const errorStack = err.stack || 'No stack trace';
 	try {
@@ -201,4 +247,4 @@ app.use( ( err, req, res, next ) => {
 		});
 	} catch {}
 	return createError(res, 500, 'internalError', 'UNHANDLED_ERROR', { message: errorMessage, errorCode: err.code || null }, req);
-} );
+});
