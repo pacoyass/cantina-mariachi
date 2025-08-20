@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Simple hook for language management - Clean version without useEffect
+ * Simple hook for language management - SSR compatible
  */
 export function useDynamicTranslation() {
   const { t, i18n } = useTranslation();
@@ -89,7 +89,7 @@ export function useDynamicTranslation() {
 }
 
 /**
- * Simple hook for language switching - Clean version without useEffect
+ * SSR-compatible hook for language switching
  */
 export function useLanguageSwitcher() {
   const { i18n, languages } = useDynamicTranslation();
@@ -103,9 +103,9 @@ export function useLanguageSwitcher() {
         return false;
       }
 
-      console.log(`Changing language from ${i18n.language} to ${code}`);
+      console.log(`🌍 Changing language from ${i18n.language} to ${code}`);
 
-      // Change language
+      // Change i18n language
       await i18n.changeLanguage(code);
       
       // Update URL
@@ -118,15 +118,20 @@ export function useLanguageSwitcher() {
         localStorage.setItem('lng', code);
       } catch {}
       
+      // Update cookie for SSR compatibility
+      try {
+        document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`;
+      } catch {}
+      
       // Update document attributes
       document.documentElement.lang = code;
       const selectedLang = languages.find(l => l.code === code);
       document.documentElement.dir = selectedLang?.rtl ? 'rtl' : 'ltr';
       
-      console.log(`Language changed successfully to ${code}`);
+      console.log(`✅ Language changed successfully to ${code}`);
       return true;
     } catch (error) {
-      console.error('Failed to change language:', error);
+      console.error('❌ Failed to change language:', error);
       return false;
     }
   }, [i18n, languages]);

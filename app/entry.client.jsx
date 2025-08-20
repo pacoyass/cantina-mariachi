@@ -6,18 +6,28 @@ import { initI18n } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
 
 /**
- * Client-side app initialization with language support
+ * Client-side app initialization with SSR-compatible language support
  */
 startTransition(async () => {
   try {
-    // Simple language detection: URL > localStorage > default
-    const params = new URLSearchParams(window.location.search);
-    const stored = localStorage.getItem('lng');
-    const lng = params.get('lng') || stored || 'en';
+    // Get language from server context (SSR) or detect on client
+    const serverLang = window.__REACT_ROUTER_DATA__?.context?.lng;
+    const urlLang = new URLSearchParams(window.location.search).get('lng');
+    const storedLang = localStorage.getItem('lng');
+    const cookieLang = document.cookie.split('; ').find(row => row.startsWith('i18next='))?.split('=')[1];
+    
+    // Language priority: URL > Server > Cookie > localStorage > Default
+    const lng = urlLang || serverLang || cookieLang || storedLang || 'en';
+    
+    console.log('🌍 Client language detection:', {
+      url: urlLang,
+      server: serverLang,
+      cookie: cookieLang,
+      stored: storedLang,
+      final: lng
+    });
 
-    console.log('🌍 Detected language:', lng);
-
-    // Set document attributes IMMEDIATELY to prevent flash
+    // Set document attributes immediately to prevent flash
     document.documentElement.lang = lng;
     document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
 
@@ -28,6 +38,19 @@ startTransition(async () => {
     if (i18n.language !== lng) {
       console.log(`🔄 Correcting i18n language from ${i18n.language} to ${lng}`);
       await i18n.changeLanguage(lng);
+    }
+
+    // Update localStorage and cookie if needed
+    if (storedLang !== lng) {
+      try {
+        localStorage.setItem('lng', lng);
+      } catch {}
+    }
+    
+    if (cookieLang !== lng) {
+      try {
+        document.cookie = `i18next=${lng}; path=/; max-age=31536000; SameSite=Lax`;
+      } catch {}
     }
 
     // Hydrate the React app
