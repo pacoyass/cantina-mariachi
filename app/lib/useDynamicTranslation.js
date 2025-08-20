@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -63,37 +63,13 @@ export function useDynamicTranslation() {
 }
 
 /**
- * Hook for language switching
+ * Simple hook for language switching
  */
 export function useLanguageSwitcher() {
   const { i18n, languages } = useDynamicTranslation();
-  const isChangingLanguage = useRef(false);
-  const lastChangedLanguage = useRef(i18n.language);
-  const changeTimeoutRef = useRef(null);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (changeTimeoutRef.current) {
-        clearTimeout(changeTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const changeLanguage = useCallback(async (code) => {
     try {
-      // Prevent multiple simultaneous language changes
-      if (isChangingLanguage.current) {
-        console.log('Language change already in progress, skipping...');
-        return false;
-      }
-
-      // Prevent changing to the same language
-      if (code === lastChangedLanguage.current) {
-        console.log('Language already set to', code);
-        return true;
-      }
-
       // Check if language is supported
       const isSupported = languages.some(lang => lang.code === code);
       if (!isSupported) {
@@ -101,63 +77,37 @@ export function useLanguageSwitcher() {
         return false;
       }
 
-      // Set flag to prevent multiple changes
-      isChangingLanguage.current = true;
-      lastChangedLanguage.current = code;
-
       console.log(`Changing language from ${i18n.language} to ${code}`);
 
       // Change language
       await i18n.changeLanguage(code);
       
-      // Update URL only if it's different
+      // Update URL
       const currentUrl = new URL(window.location.href);
-      const currentLng = currentUrl.searchParams.get('lng');
-      if (currentLng !== code) {
-        currentUrl.searchParams.set('lng', code);
-        window.history.replaceState({}, '', currentUrl.toString());
-      }
+      currentUrl.searchParams.set('lng', code);
+      window.history.replaceState({}, '', currentUrl.toString());
       
-      // Update localStorage only if it's different
-      const storedLng = localStorage.getItem('lng');
-      if (storedLng !== code) {
-        try {
-          localStorage.setItem('lng', code);
-        } catch {}
-      }
+      // Update localStorage
+      try {
+        localStorage.setItem('lng', code);
+      } catch {}
       
-      // Update document attributes only if they're different
-      const currentLang = document.documentElement.lang;
-      const currentDir = document.documentElement.dir;
+      // Update document attributes
+      document.documentElement.lang = code;
       const selectedLang = languages.find(l => l.code === code);
-      const newDir = selectedLang?.rtl ? 'rtl' : 'ltr';
-      
-      if (currentLang !== code) {
-        document.documentElement.lang = code;
-      }
-      if (currentDir !== newDir) {
-        document.documentElement.dir = newDir;
-      }
+      document.documentElement.dir = selectedLang?.rtl ? 'rtl' : 'ltr';
       
       console.log(`Language changed successfully to ${code}`);
       return true;
     } catch (error) {
       console.error('Failed to change language:', error);
       return false;
-    } finally {
-      // Reset flag after a delay to prevent rapid changes
-      if (changeTimeoutRef.current) {
-        clearTimeout(changeTimeoutRef.current);
-      }
-      changeTimeoutRef.current = setTimeout(() => {
-        isChangingLanguage.current = false;
-      }, 300);
     }
   }, [i18n, languages]);
 
   return {
     changeLanguage,
-    loading: isChangingLanguage.current,
+    loading: false,
     availableLanguages: languages.map(lang => lang.code),
     currentLanguage: i18n.language
   };
