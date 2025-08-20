@@ -135,5 +135,18 @@ function initializeI18n() {
 // Initialize i18next synchronously
 const i18nInstance = initializeI18n();
 
+// Ensure initialization is complete
+i18nInstance.on('initialized', () => {
+  console.log('✅ i18next fully initialized with languages:', i18nInstance.languages);
+});
+
+i18nInstance.on('failedLoading', (lng, ns, msg) => {
+  console.warn(`⚠️ Failed to load translation: ${lng}/${ns} - ${msg}`);
+});
+
+i18nInstance.on('loaded', (loaded) => {
+  console.log('📚 i18next loaded resources:', Object.keys(loaded));
+});
+
 export default i18nInstance;
 export { middleware };
