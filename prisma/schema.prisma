@@ -340,6 +340,60 @@ model Localization {
   @@map("localizations")
 }
 
+// DYNAMIC TRANSLATION MANAGEMENT
+model ContentSchema {
+  id          String   @id @default(cuid())
+  slug        String   // Page slug (e.g., 'home', 'about')
+  locale      String   @default("en")
+  fields      Json     // Field definitions and validation rules
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([slug, locale])
+  @@map("content_schemas")
+}
+
+model Language {
+  id          String   @id @default(cuid())
+  code        String   @unique // e.g., 'en', 'de-CH'
+  name        String   // e.g., 'English', 'Swiss German'
+  rtl         Boolean  @default(false)
+  fallback    String?  // e.g., 'de' for 'de-CH'
+  isActive    Boolean  @default(true)
+  priority    Int      @default(0) // For fallback ordering
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("languages")
+}
+
+model Namespace {
+  id          String   @id @default(cuid())
+  name        String   // e.g., 'common', 'home', 'menu'
+  locale      String   @default("en")
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([name, locale])
+  @@map("namespaces")
+}
+
+model FallbackRule {
+  id            String   @id @default(cuid())
+  sourceLocale  String   // e.g., 'de-CH'
+  targetLocale  String   // e.g., 'de'
+  priority      Int      @default(0) // Lower number = higher priority
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([sourceLocale, targetLocale])
+  @@map("fallback_rules")
+}
+
 model PageContent {
   id        String   @id @default(cuid())
   slug      String

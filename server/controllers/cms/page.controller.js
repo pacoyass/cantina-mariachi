@@ -5,9 +5,10 @@ import { LoggerService } from '../../utils/logger.js';
 import { toZonedTime } from 'date-fns-tz';
 import { subDays } from 'date-fns';
 import crypto from 'node:crypto';
+import DynamicTranslationService from '../../services/dynamicTranslation.service.js';
 
 /**
- * Get page content with field-level fallback chain
+ * Get page content with dynamic field-level fallback chain
  * Implements proper locale fallback: de-CH → de → en
  */
 export const getPage = async (req, res) => {
@@ -15,8 +16,8 @@ export const getPage = async (req, res) => {
     const { slug } = req.params;
     const { locale = 'en', status } = req.query;
     
-    // Build fallback chain: de-CH → de → en
-    const fallbackChain = buildFallbackChain(locale);
+    // Build dynamic fallback chain: de-CH → de → en
+    const fallbackChain = await DynamicTranslationService.buildDynamicFallbackChain(locale);
     
     // Fetch available locales for this slug in one query
     const candidates = await prisma.pageContent.findMany({
@@ -45,8 +46,8 @@ export const getPage = async (req, res) => {
       return createError(res, 404, 'notFound', 'PAGE_NOT_FOUND', {}, req);
     }
 
-    // Apply field-level fallbacks for missing content
-    const resolvedContent = applyFieldLevelFallbacks(page.data, candidates, fallbackChain);
+    // Apply dynamic field-level fallbacks for missing content
+    const resolvedContent = await applyDynamicFieldLevelFallbacks(page.data, candidates, fallbackChain, slug);
 
     // Set proper headers for SEO and caching
     res.set({
@@ -66,47 +67,54 @@ export const getPage = async (req, res) => {
 };
 
 /**
- * Build locale fallback chain (e.g., de-CH → de → en)
- */
-function buildFallbackChain(locale) {
-  const chain = [locale];
-  
-  // Add base language if locale has region (e.g., de-CH → de)
-  if (locale.includes('-')) {
-    const baseLang = locale.split('-')[0];
-    if (baseLang !== locale) {
-      chain.push(baseLang);
-    }
-  }
-  
-  // Always add English as final fallback
-  if (locale !== 'en') {
-    chain.push('en');
-  }
-  
-  return chain;
-}
-
-/**
- * Apply field-level fallbacks for missing content
+ * Apply dynamic field-level fallbacks for missing content
  * If a field is missing in current locale, fall back to source locale
  */
-function applyFieldLevelFallbacks(content, candidates, fallbackChain) {
+async function applyDynamicFieldLevelFallbacks(content, candidates, fallbackChain, slug) {
   if (!content || typeof content !== 'object') {
     return content;
   }
 
   const resolved = { ...content };
   
-  // For each field, check if it's missing and apply fallback
-  for (const field of Object.keys(content)) {
-    if (content[field] === null || content[field] === undefined || content[field] === '') {
-      // Find this field in fallback locales
-      for (const lng of fallbackChain) {
-        const candidate = candidates.find(c => c.locale === lng);
-        if (candidate?.data?.[field]) {
-          resolved[field] = candidate.data[field];
-          break;
+  // Get dynamic schema for this page
+  const schema = await DynamicTranslationService.getDynamicSchema(slug, fallbackChain[0]);
+  
+  // For each field defined in schema, check if it's missing and apply fallback
+  for (const [section, fields] of Object.entries(schema)) {
+    if (Array.isArray(fields)) {
+      // Handle array-based field definitions
+      for (const field of fields) {
+        if (content[section]?.[field] === null || content[section]?.[field] === undefined || content[section]?.[field] === '') {
+          // Find this field in fallback locales
+          for (const lng of fallbackChain) {
+            const candidate = candidates.find(c => c.locale === lng);
+            if (candidate?.data?.[section]?.[field]) {
+              if (!resolved[section]) resolved[section] = {};
+              resolved[section][field] = candidate.data[section][field];
+              break;
+            }
+          }
+        }
+      }
+    } else if (typeof fields === 'object') {
+      // Handle nested object field definitions
+      for (const [subsection, subfields] of Object.entries(fields)) {
+        if (Array.isArray(subfields)) {
+          for (const field of subfields) {
+            if (content[section]?.[subsection]?.[field] === null || content[section]?.[subsection]?.[field] === undefined || content[section]?.[subsection]?.[field] === '') {
+              // Find this field in fallback locales
+              for (const lng of fallbackChain) {
+                const candidate = candidates.find(c => c.locale === lng);
+                if (candidate?.data?.[section]?.[subsection]?.[field]) {
+                  if (!resolved[section]) resolved[section] = {};
+                  if (!resolved[section][subsection]) resolved[section][subsection] = {};
+                  resolved[section][subsection][field] = candidate.data[section][subsection][field];
+                  break;
+                }
+              }
+            }
+          }
         }
       }
     }
