@@ -188,60 +188,60 @@ async function getDefaultHomeContent(locale) {
   
   return {
     hero: {
-      badge: TranslationService.t('home:hero.badge', { lng: locale }),
-      title: TranslationService.t('home:hero.title', { lng: locale }),
-      desc: TranslationService.t('home:hero.desc', { lng: locale }),
+      badge: TranslationService.t('hero.badge', { lng: locale, ns: 'home' }),
+      title: TranslationService.t('hero.title', { lng: locale, ns: 'home' }),
+      desc: TranslationService.t('hero.desc', { lng: locale, ns: 'home' }),
       image: {
         jpg: '/hero.jpg',
         webp: '/hero.webp',
         avif: '/hero.avif'
       },
-      imageAlt: TranslationService.t('home:hero.imageAlt', { lng: locale })
+      imageAlt: TranslationService.t('hero.imageAlt', { lng: locale, ns: 'home' })
     },
     cta: {
-      limited: TranslationService.t('business:home.cta.limited', { lng: locale }),
-      title: TranslationService.t('business:home.cta.title', { lng: locale }),
-      desc: TranslationService.t('business:home.cta.desc', { lng: locale }),
-      endsTonight: TranslationService.t('business:home.cta.endsTonight', { lng: locale }),
-      socialProof: TranslationService.t('business:home.cta.socialProof', { lng: locale }),
-      start: TranslationService.t('business:home.cta.start', { lng: locale }),
-      reserve: TranslationService.t('business:home.cta.reserve', { lng: locale })
+      limited: TranslationService.t('home.cta.limited', { lng: locale, ns: 'business' }),
+      title: TranslationService.t('home.cta.title', { lng: locale, ns: 'business' }),
+      desc: TranslationService.t('home.cta.desc', { lng: locale, ns: 'business' }),
+      endsTonight: TranslationService.t('home.cta.endsTonight', { lng: locale, ns: 'business' }),
+      socialProof: TranslationService.t('home.cta.socialProof', { lng: locale, ns: 'business' }),
+      start: TranslationService.t('home.cta.start', { lng: locale, ns: 'business' }),
+      reserve: TranslationService.t('home.cta.reserve', { lng: locale, ns: 'business' })
     },
     features: {
-      title: TranslationService.t('home:features.title', { lng: locale }),
+      title: TranslationService.t('features.title', { lng: locale, ns: 'home' }),
       items: [
         {
           icon: 'star',
-          title: TranslationService.t('home:features.quality.title', { lng: locale }),
-          description: TranslationService.t('home:features.quality.desc', { lng: locale })
+          title: TranslationService.t('features.quality.title', { lng: locale, ns: 'home' }),
+          description: TranslationService.t('features.quality.desc', { lng: locale, ns: 'home' })
         },
         {
           icon: 'clock',
-          title: TranslationService.t('home:features.speed.title', { lng: locale }),
-          description: TranslationService.t('home:features.speed.desc', { lng: locale })
+          title: TranslationService.t('features.speed.title', { lng: locale, ns: 'home' }),
+          description: TranslationService.t('features.speed.desc', { lng: locale, ns: 'home' })
         },
         {
           icon: 'heart',
-          title: TranslationService.t('home:features.service.title', { lng: locale }),
-          description: TranslationService.t('home:features.service.desc', { lng: locale })
+          title: TranslationService.t('features.service.title', { lng: locale, ns: 'home' }),
+          description: TranslationService.t('features.service.desc', { lng: locale, ns: 'home' })
         }
       ]
     },
     about: {
-      title: TranslationService.t('home:about.title', { lng: locale }),
-      content: TranslationService.t('home:about.content', { lng: locale }),
+      title: TranslationService.t('about.title', { lng: locale, ns: 'home' }),
+      content: TranslationService.t('about.content', { lng: locale, ns: 'home' }),
       image: '/about.jpg'
     },
     contact: {
-      title: TranslationService.t('home:contact.title', { lng: locale }),
-      address: TranslationService.t('home:contact.address', { lng: locale }),
-      phone: TranslationService.t('home:contact.phone', { lng: locale }),
-      email: TranslationService.t('home:contact.email', { lng: locale })
+      title: TranslationService.t('contact.title', { lng: locale, ns: 'home' }),
+      address: TranslationService.t('contact.address', { lng: locale, ns: 'home' }),
+      phone: TranslationService.t('contact.phone', { lng: locale, ns: 'home' }),
+      email: TranslationService.t('contact.email', { lng: locale, ns: 'home' })
     },
     seo: {
-      title: TranslationService.t('home:seo.title', { lng: locale }),
-      description: TranslationService.t('home:seo.description', { lng: locale }),
-      keywords: TranslationService.t('home:seo.keywords', { lng: locale })
+      title: TranslationService.t('seo.title', { lng: locale, ns: 'home' }),
+      description: TranslationService.t('seo.description', { lng: locale, ns: 'home' }),
+      keywords: TranslationService.t('seo.keywords', { lng: locale, ns: 'home' })
     }
   };
 }
