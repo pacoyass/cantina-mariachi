@@ -8,7 +8,7 @@ CREATE TYPE "public"."OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PREPARING',
 CREATE TYPE "public"."ReservationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'SEATED', 'COMPLETED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "public"."UserRole" AS ENUM ('CUSTOMER', 'OWNER', 'ADMIN', 'COOK', 'WAITER', 'CASHIER');
+CREATE TYPE "public"."UserRole" AS ENUM ('CUSTOMER', 'OWNER', 'ADMIN', 'COOK', 'WAITER', 'CASHIER', 'DRIVER');
 
 -- CreateTable
 CREATE TABLE "public"."users" (
@@ -27,24 +27,26 @@ CREATE TABLE "public"."users" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."RefreshToken" (
+CREATE TABLE "public"."refresh_tokens" (
     "id" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "expiresAt" TIMESTAMP(3) NOT NULL,
+    "userAgent" TEXT,
+    "ip" TEXT,
 
-    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "refresh_tokens_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."BlacklistedToken" (
+CREATE TABLE "public"."blacklisted_tokens" (
     "id" TEXT NOT NULL,
     "tokenHash" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "BlacklistedToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "blacklisted_tokens_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -62,6 +64,68 @@ CREATE TABLE "public"."drivers" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "drivers_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."activity_logs" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT,
+    "type" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "metadata" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "activity_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."login_logs" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT,
+    "status" TEXT NOT NULL,
+    "ip" TEXT,
+    "userAgent" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "login_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."error_logs" (
+    "id" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "stack" TEXT,
+    "context" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "error_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."notification_logs" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT,
+    "type" TEXT NOT NULL,
+    "target" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "provider" TEXT,
+    "errorMessage" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "notification_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."system_logs" (
+    "id" TEXT NOT NULL,
+    "source" TEXT NOT NULL,
+    "event" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "metadata" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "system_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -111,7 +175,7 @@ CREATE TABLE "public"."app_config" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."AuditLog" (
+CREATE TABLE "public"."audit_logs" (
     "id" TEXT NOT NULL,
     "userId" TEXT,
     "action" TEXT NOT NULL,
@@ -121,11 +185,11 @@ CREATE TABLE "public"."AuditLog" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
-    CONSTRAINT "AuditLog_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "public"."Notification" (
+CREATE TABLE "public"."notifications" (
     "id" TEXT NOT NULL,
     "userId" TEXT,
     "content" TEXT NOT NULL,
@@ -134,7 +198,7 @@ CREATE TABLE "public"."Notification" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "notifications_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -176,6 +240,20 @@ CREATE TABLE "public"."webhooks" (
 );
 
 -- CreateTable
+CREATE TABLE "public"."webhook_logs" (
+    "id" TEXT NOT NULL,
+    "webhookId" TEXT NOT NULL,
+    "event" TEXT NOT NULL,
+    "payload" JSONB NOT NULL,
+    "status" TEXT NOT NULL,
+    "error" TEXT,
+    "attempts" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "webhook_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public"."integrations" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -213,6 +291,73 @@ CREATE TABLE "public"."localizations" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "localizations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."content_schemas" (
+    "id" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "locale" TEXT NOT NULL DEFAULT 'en',
+    "fields" JSONB NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "content_schemas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."languages" (
+    "id" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "rtl" BOOLEAN NOT NULL DEFAULT false,
+    "fallback" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "priority" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "languages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."namespaces" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "locale" TEXT NOT NULL DEFAULT 'en',
+    "description" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "namespaces_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."fallback_rules" (
+    "id" TEXT NOT NULL,
+    "sourceLocale" TEXT NOT NULL,
+    "targetLocale" TEXT NOT NULL,
+    "priority" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "fallback_rules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."page_contents" (
+    "id" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "locale" TEXT NOT NULL DEFAULT 'en',
+    "data" JSONB NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'PUBLISHED',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "page_contents_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -261,6 +406,8 @@ CREATE TABLE "public"."orders" (
     "driverId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "trackingCode" TEXT,
+    "trackingCodeExpiresAt" TIMESTAMP(3),
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
 );
@@ -302,10 +449,22 @@ CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
 CREATE INDEX "users_role_idx" ON "public"."users"("role");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "RefreshToken_token_key" ON "public"."RefreshToken"("token");
+CREATE UNIQUE INDEX "refresh_tokens_token_key" ON "public"."refresh_tokens"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BlacklistedToken_tokenHash_key" ON "public"."BlacklistedToken"("tokenHash");
+CREATE INDEX "refresh_tokens_userId_idx" ON "public"."refresh_tokens"("userId");
+
+-- CreateIndex
+CREATE INDEX "refresh_tokens_expiresAt_idx" ON "public"."refresh_tokens"("expiresAt");
+
+-- CreateIndex
+CREATE INDEX "refresh_tokens_userId_expiresAt_idx" ON "public"."refresh_tokens"("userId", "expiresAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "blacklisted_tokens_tokenHash_key" ON "public"."blacklisted_tokens"("tokenHash");
+
+-- CreateIndex
+CREATE INDEX "blacklisted_tokens_expiresAt_idx" ON "public"."blacklisted_tokens"("expiresAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "drivers_userId_key" ON "public"."drivers"("userId");
@@ -315,6 +474,21 @@ CREATE INDEX "drivers_active_deliveryZone_idx" ON "public"."drivers"("active", "
 
 -- CreateIndex
 CREATE INDEX "drivers_currentStatus_idx" ON "public"."drivers"("currentStatus");
+
+-- CreateIndex
+CREATE INDEX "activity_logs_type_createdAt_idx" ON "public"."activity_logs"("type", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "login_logs_status_createdAt_idx" ON "public"."login_logs"("status", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "error_logs_createdAt_idx" ON "public"."error_logs"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "notification_logs_type_status_createdAt_idx" ON "public"."notification_logs"("type", "status", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "system_logs_source_event_createdAt_idx" ON "public"."system_logs"("source", "event", "createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "cash_transactions_orderId_key" ON "public"."cash_transactions"("orderId");
@@ -332,10 +506,13 @@ CREATE INDEX "cash_summary_driverId_date_idx" ON "public"."cash_summary"("driver
 CREATE INDEX "cash_summary_date_idx" ON "public"."cash_summary"("date");
 
 -- CreateIndex
-CREATE INDEX "AuditLog_action_createdAt_idx" ON "public"."AuditLog"("action", "createdAt");
+CREATE UNIQUE INDEX "cash_summary_driverId_date_key" ON "public"."cash_summary"("driverId", "date");
 
 -- CreateIndex
-CREATE INDEX "Notification_userId_createdAt_idx" ON "public"."Notification"("userId", "createdAt");
+CREATE INDEX "audit_logs_action_createdAt_idx" ON "public"."audit_logs"("action", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "notifications_userId_read_createdAt_idx" ON "public"."notifications"("userId", "read", "createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "cron_locks_taskName_key" ON "public"."cron_locks"("taskName");
@@ -344,13 +521,28 @@ CREATE UNIQUE INDEX "cron_locks_taskName_key" ON "public"."cron_locks"("taskName
 CREATE INDEX "cron_locks_lockedAt_idx" ON "public"."cron_locks"("lockedAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "cron_runs_taskName_key" ON "public"."cron_runs"("taskName");
-
--- CreateIndex
 CREATE INDEX "cron_runs_taskName_lastRunAt_idx" ON "public"."cron_runs"("taskName", "lastRunAt");
 
 -- CreateIndex
+CREATE INDEX "webhook_logs_webhookId_status_createdAt_idx" ON "public"."webhook_logs"("webhookId", "status", "createdAt");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "user_preferences_userId_key" ON "public"."user_preferences"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "content_schemas_slug_locale_key" ON "public"."content_schemas"("slug", "locale");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "languages_code_key" ON "public"."languages"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "namespaces_name_locale_key" ON "public"."namespaces"("name", "locale");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "fallback_rules_sourceLocale_targetLocale_key" ON "public"."fallback_rules"("sourceLocale", "targetLocale");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "page_contents_slug_locale_key" ON "public"."page_contents"("slug", "locale");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "categories_name_key" ON "public"."categories"("name");
@@ -373,11 +565,26 @@ CREATE INDEX "orders_userId_idx" ON "public"."orders"("userId");
 -- CreateIndex
 CREATE INDEX "orders_createdAt_idx" ON "public"."orders"("createdAt");
 
+-- CreateIndex
+CREATE INDEX "orders_customerEmail_idx" ON "public"."orders"("customerEmail");
+
+-- CreateIndex
+CREATE INDEX "reservations_date_time_status_idx" ON "public"."reservations"("date", "time", "status");
+
 -- AddForeignKey
-ALTER TABLE "public"."RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."refresh_tokens" ADD CONSTRAINT "refresh_tokens_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."drivers" ADD CONSTRAINT "drivers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."activity_logs" ADD CONSTRAINT "activity_logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."login_logs" ADD CONSTRAINT "login_logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."notification_logs" ADD CONSTRAINT "notification_logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."cash_transactions" ADD CONSTRAINT "cash_transactions_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "public"."orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -389,16 +596,19 @@ ALTER TABLE "public"."cash_transactions" ADD CONSTRAINT "cash_transactions_drive
 ALTER TABLE "public"."cash_summary" ADD CONSTRAINT "cash_summary_driverId_fkey" FOREIGN KEY ("driverId") REFERENCES "public"."drivers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."AuditLog" ADD CONSTRAINT "AuditLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."audit_logs" ADD CONSTRAINT "audit_logs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."notifications" ADD CONSTRAINT "notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."webhooks" ADD CONSTRAINT "webhooks_integrationId_fkey" FOREIGN KEY ("integrationId") REFERENCES "public"."integrations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."user_preferences" ADD CONSTRAINT "user_preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."webhook_logs" ADD CONSTRAINT "webhook_logs_webhookId_fkey" FOREIGN KEY ("webhookId") REFERENCES "public"."webhooks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."user_preferences" ADD CONSTRAINT "user_preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."menu_items" ADD CONSTRAINT "menu_items_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "public"."categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
