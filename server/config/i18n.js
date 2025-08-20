@@ -11,6 +11,8 @@ const __dirname = dirname(__filename);
 // Initialize i18next with dynamic configuration
 function initializeI18n() {
   try {
+    console.log('🚀 Starting i18n initialization...');
+    
     // For now, use static configuration to avoid async issues during startup
     // Dynamic configuration will be loaded when the service is first accessed
     const staticConfig = {
@@ -27,6 +29,8 @@ function initializeI18n() {
       namespaces: staticConfig.namespaces
     });
 
+    console.log('🔄 Calling i18next.init...');
+    
     return i18next
       .use(Backend)
       .use(middleware.LanguageDetector)
@@ -106,6 +110,8 @@ function initializeI18n() {
         initImmediate: false,
         compatibilityJSON: 'v4'
       });
+      
+      console.log('✅ i18next.init completed successfully');
 
   } catch (error) {
     console.error('❌ i18n initialization failed:', error);
