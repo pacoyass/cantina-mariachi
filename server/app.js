@@ -141,22 +141,11 @@ if (process.env.ALLOW_URLENCODED === '1') {
 app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Add i18next middleware for translation support
-// Wait for i18next to be fully initialized
-i18next.on('initialized', () => {
+if (i18next && i18next.isInitialized) {
   app.use(i18nextMiddleware.handle(i18next));
   console.log('✅ i18next middleware enabled');
-});
-
-i18next.on('failedLoading', (lng, ns, msg) => {
-  console.warn(`⚠️ Failed to load translation: ${lng}/${ns} - ${msg}`);
-});
-
-// Check if already initialized
-if (i18next.isInitialized) {
-  app.use(i18nextMiddleware.handle(i18next));
-  console.log('✅ i18next middleware enabled (already initialized)');
 } else {
-  console.log('⏳ Waiting for i18next initialization...');
+  console.warn('⚠️ i18next not fully initialized, skipping middleware');
 }
 
 // Import and add translation helpers to request object
