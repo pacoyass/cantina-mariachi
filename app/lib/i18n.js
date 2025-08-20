@@ -76,9 +76,13 @@ export async function initI18n({ lng = 'en', resources }) {
   // If already initialized, just change language if needed
   if (i18n.isInitialized) {
     if (i18n.language !== lng) {
-      await i18n.changeLanguage(lng);
+      console.log(`🔄 Re-initializing i18n from ${i18n.language} to ${lng}`);
+      // Force re-initialization to ensure clean state
+      await i18n.destroy();
+      i18n.use(initReactI18next);
+    } else {
+      return i18n;
     }
-    return i18n;
   }
 
   // Get dynamic configuration
@@ -94,10 +98,11 @@ export async function initI18n({ lng = 'en', resources }) {
     namespacesCount: dynamicConfig.namespaces.length
   });
 
-  await i18n.init({
+  // Create a language-locked configuration
+  const lockedConfig = {
     lng, // Use the detected language directly
-    fallbackLng: dynamicConfig.fallbackLng,
-    supportedLngs: dynamicConfig.supportedLngs,
+    fallbackLng: lng, // Force fallback to detected language
+    supportedLngs: [lng, ...dynamicConfig.supportedLngs.filter(l => l !== lng)], // Put detected language first
     interpolation: { escapeValue: false },
     resources,
     ns: dynamicConfig.ns,
@@ -108,7 +113,7 @@ export async function initI18n({ lng = 'en', resources }) {
     
     // Additional configuration for better performance
     load: 'languageOnly',
-    preload: dynamicConfig.supportedLngs,
+    preload: [lng], // Only preload the detected language
     updateMissing: process.env.NODE_ENV === 'development',
     saveMissing: process.env.NODE_ENV === 'development',
     
@@ -121,15 +126,48 @@ export async function initI18n({ lng = 'en', resources }) {
         console.warn(`Missing translation key: ${ns}:${key} for language: ${lng}`);
       }
       return fallbackValue;
-    }
-  });
+    },
 
-  // Ensure the language is set correctly after initialization
+    // Language change prevention
+    allowMultiLoading: false,
+    loadMultiLanguage: false,
+    
+    // Strict language enforcement
+    initImmediate: false,
+    useCookie: false, // Disable cookie-based language detection
+    useLocalStorage: false, // Disable localStorage-based language detection
+  };
+
+  await i18n.init(lockedConfig);
+
+  // Add language change interceptor to prevent unauthorized changes
+  const originalChangeLanguage = i18n.changeLanguage.bind(i18n);
+  i18n.changeLanguage = async (newLang) => {
+    // Only allow language changes if explicitly requested and valid
+    if (newLang === lng || dynamicConfig.supportedLngs.includes(newLang)) {
+      console.log(`✅ Allowing language change to: ${newLang}`);
+      return await originalChangeLanguage(newLang);
+    } else {
+      console.warn(`🚫 Blocked unauthorized language change attempt: ${newLang} -> ${lng}`);
+      // Force back to detected language
+      return await originalChangeLanguage(lng);
+    }
+  };
+
+  // Double-verify the language is correct
   if (i18n.language !== lng) {
-    console.log(`🔄 Correcting i18n language from ${i18n.language} to ${lng}`);
+    console.error(`🚨 Critical: i18n language mismatch! Expected: ${lng}, Got: ${i18n.language}`);
+    // Force the correct language
     await i18n.changeLanguage(lng);
+    
+    // Verify again
+    if (i18n.language !== lng) {
+      console.error(`🚨 Failed to set correct language! Current: ${i18n.language}`);
+      throw new Error(`Failed to initialize i18n with language: ${lng}`);
+    }
   }
 
+  console.log(`✅ i18n initialized successfully with language: ${i18n.language}`);
   return i18n;
 }
 
