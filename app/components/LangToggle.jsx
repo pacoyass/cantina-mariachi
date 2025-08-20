@@ -8,7 +8,7 @@ import { useLanguageSwitcher } from '../lib/useDynamicTranslation';
 
 export function LangToggle() {
   const { t } = useTranslation('ui');
-  const { changeLanguage, availableLanguages, currentLanguage } = useLanguageSwitcher();
+  const { changeLanguage, currentLanguage } = useLanguageSwitcher();
 
   const languages = [
     { code: 'en', label: 'English' },

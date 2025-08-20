@@ -3,65 +3,16 @@
 import { useDynamicTranslation } from '../lib/useDynamicTranslation';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Globe, Languages, FileText, RefreshCw, AlertCircle } from 'lucide-react';
-import { Button } from './ui/button';
+import { Globe, Languages, FileText } from 'lucide-react';
 
 export function TranslationStatus() {
   const { 
     languages, 
     namespaces, 
     rtlLanguages, 
-    loading, 
-    error, 
     currentLanguage,
-    refreshConfig 
+    isRTL
   } = useDynamicTranslation();
-
-  if (loading) {
-    return (
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <RefreshCw className="h-5 w-5 animate-spin" />
-            Loading Translation Configuration...
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">Fetching dynamic translation settings from backend...</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card className="w-full max-w-2xl mx-auto border-destructive">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-destructive">
-            <AlertCircle className="h-5 w-5" />
-            Translation Configuration Error
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-destructive mb-4">Failed to load dynamic translation configuration:</p>
-          <p className="text-sm text-muted-foreground mb-4">{error}</p>
-          <div className="bg-muted p-3 rounded mb-4">
-            <p className="text-sm font-medium mb-2">Debug Information:</p>
-            <p className="text-xs text-muted-foreground">
-              • Backend API endpoints may not be available<br/>
-              • Database may not be initialized<br/>
-              • Dynamic translation tables may not exist<br/>
-              • Check if backend is running and migrations are applied
-            </p>
-          </div>
-          <Button onClick={refreshConfig} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Retry
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <div className="space-y-4 w-full max-w-4xl mx-auto">
@@ -76,13 +27,10 @@ export function TranslationStatus() {
         <CardContent>
           <div className="flex items-center gap-2">
             <Badge variant="default" className="bg-green-600">
-              {languages.length > 0 ? 'Dynamic (Backend)' : 'Static (Fallback)'}
+              Static Configuration
             </Badge>
             <span className="text-sm text-green-700">
-              {languages.length > 0 
-                ? `Loaded ${languages.length} languages and ${namespaces.length} namespaces from backend`
-                : 'Using static fallback configuration'
-              }
+              Using built-in language and namespace configuration
             </span>
           </div>
         </CardContent>
@@ -99,16 +47,13 @@ export function TranslationStatus() {
         <CardContent>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Badge variant={currentLanguage.rtl ? "destructive" : "default"}>
+              <Badge variant={isRTL ? "destructive" : "default"}>
                 {currentLanguage.code.toUpperCase()}
               </Badge>
               <span className="font-medium">{currentLanguage.name}</span>
-              {currentLanguage.rtl && (
+              {isRTL && (
                 <Badge variant="outline">RTL</Badge>
               )}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Priority: {currentLanguage.priority}
             </div>
           </div>
         </CardContent>
@@ -141,10 +86,6 @@ export function TranslationStatus() {
                 </div>
                 <div className="flex items-center gap-1 mt-1">
                   {lang.rtl && <Badge variant="outline" className="text-xs">RTL</Badge>}
-                  <Badge variant="outline" className="text-xs">P:{lang.priority}</Badge>
-                  {lang.fallback && (
-                    <Badge variant="outline" className="text-xs">→{lang.fallback}</Badge>
-                  )}
                 </div>
               </div>
             ))}
@@ -191,44 +132,6 @@ export function TranslationStatus() {
           </CardContent>
         </Card>
       )}
-
-      {/* API Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5" />
-            API Status
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge variant={languages.length > 0 ? "default" : "destructive"}>
-                {languages.length > 0 ? '✅' : '❌'}
-              </Badge>
-              <span className="text-sm">
-                Languages API: {languages.length > 0 ? 'Working' : 'Not responding'}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant={namespaces.length > 0 ? "default" : "destructive"}>
-                {namespaces.length > 0 ? '✅' : '❌'}
-              </Badge>
-              <span className="text-sm">
-                Namespaces API: {namespaces.length > 0 ? 'Working' : 'Not responding'}
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Refresh Button */}
-      <div className="flex justify-center">
-        <Button onClick={refreshConfig} variant="outline">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh Configuration
-        </Button>
-      </div>
     </div>
   );
 }
