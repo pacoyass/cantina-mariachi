@@ -152,7 +152,15 @@ function initializeI18n() {
 }
 
 // Initialize i18next synchronously
-const i18nInstance = initializeI18n();
+console.log('🚀 About to call initializeI18n()...');
+let i18nInstance;
+try {
+  i18nInstance = initializeI18n();
+  console.log('✅ initializeI18n() completed, instance:', typeof i18nInstance);
+} catch (error) {
+  console.error('❌ CRITICAL ERROR during i18n initialization:', error);
+  throw error;
+}
 
 // Log initialization status and test loading
 console.log('✅ i18next initialized with languages:', i18nInstance.languages || ['en']);
