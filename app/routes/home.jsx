@@ -43,12 +43,11 @@ export async function loader({ request, context }) {
   const lng = context?.lng || urlLng || cookieLng || 'en';
 
   // Dev-only: skeleton testing via ?skeleton=1&delay=1500
-  const skeleton = url.searchParams.get('skeleton') === '1';
-  const delayMs = skeleton ? Number(url.searchParams.get('delay') || 1500) : 0;
+  const skParam = url.searchParams.get('skeleton') || '';
+  const delayMs = skParam ? Number(url.searchParams.get('delay') || 1500) : 0;
   const delay = (ms) => new Promise((r) => setTimeout(r, ms));
   
   // Dev-only: choose which sections to delay via ?skeleton=items,offers,drinks,config,cms
-  const skParam = url.searchParams.get('skeleton') || '';
   const delayTargets = new Set(
     skParam === '1' || skParam === 'all'
       ? ['items', 'offers', 'testimonials', 'drinks', 'config', 'cms']
