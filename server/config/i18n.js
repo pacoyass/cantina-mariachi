@@ -97,7 +97,10 @@ function initializeI18n() {
         returnObjects: false,
         
         // Force synchronous initialization
-        initImmediate: false
+        initImmediate: false,
+        
+        // Wait for backend to load resources
+        wait: true
       });
 
   } catch (error) {
