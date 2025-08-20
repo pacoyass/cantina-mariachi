@@ -9,25 +9,32 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Initialize i18next with dynamic configuration
-async function initializeI18n() {
+function initializeI18n() {
   try {
-    // Try to get dynamic configuration
-    const dynamicConfig = await DynamicTranslationService.getDynamicI18nConfig();
-    
-    console.log('✅ Using dynamic i18n configuration:', {
-      supportedLngs: dynamicConfig.supportedLngs,
-      rtlLngs: dynamicConfig.rtlLngs,
-      namespaces: dynamicConfig.ns
+    // For now, use static configuration to avoid async issues during startup
+    // Dynamic configuration will be loaded when the service is first accessed
+    const staticConfig = {
+      supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
+      rtlLngs: ['ar'],
+      namespaces: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'orders'],
+      fallbackLng: 'en',
+      defaultNS: 'common'
+    };
+
+    console.log('✅ Using static i18n configuration during startup:', {
+      supportedLngs: staticConfig.supportedLngs,
+      rtlLngs: staticConfig.rtlLngs,
+      namespaces: staticConfig.namespaces
     });
 
     return i18next
       .use(Backend)
       .use(middleware.LanguageDetector)
       .init({
-        // Dynamic configuration from database
-        fallbackLng: dynamicConfig.fallbackLng,
+        // Static configuration for startup
+        fallbackLng: staticConfig.fallbackLng,
         lng: 'en',
-        supportedLngs: dynamicConfig.supportedLngs,
+        supportedLngs: staticConfig.supportedLngs,
         
         // Debug mode (disable in production)
         debug: process.env.NODE_ENV === 'development',
@@ -55,15 +62,15 @@ async function initializeI18n() {
           escapeValue: false
         },
         
-        // Dynamic namespaces from database
-        ns: dynamicConfig.ns,
-        defaultNS: dynamicConfig.defaultNS,
+        // Static namespaces for startup
+        ns: staticConfig.namespaces,
+        defaultNS: staticConfig.defaultNS,
         
         // Resource loading options
         load: 'languageOnly',
         
         // Preload languages
-        preload: dynamicConfig.supportedLngs,
+        preload: staticConfig.supportedLngs,
         
         // Clean code options
         cleanCode: true,
@@ -89,51 +96,33 @@ async function initializeI18n() {
       });
 
   } catch (error) {
-    console.warn('⚠️ Dynamic i18n configuration failed, using static fallback:', error.message);
+    console.warn('⚠️ i18n initialization failed, using minimal config:', error.message);
     
-    // Fallback to static configuration
-    const staticSupportedLngs = ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'];
-    const staticRtlLngs = ['ar'];
-    const staticNamespaces = ['common', 'auth', 'api', 'validation', 'email', 'business', 'home'];
-    
+    // Minimal fallback configuration
     return i18next
       .use(Backend)
       .use(middleware.LanguageDetector)
       .init({
         fallbackLng: 'en',
         lng: 'en',
-        supportedLngs: staticSupportedLngs,
-        
-        debug: process.env.NODE_ENV === 'development',
-        
+        supportedLngs: ['en'],
+        debug: false,
         backend: {
           loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
           addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json')
         },
-        
         detection: {
           order: ['querystring', 'cookie', 'header', 'session'],
-          caches: ['cookie'],
-          cookieOptions: {
-            path: '/',
-            sameSite: 'strict',
-            secure: process.env.NODE_ENV === 'production',
-            httpOnly: false
-          }
+          caches: ['cookie']
         },
-        
-        interpolation: {
-          escapeValue: false
-        },
-        
-        ns: staticNamespaces,
+        interpolation: { escapeValue: false },
+        ns: ['common'],
         defaultNS: 'common',
-        
         load: 'languageOnly',
-        preload: staticSupportedLngs,
+        preload: ['en'],
         cleanCode: true,
-        updateMissing: process.env.NODE_ENV === 'development',
-        saveMissing: process.env.NODE_ENV === 'development',
+        updateMissing: false,
+        saveMissing: false,
         returnDetails: false,
         joinArrays: false,
         returnEmptyString: false,
@@ -143,8 +132,8 @@ async function initializeI18n() {
   }
 }
 
-// Initialize i18next
-const i18nInstance = await initializeI18n();
+// Initialize i18next synchronously
+const i18nInstance = initializeI18n();
 
 export default i18nInstance;
 export { middleware };

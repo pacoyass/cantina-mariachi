@@ -14,6 +14,12 @@ export class DynamicTranslationService {
    */
   static async buildDynamicFallbackChain(locale) {
     try {
+      // Check if database is available and tables exist
+      if (!prisma || !prisma.fallbackRule) {
+        console.warn('Database not available, using static fallback');
+        return this.buildStaticFallbackChain(locale);
+      }
+
       // Get fallback rules for this locale
       const fallbackRules = await prisma.fallbackRule.findMany({
         where: { 
@@ -78,6 +84,12 @@ export class DynamicTranslationService {
    */
   static async getDynamicSchema(slug, locale) {
     try {
+      // Check if database is available and tables exist
+      if (!prisma || !prisma.contentSchema) {
+        console.warn('Database not available, using default schema');
+        return this.getDefaultSchema(slug);
+      }
+
       const schema = await prisma.contentSchema.findFirst({
         where: { 
           slug, 
@@ -134,6 +146,12 @@ export class DynamicTranslationService {
    */
   static async getSupportedLanguages() {
     try {
+      // Check if database is available and tables exist
+      if (!prisma || !prisma.language) {
+        console.warn('Database not available, using static languages');
+        return this.getStaticLanguages();
+      }
+
       const languages = await prisma.language.findMany({
         where: { isActive: true },
         orderBy: { priority: 'asc' }
@@ -183,6 +201,12 @@ export class DynamicTranslationService {
    */
   static async getActiveNamespaces(locale = 'en') {
     try {
+      // Check if database is available and tables exist
+      if (!prisma || !prisma.namespace) {
+        console.warn('Database not available, using static namespaces');
+        return this.getStaticNamespaces();
+      }
+
       const namespaces = await prisma.namespace.findMany({
         where: { 
           locale,
@@ -217,6 +241,12 @@ export class DynamicTranslationService {
    */
   static async getRtlLanguages() {
     try {
+      // Check if database is available and tables exist
+      if (!prisma || !prisma.language) {
+        console.warn('Database not available, using static RTL languages');
+        return ['ar', 'he', 'fa']; // Static fallback
+      }
+
       const languages = await prisma.language.findMany({
         where: { 
           rtl: true,
@@ -238,6 +268,11 @@ export class DynamicTranslationService {
    */
   static async initializeDefaultData() {
     try {
+      // Check if database is available
+      if (!prisma) {
+        throw new Error('Database not available');
+      }
+
       // Initialize languages
       const languages = this.getStaticLanguages();
       for (const lang of languages) {
@@ -309,18 +344,23 @@ export class DynamicTranslationService {
         });
       }
 
-      await LoggerService.logAudit(null, 'DYNAMIC_TRANSLATION_INITIALIZED', null, {
-        languagesCount: languages.length,
-        fallbackRulesCount: fallbackRules.length,
-        namespacesCount: namespaces.length,
-        schemasCount: schemas.length
-      });
+      if (LoggerService && LoggerService.logAudit) {
+        await LoggerService.logAudit(null, 'DYNAMIC_TRANSLATION_INITIALIZED', null, {
+          languagesCount: languages.length,
+          fallbackRulesCount: fallbackRules.length,
+          namespacesCount: namespaces.length,
+          schemasCount: schemas.length
+        });
+      }
 
       console.log('✅ Dynamic translation data initialized successfully');
     } catch (error) {
-      await LoggerService.logError('Dynamic translation initialization failed', error.stack, {
-        error: error.message
-      });
+      console.error('Dynamic translation initialization failed:', error.message);
+      if (LoggerService && LoggerService.logError) {
+        await LoggerService.logError('Dynamic translation initialization failed', error.stack, {
+          error: error.message
+        });
+      }
       throw error;
     }
   }
@@ -330,19 +370,30 @@ export class DynamicTranslationService {
    * @returns {Promise<Object>} i18n configuration
    */
   static async getDynamicI18nConfig() {
-    const [languages, namespaces, rtlLanguages] = await Promise.all([
-      this.getSupportedLanguages(),
-      this.getActiveNamespaces(),
-      this.getRtlLanguages()
-    ]);
+    try {
+      const [languages, namespaces, rtlLanguages] = await Promise.all([
+        this.getSupportedLanguages(),
+        this.getActiveNamespaces(),
+        this.getRtlLanguages()
+      ]);
 
-    return {
-      supportedLngs: languages.map(l => l.code),
-      rtlLngs: rtlLanguages,
-      ns: namespaces,
-      fallbackLng: 'en',
-      defaultNS: 'common'
-    };
+      return {
+        supportedLngs: languages.map(l => l.code),
+        rtlLngs: rtlLanguages,
+        ns: namespaces,
+        fallbackLng: 'en',
+        defaultNS: 'common'
+      };
+    } catch (error) {
+      console.warn('Dynamic i18n config failed, using static:', error.message);
+      return {
+        supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
+        rtlLngs: ['ar'],
+        ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home'],
+        fallbackLng: 'en',
+        defaultNS: 'common'
+      };
+    }
   }
 }
 
