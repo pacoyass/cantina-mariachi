@@ -95,7 +95,13 @@ if (process.env.ALLOW_URLENCODED === '1') {
 app.use( cookieParser( process.env.COOKIE_SECRET || 'your-fallback-secret' ) );
 
 // Add i18next middleware for translation support
-app.use(i18nextMiddleware.handle(i18next));
+// Check if i18next is properly initialized before using middleware
+if (i18next && i18next.isInitialized) {
+  app.use(i18nextMiddleware.handle(i18next));
+  console.log('✅ i18next middleware enabled');
+} else {
+  console.warn('⚠️ i18next not initialized, skipping middleware');
+}
 
 // Import and add translation helpers to request object
 const { addTranslationHelpers } = await import('./utils/translation.js');

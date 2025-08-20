@@ -13,6 +13,7 @@ export function getI18nInstance() {
 
 /**
  * Get dynamic i18n configuration from backend
+ * Falls back to static configuration if backend is unavailable
  */
 async function getDynamicI18nConfig() {
   try {
