@@ -42,7 +42,9 @@ function initializeI18n() {
         // Backend options
         backend: {
           loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
-          addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json')
+          addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json'),
+          // Debug backend loading
+          debug: process.env.NODE_ENV === 'development'
         },
         
         // Language detection options
@@ -67,7 +69,7 @@ function initializeI18n() {
         defaultNS: staticConfig.defaultNS,
         
         // Resource loading options
-        load: 'languageOnly',
+        load: 'all',
         
         // Preload languages
         preload: staticConfig.supportedLngs,
@@ -138,8 +140,19 @@ function initializeI18n() {
 // Initialize i18next synchronously
 const i18nInstance = initializeI18n();
 
-// Log initialization status
+// Log initialization status and test loading
 console.log('✅ i18next initialized with languages:', i18nInstance.languages || ['en']);
+console.log('📚 Available namespaces:', i18nInstance.options.ns);
+console.log('🌍 Supported languages:', i18nInstance.options.supportedLngs);
+
+// Test if translations are loading properly
+try {
+  const testEn = i18nInstance.t('dataRetrieved', { lng: 'en', ns: 'api' });
+  const testFr = i18nInstance.t('hero.badge', { lng: 'fr', ns: 'home' });
+  console.log('✅ Translation test - EN:', testEn, 'FR:', testFr);
+} catch (error) {
+  console.warn('⚠️ Translation test failed:', error.message);
+}
 
 export default i18nInstance;
 export { middleware };
