@@ -351,7 +351,7 @@ export const uiResources = {
         desc: 'Prenota per 8+ persone o organizza il catering per l\'ufficio in pochi minuti.',
         plan: 'Organizza evento',
         catering: 'Catering',
-        q1: { question: 'Offrite menu fissi?', answer: 'Sì — menu per gruppi da 8 a 30 persone, con opzioni vegetariane.' },
+        q1: { question: 'Offrite menu fissi?', answer: 'Sì — menu per gruppi da 8 a 30 persone, con opzioni vegetarianhe.' },
         q2: { question: 'Con quanto anticipo prenotare?', answer: 'Consigliamo 48 ore; in giornata può essere possibile fuori dalle ore di punta.' }
       },
       offers: {
@@ -401,7 +401,7 @@ export const uiResources = {
       },
       faq: {
         heading: 'Domande frequenti',
-        q1: { question: 'Offrite opzioni vegetariane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetariane.' },
+        q1: { question: 'Offrite opzioni vegetariane?', answer: 'Sì, molte! Molti dei nostri tacos e bowl hanno opzioni vegetarianhe.' },
         q2: { question: 'Quanto impiega la consegna?', answer: 'In media, meno di 35 minuti a seconda di orario e distanza.' },
         q3: { question: 'Posso modificare la prenotazione?', answer: 'Puoi modificarla fino a 2 ore prima dell\'orario.' }
       },
@@ -687,7 +687,7 @@ export const uiResources = {
       topbar: {
         open: 'Abierto ahora',
         closed: 'Cerrado ahora',
-        eta: 'Entrega estimada ~ {{m}} min',
+        eta: 'Entrega estimada ~ {{mins}} min',
         noSignup: 'No requiere registro',
         browse: 'Ver menú',
       },
@@ -1356,7 +1356,7 @@ export const uiResources = {
       topbar: {
         open: 'Aberto agora',
         closed: 'Fechado agora',
-        eta: 'Entrega em ~ {{m}} min',
+        eta: 'Entrega em ~ {{mins}} min',
         noSignup: 'Sem cadastro',
         browse: 'Ver menu',
       },
