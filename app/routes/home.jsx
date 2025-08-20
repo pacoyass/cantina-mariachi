@@ -1,6 +1,7 @@
 import { useLoaderData, Link, Await, ScrollRestoration } from "react-router";
 import { Suspense, useEffect, useMemo, useRef, useState, lazy } from "react";
 import { Button } from "../components/ui/button";
+import { Skeleton } from "../components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Separator } from "../components/ui/separator";
@@ -148,66 +149,9 @@ export default function Home() {
         <Await resolve={items}>{(resolved) => <JsonLd items={resolved} />}</Await>
       </Suspense>
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
-          <div className="space-y-6">
-            <Badge className="w-fit" variant="secondary">{safeCms.hero?.badge ?? t('hero.badge')}</Badge>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-              {safeCms.hero?.title ? <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
-            </h1>
-            <p className="text-muted-foreground max-w-prose">
-              {safeCms.hero?.desc || t('hero.desc')}
-            </p>
-            <div className="flex items-center gap-3 text-sm" aria-live="polite">
-              <Suspense fallback={null}>
-                <Await resolve={config}>{(c) => (
-                  <>
-                    <span className={c?.status?.isOpen ? 'text-green-600' : 'text-red-600'}>
-                      {c?.status?.isOpen ? t('hero.openNow') : t('hero.closedNow')}
-                    </span>
-                    <Separator className="w-px h-4" orientation="vertical" />
-                    <span>{t('hero.eta', { m: c?.status?.etaMins ?? 25 })}</span>
-                  </>
-                )}</Await>
-              </Suspense>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Button className="px-6" aria-label={t('hero.orderNow')} onClick={() => track('click_order_now_hero')}>{t('hero.orderNow')}</Button>
-              <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')} onClick={() => track('click_reserve_hero')}>{t('hero.reserve')}</Button>
-              <Link className="underline text-sm self-center" to="/menu" aria-label={t('hero.browseMenu')} onClick={() => track('click_browse_menu_hero')}>{t('hero.browseMenu')}</Link>
-            </div>
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div className="flex items-center gap-1 text-yellow-500" aria-label={t('hero.rating')}>
-                {[...Array(5)].map((_, i) => (<Star key={i} className="size-4 fill-current" />))}
-              </div>
-              <div className="text-muted-foreground" aria-live="polite">{t('hero.avgTime')}</div>
-              <Separator className="hidden md:block w-px h-5" orientation="vertical" />
-              <div className="text-muted-foreground">{t('hero.avgTime')}</div>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-              <picture>
-                {safeCms.hero?.image?.avif ? <source srcSet={safeCms.hero.image.avif} type="image/avif" /> : null}
-                {safeCms.hero?.image?.webp ? <source srcSet={safeCms.hero.image.webp} type="image/webp" /> : null}
-                <img src={safeCms.hero?.image?.jpg || "/hero.jpg"} alt={safeCms.hero?.imageAlt || t('hero.imageAlt')} loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
-              </picture>
-            </div>
-            <div className="absolute -bottom-6 -right-6 hidden md:block">
-              <Card className="w-64">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">{t('hero.card.title')}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-muted-foreground">
-                  {t('hero.card.desc')}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-        <div className="mex-divider" />
-      </section>
+      <Suspense fallback={<HeroSkeleton />}>
+        <HeroSection safeCms={safeCms} t={t} i18n={i18n} />
+      </Suspense>
 
       {/* Why choose us */}
       <section className="container mx-auto px-6 py-14">
@@ -223,14 +167,9 @@ export default function Home() {
       </section>
 
       {/* Logo cloud */}
-      <section className="container mx-auto px-6 py-8">
-        <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading ?? t('logo.heading')}</div>
-        <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
-          {(cms?.logo?.brands || ['FlavorMag','EatHub','CityEats','DineNow','LocalBest']).map((name) => (
-            <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
-          ))}
-        </div>
-      </section>
+      <Suspense fallback={<LogoCloudSkeleton />}>
+        <LogoCloudSection cms={cms} t={t} />
+      </Suspense>
 
       {/* Explore menu (Tabs) */}
       <section className="container mx-auto px-6 py-14">
@@ -529,6 +468,118 @@ export default function Home() {
       <ScrollRestoration />
     </main>
   );
+}
+
+function HeroSection({ safeCms, t, i18n }) {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
+        <div className="space-y-6">
+          <Badge className="w-fit" variant="secondary">{safeCms.hero?.badge ?? t('hero.badge')}</Badge>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+            {safeCms.hero?.title ? <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
+          </h1>
+          <p className="text-muted-foreground max-w-prose">
+            {safeCms.hero?.desc || t('hero.desc')}
+          </p>
+          <div className="flex items-center gap-3 text-sm" aria-live="polite">
+            <Suspense fallback={null}>
+              <Await resolve={import("../routes/home.jsx").then(mod => mod)}>{() => (
+                <></>
+              )}</Await>
+            </Suspense>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button className="px-6" aria-label={t('hero.orderNow')} onClick={() => track('click_order_now_hero')}>{t('hero.orderNow')}</Button>
+            <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')} onClick={() => track('click_reserve_hero')}>{t('hero.reserve')}</Button>
+            <Link className="underline text-sm self-center" to="/menu" aria-label={t('hero.browseMenu')} onClick={() => track('click_browse_menu_hero')}>{t('hero.browseMenu')}</Link>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            <div className="flex items-center gap-1 text-yellow-500" aria-label={t('hero.rating')}>
+              {[...Array(5)].map((_, i) => (<Star key={i} className="size-4 fill-current" />))}
+            </div>
+            <div className="text-muted-foreground" aria-live="polite">{t('hero.avgTime')}</div>
+            <Separator className="hidden md:block w-px h-5" orientation="vertical" />
+            <div className="text-muted-foreground">{t('hero.avgTime')}</div>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <picture>
+              {safeCms.hero?.image?.avif ? <source srcSet={safeCms.hero.image.avif} type="image/avif" /> : null}
+              {safeCms.hero?.image?.webp ? <source srcSet={safeCms.hero.image.webp} type="image/webp" /> : null}
+              <img src={safeCms.hero?.image?.jpg || "/hero.jpg"} alt={safeCms.hero?.imageAlt || t('hero.imageAlt')} loading="eager" width="1200" height="900" className="w-full h-full object-cover" />
+            </picture>
+          </div>
+          <div className="absolute -bottom-6 -right-6 hidden md:block">
+            <Card className="w-64">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">{t('hero.card.title')}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                {t('hero.card.desc')}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+      <div className="mex-divider" />
+    </section>
+  )
+}
+
+function LogoCloudSection({ cms, t }) {
+  return (
+    <section className="container mx-auto px-6 py-8">
+      <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading ?? t('logo.heading')}</div>
+      <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
+        {(cms?.logo?.brands || ['FlavorMag','EatHub','CityEats','DineNow','LocalBest']).map((name) => (
+          <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function HeroSkeleton() {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
+        <div className="space-y-6">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-10 w-3/4" />
+          <Skeleton className="h-4 w-2/3" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+          <div className="flex gap-3">
+            <Skeleton className="h-9 w-32" />
+            <Skeleton className="h-9 w-32" />
+          </div>
+        </div>
+        <div className="relative">
+          <Skeleton className="aspect-[4/3] w-full rounded-xl" />
+        </div>
+      </div>
+      <div className="mex-divider" />
+    </section>
+  )
+}
+
+function LogoCloudSkeleton() {
+  return (
+    <section className="container mx-auto px-6 py-8">
+      <Skeleton className="h-3 w-32 mx-auto" />
+      <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-8 rounded-md" />
+        ))}
+      </div>
+    </section>
+  )
 }
 
 function MenuItemCard({ item, t, locale }) {
