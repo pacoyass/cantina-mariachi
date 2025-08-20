@@ -67,12 +67,12 @@ export function useDynamicTranslation() {
  */
 export function useLanguageSwitcher() {
   const { i18n, languages } = useDynamicTranslation();
-  const isChangingRef = useRef(false);
+  const [isLoading, setIsLoading] = useState(false);
   const lastChangedRef = useRef(i18n.language);
 
   const changeLanguage = useCallback(async (code) => {
     // Prevent multiple simultaneous language changes
-    if (isChangingRef.current) {
+    if (isLoading) {
       console.log('🔄 Language change already in progress, skipping...');
       return false;
     }
@@ -91,8 +91,8 @@ export function useLanguageSwitcher() {
         return false;
       }
 
-      // Set changing flag
-      isChangingRef.current = true;
+      // Set loading state
+      setIsLoading(true);
       lastChangedRef.current = code;
 
       console.log(`🌍 Changing language from ${i18n.language} to ${code}`);
@@ -135,16 +135,14 @@ export function useLanguageSwitcher() {
       console.error('❌ Failed to change language:', error);
       return false;
     } finally {
-      // Reset changing flag after a short delay to prevent rapid changes
-      setTimeout(() => {
-        isChangingRef.current = false;
-      }, 100);
+      // Reset loading state immediately
+      setIsLoading(false);
     }
-  }, [i18n, languages]);
+  }, [i18n, languages, isLoading]);
 
   return {
     changeLanguage,
-    loading: isChangingRef.current,
+    loading: isLoading,
     availableLanguages: languages.map(lang => lang.code),
     currentLanguage: i18n.language
   };
