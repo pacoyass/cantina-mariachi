@@ -8,7 +8,7 @@ import { useLanguageSwitcher } from '../lib/useDynamicTranslation';
 
 export function LangToggle() {
   const { t } = useTranslation('ui');
-  const { changeLanguage, currentLanguage } = useLanguageSwitcher();
+  const { changeLanguage, currentLanguage, loading } = useLanguageSwitcher();
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -21,7 +21,8 @@ export function LangToggle() {
   ];
 
   const handleLanguageChange = async (code) => {
-    if (code === currentLanguage) {
+    // Prevent action if already loading or same language
+    if (loading || code === currentLanguage) {
       return;
     }
     
@@ -40,8 +41,13 @@ export function LangToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" aria-label={t('a11y.toggleLanguage')}>
-          <Globe className="h-[1.2rem] w-[1.2rem]" />
+        <Button 
+          variant="outline" 
+          size="icon" 
+          aria-label={t('a11y.toggleLanguage')}
+          disabled={loading}
+        >
+          <Globe className={`h-[1.2rem] w-[1.2rem] ${loading ? 'animate-spin' : ''}`} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="flex items-center mx-auto">
@@ -50,6 +56,7 @@ export function LangToggle() {
             key={lang.code} 
             onClick={() => handleLanguageChange(lang.code)}
             className={lang.code === currentLanguage ? 'bg-accent' : ''}
+            disabled={loading}
           >
             {lang.label}
             {lang.code === currentLanguage && (
