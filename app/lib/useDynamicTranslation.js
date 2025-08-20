@@ -86,6 +86,32 @@ export function useDynamicTranslation() {
     fetchConfig();
   }, [fetchConfig]);
 
+  // Persist language changes to localStorage and cookies
+  useEffect(() => {
+    if (i18n.language && i18n.language !== 'en') {
+      try {
+        localStorage.setItem('lng', i18n.language);
+        document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`;
+        
+        // Update URL if not already set
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('lng') !== i18n.language) {
+          url.searchParams.set('lng', i18n.language);
+          window.history.replaceState({}, '', url.toString());
+        }
+        
+        // Update document attributes
+        document.documentElement.lang = i18n.language;
+        const selectedLang = languages.find(l => l.code === i18n.language);
+        if (selectedLang) {
+          document.documentElement.dir = selectedLang.rtl ? 'rtl' : 'ltr';
+        }
+      } catch (error) {
+        console.warn('Failed to persist language preference:', error);
+      }
+    }
+  }, [i18n.language, languages]);
+
   // Get current language info
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || 
     { code: 'en', name: 'English', rtl: false, priority: 0 };

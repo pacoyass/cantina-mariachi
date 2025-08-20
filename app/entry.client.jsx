@@ -39,17 +39,22 @@ startTransition(async () => {
     selected: lng
   });
 
+  // Set document attributes BEFORE i18n initialization to prevent flash
+  try {
+    document.documentElement.lang = lng;
+    
+    // Set RTL direction based on language
+    const isRTL = ['ar', 'he', 'fa'].includes(lng);
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  } catch (error) {
+    console.warn('Failed to set initial document attributes:', error);
+  }
+
+  // Initialize i18n with the detected language
   const i18n = await initI18n({ lng, resources: uiResources });
 
   try {
-    // Update document attributes immediately
-    document.documentElement.lang = i18n.language;
-    
-    // Set RTL direction based on language
-    const isRTL = ['ar', 'he', 'fa'].includes(i18n.language);
-    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-    
-    // Store language preference if not already stored
+    // Update stored preferences if not already set
     if (!storedLang) {
       try { 
         localStorage.setItem('lng', i18n.language); 
