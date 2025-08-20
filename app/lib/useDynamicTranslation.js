@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { useState, useCallback, useEffect } from 'react';
-=======
-import { useState, useCallback, useRef } from 'react';
->>>>>>> fde3af000795ac3b0d277c81c88412792453b549
+import { useState, useCallback, useRef,useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
