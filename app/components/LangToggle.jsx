@@ -5,12 +5,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Globe } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useLanguageSwitcher } from '../lib/useDynamicTranslation';
-import { useState, useCallback } from 'react';
 
 export function LangToggle() {
   const { t } = useTranslation('ui');
-  const { changeLanguage, currentLanguage, loading } = useLanguageSwitcher();
-  const [isChanging, setIsChanging] = useState(false);
+  const { changeLanguage, currentLanguage } = useLanguageSwitcher();
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -22,41 +20,22 @@ export function LangToggle() {
     { code: 'ar', label: 'العربية' },
   ];
 
-  const handleLanguageChange = useCallback(async (code) => {
-    // Prevent multiple rapid clicks
-    if (isChanging || loading) {
-      console.log('Language change in progress, ignoring click');
-      return;
-    }
-
-    // Prevent changing to the same language
+  const handleLanguageChange = async (code) => {
     if (code === currentLanguage) {
-      console.log('Already on language:', code);
       return;
     }
-
+    
     try {
-      setIsChanging(true);
-      const success = await changeLanguage(code);
-      if (success) {
-        console.log(`Language changed to ${code}`);
-      } else {
-        console.warn(`Failed to change language to ${code}`);
-      }
+      await changeLanguage(code);
     } catch (error) {
       console.error('Error changing language:', error);
-    } finally {
-      // Reset state after a short delay
-      setTimeout(() => {
-        setIsChanging(false);
-      }, 200);
     }
-  }, [changeLanguage, currentLanguage, isChanging, loading]);
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" disabled={isChanging || loading}>
+        <Button variant="outline" size="icon">
           <Globe className="h-[1.2rem] w-[1.2rem]" />
           <span className="sr-only">{t('a11y.toggleLanguage')}</span>
         </Button>
@@ -67,7 +46,6 @@ export function LangToggle() {
             key={lang.code} 
             onClick={() => handleLanguageChange(lang.code)}
             className={lang.code === currentLanguage ? 'bg-accent' : ''}
-            disabled={isChanging || loading}
           >
             {lang.label}
             {lang.code === currentLanguage && (
