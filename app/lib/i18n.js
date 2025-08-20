@@ -11,9 +11,17 @@ export function getI18nInstance() {
   return i18next;
 }
 
+/**
+ * Initialize i18n with the specified language
+ * @param {Object} options - Configuration options
+ * @param {string} options.lng - Language code (default: 'en')
+ * @param {Object} options.resources - Translation resources
+ * @returns {Promise<Object>} Initialized i18n instance
+ */
 export async function initI18n({ lng = 'en', resources }) {
   const i18n = getI18nInstance();
   
+  // If already initialized, just change language if needed
   if (i18n.isInitialized) {
     if (i18n.language !== lng) {
       console.log(`🔄 Re-initializing i18n from ${i18n.language} to ${lng}`);
@@ -25,6 +33,7 @@ export async function initI18n({ lng = 'en', resources }) {
     }
   }
 
+  // Initialize with clean, simple configuration
   await i18n.init({
     lng,
     fallbackLng: 'en',
@@ -81,6 +90,13 @@ export async function initI18n({ lng = 'en', resources }) {
   return i18n;
 }
 
+/**
+ * Create server-side i18n instance for SSR
+ * @param {Object} options - Configuration options
+ * @param {string} options.lng - Language code (default: 'en')
+ * @param {Object} options.resources - Translation resources
+ * @returns {Object} Server i18n instance
+ */
 export function createServerI18n({ lng = 'en', resources }) {
   const i18n = i18next.createInstance();
   i18n.use(initReactI18next);
