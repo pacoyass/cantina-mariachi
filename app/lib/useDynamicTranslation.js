@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
- * Simple hook for language management
+ * Simple hook for language management - Clean version without useEffect
  */
 export function useDynamicTranslation() {
   const { t, i18n } = useTranslation();
@@ -89,7 +89,7 @@ export function useDynamicTranslation() {
 }
 
 /**
- * Simple hook for language switching
+ * Simple hook for language switching - Clean version without useEffect
  */
 export function useLanguageSwitcher() {
   const { i18n, languages } = useDynamicTranslation();
