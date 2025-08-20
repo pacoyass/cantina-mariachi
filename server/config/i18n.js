@@ -16,7 +16,7 @@ function initializeI18n() {
     const staticConfig = {
       supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
       rtlLngs: ['ar'],
-      namespaces: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'orders'],
+      namespaces: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home'],
       fallbackLng: 'en',
       defaultNS: 'common'
     };
@@ -147,9 +147,13 @@ console.log('🌍 Supported languages:', i18nInstance.options?.supportedLngs || 
 
 // Test if translations are loading properly
 try {
-  const testEn = i18nInstance.t('dataRetrieved', { lng: 'en', ns: 'api' });
-  const testFr = i18nInstance.t('hero.badge', { lng: 'fr', ns: 'home' });
-  console.log('✅ Translation test - EN:', testEn, 'FR:', testFr);
+  if (i18nInstance && typeof i18nInstance.t === 'function') {
+    const testEn = i18nInstance.t('dataRetrieved', { lng: 'en', ns: 'api' });
+    const testFr = i18nInstance.t('hero.badge', { lng: 'fr', ns: 'home' });
+    console.log('✅ Translation test - EN:', testEn, 'FR:', testFr);
+  } else {
+    console.warn('⚠️ i18nInstance not properly initialized for testing');
+  }
 } catch (error) {
   console.warn('⚠️ Translation test failed:', error.message);
 }
