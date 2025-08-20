@@ -95,6 +95,16 @@ export function useLanguageSwitcher() {
   const { i18n, languages } = useDynamicTranslation();
   const isChangingLanguage = useRef(false);
   const lastChangedLanguage = useRef(i18n.language);
+  const changeTimeoutRef = useRef(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const changeLanguage = useCallback(async (code) => {
     try {
@@ -161,10 +171,13 @@ export function useLanguageSwitcher() {
       console.error('Failed to change language:', error);
       return false;
     } finally {
-      // Reset flag after a short delay to prevent rapid changes
-      setTimeout(() => {
+      // Reset flag after a delay to prevent rapid changes
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current);
+      }
+      changeTimeoutRef.current = setTimeout(() => {
         isChangingLanguage.current = false;
-      }, 100);
+      }, 300);
     }
   }, [i18n, languages]);
 
