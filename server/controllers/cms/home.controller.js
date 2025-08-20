@@ -1,17 +1,18 @@
 import prisma from '../../config/database.js';
 import { createError, createResponse } from '../../utils/response.js';
 import { TranslationService } from '../../utils/translation.js';
+import DynamicTranslationService from '../../services/dynamicTranslation.service.js';
 
 /**
- * Get home page content with proper locale fallbacks
+ * Get home page content with dynamic locale fallbacks
  * Provides structured content for hero, sections, and SEO
  */
 export const getHomePage = async (req, res) => {
   try {
     const { locale = 'en' } = req.query;
     
-    // Build fallback chain: de-CH → de → en
-    const fallbackChain = buildFallbackChain(locale);
+    // Build dynamic fallback chain: de-CH → de → en
+    const fallbackChain = await DynamicTranslationService.buildDynamicFallbackChain(locale);
     
     // Fetch home page content from all fallback locales
     const candidates = await prisma.pageContent.findMany({
@@ -38,7 +39,7 @@ export const getHomePage = async (req, res) => {
 
     if (!page) {
       // No CMS record; return sane defaults so frontend doesn't skeleton
-      const defaultContent = getDefaultHomeContent(fallbackChain[0]);
+      const defaultContent = await getDefaultHomeContent(fallbackChain[0]);
       const synthetic = {
         slug: 'home',
         locale: fallbackChain[0],
@@ -59,10 +60,10 @@ export const getHomePage = async (req, res) => {
     }
 
     // Apply field-level fallbacks for missing content
-    const resolvedContent = applyFieldLevelFallbacks(page.data, candidates, fallbackChain);
+    const resolvedContent = await applyDynamicFieldLevelFallbacks(page.data, candidates, fallbackChain, 'home');
     
-    // Ensure required fields exist with fallbacks
-    const homeContent = ensureRequiredFields(resolvedContent, resolvedLocale);
+    // Ensure required fields exist with dynamic fallbacks
+    const homeContent = await ensureDynamicRequiredFields(resolvedContent, resolvedLocale, 'home');
 
     // Set proper headers for SEO and caching
     res.set({
@@ -86,46 +87,53 @@ export const getHomePage = async (req, res) => {
 };
 
 /**
- * Build locale fallback chain (e.g., de-CH → de → en)
+ * Apply dynamic field-level fallbacks for missing content
  */
-function buildFallbackChain(locale) {
-  const chain = [locale];
-  
-  // Add base language if locale has region (e.g., de-CH → de)
-  if (locale.includes('-')) {
-    const baseLang = locale.split('-')[0];
-    if (baseLang !== locale) {
-      chain.push(baseLang);
-    }
-  }
-  
-  // Always add English as final fallback
-  if (locale !== 'en') {
-    chain.push('en');
-  }
-  
-  return chain;
-}
-
-/**
- * Apply field-level fallbacks for missing content
- */
-function applyFieldLevelFallbacks(content, candidates, fallbackChain) {
+async function applyDynamicFieldLevelFallbacks(content, candidates, fallbackChain, slug) {
   if (!content || typeof content !== 'object') {
     return content;
   }
 
   const resolved = { ...content };
   
-  // For each field, check if it's missing and apply fallback
-  for (const field of Object.keys(content)) {
-    if (content[field] === null || content[field] === undefined || content[field] === '') {
-      // Find this field in fallback locales
-      for (const lng of fallbackChain) {
-        const candidate = candidates.find(c => c.locale === lng);
-        if (candidate?.data?.[field]) {
-          resolved[field] = candidate.data[field];
-          break;
+  // Get dynamic schema for this page
+  const schema = await DynamicTranslationService.getDynamicSchema(slug, fallbackChain[0]);
+  
+  // For each field defined in schema, check if it's missing and apply fallback
+  for (const [section, fields] of Object.entries(schema)) {
+    if (Array.isArray(fields)) {
+      // Handle array-based field definitions
+      for (const field of fields) {
+        if (content[section]?.[field] === null || content[section]?.[field] === undefined || content[section]?.[field] === '') {
+          // Find this field in fallback locales
+          for (const lng of fallbackChain) {
+            const candidate = candidates.find(c => c.locale === lng);
+            if (candidate?.data?.[section]?.[field]) {
+              if (!resolved[section]) resolved[section] = {};
+              resolved[section][field] = candidate.data[section][field];
+              break;
+            }
+          }
+        }
+      }
+    } else if (typeof fields === 'object') {
+      // Handle nested object field definitions
+      for (const [subsection, subfields] of Object.entries(fields)) {
+        if (Array.isArray(subfields)) {
+          for (const field of subfields) {
+            if (content[section]?.[subsection]?.[field] === null || content[section]?.[subsection]?.[field] === undefined || content[section]?.[subsection]?.[field] === '') {
+              // Find this field in fallback locales
+              for (const lng of fallbackChain) {
+                const candidate = candidates.find(c => c.locale === lng);
+                if (candidate?.data?.[section]?.[subsection]?.[field]) {
+                  if (!resolved[section]) resolved[section] = {};
+                  if (!resolved[section][subsection]) resolved[section][subsection] = {};
+                  resolved[section][subsection][field] = candidate.data[section][subsection][field];
+                  break;
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -135,60 +143,47 @@ function applyFieldLevelFallbacks(content, candidates, fallbackChain) {
 }
 
 /**
- * Ensure required fields exist with proper fallbacks
+ * Ensure required fields exist with dynamic fallbacks
  */
-function ensureRequiredFields(content, locale) {
-  const defaultContent = getDefaultHomeContent(locale);
+async function ensureDynamicRequiredFields(content, locale, slug) {
+  const defaultContent = await getDefaultHomeContent(locale);
+  const schema = await DynamicTranslationService.getDynamicSchema(slug, locale);
   
-  return {
-    // Hero section
-    hero: {
-      badge: content?.hero?.badge || defaultContent.hero.badge,
-      title: content?.hero?.title || defaultContent.hero.title,
-      desc: content?.hero?.desc || defaultContent.hero.desc,
-      image: content?.hero?.image || defaultContent.hero.image,
-      imageAlt: content?.hero?.imageAlt || defaultContent.hero.imageAlt,
-      ...content?.hero
-    },
-    
-    // CTA section
-    cta: {
-      limited: content?.cta?.limited || defaultContent.cta?.limited,
-      title: content?.cta?.title || defaultContent.cta?.title,
-      desc: content?.cta?.desc || defaultContent.cta?.desc,
-      endsTonight: content?.cta?.endsTonight || defaultContent.cta?.endsTonight,
-      socialProof: content?.cta?.socialProof || defaultContent.cta?.socialProof,
-      start: content?.cta?.start || defaultContent.cta?.start,
-      reserve: content?.cta?.reserve || defaultContent.cta?.reserve,
-      ...(content?.cta || {})
-    },
-
-    // Features section
-    features: content?.features || defaultContent.features,
-    
-    // About section
-    about: content?.about || defaultContent.about,
-    
-    // Contact section
-    contact: content?.contact || defaultContent.contact,
-    
-    // SEO metadata
-    seo: {
-      title: content?.seo?.title || defaultContent.seo.title,
-      description: content?.seo?.description || defaultContent.seo.description,
-      keywords: content?.seo?.keywords || defaultContent.seo.keywords,
-      ...content?.seo
-    },
-    
-    // Any other custom fields
-    ...content
-  };
+  const resolved = { ...content };
+  
+  // Apply schema-based field resolution
+  for (const [section, fields] of Object.entries(schema)) {
+    if (Array.isArray(fields)) {
+      // Handle array-based field definitions
+      if (!resolved[section]) resolved[section] = {};
+      for (const field of fields) {
+        if (resolved[section][field] === null || resolved[section][field] === undefined || resolved[section][field] === '') {
+          resolved[section][field] = defaultContent[section]?.[field] || null;
+        }
+      }
+    } else if (typeof fields === 'object') {
+      // Handle nested object field definitions
+      if (!resolved[section]) resolved[section] = {};
+      for (const [subsection, subfields] of Object.entries(fields)) {
+        if (Array.isArray(subfields)) {
+          if (!resolved[section][subsection]) resolved[section][subsection] = {};
+          for (const field of subfields) {
+            if (resolved[section][subsection][field] === null || resolved[section][subsection][field] === undefined || resolved[section][subsection][field] === '') {
+              resolved[section][subsection][field] = defaultContent[section]?.[subsection]?.[field] || null;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return resolved;
 }
 
 /**
  * Get default home content for fallback scenarios
  */
-function getDefaultHomeContent(locale) {
+async function getDefaultHomeContent(locale) {
   const isRTL = ['ar', 'he', 'fa'].includes(locale);
   
   return {
