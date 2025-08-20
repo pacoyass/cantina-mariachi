@@ -151,7 +151,7 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
           <div className="space-y-6">
-            <Badge className="w-fit" variant="secondary">{safeCms.hero?.badge || 'New'}</Badge>
+            <Badge className="w-fit" variant="secondary">{safeCms.hero?.badge ?? t('hero.badge')}</Badge>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               {safeCms.hero?.title ? <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
             </h1>
@@ -224,7 +224,7 @@ export default function Home() {
 
       {/* Logo cloud */}
       <section className="container mx-auto px-6 py-8">
-        <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading || <span className="animate-pulse bg-muted h-3 w-32 rounded mx-auto">Loading...</span>}</div>
+        <div className="text-center text-xs text-muted-foreground">{cms?.logo?.heading ?? t('logo.heading')}</div>
         <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-6 opacity-80">
           {(cms?.logo?.brands || ['FlavorMag','EatHub','CityEats','DineNow','LocalBest']).map((name) => (
             <div key={name} className="bg-secondary text-foreground/70 rounded-md py-3 text-center text-xs">{name}</div>
@@ -243,7 +243,7 @@ export default function Home() {
           </TabsList>
           <div className="mt-3">
           <TabsContent value="tacos" forceMount className="data-[state=inactive]:hidden data-[state=active]:block transition-opacity">
-            <Suspense fallback={<MenuItemsSkeleton count={3} />}>
+            <Suspense fallback={<MenuItemsSkeleton count={3} />}> 
               <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
                 {(resolvedItems) => (
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
