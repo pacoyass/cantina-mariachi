@@ -142,8 +142,8 @@ const i18nInstance = initializeI18n();
 
 // Log initialization status and test loading
 console.log('✅ i18next initialized with languages:', i18nInstance.languages || ['en']);
-console.log('📚 Available namespaces:', i18nInstance.options.ns);
-console.log('🌍 Supported languages:', i18nInstance.options.supportedLngs);
+console.log('📚 Available namespaces:', i18nInstance.options?.ns || ['common']);
+console.log('🌍 Supported languages:', i18nInstance.options?.supportedLngs || ['en']);
 
 // Test if translations are loading properly
 try {
