@@ -143,7 +143,7 @@ const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
 
 export default function Home() {
   const { items, offers, testimonials, drinks, config, cms } = useLoaderData();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('home');
   const safeCms = cms || {};
 
   return (
@@ -586,7 +586,7 @@ function LogoCloudSkeleton() {
 }
 
 function MenuItemCard({ item, t, locale }) {
-  const { t: tMenu } = useTranslation()
+  const { t: tMenu } = useTranslation('menu')
   const tags = [item.isVegetarian ? tMenu('filters.vegetarian') : null, item.isVegan ? tMenu('filters.vegan') : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
@@ -616,7 +616,7 @@ function MenuItemCard({ item, t, locale }) {
 }
 
 function PopularItemCard({ item, idx, t, locale }) {
-  const { t: tMenu } = useTranslation()
+  const { t: tMenu } = useTranslation('menu')
   const tags = [item.isVegetarian ? tMenu('filters.vegetarian') : null, item.isVegan ? tMenu('filters.vegan') : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
