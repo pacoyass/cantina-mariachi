@@ -292,6 +292,20 @@ export const uiResources = {
         keywords: 'Mexican food, tacos, delivery, restaurant, online ordering, table reservation'
       }
     },
+    events: {
+      heading: 'Events & Catering',
+      desc: 'We organize special events and catering services for large groups. From birthdays to corporate events.',
+      plan: 'Plan Event',
+      catering: 'Catering Service',
+      q1: {
+        question: 'What is the minimum group size for events?',
+        answer: 'Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations.'
+      },
+      q2: {
+        question: 'Do you offer vegetarian and vegan options?',
+        answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
+      }
+    },
     // Frontend-specific namespaces
     ui: {
       nav: {
