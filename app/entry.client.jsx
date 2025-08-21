@@ -4,6 +4,7 @@ import { HydratedRouter } from "react-router/dom";
 import { I18nextProvider } from 'react-i18next';
 import { initI18n } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
+import { rtlLngs } from './lib/i18n.js';
 
 /**
  * Client-side app initialization with SSR-compatible language support
@@ -29,7 +30,7 @@ startTransition(async () => {
 
     // Set document attributes immediately to prevent flash
     document.documentElement.lang = lng;
-    document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';
 
     // Initialize i18n with the detected language
     const i18n = await initI18n({ lng, resources: uiResources });
@@ -52,6 +53,20 @@ startTransition(async () => {
         document.cookie = `i18next=${lng}; path=/; max-age=31536000; SameSite=Lax`;
       } catch {}
     }
+
+    // Listen for language changes and update document attributes
+    i18n.on('languageChanged', (newLng) => {
+      document.documentElement.lang = newLng;
+      document.documentElement.dir = rtlLngs.includes(newLng) ? 'rtl' : 'ltr';
+      
+      // Update URL if not already set
+      const currentUrlLang = new URLSearchParams(window.location.search).get('lng');
+      if (currentUrlLang !== newLng) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('lng', newLng);
+        window.history.replaceState({}, '', url.toString());
+      }
+    });
 
     // Hydrate the React app
     hydrateRoot(

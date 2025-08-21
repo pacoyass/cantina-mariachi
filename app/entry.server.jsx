@@ -5,7 +5,7 @@ import { ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { I18nextProvider } from 'react-i18next';
-import { createServerI18n } from './lib/i18n.js';
+import { createServerI18n, rtlLngs } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
 
 export const streamTimeout = 5000;
@@ -17,7 +17,19 @@ export default function handleRequest(
   routerContext,
   loadContext
 ) {
-  const i18n = createServerI18n({ lng: loadContext?.lng || 'en', resources: uiResources });
+  // Get language from context (set by server middleware)
+  const lng = loadContext?.lng || 'en';
+  
+  // Create server i18n instance with the detected language
+  const i18n = createServerI18n({ lng, resources: uiResources });
+  
+  // Set document attributes for SSR
+  const dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';
+  
+  // Add language and direction to response headers for better SEO
+  responseHeaders.set("Content-Language", lng);
+  responseHeaders.set("X-Language", lng);
+  responseHeaders.set("X-Direction", dir);
 
   return new Promise((resolve, reject) => {
     let shellRendered = false;
@@ -42,7 +54,10 @@ export default function handleRequest(
           shellRendered = true;
           const body = new PassThrough();
           const stream = createReadableStreamFromReadable(body);
-          responseHeaders.set("Content-Type", "text/html");
+          
+          // Set proper content type and language headers
+          responseHeaders.set("Content-Type", "text/html; charset=utf-8");
+          
           resolve(
             new Response(stream, {
               headers: responseHeaders,

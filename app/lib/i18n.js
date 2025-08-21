@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { supportedLngs, rtlLngs } from '../../i18n.config.js';
 
 let initialized = false;
 
@@ -29,18 +30,34 @@ export async function initI18n({ lng = 'en', resources }) {
     return i18n;
   }
 
-  // Initialize with clean, simple configuration
+  // Initialize with backend-aligned configuration
   await i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
+    supportedLngs,
     interpolation: { escapeValue: false },
     resources,
-    ns: ['ui', 'home', 'menu', 'orders', 'reservations', 'account'],
-    defaultNS: 'ui',
+    // Align with backend namespaces
+    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'orders', 'reservations', 'account'],
+    defaultNS: 'common',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
+    // SSR optimizations
+    initImmediate: false,
+    compatibilityJSON: 'v4',
+    // Language detection
+    detection: {
+      order: ['querystring', 'cookie', 'header', 'session'],
+      caches: ['cookie'],
+      cookieOptions: {
+        path: '/',
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false,
+        maxAge: 365 * 24 * 60 * 60 * 1000 // 1 year
+      }
+    }
   });
 
   return i18n;
@@ -60,16 +77,29 @@ export function createServerI18n({ lng = 'en', resources }) {
   i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs: ['en', 'ar', 'es', 'fr', 'de', 'it', 'pt'],
+    supportedLngs,
     interpolation: { escapeValue: false },
     resources,
-    ns: ['ui', 'home', 'menu', 'orders', 'reservations', 'account'],
-    defaultNS: 'ui',
+    // Align with backend namespaces
+    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'orders', 'reservations', 'account'],
+    defaultNS: 'common',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
+    // SSR optimizations
     initImmediate: false,
+    compatibilityJSON: 'v4',
+    // Server-specific options
+    backend: {
+      loadPath: false, // Disable backend loading on server
+      addPath: false
+    }
   });
   
   return i18n;
 }
+
+/**
+ * Get RTL languages for SSR
+ */
+export { rtlLngs };
