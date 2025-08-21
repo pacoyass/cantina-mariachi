@@ -246,7 +246,27 @@ export const uiResources = {
         rewards: { title: 'Rewards that matter', desc: 'Points on every order, instant perks.' }
       },
       faq: {
-        heading: 'Frequently asked questions'
+        heading: 'Frequently asked questions',
+        q1: {
+          question: 'What is your delivery time?',
+          answer: 'Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive.'
+        },
+        q2: {
+          question: 'Do you offer vegetarian and vegan options?',
+          answer: 'Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides.'
+        },
+        q3: {
+          question: 'Can I customize my order?',
+          answer: 'Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering.'
+        }
+      },
+      popular: {
+        heading: 'Popular This Week',
+        seeMenu: 'See Full Menu',
+        coming: 'Coming Soon',
+        chefSpecial: 'Chef Special {{num}}',
+        notify: 'Notify Me',
+        rating: '4.9/5 from 2,400+ locals'
       },
       cta: {
         title: 'Ready to experience authentic Mexican?',
@@ -722,7 +742,27 @@ export const uiResources = {
         rewards: { title: 'مكافآت قيّمة', desc: 'نقاط على كل طلب ومزايا فورية.' }
       },
       faq: {
-        heading: 'الأسئلة الشائعة'
+        heading: 'الأسئلة الشائعة',
+        q1: {
+          question: 'ما هو وقت التوصيل؟',
+          answer: 'متوسط وقت التوصيل لدينا هو 25-35 دقيقة. نستخدم التتبع في الوقت الفعلي حتى تتمكن من رؤية موعد وصول طلبك بالضبط.'
+        },
+        q2: {
+          question: 'هل تقدمون خيارات نباتية ونباتية صرفة؟',
+          answer: 'نعم! لدينا مجموعة واسعة من الأطباق النباتية والنباتية الصرفة. قائمتنا تشمل التاكو النباتي والسلطات والأطباق الجانبية.'
+        },
+        q3: {
+          question: 'هل يمكنني تخصيص طلبي؟',
+          answer: 'بالتأكيد! يمكنك تخصيص أي طبق بإضافة أو إزالة المكونات. فقط أخبرنا بتفضيلاتك عند الطلب.'
+        }
+      },
+      popular: {
+        heading: 'الأكثر شعبية هذا الأسبوع',
+        seeMenu: 'انظر القائمة الكاملة',
+        coming: 'قريباً',
+        chefSpecial: 'طبق الشيف الخاص {{num}}',
+        notify: 'أخبرني',
+        rating: '4.9/5 من أكثر من 2,400 من السكان المحليين'
       },
       cta: {
         title: 'مستعد لتجربة المكسيكي الأصيل؟',
