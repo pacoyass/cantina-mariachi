@@ -41,6 +41,29 @@ export const uiResources = {
         answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
       }
     },
+    faq: {
+      heading: 'Frequently Asked Questions',
+      q1: {
+        question: 'What is your delivery time?',
+        answer: 'Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive.'
+      },
+      q2: {
+        question: 'Do you offer vegetarian and vegan options?',
+        answer: 'Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides.'
+      },
+      q3: {
+        question: 'Can I customize my order?',
+        answer: 'Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering.'
+      }
+    },
+    popular: {
+      heading: 'Popular This Week',
+      seeMenu: 'See Full Menu',
+      coming: 'Coming Soon',
+      chefSpecial: 'Chef Special {{num}}',
+      notify: 'Notify Me',
+      rating: '4.9/5 from 2,400+ locals'
+    },
     auth: {
       loginSuccess: 'Login successful',
       loginFailed: 'Login failed',
@@ -493,6 +516,29 @@ export const uiResources = {
         question: 'هل تقدمون خيارات نباتية ونباتية صرفة؟',
         answer: 'نعم، لدينا قائمة كاملة من الخيارات النباتية والنباتية الصرفة. يمكننا أيضاً تخصيص القوائم حسب احتياجاتكم الغذائية.'
       }
+    },
+    faq: {
+      heading: 'الأسئلة الشائعة',
+      q1: {
+        question: 'ما هو وقت التوصيل؟',
+        answer: 'متوسط وقت التوصيل لدينا هو 25-35 دقيقة. نستخدم التتبع في الوقت الفعلي حتى تتمكن من رؤية موعد وصول طلبك بالضبط.'
+      },
+      q2: {
+        question: 'هل تقدمون خيارات نباتية ونباتية صرفة؟',
+        answer: 'نعم! لدينا مجموعة واسعة من الأطباق النباتية والنباتية الصرفة. قائمتنا تشمل التاكو النباتي والسلطات والأطباق الجانبية.'
+      },
+      q3: {
+        question: 'هل يمكنني تخصيص طلبي؟',
+        answer: 'بالتأكيد! يمكنك تخصيص أي طبق بإضافة أو إزالة المكونات. فقط أخبرنا بتفضيلاتك عند الطلب.'
+      }
+    },
+    popular: {
+      heading: 'الأكثر شعبية هذا الأسبوع',
+      seeMenu: 'انظر القائمة الكاملة',
+      coming: 'قريباً',
+      chefSpecial: 'طبق الشيف الخاص {{num}}',
+      notify: 'أخبرني',
+      rating: '4.9/5 من أكثر من 2,400 من السكان المحليين'
     },
     auth: {
       loginSuccess: 'تم تسجيل الدخول بنجاح',
@@ -947,6 +993,29 @@ export const uiResources = {
         answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según sus necesidades dietéticas.'
       }
     },
+    faq: {
+      heading: 'Preguntas Frecuentes',
+      q1: {
+        question: '¿Cuál es su tiempo de entrega?',
+        answer: 'Nuestro tiempo promedio de entrega es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido.'
+      },
+      q2: {
+        question: '¿Ofrecen opciones vegetarianas y veganas?',
+        answer: '¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y guarniciones a base de plantas.'
+      },
+      q3: {
+        question: '¿Puedo personalizar mi pedido?',
+        answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznos saber tus preferencias al ordenar.'
+      }
+    },
+    popular: {
+      heading: 'Popular Esta Semana',
+      seeMenu: 'Ver Menú Completo',
+      coming: 'Próximamente',
+      chefSpecial: 'Especial del Chef {{num}}',
+      notify: 'Notifícame',
+      rating: '4.9/5 de más de 2,400 locales'
+    },
     auth: {
       loginSuccess: 'Connexion réussie',
       loginFailed: 'Échec de la connexion',
@@ -1399,6 +1468,29 @@ export const uiResources = {
         answer: 'Oui, nous avons un menu complet d\'options végétariennes et véganes. Nous pouvons également personnaliser les menus selon vos besoins alimentaires.'
       }
     },
+    faq: {
+      heading: 'Questions Fréquemment Posées',
+      q1: {
+        question: 'Quel est votre temps de livraison ?',
+        answer: 'Notre temps de livraison moyen est de 25-35 minutes. Nous utilisons le suivi en temps réel pour que vous puissiez voir exactement quand votre commande arrivera.'
+      },
+      q2: {
+        question: 'Proposez-vous des options végétariennes et véganes ?',
+        answer: 'Oui ! Nous avons une large sélection de plats végétariens et végans. Notre menu comprend des tacos, des bols et des accompagnements à base de plantes.'
+      },
+      q3: {
+        question: 'Puis-je personnaliser ma commande ?',
+        answer: 'Absolument ! Vous pouvez personnaliser n\'importe quel plat en ajoutant ou en supprimant des ingrédients. Faites-nous simplement savoir vos préférences lors de la commande.'
+      }
+    },
+    popular: {
+      heading: 'Populaire Cette Semaine',
+      seeMenu: 'Voir le Menu Complet',
+      coming: 'Bientôt Disponible',
+      chefSpecial: 'Spécial du Chef {{num}}',
+      notify: 'Me Notifier',
+      rating: '4,9/5 de plus de 2 400 habitants locaux'
+    },
     auth: {
       loginSuccess: 'Connexion réussie',
       loginFailed: 'Échec de la connexion',
@@ -1850,6 +1942,29 @@ export const uiResources = {
         question: 'Bieten Sie vegetarische und vegane Optionen?',
         answer: 'Ja, wir haben ein vollständiges Menü mit vegetarischen und veganen Optionen. Wir können auch Menüs nach Ihren Ernährungsbedürfnissen anpassen.'
       }
+    },
+    faq: {
+      heading: 'Häufig Gestellte Fragen',
+      q1: {
+        question: 'Wie ist Ihre Lieferzeit?',
+        answer: 'Unsere durchschnittliche Lieferzeit beträgt 25-35 Minuten. Wir verwenden Echtzeit-Tracking, damit Sie genau sehen können, wann Ihre Bestellung ankommt.'
+      },
+      q2: {
+        question: 'Bieten Sie vegetarische und vegane Optionen?',
+        answer: 'Ja! Wir haben eine große Auswahl an vegetarischen und veganen Gerichten. Unser Menü umfasst pflanzliche Tacos, Schüsseln und Beilagen.'
+      },
+      q3: {
+        question: 'Kann ich meine Bestellung anpassen?',
+        answer: 'Absolut! Sie können jedes Gericht anpassen, indem Sie Zutaten hinzufügen oder entfernen. Lassen Sie uns einfach Ihre Präferenzen bei der Bestellung wissen.'
+      }
+    },
+    popular: {
+      heading: 'Diese Woche Beliebt',
+      seeMenu: 'Vollständiges Menü Anzeigen',
+      coming: 'Demnächst Verfügbar',
+      chefSpecial: 'Chef-Spezial {{num}}',
+      notify: 'Benachrichtigen Sie Mich',
+      rating: '4,9/5 von über 2.400 Einheimischen'
     },
     auth: {
       loginSuccess: 'Anmeldung erfolgreich',
@@ -2304,6 +2419,29 @@ export const uiResources = {
         answer: 'Sì, abbiamo un menu completo di opzioni vegetariane e vegane. Possiamo anche personalizzare i menu secondo le vostre esigenze alimentari.'
       }
     },
+    faq: {
+      heading: 'Domande Frequenti',
+      q1: {
+        question: 'Qual è il vostro tempo di consegna?',
+        answer: 'Il nostro tempo di consegna medio è di 25-35 minuti. Utilizziamo il tracciamento in tempo reale così puoi vedere esattamente quando arriverà il tuo ordine.'
+      },
+      q2: {
+        question: 'Offrite opzioni vegetariane e vegane?',
+        answer: 'Sì! Abbiamo un\'ampia selezione di piatti vegetariani e vegani. Il nostro menu include tacos, bowl e contorni a base di piante.'
+      },
+      q3: {
+        question: 'Posso personalizzare il mio ordine?',
+        answer: 'Assolutamente! Puoi personalizzare qualsiasi piatto aggiungendo o rimuovendo ingredienti. Faccelo semplicemente sapere le tue preferenze quando ordini.'
+      }
+    },
+    popular: {
+      heading: 'Popolare Questa Settimana',
+      seeMenu: 'Vedi Menu Completo',
+      coming: 'Prossimamente',
+      chefSpecial: 'Speciale dello Chef {{num}}',
+      notify: 'Notificami',
+      rating: '4,9/5 da oltre 2.400 locali'
+    },
     auth: {
       loginSuccess: 'Accesso effettuato con successo',
       loginFailed: 'Accesso fallito',
@@ -2756,6 +2894,29 @@ export const uiResources = {
         question: 'Vocês oferecem opções vegetarianas e veganas?',
         answer: 'Sim, temos um menu completo de opções vegetarianas e veganas. Também podemos personalizar menus de acordo com suas necessidades alimentares.'
       }
+    },
+    faq: {
+      heading: 'Perguntas Frequentes',
+      q1: {
+        question: 'Qual é o seu tempo de entrega?',
+        answer: 'Nosso tempo médio de entrega é de 25-35 minutos. Usamos rastreamento em tempo real para que você possa ver exatamente quando seu pedido chegará.'
+      },
+      q2: {
+        question: 'Vocês oferecem opções vegetarianas e veganas?',
+        answer: 'Sim! Temos uma ampla seleção de pratos vegetarianos e veganos. Nosso menu inclui tacos, bowls e acompanhamentos à base de plantas.'
+      },
+      q3: {
+        question: 'Posso personalizar meu pedido?',
+        answer: 'Absolutamente! Você pode personalizar qualquer prato adicionando ou removendo ingredientes. Apenas nos informe suas preferências ao fazer o pedido.'
+      }
+    },
+    popular: {
+      heading: 'Popular Esta Semana',
+      seeMenu: 'Ver Menu Completo',
+      coming: 'Em Breve',
+      chefSpecial: 'Especial do Chef {{num}}',
+      notify: 'Notifique-me',
+      rating: '4,9/5 de mais de 2.400 locais'
     },
     auth: {
       loginSuccess: 'Login realizado com sucesso',
