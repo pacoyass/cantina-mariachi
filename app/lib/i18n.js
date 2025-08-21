@@ -38,7 +38,7 @@ export async function initI18n({ lng = 'en', resources }) {
     interpolation: { escapeValue: false },
     resources,
     // Align with backend namespaces
-    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'orders', 'reservations', 'account'],
+    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'events', 'ui', 'menu', 'orders', 'reservations', 'account'],
     defaultNS: 'common',
     react: { useSuspense: false },
     returnEmptyString: false,
@@ -81,7 +81,7 @@ export function createServerI18n({ lng = 'en', resources }) {
     interpolation: { escapeValue: false },
     resources,
     // Align with backend namespaces
-    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'orders', 'reservations', 'account'],
+    ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'events', 'ui', 'menu', 'orders', 'reservations', 'account'],
     defaultNS: 'common',
     react: { useSuspense: false },
     returnEmptyString: false,
