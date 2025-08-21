@@ -1463,6 +1463,101 @@ export const uiResources = {
       },
       logout: 'Déconnexion',
       deleteAccount: 'Supprimer le compte'
+    },
+    home: {
+      hero: {
+        badge: 'Nuevo: lanzamiento de recompensas — gana puntos en cada pedido',
+        title: 'Mexicano Auténtico. <primary>Entregado Rápido.</primary>',
+        desc: 'Desde tacos de calle hasta especialidades cocinadas lentamente. Ordena en segundos, reserva una mesa instantáneamente y rastrea tu entrega en tiempo real — todo en un solo lugar.',
+        orderNow: 'Ordenar Ahora',
+        reserve: 'Reservar Mesa',
+        browseMenu: 'Ver menú completo',
+        rating: '4.9/5 de más de 2,400 comensales locales',
+        avgTime: 'Entrega en menos de 35 minutos en promedio',
+        openNow: 'Abierto ahora',
+        closedNow: 'Cerrado ahora',
+        eta: 'ETA ~ {{m}}m',
+        card: {
+          title: 'Selección del Chef',
+          desc: 'Barbacoa cocinada lentamente con salsa verde fresca y tortillas calientes.'
+        }
+      },
+      logo: {
+        heading: 'Confiado por foodies locales y destacado en'
+      },
+      explore: {
+        heading: 'Explora el menú',
+        tacos: 'Tacos',
+        bowls: 'Bowls',
+        drinks: 'Bebidas',
+        coming: 'Próximamente.',
+        chefNotes: 'Notas del chef: favorito de la multitud con cilantro fresco y lima.',
+        viewMore: 'Ver más'
+      },
+      loyalty: {
+        heading: 'Lealtad y Recompensas',
+        membersSave: 'Los miembros ahorran más',
+        points: 'puntos',
+        nextAt: 'Próxima recompensa en {{points}}',
+        freeDessert: 'Postre gratis',
+        join: 'Unirse a recompensas',
+        perks: 'Ver beneficios'
+      },
+      why: {
+        heading: 'Por qué elegir Cantina',
+        faster: { title: 'Más rápido que las apps', desc: 'Directo de la cocina a tu puerta, sin demoras de terceros.' },
+        fees: { title: 'Tarifas transparentes', desc: 'Sin cargos sorpresa al pagar.' },
+        oneTap: { title: 'Reservas de un toque', desc: 'Disponibilidad en vivo y confirmaciones por SMS.' },
+        tracking: { title: 'Rastreo en vivo', desc: 'Actualizaciones minuto a minuto.' },
+        chef: { title: 'Hecho por chefs', desc: 'Ingredientes frescos y menús de temporada.' },
+        rewards: { title: 'Recompensas que importan', desc: 'Puntos en cada pedido, beneficios instantáneos.' }
+      },
+      faq: {
+        heading: 'Preguntas Frecuentes',
+        q1: {
+          question: '¿Cuál es su tiempo de entrega?',
+          answer: 'Nuestro tiempo promedio de entrega es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido.'
+        },
+        q2: {
+          question: '¿Ofrecen opciones vegetarianas y veganas?',
+          answer: '¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y guarniciones a base de plantas.'
+        },
+        q3: {
+          question: '¿Puedo personalizar mi pedido?',
+          answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznos saber tus preferencias al ordenar.'
+        }
+      },
+      popular: {
+        heading: 'Popular Esta Semana',
+        seeMenu: 'Ver Menú Completo',
+        coming: 'Próximamente',
+        chefSpecial: 'Especial del Chef {{num}}',
+        notify: 'Notifícame',
+        rating: '4.9/5 de más de 2,400 locales'
+      },
+      cta: {
+        title: '¿Listo para experimentar el mexicano auténtico?',
+        desc: 'Únete a miles de clientes satisfechos que eligen Cantina por calidad, velocidad y servicio.',
+        socialProof: '2,400+ clientes felices este mes',
+        limited: 'Oferta por tiempo limitado',
+        start: 'Comenzar a Ordenar',
+        reserve: 'Reservar Mesa',
+        endsTonight: '¡Termina esta noche a medianoche!'
+      },
+      offers: {
+        heading: 'Ofertas de Temporada',
+        badge: 'Tiempo Limitado',
+        bundle: 'Paquete Taco Tuesday',
+        deal: '2 tacos + bebida — $9.99',
+        endsIn: 'Termina en',
+        orderBundle: 'Ordenar Paquete',
+        viewDetails: 'Ver Detalles'
+      },
+      seo: {
+        title: 'Cantina Mariachi – Mexicano Auténtico, Experiencia Moderna',
+        description: 'Ordena en línea en segundos, reserva instantáneamente y rastrea tu entrega en vivo.',
+        keywords: 'mexicano, tacos, entrega, restaurante'
+      }
     }
   },
   
