@@ -17,24 +17,22 @@ import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useTranslation } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
+import { useEffect } from 'react';
 
 export async function loader( { request, context } )
 {
-  
-
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
   const lng = context?.lng || 'en';
+  
   if ( nonce ) {
-    
-
     return { nonce: nonce, csrfToken: csrfToken, lng };
   }
   
   return { nonce: "", lng }; 
 }
-export const links = () => [
 
+export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -54,9 +52,45 @@ export function Layout( { children } )
   const nonce = loaderData.nonce || ""; 
   const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
-  const urlLang = (() => { try { return new URLSearchParams(window.location.search).get('lng'); } catch { return null; } })();
+  
+  // Get language from URL or fallback to server context
+  const urlLang = (() => { 
+    try { 
+      return new URLSearchParams(window.location.search).get('lng'); 
+    } catch { 
+      return null; 
+    } 
+  })();
+  
   const lang = urlLang || i18n?.language || initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
+
+  // Sync client-side language changes with server context
+  useEffect(() => {
+    try {
+      if (urlLang && i18n?.changeLanguage) {
+        i18n.changeLanguage(urlLang);
+      }
+      
+      // Update document attributes
+      document.documentElement.lang = lang;
+      document.documentElement.dir = dir;
+      
+      // Update meta tags for better SEO
+      const metaLang = document.querySelector('meta[name="language"]');
+      if (metaLang) {
+        metaLang.setAttribute('content', lang);
+      } else {
+        const newMeta = document.createElement('meta');
+        newMeta.name = 'language';
+        newMeta.content = lang;
+        document.head.appendChild(newMeta);
+      }
+      
+    } catch (error) {
+      console.warn('Failed to sync language:', error);
+    }
+  }, [urlLang, lang, dir, i18n]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
@@ -64,8 +98,9 @@ export function Layout( { children } )
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="server-start-time" content={Date.now().toString()} />
+        <meta name="language" content={lang} />
         <Meta nonce={nonce} />
-        <Links  nonce={nonce}/>
+        <Links nonce={nonce}/>
         
         {/* SEO: Language alternatives */}
         {supportedLngs.map(code => (
@@ -75,17 +110,21 @@ export function Layout( { children } )
         
         {/* Canonical URL */}
         <link rel="canonical" href={lang === 'en' ? '/' : `/?lng=${lang}`} />
+        
+        {/* RTL CSS for Arabic */}
+        {lang === 'ar' && (
+          <style nonce={nonce}>
+            {`
+              body { direction: rtl; text-align: right; }
+              .rtl-support { direction: rtl; }
+            `}
+          </style>
+        )}
       </head>
       <body className="antialiased">
-      
-
-          <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
-
-         {children}
-         </ThemeProvider>
-
-        
-       
+        <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
         
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
