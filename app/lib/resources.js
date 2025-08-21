@@ -896,14 +896,14 @@ export const uiResources = {
       deleted: 'Eliminado exitosamente',
       operationFailed: 'Operación fallida',
       invalidRequest: 'Solicitud inválida',
-      resourceNotFound: 'Ressource non trouvée',
-      serverError: 'Erreur du serveur',
-      maintenance: 'Le serveur est en maintenance',
-      rateLimited: 'Trop de requêtes. Réessayez plus tard.',
-      timeout: 'Délai d\'attente dépassé',
-      dataRetrieved: 'Données récupérées avec succès',
-      languageUpdated: 'Langue mise à jour avec succès',
-      languageReset: 'Langue réinitialisée par défaut avec succès'
+      resourceNotFound: 'Recurso no encontrado',
+      serverError: 'Error del servidor',
+      maintenance: 'El servidor está en mantenimiento',
+      rateLimited: 'Demasiadas solicitudes. Inténtalo más tarde.',
+      timeout: 'Tiempo de espera agotado',
+      dataRetrieved: 'Datos recuperados exitosamente',
+      languageUpdated: 'Idioma actualizado exitosamente',
+      languageReset: 'Idioma restablecido al predeterminado exitosamente'
     },
     auth: {
       loginSuccess: 'Connexion réussie',
