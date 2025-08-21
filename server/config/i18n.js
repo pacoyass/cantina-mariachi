@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Initialize i18next with dynamic configuration
-function initializeI18n() {
+async function initializeI18n() {
   try {
     console.log('🚀 Starting i18n initialization...');
     
@@ -17,152 +17,139 @@ function initializeI18n() {
     console.log('📁 Backend loadPath:', join(__dirname, '../locales/{{lng}}/{{ns}}.json'));
     console.log('🌍 Will attempt to load languages:', supportedLngs);
     
-    return i18next
+    const instance = i18next
       .use(Backend)
-      .use(middleware.LanguageDetector)
-      .init({
-        // Basic configuration
-        fallbackLng: 'en',
-        lng: 'en',
-        supportedLngs,
-        
-        // Debug mode (disable in production)
-        debug: process.env.NODE_ENV === 'development',
-        
-        // Backend options - simplified
-        backend: {
-          loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
-          addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json'),
-          debug: process.env.NODE_ENV === 'development'
-        },
-        
-        // Language detection options
-        detection: {
-          order: ['querystring', 'cookie', 'header', 'session'],
-          caches: ['cookie'],
-          cookieOptions: {
-            path: '/',
-            sameSite: 'strict',
-            secure: process.env.NODE_ENV === 'production',
-            httpOnly: false
-          }
-        },
-        
-        // Interpolation options
-        interpolation: {
-          escapeValue: false
-        },
-        
-        // Namespaces
-        ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home'],
-        defaultNS: 'common',
-        
-        // Resource loading options
-        load: 'all',
-        
-        // Preload languages
-        preload: supportedLngs,
-        
-        // Clean code options
-        cleanCode: true,
-        
-        // Performance options
-        updateMissing: process.env.NODE_ENV === 'development',
-        saveMissing: process.env.NODE_ENV === 'development',
-        
-        // Return details about translation
-        returnDetails: false,
-        
-        // Join arrays
-        joinArrays: false,
-        
-        // Return empty string for missing keys
-        returnEmptyString: false,
-        
-        // Return null for missing keys
-        returnNull: false,
-        
-        // Return objects for missing keys
-        returnObjects: false,
-        
-        // Force synchronous initialization
-        initImmediate: false,
-        
-        // Wait for backend to load resources
-        wait: true,
-        
-        // Ensure proper initialization
-        compatibilityJSON: 'v4'
-      });
+      .use(middleware.LanguageDetector);
+    
+    // Wait for initialization to complete
+    await instance.init({
+      // Basic configuration
+      fallbackLng: 'en',
+      lng: 'en',
+      supportedLngs,
       
-      console.log('✅ i18next.init completed successfully');
+      // Debug mode (disable in production)
+      debug: process.env.NODE_ENV === 'development',
+      
+      // Backend options - simplified
+      backend: {
+        loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
+        addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json'),
+        debug: process.env.NODE_ENV === 'development'
+      },
+      
+      // Language detection options
+      detection: {
+        order: ['querystring', 'cookie', 'header', 'session'],
+        caches: ['cookie'],
+        cookieOptions: {
+          path: '/',
+          sameSite: 'strict',
+          secure: process.env.NODE_ENV === 'production',
+          httpOnly: false
+        }
+      },
+      
+      // Interpolation options
+      interpolation: {
+        escapeValue: false
+      },
+      
+      // Namespaces
+      ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home'],
+      defaultNS: 'common',
+      
+      // Resource loading options
+      load: 'all',
+      
+      // Preload languages
+      preload: supportedLngs,
+      
+      // Clean code options
+      cleanCode: true,
+      
+      // Performance options
+      updateMissing: process.env.NODE_ENV === 'development',
+      saveMissing: process.env.NODE_ENV === 'development',
+      
+      // Return details about translation
+      returnDetails: false,
+      
+      // Join arrays
+      joinArrays: false,
+      
+      // Return empty string for missing keys
+      returnEmptyString: false,
+      
+      // Return null for missing keys
+      returnNull: false,
+      
+      // Return objects for missing keys
+      returnObjects: false,
+      
+      // Force synchronous initialization
+      initImmediate: false,
+      
+      // Wait for backend to load resources
+      wait: true,
+      
+      // Ensure proper initialization
+      compatibilityJSON: 'v4'
+    });
+      
+    console.log('✅ i18next.init completed successfully');
+    return instance;
 
   } catch (error) {
     console.error('❌ i18n initialization failed:', error);
     console.warn('⚠️ i18n initialization failed, using minimal config:', error.message);
     
     // Minimal fallback configuration
-    return i18next
+    const fallbackInstance = i18next
       .use(Backend)
-      .use(middleware.LanguageDetector)
-      .init({
-        fallbackLng: 'en',
-        lng: 'en',
-        supportedLngs: ['en'],
-        debug: false,
-        backend: {
-          loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
-          addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json')
-        },
-        detection: {
-          order: ['querystring', 'cookie', 'header', 'session'],
-          caches: ['cookie']
-        },
-        interpolation: { escapeValue: false },
-        ns: ['common'],
-        defaultNS: 'common',
-        load: 'languageOnly',
-        preload: ['en'],
-        cleanCode: true,
-        updateMissing: false,
-        saveMissing: false,
-        returnDetails: false,
-        joinArrays: false,
-        returnEmptyString: false,
-        returnNull: false,
-        returnObjects: false
-      });
+      .use(middleware.LanguageDetector);
+    
+    await fallbackInstance.init({
+      fallbackLng: 'en',
+      lng: 'en',
+      supportedLngs: ['en'],
+      debug: false,
+      backend: {
+        loadPath: join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
+        addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json')
+      },
+      detection: {
+        order: ['querystring', 'cookie', 'header', 'session'],
+        caches: ['cookie']
+      },
+      interpolation: { escapeValue: false },
+      ns: ['common'],
+      defaultNS: 'common',
+      load: 'languageOnly',
+      preload: ['en'],
+      cleanCode: true,
+      updateMissing: false,
+      saveMissing: false,
+      returnDetails: false,
+      joinArrays: false,
+      returnEmptyString: false,
+      returnNull: false,
+      returnObjects: false
+    });
+    
+    return fallbackInstance;
   }
 }
 
-// Initialize i18next synchronously
+// Initialize i18next asynchronously and export the Promise
 console.log('🚀 About to call initializeI18n()...');
-let i18nInstance;
-try {
-  i18nInstance = initializeI18n();
-  console.log('✅ initializeI18n() completed, instance:', typeof i18nInstance);
-} catch (error) {
-  console.error('❌ CRITICAL ERROR during i18n initialization:', error);
-  throw error;
-}
+const i18nPromise = initializeI18n();
 
-// Log initialization status and test loading
-console.log('✅ i18next initialized with languages:', i18nInstance.languages || ['en']);
-console.log('📚 Available namespaces:', i18nInstance.options?.ns || ['common']);
-console.log('🌍 Supported languages:', i18nInstance.options?.supportedLngs || ['en']);
-
-// Test if translations are loading properly
-try {
-  if (i18nInstance && typeof i18nInstance.t === 'function') {
-    const testEn = i18nInstance.t('dataRetrieved', { lng: 'en', ns: 'api' });
-    const testFr = i18nInstance.t('hero.badge', { lng: 'fr', ns: 'home' });
-    console.log('✅ Translation test - EN:', testEn, 'FR:', testFr);
-  } else {
-    console.warn('⚠️ i18nInstance not properly initialized for testing');
-  }
-} catch (error) {
-  console.warn('⚠️ Translation test failed:', error.message);
-}
-
-export default i18nInstance;
+// Export the Promise - consumers must await it
+export default i18nPromise;
 export { middleware };
+
+// For backward compatibility, also export a function to get the instance
+export async function getI18nInstance() {
+  return await i18nPromise;
+}
