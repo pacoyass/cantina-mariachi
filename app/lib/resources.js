@@ -239,36 +239,100 @@ export const uiResources = {
       statuses: { pending: 'Pending', preparing: 'Preparing', delivering: 'Delivering', completed: 'Completed', cancelled: 'Cancelled' }
     },
     reservations: {
-      title: 'Reservations',
-      subtitle: 'Book a table and check availability.',
-      form: {
-        name: 'Full name',
-        phone: 'Phone number',
+      hero: {
+        title: 'Book a Table',
+        subtitle: 'Book a table at our restaurant and enjoy an authentic Mexican dining experience',
         date: 'Date',
         time: 'Time',
-        guests: 'Guests',
-        notes: 'Notes (optional)',
-        placeholderName: 'e.g. Alex Carter',
-        placeholderPhone: 'e.g. +1 555 123-4567',
-        submit: 'Reserve'
+        partySize: 'Party Size',
+        name: 'Name',
+        email: 'Email',
+        phone: 'Phone',
+        notes: 'Special Notes',
+        bookNow: 'Book Now',
+        available: 'Available',
+        unavailable: 'Unavailable',
+        selectDate: 'Select Date',
+        selectTime: 'Select Time',
+        selectPartySize: 'Select Party Size'
+      },
+      form: {
+        required: 'Required',
+        invalidEmail: 'Invalid email',
+        invalidPhone: 'Invalid phone number',
+        minPartySize: 'Minimum: 1 person',
+        maxPartySize: 'Maximum: 20 people',
+        submit: 'Submit Reservation',
+        submitting: 'Submitting...',
+        success: 'Reservation successful!',
+        error: 'Error making reservation'
+      },
+      availability: {
+        title: 'Available Times',
+        today: 'Today',
+        tomorrow: 'Tomorrow',
+        thisWeek: 'This Week',
+        nextWeek: 'Next Week',
+        noAvailability: 'No times available',
+        loading: 'Loading...'
+      },
+      confirmation: {
+        title: 'Reservation Confirmation',
+        message: 'A confirmation will be sent to your email',
+        reference: 'Reference Number',
+        date: 'Date',
+        time: 'Time',
+        partySize: 'Party Size',
+        location: 'Location',
+        contact: 'Contact Information'
       }
     },
     account: {
-      title: 'My Account',
-      subtitle: 'Manage your profile and preferences.',
-      profile: {
-        name: 'Full name',
-        email: 'Email',
-        phone: 'Phone',
-        save: 'Save changes'
+      hero: {
+        title: 'My Account',
+        subtitle: 'Manage your personal information, orders, and reservations',
+        welcome: 'Hello, {{name}}'
       },
-      security: {
-        heading: 'Security',
-        current: 'Current password',
-        new: 'New password',
-        confirm: 'Confirm new password',
-        update: 'Update password'
-      }
+      profile: {
+        title: 'Profile',
+        personalInfo: 'Personal Information',
+        contactInfo: 'Contact Information',
+        preferences: 'Preferences',
+        save: 'Save Changes',
+        saved: 'Saved',
+        saving: 'Saving...'
+      },
+      orders: {
+        title: 'My Orders',
+        recent: 'Recent Orders',
+        all: 'All Orders',
+        status: 'Status',
+        date: 'Date',
+        total: 'Total',
+        viewDetails: 'View Details',
+        reorder: 'Reorder',
+        track: 'Track Order',
+        noOrders: 'No orders yet'
+      },
+      reservations: {
+        title: 'My Reservations',
+        upcoming: 'Upcoming Reservations',
+        past: 'Past Reservations',
+        cancel: 'Cancel Reservation',
+        modify: 'Modify Reservation',
+        noReservations: 'No reservations'
+      },
+      settings: {
+        title: 'Settings',
+        notifications: 'Notifications',
+        language: 'Language',
+        currency: 'Currency',
+        timezone: 'Timezone',
+        privacy: 'Privacy',
+        security: 'Security'
+      },
+      logout: 'Logout',
+      deleteAccount: 'Delete Account'
     }
   },
   it: {
@@ -351,7 +415,7 @@ export const uiResources = {
         desc: 'Prenota per 8+ persone o organizza il catering per l\'ufficio in pochi minuti.',
         plan: 'Organizza evento',
         catering: 'Catering',
-        q1: { question: 'Offrite menu fissi?', answer: 'Sì — menu per gruppi da 8 a 30 persone, con opzioni vegetarianhe.' },
+        q1: { question: 'Offrite menu fissi?', answer: 'Sì — menús para gruppi da 8 a 30 persone, con opzioni vegetarianhe.' },
         q2: { question: 'Con quanto anticipo prenotare?', answer: 'Consigliamo 48 ore; in giornata può essere possibile fuori dalle ore di punta.' }
       },
       offers: {
@@ -436,16 +500,14 @@ export const uiResources = {
         searchPlaceholder: 'Cerca piatti…',
         search: 'Cerca',
         sortBy: 'Ordina per',
-        sort: { popular: 'Più popolari', priceLow: 'Prezzo: crescente', priceHigh: 'Prezzo: decrescente', newest: 'Più recenti' },
-        add: 'Aggiungi all\'ordine',
-        unavailable: 'Non disponibile',
-        noItems: 'Nessun elemento trovato.'
+        sort: { popular: 'الأكثر رواجًا', priceLow: 'السعر: من الأقل إلى الأعلى', priceHigh: 'السعر: من الأعلى إلى الأقل', newest: 'الأحدث' },
+        add: 'أضف إلى الطلب',
+        unavailable: 'غير متاح',
+        noItems: 'لا توجد عناصر.'
       },
-      categories: 'Categorie',
-      categoriesAll: 'Tutte',
-      filters: { dietary: 'Diete', vegetarian: 'Vegetariano', vegan: 'Vegano', glutenFree: 'Senza glutine', spicy: 'Piccante' },
-      results: 'Mostrati {{count}} elementi',
-      badges: { new: 'Nuovo', popular: 'Popolare' }
+      categories: 'الفئات', categoriesAll: 'الكل',
+      filters: { dietary: 'أنظمة غذائية', vegetarian: 'نباتي', vegan: 'نباتي صارم', glutenFree: 'خالٍ من الغلوتين', spicy: 'حار' },
+      results: 'عرض {{count}} عنصر', badges: { new: 'جديد', popular: 'شائع' }
     }
   },
   ar: {
@@ -1604,5 +1666,101 @@ export const uiResources = {
       results: 'Mostrando {{count}} itens',
       badges: { new: 'Novo', popular: 'Popular' }
     }
+  },
+  reservations: {
+    hero: {
+      title: 'Book a Table',
+      subtitle: 'Book a table at our restaurant and enjoy an authentic Mexican dining experience',
+      date: 'Date',
+      time: 'Time',
+      partySize: 'Party Size',
+      name: 'Name',
+      email: 'Email',
+      phone: 'Phone',
+      notes: 'Special Notes',
+      bookNow: 'Book Now',
+      available: 'Available',
+      unavailable: 'Unavailable',
+      selectDate: 'Select Date',
+      selectTime: 'Select Time',
+      selectPartySize: 'Select Party Size'
+    },
+    form: {
+      required: 'Required',
+      invalidEmail: 'Invalid email',
+      invalidPhone: 'Invalid phone number',
+      minPartySize: 'Minimum: 1 person',
+      maxPartySize: 'Maximum: 20 people',
+      submit: 'Submit Reservation',
+      submitting: 'Submitting...',
+      success: 'Reservation successful!',
+      error: 'Error making reservation'
+    },
+    availability: {
+      title: 'Available Times',
+      today: 'Today',
+      tomorrow: 'Tomorrow',
+      thisWeek: 'This Week',
+      nextWeek: 'Next Week',
+      noAvailability: 'No times available',
+      loading: 'Loading...'
+    },
+    confirmation: {
+      title: 'Reservation Confirmation',
+      message: 'A confirmation will be sent to your email',
+      reference: 'Reference Number',
+      date: 'Date',
+      time: 'Time',
+      partySize: 'Party Size',
+      location: 'Location',
+      contact: 'Contact Information'
+    }
+  },
+  account: {
+    hero: {
+      title: 'My Account',
+      subtitle: 'Manage your personal information, orders, and reservations',
+      welcome: 'Hello, {{name}}'
+    },
+    profile: {
+      title: 'Profile',
+      personalInfo: 'Personal Information',
+      contactInfo: 'Contact Information',
+      preferences: 'Preferences',
+      save: 'Save Changes',
+      saved: 'Saved',
+      saving: 'Saving...'
+    },
+    orders: {
+      title: 'My Orders',
+      recent: 'Recent Orders',
+      all: 'All Orders',
+      status: 'Status',
+      date: 'Date',
+      total: 'Total',
+      viewDetails: 'View Details',
+      reorder: 'Reorder',
+      track: 'Track Order',
+      noOrders: 'No orders yet'
+    },
+    reservations: {
+      title: 'My Reservations',
+      upcoming: 'Upcoming Reservations',
+      past: 'Past Reservations',
+      cancel: 'Cancel Reservation',
+      modify: 'Modify Reservation',
+      noReservations: 'No reservations'
+    },
+    settings: {
+      title: 'Settings',
+      notifications: 'Notifications',
+      language: 'Language',
+      currency: 'Currency',
+      timezone: 'Timezone',
+      privacy: 'Privacy',
+      security: 'Security'
+    },
+    logout: 'Logout',
+    deleteAccount: 'Delete Account'
   }
 };
