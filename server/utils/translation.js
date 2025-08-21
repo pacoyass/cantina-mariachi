@@ -1,4 +1,4 @@
-import i18next from '../config/i18n.js';
+import i18nPromise from '../config/i18n.js';
 
 /**
  * Translation utility class for backend operations
@@ -14,11 +14,12 @@ export class TranslationService {
    * @param {string} options.ns - Namespace (if not included in key)
    * @returns {string} Translated string
    */
-  static t(key, options = {}) {
+  static async t(key, options = {}) {
     const { lng = 'en', interpolation = {}, ns } = options;
     
     try {
-      return i18next.t(key, {
+      const i18n = await i18nPromise;
+      return i18n.t(key, {
         lng,
         ns,
         ...interpolation
@@ -37,10 +38,10 @@ export class TranslationService {
    * @param {string} namespace - Namespace (optional)
    * @returns {string} Translated string
    */
-  static tReq(req, key, interpolation = {}, namespace = null) {
+  static async tReq(req, key, interpolation = {}, namespace = null) {
     const language = req.language || req.lng || 'en';
     
-    return this.t(key, {
+    return await this.t(key, {
       lng: language,
       interpolation,
       ns: namespace
@@ -53,12 +54,12 @@ export class TranslationService {
    * @param {Object} options - Translation options
    * @returns {Object} Object with keys as properties and translations as values
    */
-  static tMultiple(keys, options = {}) {
+  static async tMultiple(keys, options = {}) {
     const result = {};
     
-    keys.forEach(key => {
-      result[key] = this.t(key, options);
-    });
+    for (const key of keys) {
+      result[key] = await this.t(key, options);
+    }
     
     return result;
   }
@@ -70,8 +71,8 @@ export class TranslationService {
    * @param {Object} interpolation - Variables for interpolation
    * @returns {string} Translated message
    */
-  static tResponse(type, language = 'en', interpolation = {}) {
-    return this.t(`common:${type}`, {
+  static async tResponse(type, language = 'en', interpolation = {}) {
+    return await this.t(`common:${type}`, {
       lng: language,
       interpolation
     });
@@ -84,8 +85,8 @@ export class TranslationService {
    * @param {Object} interpolation - Variables for interpolation (field, min, max, etc.)
    * @returns {string} Translated validation message
    */
-  static tValidation(validationType, language = 'en', interpolation = {}) {
-    return this.t(`validation:${validationType}`, {
+  static async tValidation(validationType, language = 'en', interpolation = {}) {
+    return await this.t(`validation:${validationType}`, {
       lng: language,
       interpolation
     });
@@ -98,8 +99,8 @@ export class TranslationService {
    * @param {Object} interpolation - Variables for interpolation
    * @returns {string} Translated auth message
    */
-  static tAuth(authType, language = 'en', interpolation = {}) {
-    return this.t(`auth:${authType}`, {
+  static async tAuth(authType, language = 'en', interpolation = {}) {
+    return await this.t(`auth:${authType}`, {
       lng: language,
       interpolation
     });
@@ -112,8 +113,8 @@ export class TranslationService {
    * @param {Object} interpolation - Variables for interpolation
    * @returns {string} Translated email content
    */
-  static tEmail(emailType, language = 'en', interpolation = {}) {
-    return this.t(`email:${emailType}`, {
+  static async tEmail(emailType, language = 'en', interpolation = {}) {
+    return await this.t(`email:${emailType}`, {
       lng: language,
       interpolation
     });
@@ -125,16 +126,26 @@ export class TranslationService {
    * @param {string} language - Language code
    * @returns {boolean} True if translation exists
    */
-  static exists(key, language = 'en') {
-    return i18next.exists(key, { lng: language });
+  static async exists(key, language = 'en') {
+    try {
+      const i18n = await i18nPromise;
+      return i18n.exists(key, { lng: language });
+    } catch (error) {
+      return false;
+    }
   }
 
   /**
    * Get available languages
    * @returns {Array<string>} Array of supported language codes
    */
-  static getSupportedLanguages() {
-    return i18next.options.supportedLngs || ['en'];
+  static async getSupportedLanguages() {
+    try {
+      const i18n = await i18nPromise;
+      return i18n.options.supportedLngs || ['en'];
+    } catch (error) {
+      return ['en'];
+    }
   }
 
   /**
@@ -154,11 +165,11 @@ export class TranslationService {
    * @param {string} namespace - Namespace (defaults to 'common')
    * @returns {string} Formatted error message
    */
-  static formatError(req, errorKey, interpolation = {}, namespace = 'common') {
+  static async formatError(req, errorKey, interpolation = {}, namespace = 'common') {
     const language = this.getCurrentLanguage(req);
     const key = namespace ? `${namespace}:${errorKey}` : errorKey;
     
-    return this.t(key, {
+    return await this.t(key, {
       lng: language,
       interpolation
     });
@@ -169,22 +180,22 @@ export class TranslationService {
  * Middleware to add translation helpers to request object
  */
 export const addTranslationHelpers = (req, res, next) => {
-  // Add translation method to request
-  req.t = (key, interpolation = {}, namespace = null) => {
-    return TranslationService.tReq(req, key, interpolation, namespace);
+  // Add translation method to request (async)
+  req.t = async (key, interpolation = {}, namespace = null) => {
+    return await TranslationService.tReq(req, key, interpolation, namespace);
   };
 
-  // Add specific helper methods
-  req.tAuth = (key, interpolation = {}) => {
-    return TranslationService.tAuth(key, TranslationService.getCurrentLanguage(req), interpolation);
+  // Add specific helper methods (async)
+  req.tAuth = async (key, interpolation = {}) => {
+    return await TranslationService.tAuth(key, TranslationService.getCurrentLanguage(req), interpolation);
   };
 
-  req.tValidation = (key, interpolation = {}) => {
-    return TranslationService.tValidation(key, TranslationService.getCurrentLanguage(req), interpolation);
+  req.tValidation = async (key, interpolation = {}) => {
+    return await TranslationService.tValidation(key, TranslationService.getCurrentLanguage(req), interpolation);
   };
 
-  req.tResponse = (key, interpolation = {}) => {
-    return TranslationService.tResponse(key, TranslationService.getCurrentLanguage(req), interpolation);
+  req.tResponse = async (key, interpolation = {}) => {
+    return await TranslationService.tResponse(key, TranslationService.getCurrentLanguage(req), interpolation);
   };
 
   next();

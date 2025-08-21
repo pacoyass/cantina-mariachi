@@ -13,7 +13,7 @@ import dotenv from 'dotenv';
 import crypto from 'node:crypto';
 import swaggerUi from 'swagger-ui-express';
 import { doubleCsrf } from 'csrf-csrf';
-import i18next, { middleware as i18nextMiddleware } from './config/i18n.js';
+import i18nPromise, { middleware as i18nextMiddleware } from './config/i18n.js';
 dotenv.config();
 
 export const app = express();
@@ -117,36 +117,68 @@ app.use(helmet.hsts({
 
 app.use(cors({
 	origin: (origin, cb) => {
-		const origins = (process.env.CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
-		if (!origins.length) return cb(null, true);
+		// Allow requests with no origin (like mobile apps or curl requests)
 		if (!origin) return cb(null, true);
-		return cb(null, origins.includes(origin));
+		
+		// Allow localhost and your domain
+		const allowedOrigins = [
+			'http://localhost:3000',
+			'http://localhost:5173',
+			'http://localhost:4173',
+			'http://127.0.0.1:3000',
+			'http://127.0.0.1:5173',
+			'http://127.0.0.1:4173'
+		];
+		
+		if (allowedOrigins.includes(origin)) {
+			return cb(null, true);
+		}
+		
+		cb(new Error('Not allowed by CORS'));
 	},
-	credentials: true,
+	credentials: true
 }));
 
-if (process.env.ENABLE_EXPRESS_SESSION === 'true') {
-	app.use(session({
-		secret: process.env.SESSION_SECRET || process.env.COOKIE_SECRET || 'dev-session-secret',
-		resave: false,
-		saveUninitialized: false,
-		cookie: { secure: process.env.NODE_ENV === 'production', sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax' },
-	}));
-}
-
-app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '1mb' }));
-if (process.env.ALLOW_URLENCODED === '1') {
-	app.use(express.urlencoded({ extended: true, limit: process.env.JSON_BODY_LIMIT || '1mb' }));
-}
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
-// Add i18next middleware for translation support
-if (i18next && typeof i18next.t === 'function') {
-  app.use(i18nextMiddleware.handle(i18next));
-  console.log('✅ i18next middleware enabled');
-} else {
-  console.warn('⚠️ i18next not fully initialized, skipping middleware');
-}
+// Initialize i18n and add middleware
+let i18nInstance = null;
+
+// Initialize i18n asynchronously
+(async () => {
+  try {
+    console.log('🔄 Waiting for i18n initialization...');
+    i18nInstance = await i18nPromise;
+    console.log('✅ i18n initialized successfully');
+    
+    // Add i18next middleware for translation support
+    if (i18nInstance && typeof i18nInstance.t === 'function') {
+      app.use(i18nextMiddleware.handle(i18nInstance));
+      console.log('✅ i18next middleware enabled');
+      
+      // Log successful initialization details
+      console.log('✅ i18next initialized with languages:', i18nInstance.languages || ['en']);
+      console.log('📚 Available namespaces:', i18nInstance.options?.ns || ['common']);
+      console.log('🌍 Supported languages:', i18nInstance.options?.supportedLngs || ['en']);
+      
+      // Test if translations are loading properly
+      try {
+        const testEn = i18nInstance.t('dataRetrieved', { lng: 'en', ns: 'api' });
+        const testFr = i18nInstance.t('hero.badge', { lng: 'fr', ns: 'home' });
+        console.log('✅ Translation test - EN:', testEn, 'FR:', testFr);
+      } catch (error) {
+        console.warn('⚠️ Translation test failed:', error.message);
+      }
+    } else {
+      console.warn('⚠️ i18nInstance not properly initialized for middleware');
+    }
+  } catch (error) {
+    console.error('❌ Failed to initialize i18n:', error);
+    console.warn('⚠️ Continuing without i18n middleware');
+  }
+})();
 
 // Import and add translation helpers to request object
 const { addTranslationHelpers } = await import('./utils/translation.js');
