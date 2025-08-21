@@ -905,6 +905,20 @@ export const uiResources = {
       languageUpdated: 'Idioma actualizado exitosamente',
       languageReset: 'Idioma restablecido al predeterminado exitosamente'
     },
+    events: {
+      heading: 'Eventos y Catering',
+      desc: 'Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.',
+      plan: 'Planificar Evento',
+      catering: 'Servicio de Catering',
+      q1: {
+        question: '¿Cuál es el tamaño mínimo del grupo para eventos?',
+        answer: 'Nuestro tamaño mínimo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares.'
+      },
+      q2: {
+        question: '¿Ofrecen opciones vegetarianas y veganas?',
+        answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según sus necesidades dietéticas.'
+      }
+    },
     auth: {
       loginSuccess: 'Connexion réussie',
       loginFailed: 'Échec de la connexion',
