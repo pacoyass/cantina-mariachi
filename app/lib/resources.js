@@ -27,6 +27,20 @@ export const uiResources = {
       languageUpdated: 'Language updated successfully',
       languageReset: 'Language reset to default successfully'
     },
+    events: {
+      heading: 'Events & Catering',
+      desc: 'We organize special events and catering for large groups. From birthdays to corporate events.',
+      plan: 'Plan Event',
+      catering: 'Catering Service',
+      q1: {
+        question: 'What is the minimum group size for events?',
+        answer: 'Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations.'
+      },
+      q2: {
+        question: 'Do you offer vegetarian and vegan options?',
+        answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
+      }
+    },
     auth: {
       loginSuccess: 'Login successful',
       loginFailed: 'Login failed',
@@ -465,6 +479,20 @@ export const uiResources = {
       dataRetrieved: 'تم استرجاع البيانات بنجاح',
       languageUpdated: 'تم تحديث اللغة بنجاح',
       languageReset: 'تم إعادة تعيين اللغة إلى الافتراضي بنجاح'
+    },
+    events: {
+      heading: 'الفعاليات والضيافة',
+      desc: 'ننظم فعاليات خاصة وخدمات ضيافة للمجموعات الكبيرة. من أعياد الميلاد إلى الفعاليات المؤسسية.',
+      plan: 'تخطيط الفعالية',
+      catering: 'خدمة الضيافة',
+      q1: {
+        question: 'ما هو الحد الأدنى لحجم المجموعة للفعاليات؟',
+        answer: 'الحد الأدنى لحجم المجموعة للفعاليات هو 20 شخصاً. للمجموعات الأصغر، نوصي بالحجوزات العادية.'
+      },
+      q2: {
+        question: 'هل تقدمون خيارات نباتية ونباتية صرفة؟',
+        answer: 'نعم، لدينا قائمة كاملة من الخيارات النباتية والنباتية الصرفة. يمكننا أيضاً تخصيص القوائم حسب احتياجاتكم الغذائية.'
+      }
     },
     auth: {
       loginSuccess: 'تم تسجيل الدخول بنجاح',
@@ -1357,6 +1385,20 @@ export const uiResources = {
       languageUpdated: 'Langue mise à jour avec succès',
       languageReset: 'Langue réinitialisée par défaut avec succès'
     },
+    events: {
+      heading: 'Événements et Traiteur',
+      desc: 'Nous organisons des événements spéciaux et des services de traiteur pour de grands groupes. Des anniversaires aux événements d\'entreprise.',
+      plan: 'Planifier l\'Événement',
+      catering: 'Service de Traiteur',
+      q1: {
+        question: 'Quelle est la taille minimale du groupe pour les événements ?',
+        answer: 'Notre taille minimale de groupe pour les événements est de 20 personnes. Pour les groupes plus petits, nous recommandons des réservations régulières.'
+      },
+      q2: {
+        question: 'Proposez-vous des options végétariennes et véganes ?',
+        answer: 'Oui, nous avons un menu complet d\'options végétariennes et véganes. Nous pouvons également personnaliser les menus selon vos besoins alimentaires.'
+      }
+    },
     auth: {
       loginSuccess: 'Connexion réussie',
       loginFailed: 'Échec de la connexion',
@@ -1794,6 +1836,20 @@ export const uiResources = {
       dataRetrieved: 'Daten erfolgreich abgerufen',
       languageUpdated: 'Sprache erfolgreich aktualisiert',
       languageReset: 'Sprache erfolgreich auf Standard zurückgesetzt'
+    },
+    events: {
+      heading: 'Veranstaltungen & Catering',
+      desc: 'Wir organisieren besondere Veranstaltungen und Catering für große Gruppen. Von Geburtstagen bis zu Firmenveranstaltungen.',
+      plan: 'Veranstaltung Planen',
+      catering: 'Catering-Service',
+      q1: {
+        question: 'Was ist die Mindestgröße für Veranstaltungen?',
+        answer: 'Unsere Mindestgruppengröße für Veranstaltungen beträgt 20 Personen. Für kleinere Gruppen empfehlen wir reguläre Reservierungen.'
+      },
+      q2: {
+        question: 'Bieten Sie vegetarische und vegane Optionen?',
+        answer: 'Ja, wir haben ein vollständiges Menü mit vegetarischen und veganen Optionen. Wir können auch Menüs nach Ihren Ernährungsbedürfnissen anpassen.'
+      }
     },
     auth: {
       loginSuccess: 'Anmeldung erfolgreich',
@@ -2234,6 +2290,20 @@ export const uiResources = {
       languageUpdated: 'Lingua aggiornata con successo',
       languageReset: 'Lingua reimpostata al valore predefinito con successo'
     },
+    events: {
+      heading: 'Eventi e Catering',
+      desc: 'Organizziamo eventi speciali e servizi di catering per grandi gruppi. Dai compleanni agli eventi aziendali.',
+      plan: 'Pianifica Evento',
+      catering: 'Servizio di Catering',
+      q1: {
+        question: 'Qual è la dimensione minima del gruppo per gli eventi?',
+        answer: 'La nostra dimensione minima del gruppo per gli eventi è di 20 persone. Per gruppi più piccoli, raccomandiamo prenotazioni regolari.'
+      },
+      q2: {
+        question: 'Offrite opzioni vegetariane e vegane?',
+        answer: 'Sì, abbiamo un menu completo di opzioni vegetariane e vegane. Possiamo anche personalizzare i menu secondo le vostre esigenze alimentari.'
+      }
+    },
     auth: {
       loginSuccess: 'Accesso effettuato con successo',
       loginFailed: 'Accesso fallito',
@@ -2672,6 +2742,20 @@ export const uiResources = {
       dataRetrieved: 'Dados recuperados com sucesso',
       languageUpdated: 'Idioma atualizado com sucesso',
       languageReset: 'Idioma redefinido para o padrão com sucesso'
+    },
+    events: {
+      heading: 'Eventos e Catering',
+      desc: 'Organizamos eventos especiais e serviços de catering para grandes grupos. Desde aniversários até eventos corporativos.',
+      plan: 'Planejar Evento',
+      catering: 'Serviço de Catering',
+      q1: {
+        question: 'Qual é o tamanho mínimo do grupo para eventos?',
+        answer: 'Nosso tamanho mínimo de grupo para eventos é de 20 pessoas. Para grupos menores, recomendamos reservas regulares.'
+      },
+      q2: {
+        question: 'Vocês oferecem opções vegetarianas e veganas?',
+        answer: 'Sim, temos um menu completo de opções vegetarianas e veganas. Também podemos personalizar menus de acordo com suas necessidades alimentares.'
+      }
     },
     auth: {
       loginSuccess: 'Login realizado com sucesso',
