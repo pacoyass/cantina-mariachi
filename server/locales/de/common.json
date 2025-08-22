@@ -19,5 +19,8 @@
   "serverError": "Serverfehler aufgetreten",
   "maintenance": "Server ist in Wartung",
   "rateLimited": "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",
-  "timeout": "Zeitüberschreitung der Anfrage"
+  "timeout": "Zeitüberschreitung der Anfrage",
+  "dataRetrieved": "Daten erfolgreich abgerufen",
+  "languageUpdated": "Sprache erfolgreich aktualisiert",
+  "languageReset": "Sprache erfolgreich auf Standard zurückgesetzt"
 }

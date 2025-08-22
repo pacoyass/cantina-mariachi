@@ -19,5 +19,8 @@
   "serverError": "Erro do servidor",
   "maintenance": "O servidor está em manutenção",
   "rateLimited": "Muitas solicitações. Tente novamente mais tarde.",
-  "timeout": "Timeout da solicitação"
+  "timeout": "Timeout da solicitação",
+  "dataRetrieved": "Dados recuperados com sucesso",
+  "languageUpdated": "Idioma atualizado com sucesso",
+  "languageReset": "Idioma redefinido para padrão com sucesso"
 }
