@@ -11,18 +11,17 @@ import { rtlLngs } from './lib/i18n.js';
  */
 startTransition(async () => {
   try {
-    // Get language from server context (SSR) or detect on client
-    const serverLang = window.__REACT_ROUTER_DATA__?.context?.lng;
+    // Get language from various sources (React Router loader data is handled in root.jsx)
     const urlLang = new URLSearchParams(window.location.search).get('lng');
     const storedLang = localStorage.getItem('lng');
     const cookieLang = document.cookie.split('; ').find(row => row.startsWith('i18next='))?.split('=')[1];
     
-    // Language priority: URL > Server > Cookie > localStorage > Default
-    const lng = urlLang || serverLang || cookieLang || storedLang || 'en';
+    // Language priority: URL > Cookie > localStorage > Default
+    // Note: Server language is accessed through React Router loader in root.jsx
+    const lng = urlLang || cookieLang || storedLang || 'en';
     
     console.log('🌍 Client language detection:', {
       url: urlLang,
-      server: serverLang,
       cookie: cookieLang,
       stored: storedLang,
       final: lng
