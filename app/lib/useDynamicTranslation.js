@@ -24,7 +24,7 @@ export function useDynamicTranslation() {
     if (i18n.language && i18n.language !== 'en') {
       try {
         localStorage.setItem('lng', i18n.language);
-        document.cookie = `i18next=${i18n.language}; path=/; max-age=31536000; SameSite=Lax`;
+        // Note: Server handles cookie updates via httpOnly cookies
         
         // Update URL if not already set
         const url = new URL(window.location.href);
@@ -139,13 +139,7 @@ export function useLanguageSwitcher() {
         } catch {}
       }
       
-      // Update cookie (only if different)
-      const currentCookie = document.cookie.split('; ').find(row => row.startsWith('i18next='))?.split('=')[1];
-      if (currentCookie !== code) {
-        try {
-          document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`;
-        } catch {}
-      }
+      // Note: Server handles cookie updates via httpOnly cookies
       
       // Update URL last (only if different)
       const currentUrl = new URL(window.location.href);

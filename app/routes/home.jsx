@@ -445,7 +445,7 @@ export default function Home() {
                   {t('cta.socialProof')}
                 </div>
                 <div className="text-xs text-primary mt-1" aria-live="polite">
-                  {t('cta.limited')} · ⏰ <Countdown to={Date.now() + 1000 * 60 * 60 * 4} />
+                  {t('cta.limited')} · ⏰ <Countdown to={4 * 60 * 60 * 1000} />
                 </div>
               </div>
               <div className="flex gap-3">
@@ -664,13 +664,25 @@ function PopularItemCard({ item, idx, t, locale }) {
 
 function CarouselTestimonials({ testimonials }) {
   const [idx, setIdx] = useState(0)
-  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : true
+  const [isMounted, setIsMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(true) // Default to mobile for SSR
+  
   useEffect(() => {
-    if (!isMobile) return
+    setIsMounted(true)
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  
+  useEffect(() => {
+    if (!isMobile || !isMounted) return
     const id = setInterval(() => setIdx(i => (i + 1) % Math.max(testimonials.length, 1)), 4000)
     return () => clearInterval(id)
-  }, [isMobile, testimonials?.length])
+  }, [isMobile, testimonials?.length, isMounted])
+  
   const slice = isMobile ? testimonials.slice(idx, idx + 1) : testimonials
+  
   return (
     <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-3'}`}>
       {slice.map((t) => (
@@ -688,7 +700,7 @@ function CarouselTestimonials({ testimonials }) {
                       <Star key={i} className={`size-3 ${i < Number(t.rating || 0) ? 'fill-current' : ''}`} />
                     ))}
                   </div>
-                  <div className="text-xs text-muted-foreground">{new Date(t.date).toLocaleDateString()}</div>
+                  <div className="text-xs text-muted-foreground">{new Date(t.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">{t.content} <Link to="/reviews" className="underline">Read more</Link></div>
               </div>
@@ -710,21 +722,33 @@ function ProgressBar({ value, max }) {
 }
 
 function Countdown({ to }) {
-  const targetRef = useRef(to);
-  const [ms, setMs] = useState(Math.max(0, targetRef.current - Date.now()));
+  const [ms, setMs] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+  
   useEffect(() => {
-    targetRef.current = to;
-    setMs(Math.max(0, targetRef.current - Date.now()));
+    setIsMounted(true);
+    // Set initial countdown only after mounting to prevent hydration mismatch
+    setMs(to);
   }, [to]);
+  
   useEffect(() => {
+    if (!isMounted) return;
+    
     const id = setInterval(() => setMs((prev) => Math.max(0, prev - 1000)), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [isMounted]);
+  
+  // Don't render anything during SSR to prevent hydration mismatch
+  if (!isMounted) {
+    return <span>--d --:--:--</span>;
+  }
+  
   const total = ms / 1000;
   const d = Math.floor(total / 86400);
   const h = Math.floor((total % 86400) / 3600);
   const m = Math.floor((total % 3600) / 60);
   const s = Math.floor(total % 60);
+  
   return (<span>{d}d {String(h).padStart(2, '0')}:{String(m).padStart(2, '0')}:{String(s).padStart(2, '0')}</span>);
 }
 
@@ -786,7 +810,7 @@ function Testimonial({ name, initials, rating, date, children }) {
                   <Star key={i} className={`size-3 ${i < Number(rating || 0) ? 'fill-current' : ''}`} />
                 ))}
               </div>
-              <div className="text-xs text-muted-foreground">{new Date(date).toLocaleDateString()}</div>
+              <div className="text-xs text-muted-foreground">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
             </div>
             <div className="text-sm text-muted-foreground mt-1">{children}</div>
           </div>
