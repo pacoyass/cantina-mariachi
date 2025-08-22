@@ -14,17 +14,18 @@ startTransition(async () => {
     // Get language from various sources (React Router loader data is handled in root.jsx)
     const urlLang = new URLSearchParams(window.location.search).get('lng');
     const storedLang = localStorage.getItem('lng');
-    const cookieLang = document.cookie.split('; ').find(row => row.startsWith('i18next='))?.split('=')[1];
+    // Note: Server sets httpOnly cookies, so we can't read them from client
+    // We'll rely on URL, localStorage, and server context instead
     
-    // Language priority: URL > Cookie > localStorage > Default
+    // Language priority: URL > localStorage > Default
     // Note: Server language is accessed through React Router loader in root.jsx
-    const lng = urlLang || cookieLang || storedLang || 'en';
+    const lng = urlLang || storedLang || 'en';
     
     console.log('🌍 Client language detection:', {
       url: urlLang,
-      cookie: cookieLang,
       stored: storedLang,
-      final: lng
+      final: lng,
+      note: 'Server cookies are httpOnly and not accessible from client'
     });
 
     // Set document attributes immediately to prevent flash
@@ -40,18 +41,15 @@ startTransition(async () => {
       await i18n.changeLanguage(lng);
     }
 
-    // Update localStorage and cookie if needed
+    // Update localStorage if needed
     if (storedLang !== lng) {
       try {
         localStorage.setItem('lng', lng);
       } catch {}
     }
     
-    if (cookieLang !== lng) {
-      try {
-        document.cookie = `i18next=${lng}; path=/; max-age=31536000; SameSite=Lax`;
-      } catch {}
-    }
+    // Note: Server handles cookie updates automatically via httpOnly cookies
+    // No need to manually set cookies on the client side
 
     // Listen for language changes and update document attributes
     i18n.on('languageChanged', (newLng) => {

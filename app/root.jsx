@@ -186,7 +186,7 @@ export function ErrorBoundary( { error } )
                             const url = new URL(window.location.href);
                             url.searchParams.set('lng', code);
                             window.history.replaceState({}, '', url.toString());
-                            try { document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
+                            // Note: Server handles cookie updates via httpOnly cookies
                           }}
                         >
                           {code.toUpperCase()}
@@ -200,7 +200,7 @@ export function ErrorBoundary( { error } )
                           const url = new URL(window.location.href);
                           url.searchParams.delete('lng');
                           window.history.replaceState({}, '', url.toString());
-                          try { document.cookie = 'i18next=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'; } catch {}
+                          // Note: Server handles cookie updates via httpOnly cookies
                         }}
                       >
                         Reset to Default
@@ -241,8 +241,7 @@ export function ErrorBoundary( { error } )
                       const url = new URL(window.location.href);
                       url.searchParams.set('lng', code);
                       window.history.replaceState({}, '', url.toString());
-                      // Update cookie
-                      try { document.cookie = `i18next=${code}; path=/; max-age=31536000; SameSite=Lax`; } catch {}
+                      // Note: Server handles cookie updates via httpOnly cookies
                     }}
                   >
                     {code.toUpperCase()}
@@ -257,8 +256,7 @@ export function ErrorBoundary( { error } )
                     const url = new URL(window.location.href);
                     url.searchParams.delete('lng');
                     window.history.replaceState({}, '', url.toString());
-                    // Clear cookie
-                    try { document.cookie = 'i18next=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'; } catch {}
+                    // Note: Server handles cookie updates via httpOnly cookies
                   }}
                 >
                   Reset to Default
