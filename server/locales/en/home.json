@@ -3,7 +3,16 @@
     "badge": "New: Rewards launch — earn points on every order",
     "title": "Authentic Mexican. <primary>Delivered fast.</primary>",
     "desc": "From street‑style tacos to slow‑cooked specialties. Order in seconds, reserve a table instantly, and track your delivery in real time — all in one place.",
-    "imageAlt": "Colorful tacos platter with fresh ingredients and vibrant salsa"
+    "imageAlt": "Colorful tacos platter with fresh ingredients and vibrant salsa",
+    "orderNow": "Order Now",
+    "reserve": "Reserve Table",
+    "browseMenu": "Browse Menu",
+    "rating": "4.9/5 from 2,400+ locals",
+    "avgTime": "25-35 min avg",
+    "card": {
+      "title": "Fresh Daily",
+      "desc": "We source ingredients from local markets every morning"
+    }
   },
   "features": {
     "title": "Why choose Cantina",
@@ -29,6 +38,94 @@
     "endsIn": "Ends in",
     "orderBundle": "Order bundle",
     "viewDetails": "View details"
+  },
+  "why": {
+    "heading": "Why choose Cantina",
+    "faster": {
+      "title": "Faster than delivery apps",
+      "desc": "Direct from our kitchen to your door"
+    },
+    "fees": {
+      "title": "No hidden fees",
+      "desc": "What you see is what you pay"
+    },
+    "oneTap": {
+      "title": "One-tap reordering",
+      "desc": "Quick reorder of your favorites"
+    },
+    "tracking": {
+      "title": "Live tracking",
+      "desc": "Real-time updates on your order"
+    },
+    "chef": {
+      "title": "Chef-crafted quality",
+      "desc": "Made with care by expert chefs"
+    },
+    "rewards": {
+      "title": "Earn rewards",
+      "desc": "Points on every order"
+    }
+  },
+  "explore": {
+    "heading": "Explore Our Menu",
+    "tacos": "Tacos",
+    "bowls": "Bowls",
+    "drinks": "Drinks",
+    "coming": "Coming Soon",
+    "viewMore": "View Full Menu"
+  },
+  "popular": {
+    "heading": "Popular This Week",
+    "seeMenu": "See Full Menu",
+    "coming": "Coming Soon",
+    "chefSpecial": "Chef Special {{num}}",
+    "notify": "Notify Me",
+    "add": "Add to Cart"
+  },
+  "loyalty": {
+    "heading": "Loyalty & Rewards",
+    "membersSave": "Members save 10%",
+    "points": "1,250 points",
+    "nextAt": "Next reward at 1,500 points",
+    "freeDessert": "Free dessert on your birthday",
+    "join": "Join Now",
+    "perks": "View Perks"
+  },
+  "events": {
+    "heading": "Events & Catering",
+    "desc": "We organize special events and catering for large groups. From birthdays to corporate events.",
+    "plan": "Plan Event",
+    "catering": "Catering Service",
+    "q1": {
+      "question": "What is the minimum group size for events?",
+      "answer": "Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations."
+    },
+    "q2": {
+      "question": "Do you offer vegetarian and vegan options?",
+      "answer": "Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs."
+    }
+  },
+  "testimonials": {
+    "heading": "What Our Customers Say"
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions"
+  },
+  "cta": {
+    "endsTonight": "Ends Tonight",
+    "title": "Ready to Taste the Difference?",
+    "desc": "Join thousands of satisfied customers who choose Cantina for authentic Mexican flavors.",
+    "socialProof": "4.9/5 rating from 2,400+ reviews",
+    "limited": "Limited time offer",
+    "start": "Start Ordering",
+    "reserve": "Reserve Table"
+  },
+  "sticky": {
+    "order": "Order Now",
+    "reserve": "Reserve"
+  },
+  "logo": {
+    "heading": "Trusted by local businesses and food lovers"
   },
   "values": {
     "heading": "Our Values",
