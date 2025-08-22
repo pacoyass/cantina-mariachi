@@ -30,6 +30,43 @@
     "orderBundle": "Order bundle",
     "viewDetails": "View details"
   },
+  "values": {
+    "heading": "Our Values",
+    "desc": "We're committed to quality, sustainability, and community.",
+    "badges": {
+      "localProduce": "Local Produce",
+      "sustainableSeafood": "Sustainable Seafood",
+      "fairTrade": "Fair Trade",
+      "lowWaste": "Low Waste"
+    },
+    "cards": {
+      "dailyMarket": "Daily Market",
+      "houseSalsas": "House Salsas",
+      "localTortillas": "Local Tortillas",
+      "compostablePackaging": "Compostable Packaging"
+    }
+  },
+  "value": {
+    "reorderDesc": "Quick reordering for your favorite meals",
+    "trustedTitle": "Trusted by Thousands",
+    "trustedDesc": "Join our community of satisfied customers"
+  },
+  "how": {
+    "heading": "How It Works",
+    "desc": "Simple steps to delicious Mexican food",
+    "step1": {
+      "title": "Choose Your Meal",
+      "desc": "Browse our menu and select your favorite dishes"
+    },
+    "step2": {
+      "title": "Place Your Order",
+      "desc": "Order online or call us for quick service"
+    },
+    "step3": {
+      "title": "Enjoy & Track",
+      "desc": "Track your delivery in real-time and enjoy fresh food"
+    }
+  },
   "seo": {
     "title": "Cantina Mariachi – Authentic Mexican, Modern Experience",
     "description": "Order online in seconds, reserve instantly, and track your delivery live. Authentic Mexican cuisine delivered fast.",
