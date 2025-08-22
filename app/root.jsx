@@ -17,7 +17,7 @@ import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { useTranslation } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export async function loader( { request, context } )
 {
@@ -53,44 +53,46 @@ export function Layout( { children } )
   const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
   
-  // Get language from URL or fallback to server context
-  const urlLang = (() => { 
-    try { 
-      return new URLSearchParams(window.location.search).get('lng'); 
-    } catch { 
-      return null; 
-    } 
-  })();
-  
-  const lang = urlLang || i18n?.language || initialLang;
-  const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
+  // Use server-provided language to prevent hydration mismatches
+  const [lang, setLang] = useState(initialLang);
+  const [dir, setDir] = useState(rtlLngs.includes(initialLang) ? 'rtl' : 'ltr');
 
-  // Sync client-side language changes with server context
+  // Handle client-side language changes after mounting
   useEffect(() => {
     try {
-      if (urlLang && i18n?.changeLanguage) {
-        i18n.changeLanguage(urlLang);
+      // Get language from URL parameter
+      const urlLang = new URLSearchParams(window.location.search).get('lng');
+      const newLang = urlLang || initialLang;
+      
+      if (newLang !== lang) {
+        setLang(newLang);
+        setDir(rtlLngs.includes(newLang) ? 'rtl' : 'ltr');
+        
+        // Update i18n if needed
+        if (i18n?.changeLanguage && i18n.language !== newLang) {
+          i18n.changeLanguage(newLang);
+        }
       }
       
       // Update document attributes
-      document.documentElement.lang = lang;
-      document.documentElement.dir = dir;
+      document.documentElement.lang = newLang;
+      document.documentElement.dir = rtlLngs.includes(newLang) ? 'rtl' : 'ltr';
       
       // Update meta tags for better SEO
       const metaLang = document.querySelector('meta[name="language"]');
       if (metaLang) {
-        metaLang.setAttribute('content', lang);
+        metaLang.setAttribute('content', newLang);
       } else {
         const newMeta = document.createElement('meta');
         newMeta.name = 'language';
-        newMeta.content = lang;
+        newMeta.content = newLang;
         document.head.appendChild(newMeta);
       }
       
     } catch (error) {
       console.warn('Failed to sync language:', error);
     }
-  }, [urlLang, lang, dir, i18n]);
+  }, [initialLang, i18n, lang]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
