@@ -290,6 +290,49 @@ export const uiResources = {
         title: 'Cantina Mariachi – Authentic Mexican, Modern Experience',
         description: 'Order online in seconds, reserve instantly, and track your delivery live. Authentic Mexican cuisine delivered fast.',
         keywords: 'Mexican food, tacos, delivery, restaurant, online ordering, table reservation'
+      },
+      values: {
+        heading: 'Our Values & Sourcing',
+        desc: 'We\'re committed to quality, sustainability, and supporting local communities through responsible sourcing and eco-friendly practices.',
+        badges: {
+          localProduce: 'Local Produce',
+          sustainableSeafood: 'Sustainable Seafood',
+          fairTrade: 'Fair Trade',
+          lowWaste: 'Low Waste'
+        },
+        cards: {
+          dailyMarket: 'Daily Market Fresh',
+          houseSalsas: 'House-Made Salsas',
+          localTortillas: 'Local Tortillas',
+          compostablePackaging: 'Compostable Packaging'
+        }
+      },
+      value: {
+        reorderDesc: 'Reorder your favorites in seconds',
+        trustedTitle: 'Trusted by 10,000+ locals',
+        trustedDesc: 'Join thousands of satisfied customers'
+      },
+      how: {
+        heading: 'How It Works',
+        desc: 'Ordering with Cantina Mariachi is simple and fast',
+        step1: {
+          title: 'Choose Your Favorites',
+          desc: 'Browse our menu and select your favorite dishes'
+        },
+        step2: {
+          title: 'Place Your Order',
+          desc: 'Customize your order and checkout securely'
+        },
+        step3: {
+          title: 'Track & Enjoy',
+          desc: 'Follow your order in real-time and enjoy fresh food'
+        }
+      },
+      testimonials: {
+        heading: 'What Our Customers Say'
+      },
+      sticky: {
+        order: 'Order Now'
       }
     },
     events: {

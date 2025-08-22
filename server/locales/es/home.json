@@ -3,7 +3,10 @@
     "badge": "Nuevo: Lanzamiento de recompensas — gana puntos en cada pedido",
     "title": "Mexicano auténtico. <primary>Entregado rápido.</primary>",
     "desc": "Desde tacos estilo callejero hasta especialidades cocinadas lentamente. Pide en segundos, reserva una mesa al instante y rastrea tu entrega en tiempo real — todo en un solo lugar.",
-    "imageAlt": "Plato colorido de tacos con ingredientes frescos y salsa vibrante"
+    "imageAlt": "Plato colorido de tacos con ingredientes frescos y salsa vibrante",
+    "orderNow": "Ordenar Ahora",
+    "reserve": "Reservar Mesa",
+    "browseMenu": "Ver Menú"
   },
   "features": {
     "title": "Por qué elegir Cantina",
@@ -29,6 +32,139 @@
     "endsIn": "Termina en",
     "orderBundle": "Pedir combo",
     "viewDetails": "Ver detalles"
+  },
+  "why": {
+    "heading": "Por qué Elegir Cantina Mariachi",
+    "faster": {
+      "title": "Más rápido que las apps de entrega",
+      "desc": "Directo de nuestra cocina a tu puerta en 25-35 minutos"
+    },
+    "fees": {
+      "title": "Sin cargos ocultos",
+      "desc": "Precios transparentes sin cargos sorpresa"
+    },
+    "oneTap": {
+      "title": "Reordenar con un toque",
+      "desc": "Reordena tus favoritos con solo un toque"
+    },
+    "tracking": {
+      "title": "Seguimiento en vivo",
+      "desc": "Ve exactamente cuándo llegará tu comida"
+    },
+    "chef": {
+      "title": "Calidad de chef",
+      "desc": "Cada plato preparado por nuestros chefs expertos"
+    },
+    "rewards": {
+      "title": "Gana recompensas",
+      "desc": "Obtén puntos en cada pedido y desbloquea beneficios exclusivos"
+    }
+  },
+  "explore": {
+    "heading": "Explora Nuestro Menú",
+    "tacos": "Tacos",
+    "bowls": "Bowls",
+    "drinks": "Bebidas",
+    "viewMore": "Ver Más",
+    "coming": "Próximamente"
+  },
+  "loyalty": {
+    "heading": "Programa de Lealtad",
+    "membersSave": "Los miembros ahorran 10%",
+    "points": "Gana 1 punto por $1 gastado",
+    "nextAt": "Próxima recompensa en {{points}} puntos",
+    "freeDessert": "Postre gratis en tu cumpleaños",
+    "join": "Únete Ahora",
+    "perks": "Ver Beneficios"
+  },
+  "events": {
+    "heading": "Eventos y Catering",
+    "desc": "Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.",
+    "plan": "Planear Evento",
+    "catering": "Servicio de Catering",
+    "q1": {
+      "question": "¿Cuál es el tamaño mínimo del grupo para eventos?",
+      "answer": "Nuestro tamaño mínimo de grupo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares."
+    },
+    "q2": {
+      "question": "¿Ofrecen opciones vegetarianas y veganas?",
+      "answer": "Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas."
+    }
+  },
+  "testimonials": {
+    "heading": "Lo Que Dicen Nuestros Clientes"
+  },
+  "values": {
+    "heading": "Nuestros Valores y Abastecimiento",
+    "desc": "Estamos comprometidos con la calidad, la sostenibilidad y el apoyo a las comunidades locales a través del abastecimiento responsable y prácticas ecológicas.",
+    "badges": {
+      "localProduce": "Productos Locales",
+      "sustainableSeafood": "Mariscos Sostenibles",
+      "fairTrade": "Comercio Justo",
+      "lowWaste": "Bajo Desperdicio"
+    },
+    "cards": {
+      "dailyMarket": "Fresco del Mercado Diario",
+      "houseSalsas": "Salsas Caseras",
+      "localTortillas": "Tortillas Locales",
+      "compostablePackaging": "Empaque Compostable"
+    }
+  },
+  "value": {
+    "reorderDesc": "Reordena tus favoritos en segundos",
+    "trustedTitle": "Confiado por más de 10,000 locales",
+    "trustedDesc": "Únete a miles de clientes satisfechos"
+  },
+  "how": {
+    "heading": "Cómo Funciona",
+    "desc": "Ordenar con Cantina Mariachi es simple y rápido",
+    "step1": {
+      "title": "Elige Tus Favoritos",
+      "desc": "Navega por nuestro menú y selecciona tus platos favoritos"
+    },
+    "step2": {
+      "title": "Haz Tu Pedido",
+      "desc": "Personaliza tu pedido y paga de forma segura"
+    },
+    "step3": {
+      "title": "Rastrea y Disfruta",
+      "desc": "Sigue tu pedido en tiempo real y disfruta comida fresca"
+    }
+  },
+  "popular": {
+    "heading": "Popular Esta Semana",
+    "seeMenu": "Ver Menú Completo",
+    "coming": "Próximamente",
+    "chefSpecial": "Especial del Chef {{num}}",
+    "notify": "Notifícame",
+    "rating": "4.9/5 de más de 2,400 locales"
+  },
+  "faq": {
+    "heading": "Preguntas Frecuentes",
+    "q1": {
+      "question": "¿Cuál es su tiempo de entrega?",
+      "answer": "Nuestro tiempo de entrega promedio es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido."
+    },
+    "q2": {
+      "question": "¿Ofrecen opciones vegetarianas y veganas?",
+      "answer": "¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y acompañamientos a base de plantas."
+    },
+    "q3": {
+      "question": "¿Puedo personalizar mi pedido?",
+      "answer": "¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznoslo saber al ordenar."
+    }
+  },
+  "cta": {
+    "endsTonight": "⚡ Termina Esta Noche",
+    "title": "Tiempo Limitado: Combo Taco Tuesday",
+    "desc": "2 tacos + bebida por solo $9.99. Perfecto para compartir o quedártelo todo para ti.",
+    "socialProof": "🔥 Más de 2,400 pedidos esta semana",
+    "limited": "Oferta por Tiempo Limitado",
+    "start": "Comenzar a Ordenar",
+    "reserve": "Reservar Mesa"
+  },
+  "sticky": {
+    "order": "Ordenar Ahora"
   },
   "seo": {
     "title": "Cantina Mariachi – Experiencia Mexicana Auténtica y Moderna",

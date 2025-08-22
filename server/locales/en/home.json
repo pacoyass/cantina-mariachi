@@ -3,7 +3,10 @@
     "badge": "New: Rewards launch — earn points on every order",
     "title": "Authentic Mexican. <primary>Delivered fast.</primary>",
     "desc": "From street‑style tacos to slow‑cooked specialties. Order in seconds, reserve a table instantly, and track your delivery in real time — all in one place.",
-    "imageAlt": "Colorful tacos platter with fresh ingredients and vibrant salsa"
+    "imageAlt": "Colorful tacos platter with fresh ingredients and vibrant salsa",
+    "orderNow": "Order Now",
+    "reserve": "Reserve Table",
+    "browseMenu": "Browse Menu"
   },
   "features": {
     "title": "Why choose Cantina",
@@ -29,6 +32,139 @@
     "endsIn": "Ends in",
     "orderBundle": "Order bundle",
     "viewDetails": "View details"
+  },
+  "why": {
+    "heading": "Why Choose Cantina Mariachi",
+    "faster": {
+      "title": "Faster than delivery apps",
+      "desc": "Direct from our kitchen to your door in 25-35 minutes"
+    },
+    "fees": {
+      "title": "No hidden fees",
+      "desc": "Transparent pricing with no surprise charges"
+    },
+    "oneTap": {
+      "title": "One-tap reordering",
+      "desc": "Reorder your favorites with just one tap"
+    },
+    "tracking": {
+      "title": "Live order tracking",
+      "desc": "See exactly when your food will arrive"
+    },
+    "chef": {
+      "title": "Chef-crafted quality",
+      "desc": "Every dish prepared by our expert chefs"
+    },
+    "rewards": {
+      "title": "Earn rewards",
+      "desc": "Get points on every order and unlock exclusive perks"
+    }
+  },
+  "explore": {
+    "heading": "Explore Our Menu",
+    "tacos": "Tacos",
+    "bowls": "Bowls",
+    "drinks": "Drinks",
+    "viewMore": "View More",
+    "coming": "Coming Soon"
+  },
+  "loyalty": {
+    "heading": "Loyalty Program",
+    "membersSave": "Members save 10%",
+    "points": "Earn 1 point per $1 spent",
+    "nextAt": "Next reward at {{points}} points",
+    "freeDessert": "Free dessert on your birthday",
+    "join": "Join Now",
+    "perks": "View Perks"
+  },
+  "events": {
+    "heading": "Events & Catering",
+    "desc": "We organize special events and catering for large groups. From birthdays to corporate events.",
+    "plan": "Plan Event",
+    "catering": "Catering Service",
+    "q1": {
+      "question": "What is the minimum group size for events?",
+      "answer": "Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations."
+    },
+    "q2": {
+      "question": "Do you offer vegetarian and vegan options?",
+      "answer": "Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs."
+    }
+  },
+  "testimonials": {
+    "heading": "What Our Customers Say"
+  },
+  "values": {
+    "heading": "Our Values & Sourcing",
+    "desc": "We're committed to quality, sustainability, and supporting local communities through responsible sourcing and eco-friendly practices.",
+    "badges": {
+      "localProduce": "Local Produce",
+      "sustainableSeafood": "Sustainable Seafood",
+      "fairTrade": "Fair Trade",
+      "lowWaste": "Low Waste"
+    },
+    "cards": {
+      "dailyMarket": "Daily Market Fresh",
+      "houseSalsas": "House-Made Salsas",
+      "localTortillas": "Local Tortillas",
+      "compostablePackaging": "Compostable Packaging"
+    }
+  },
+  "value": {
+    "reorderDesc": "Reorder your favorites in seconds",
+    "trustedTitle": "Trusted by 10,000+ locals",
+    "trustedDesc": "Join thousands of satisfied customers"
+  },
+  "how": {
+    "heading": "How It Works",
+    "desc": "Ordering with Cantina Mariachi is simple and fast",
+    "step1": {
+      "title": "Choose Your Favorites",
+      "desc": "Browse our menu and select your favorite dishes"
+    },
+    "step2": {
+      "title": "Place Your Order",
+      "desc": "Customize your order and checkout securely"
+    },
+    "step3": {
+      "title": "Track & Enjoy",
+      "desc": "Follow your order in real-time and enjoy fresh food"
+    }
+  },
+  "popular": {
+    "heading": "Popular This Week",
+    "seeMenu": "See Full Menu",
+    "coming": "Coming Soon",
+    "chefSpecial": "Chef Special {{num}}",
+    "notify": "Notify Me",
+    "rating": "4.9/5 from 2,400+ locals"
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions",
+    "q1": {
+      "question": "What is your delivery time?",
+      "answer": "Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive."
+    },
+    "q2": {
+      "question": "Do you offer vegetarian and vegan options?",
+      "answer": "Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides."
+    },
+    "q3": {
+      "question": "Can I customize my order?",
+      "answer": "Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering."
+    }
+  },
+  "cta": {
+    "endsTonight": "⚡ Ends Tonight",
+    "title": "Limited Time: Taco Tuesday Bundle",
+    "desc": "2 tacos + drink for just $9.99. Perfect for sharing or keeping all to yourself.",
+    "socialProof": "🔥 2,400+ orders this week",
+    "limited": "Limited Time Offer",
+    "start": "Start Ordering",
+    "reserve": "Reserve Table"
+  },
+  "sticky": {
+    "order": "Order Now"
   },
   "seo": {
     "title": "Cantina Mariachi – Authentic Mexican, Modern Experience",
