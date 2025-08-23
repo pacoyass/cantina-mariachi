@@ -53,46 +53,44 @@ export function Layout( { children } )
   const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
   
-  // Use server-provided language to prevent hydration mismatches
-  const [lang, setLang] = useState(initialLang);
-  const [dir, setDir] = useState(rtlLngs.includes(initialLang) ? 'rtl' : 'ltr');
+  // Get language from URL or fallback to server context
+  const urlLang = (() => { 
+    try { 
+      return new URLSearchParams(window.location.search).get('lng'); 
+    } catch { 
+      return null; 
+    } 
+  })();
+  
+  const lang = urlLang || i18n?.language || initialLang;
+  const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
 
-  // Handle client-side language changes after mounting
+  // Sync client-side language changes with server context
   useEffect(() => {
     try {
-      // Get language from URL parameter
-      const urlLang = new URLSearchParams(window.location.search).get('lng');
-      const newLang = urlLang || initialLang;
-      
-      if (newLang !== lang) {
-        setLang(newLang);
-        setDir(rtlLngs.includes(newLang) ? 'rtl' : 'ltr');
-        
-        // Update i18n if needed
-        if (i18n?.changeLanguage && i18n.language !== newLang) {
-          i18n.changeLanguage(newLang);
-        }
+      if (urlLang && i18n?.changeLanguage) {
+        i18n.changeLanguage(urlLang);
       }
       
       // Update document attributes
-      document.documentElement.lang = newLang;
-      document.documentElement.dir = rtlLngs.includes(newLang) ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+      document.documentElement.dir = dir;
       
       // Update meta tags for better SEO
       const metaLang = document.querySelector('meta[name="language"]');
       if (metaLang) {
-        metaLang.setAttribute('content', newLang);
+        metaLang.setAttribute('content', lang);
       } else {
         const newMeta = document.createElement('meta');
         newMeta.name = 'language';
-        newMeta.content = newLang;
+        newMeta.content = lang;
         document.head.appendChild(newMeta);
       }
       
     } catch (error) {
       console.warn('Failed to sync language:', error);
     }
-  }, [initialLang, i18n, lang]);
+  }, [urlLang, lang, dir, i18n]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
