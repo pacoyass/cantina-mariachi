@@ -3,7 +3,16 @@
     "badge": "Nuevo: Lanzamiento de recompensas — gana puntos en cada pedido",
     "title": "Mexicano auténtico. <primary>Entregado rápido.</primary>",
     "desc": "Desde tacos estilo callejero hasta especialidades cocinadas lentamente. Pide en segundos, reserva una mesa al instante y rastrea tu entrega en tiempo real — todo en un solo lugar.",
-    "imageAlt": "Plato colorido de tacos con ingredientes frescos y salsa vibrante"
+    "imageAlt": "Plato colorido de tacos con ingredientes frescos y salsa vibrante",
+    "orderNow": "Ordenar Ahora",
+    "reserve": "Reservar Mesa",
+    "browseMenu": "Ver Menú",
+    "rating": "4.9/5 de 2,400+ locales",
+    "avgTime": "25-35 min promedio",
+    "card": {
+      "title": "Fresco Diario",
+      "desc": "Obtenemos ingredientes de mercados locales cada mañana"
+    }
   },
   "features": {
     "title": "Por qué elegir Cantina",
@@ -29,6 +38,94 @@
     "endsIn": "Termina en",
     "orderBundle": "Pedir combo",
     "viewDetails": "Ver detalles"
+  },
+  "why": {
+    "heading": "Por qué elegir Cantina",
+    "faster": {
+      "title": "Más rápido que las apps de entrega",
+      "desc": "Directo de nuestra cocina a tu puerta"
+    },
+    "fees": {
+      "title": "Sin cargos ocultos",
+      "desc": "Lo que ves es lo que pagas"
+    },
+    "oneTap": {
+      "title": "Reordenar con un toque",
+      "desc": "Reordenar rápidamente tus favoritos"
+    },
+    "tracking": {
+      "title": "Seguimiento en vivo",
+      "desc": "Actualizaciones en tiempo real de tu pedido"
+    },
+    "chef": {
+      "title": "Calidad de chef",
+      "desc": "Hecho con cuidado por chefs expertos"
+    },
+    "rewards": {
+      "title": "Gana recompensas",
+      "desc": "Puntos en cada pedido"
+    }
+  },
+  "explore": {
+    "heading": "Explora Nuestro Menú",
+    "tacos": "Tacos",
+    "bowls": "Bowls",
+    "drinks": "Bebidas",
+    "coming": "Próximamente",
+    "viewMore": "Ver Menú Completo"
+  },
+  "popular": {
+    "heading": "Popular Esta Semana",
+    "seeMenu": "Ver Menú Completo",
+    "coming": "Próximamente",
+    "chefSpecial": "Especial del Chef {{num}}",
+    "notify": "Notifícame",
+    "add": "Agregar al Carrito"
+  },
+  "loyalty": {
+    "heading": "Lealtad y Recompensas",
+    "membersSave": "Los miembros ahorran 10%",
+    "points": "1,250 puntos",
+    "nextAt": "Próxima recompensa en 1,500 puntos",
+    "freeDessert": "Postre gratis en tu cumpleaños",
+    "join": "Únete Ahora",
+    "perks": "Ver Beneficios"
+  },
+  "events": {
+    "heading": "Eventos y Catering",
+    "desc": "Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.",
+    "plan": "Planear Evento",
+    "catering": "Servicio de Catering",
+    "q1": {
+      "question": "¿Cuál es el tamaño mínimo del grupo para eventos?",
+      "answer": "Nuestro tamaño mínimo de grupo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares."
+    },
+    "q2": {
+      "question": "¿Ofrecen opciones vegetarianas y veganas?",
+      "answer": "Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas."
+    }
+  },
+  "testimonials": {
+    "heading": "Lo que Dicen Nuestros Clientes"
+  },
+  "faq": {
+    "heading": "Preguntas Frecuentes"
+  },
+  "cta": {
+    "endsTonight": "Termina Esta Noche",
+    "title": "¿Listo para Probar la Diferencia?",
+    "desc": "Únete a miles de clientes satisfechos que eligen Cantina por sabores mexicanos auténticos.",
+    "socialProof": "4.9/5 calificación de 2,400+ reseñas",
+    "limited": "Oferta por tiempo limitado",
+    "start": "Comenzar a Ordenar",
+    "reserve": "Reservar Mesa"
+  },
+  "sticky": {
+    "order": "Ordenar Ahora",
+    "reserve": "Reservar"
+  },
+  "logo": {
+    "heading": "Confiado por negocios locales y amantes de la comida"
   },
   "values": {
     "heading": "Nuestros Valores",
