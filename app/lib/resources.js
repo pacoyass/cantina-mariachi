@@ -1,7 +1,7 @@
 export const uiResources = {
-  // Organize by namespace first, then by language (i18next format)
-  common: {
-    en: {
+  en: {
+    // Backend namespaces (aligned with server)
+    common: {
       success: 'Success',
       error: 'Error',
       statusSuccess: 'success',
@@ -27,35 +27,7 @@ export const uiResources = {
       languageUpdated: 'Language updated successfully',
       languageReset: 'Language reset to default successfully'
     },
-    es: {
-      success: 'Éxito',
-      error: 'Error',
-      statusSuccess: 'éxito',
-      statusError: 'error',
-      welcome: 'Bienvenido',
-      loading: 'Cargando...',
-      notFound: 'No encontrado',
-      unauthorized: 'Acceso no autorizado',
-      forbidden: 'Acceso prohibido',
-      internalError: 'Error interno del servidor',
-      badRequest: 'Solicitud incorrecta',
-      created: 'Creado exitosamente',
-      updated: 'Actualizado exitosamente',
-      deleted: 'Eliminado exitosamente',
-      operationFailed: 'Operación fallida',
-      invalidRequest: 'Solicitud inválida',
-      resourceNotFound: 'Recurso no encontrado',
-      serverError: 'Error del servidor',
-      maintenance: 'Servidor en mantenimiento',
-      rateLimited: 'Demasiadas solicitudes. Inténtalo más tarde.',
-      timeout: 'Tiempo de espera agotado',
-      dataRetrieved: 'Datos recuperados exitosamente',
-      languageUpdated: 'Idioma actualizado exitosamente',
-      languageReset: 'Idioma restablecido por defecto exitosamente'
-    }
-  },
-  events: {
-    en: {
+    events: {
       heading: 'Events & Catering',
       desc: 'We organize special events and catering for large groups. From birthdays to corporate events.',
       plan: 'Plan Event',
@@ -69,23 +41,163 @@ export const uiResources = {
         answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
       }
     },
-    es: {
-      heading: 'Eventos y Catering',
-      desc: 'Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.',
-      plan: 'Planear Evento',
-      catering: 'Servicio de Catering',
+    faq: {
+      heading: 'Frequently Asked Questions',
       q1: {
-        question: '¿Cuál es el tamaño mínimo del grupo para eventos?',
-        answer: 'Nuestro tamaño mínimo de grupo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares.'
+        question: 'What is your delivery time?',
+        answer: 'Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive.'
       },
       q2: {
-        question: '¿Ofrecen opciones vegetarianas y veganas?',
-        answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
+        question: 'Do you offer vegetarian and vegan options?',
+        answer: 'Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides.'
+      },
+      q3: {
+        question: 'Can I customize my order?',
+        answer: 'Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering.'
       }
-    }
-  },
-  home: {
-    en: {
+    },
+    popular: {
+      heading: 'Popular This Week',
+      seeMenu: 'See Full Menu',
+      coming: 'Coming Soon',
+      chefSpecial: 'Chef Special {{num}}',
+      notify: 'Notify Me',
+      rating: '4.9/5 from 2,400+ locals'
+    },
+    auth: {
+      loginSuccess: 'Login successful',
+      loginFailed: 'Login failed',
+      logoutSuccess: 'Logout successful',
+      registerSuccess: 'Registration successful',
+      registerFailed: 'Registration failed',
+      invalidCredentials: 'Invalid credentials',
+      accountLocked: 'Account is locked',
+      accountNotVerified: 'Account is not verified',
+      passwordResetSent: 'Password reset link sent to your email',
+      passwordResetSuccess: 'Password reset successful',
+      passwordResetFailed: 'Password reset failed',
+      tokenExpired: 'Token has expired',
+      tokenInvalid: 'Invalid token',
+      accessDenied: 'Access denied',
+      sessionExpired: 'Session has expired',
+      emailAlreadyExists: 'Email already exists',
+      usernameAlreadyExists: 'Username already exists',
+      accountCreated: 'Account created successfully',
+      verificationEmailSent: 'Verification email sent',
+      emailVerified: 'Email verified successfully',
+      invalidVerificationToken: 'Invalid verification token'
+    },
+    api: {
+      dataRetrieved: 'Data retrieved successfully',
+      dataUpdated: 'Data updated successfully',
+      dataCreated: 'Data created successfully',
+      dataDeleted: 'Data deleted successfully',
+      noDataFound: 'No data found',
+      invalidApiKey: 'Invalid API key',
+      apiKeyExpired: 'API key has expired',
+      apiKeyRequired: 'API key is required',
+      quotaExceeded: 'API quota exceeded',
+      methodNotAllowed: 'Method not allowed',
+      unsupportedMediaType: 'Unsupported media type',
+      payloadTooLarge: 'Payload too large',
+      requestEntityTooLarge: 'Request entity too large',
+      contentTypeRequired: 'Content-Type header is required',
+      jsonParseError: 'Invalid JSON format',
+      missingRequiredField: 'Missing required field: {{field}}',
+      invalidFieldValue: 'Invalid value for field: {{field}}',
+      duplicateEntry: 'Duplicate entry found',
+      constraintViolation: 'Database constraint violation',
+      connectionError: 'Database connection error',
+      checkApiDocsAction: 'Check the URL or refer to the API documentation for valid endpoints.'
+    },
+    validation: {
+      required: '{{field}} is required',
+      email: 'Please enter a valid email address',
+      minLength: '{{field}} must be at least {{min}} characters long',
+      maxLength: '{{field}} must not exceed {{max}} characters',
+      passwordStrength: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number',
+      passwordMatch: 'Passwords do not match',
+      invalidFormat: 'Invalid format for {{field}}',
+      invalidDate: 'Invalid date format',
+      futureDateRequired: 'Date must be in the future',
+      pastDateRequired: 'Date must be in the past',
+      invalidPhone: 'Invalid phone number format',
+      invalidUrl: 'Invalid URL format',
+      numericOnly: '{{field}} must contain only numbers',
+      alphabeticOnly: '{{field}} must contain only letters',
+      alphanumericOnly: '{{field}} must contain only letters and numbers',
+      invalidRange: '{{field}} must be between {{min}} and {{max}}',
+      fileRequired: 'File is required',
+      invalidFileType: 'Invalid file type. Allowed types: {{types}}',
+      fileSizeExceeded: 'File size must not exceed {{maxSize}}',
+      invalidImageFormat: 'Invalid image format',
+      duplicateValue: '{{field}} already exists'
+    },
+    email: {
+      subject: {
+        welcome: 'Welcome to {{appName}}',
+        passwordReset: 'Password Reset Request',
+        emailVerification: 'Verify Your Email Address',
+        accountLocked: 'Account Security Alert',
+        loginAlert: 'New Login Detected'
+      },
+      greeting: 'Hello {{name}},',
+      welcomeMessage: 'Welcome to {{appName}}! We are excited to have you with us.',
+      passwordResetMessage: 'You have requested a password reset. Click the link below to proceed:',
+      verificationMessage: 'Please verify your email address by clicking the link below:',
+      accountLockedMessage: 'Your account has been temporarily locked due to multiple failed login attempts.',
+      loginAlertMessage: 'We have detected a new login to your account from {{location}} at {{time}}.',
+      footer: 'If you did not request this, please ignore this email or contact support.',
+      buttonText: {
+        resetPassword: 'Reset Password',
+        verifyEmail: 'Verify Email',
+        contactSupport: 'Contact Support'
+      },
+      expiryNotice: 'This link will expire in {{hours}} hours.',
+      supportContact: 'If you need help, please contact us at {{email}}'
+    },
+    business: {
+      menu: {
+        itemCreated: 'Menu item created successfully',
+        itemUpdated: 'Menu item updated successfully',
+        itemDeleted: 'Menu item deleted successfully',
+        itemNotFound: 'Menu item not found',
+        categoryCreated: 'Menu category created successfully',
+        categoryUpdated: 'Menu category updated successfully',
+        categoryDeleted: 'Menu category deleted successfully',
+        categoryNotFound: 'Menu category not found',
+        itemOutOfStock: 'Menu item is out of stock',
+        invalidPrice: 'Invalid price specified',
+        duplicateItem: 'Menu item already exists'
+      },
+      orders: {
+        orderCreated: 'Order created successfully',
+        orderUpdated: 'Order updated successfully',
+        orderCancelled: 'Order cancelled successfully',
+        orderNotFound: 'Order not found',
+        orderStatusUpdated: 'Order status updated successfully',
+        invalidOrderStatus: 'Invalid order status',
+        orderAlreadyCancelled: 'Order is already cancelled',
+        orderCannotBeCancelled: 'Order cannot be cancelled at this stage',
+        paymentRequired: 'Payment is required to complete the order',
+        insufficientInventory: 'Insufficient inventory for some items',
+        orderTotal: 'Order total: {{amount}}',
+        estimatedDelivery: 'Estimated delivery time: {{time}} minutes'
+      },
+      reservations: {
+        reservationCreated: 'Reservation created successfully',
+        reservationUpdated: 'Reservation updated successfully',
+        reservationCancelled: 'Reservation cancelled successfully',
+        reservationNotFound: 'Reservation not found',
+        reservationConfirmed: 'Reservation confirmed',
+        tableNotAvailable: 'Table is not available at the requested time',
+        invalidReservationTime: 'Invalid reservation time',
+        reservationTooEarly: 'Reservation time is too far in the future',
+        reservationTooLate: 'Reservation time has already passed',
+        capacityExceeded: 'Group size exceeds table capacity'
+      }
+    },
+    home: {
       hero: {
         badge: 'New: Rewards launch — earn points on every order',
         title: 'Authentic Mexican. <primary>Delivered fast.</primary>',
@@ -229,8 +341,208 @@ export const uiResources = {
       logo: {
         heading: 'Trusted by local businesses and food lovers'
       }
+    }
+  },
+  
+  // Spanish translations
+  es: {
+    common: {
+      success: 'Éxito',
+      error: 'Error',
+      statusSuccess: 'éxito',
+      statusError: 'error',
+      welcome: 'Bienvenido',
+      loading: 'Cargando...',
+      notFound: 'No encontrado',
+      unauthorized: 'Acceso no autorizado',
+      forbidden: 'Acceso prohibido',
+      internalError: 'Error interno del servidor',
+      badRequest: 'Solicitud incorrecta',
+      created: 'Creado exitosamente',
+      updated: 'Actualizado exitosamente',
+      deleted: 'Eliminado exitosamente',
+      operationFailed: 'Operación fallida',
+      invalidRequest: 'Solicitud inválida',
+      resourceNotFound: 'Recurso no encontrado',
+      serverError: 'Error del servidor',
+      maintenance: 'El servidor está en mantenimiento',
+      rateLimited: 'Demasiadas solicitudes. Inténtalo más tarde.',
+      timeout: 'Tiempo de espera agotado',
+      dataRetrieved: 'Datos recuperados exitosamente',
+      languageUpdated: 'Idioma actualizado exitosamente',
+      languageReset: 'Idioma restablecido al predeterminado exitosamente'
     },
-    es: {
+    events: {
+      heading: 'Eventos y Catering',
+      desc: 'Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.',
+      plan: 'Planear Evento',
+      catering: 'Servicio de Catering',
+      q1: {
+        question: '¿Cuál es el tamaño mínimo del grupo para eventos?',
+        answer: 'Nuestro tamaño mínimo de grupo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares.'
+      },
+      q2: {
+        question: '¿Ofrecen opciones vegetarianas y veganas?',
+        answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
+      }
+    },
+    faq: {
+      heading: 'Preguntas Frecuentes',
+      q1: {
+        question: '¿Cuál es su tiempo de entrega?',
+        answer: 'Nuestro tiempo promedio de entrega es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido.'
+      },
+      q2: {
+        question: '¿Ofrecen opciones vegetarianas y veganas?',
+        answer: '¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y guarniciones a base de plantas.'
+      },
+      q3: {
+        question: '¿Puedo personalizar mi pedido?',
+        answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznos saber tus preferencias al ordenar.'
+      }
+    },
+    popular: {
+      heading: 'Popular Esta Semana',
+      seeMenu: 'Ver Menú Completo',
+      coming: 'Próximamente',
+      chefSpecial: 'Especial del Chef {{num}}',
+      notify: 'Notifícame',
+      rating: '4.9/5 de más de 2,400 locales'
+    },
+    auth: {
+      loginSuccess: 'Connexion réussie',
+      loginFailed: 'Échec de la connexion',
+      logoutSuccess: 'Déconnexion réussie',
+      registerSuccess: 'Inscription réussie',
+      registerFailed: 'Échec de l\'inscription',
+      invalidCredentials: 'Identifiants invalides',
+      accountLocked: 'Le compte est verrouillé',
+      accountNotVerified: 'Le compte n\'est pas vérifié',
+      passwordResetSent: 'Lien de réinitialisation du mot de passe envoyé à votre email',
+      passwordResetSuccess: 'Réinitialisation du mot de passe réussie',
+      passwordResetFailed: 'Échec de la réinitialisation du mot de passe',
+      tokenExpired: 'Le jeton a expiré',
+      tokenInvalid: 'Jeton invalide',
+      accessDenied: 'Accès refusé',
+      sessionExpired: 'La session a expiré',
+      emailAlreadyExists: 'L\'email existe déjà',
+      usernameAlreadyExists: 'Le nom d\'utilisateur existe déjà',
+      accountCreated: 'Compte créé avec succès',
+      verificationEmailSent: 'Email de vérification envoyé',
+      emailVerified: 'Email vérifié avec succès',
+      invalidVerificationToken: 'Jeton de vérification invalide'
+    },
+    api: {
+      dataRetrieved: 'Données récupérées avec succès',
+      dataUpdated: 'Données mises à jour avec succès',
+      dataCreated: 'Données créées avec succès',
+      dataDeleted: 'Données supprimées avec succès',
+      noDataFound: 'Aucune donnée trouvée',
+      invalidApiKey: 'Clé API invalide',
+      apiKeyExpired: 'La clé API a expiré',
+      apiKeyRequired: 'Clé API requise',
+      quotaExceeded: 'Quota API dépassé',
+      methodNotAllowed: 'Méthode non autorisée',
+      unsupportedMediaType: 'Type de média non pris en charge',
+      payloadTooLarge: 'Charge utile trop volumineuse',
+      requestEntityTooLarge: 'Entité de requête trop volumineuse',
+      contentTypeRequired: 'En-tête Content-Type requis',
+      jsonParseError: 'Format JSON invalide',
+      missingRequiredField: 'Champ requis manquant: {{field}}',
+      invalidFieldValue: 'Valeur invalide pour le champ: {{field}}',
+      duplicateEntry: 'Entrée en double trouvée',
+      constraintViolation: 'Violation de contrainte de base de données',
+      connectionError: 'Erreur de connexion à la base de données',
+      checkApiDocsAction: 'Vérifiez l\'URL ou consultez la documentation de l\'API pour des points de terminaison valides.'
+    },
+    validation: {
+      required: '{{field}} est requis',
+      email: 'Veuillez saisir une adresse email valide',
+      minLength: '{{field}} doit contenir au moins {{min}} caractères',
+      maxLength: '{{field}} ne doit pas dépasser {{max}} caractères',
+      passwordStrength: 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une minuscule et un chiffre',
+      passwordMatch: 'Les mots de passe ne correspondent pas',
+      invalidFormat: 'Format invalide pour {{field}}',
+      invalidDate: 'Format de date invalide',
+      futureDateRequired: 'La date doit être dans le futur',
+      pastDateRequired: 'La date doit être dans le passé',
+      invalidPhone: 'Format de numéro de téléphone invalide',
+      invalidUrl: 'Format d\'URL invalide',
+      numericOnly: '{{field}} ne doit contenir que des chiffres',
+      alphabeticOnly: '{{field}} ne doit contenir que des lettres',
+      alphanumericOnly: '{{field}} ne doit contenir que des lettres et des chiffres',
+      invalidRange: '{{field}} doit être entre {{min}} et {{max}}',
+      fileRequired: 'Le fichier est requis',
+      invalidFileType: 'Type de fichier invalide. Types autorisés: {{types}}',
+      fileSizeExceeded: 'La taille du fichier ne doit pas dépasser {{maxSize}}',
+      invalidImageFormat: 'Format d\'image invalide',
+      duplicateValue: '{{field}} existe déjà'
+    },
+    email: {
+      subject: {
+        welcome: 'Bienvenue sur {{appName}}',
+        passwordReset: 'Demande de réinitialisation de mot de passe',
+        emailVerification: 'Vérifiez votre adresse email',
+        accountLocked: 'Alerte de sécurité du compte',
+        loginAlert: 'Nouvelle connexion détectée'
+      },
+      greeting: 'Bonjour {{name}},',
+      welcomeMessage: 'Bienvenue sur {{appName}}! Nous sommes ravis de vous accueillir.',
+      passwordResetMessage: 'Vous avez demandé une réinitialisation de mot de passe. Cliquez sur le lien ci-dessous pour continuer:',
+      verificationMessage: 'Veuillez vérifier votre adresse email en cliquant sur le lien ci-dessous:',
+      accountLockedMessage: 'Votre compte a été temporairement verrouillé en raison de plusieurs tentatives de connexion échouées.',
+      loginAlertMessage: 'Nous avons détecté une nouvelle connexion à votre compte depuis {{location}} à {{time}}.',
+      footer: 'Si vous n\'avez pas demandé cela, veuillez ignorer cet email ou contacter le support.',
+      buttonText: {
+        resetPassword: 'Réinitialiser le mot de passe',
+        verifyEmail: 'Vérifier l\'email',
+        contactSupport: 'Contacter le support'
+      },
+      expiryNotice: 'Ce lien expirera dans {{hours}} heures.',
+      supportContact: 'Si vous avez besoin d\'aide, veuillez nous contacter à {{email}}'
+    },
+    business: {
+      menu: {
+        itemCreated: 'Élément du menu créé avec succès',
+        itemUpdated: 'Élément du menu mis à jour avec succès',
+        itemDeleted: 'Élément du menu supprimé avec succès',
+        itemNotFound: 'Élément du menu non trouvé',
+        categoryCreated: 'Catégorie du menu créée avec succès',
+        categoryUpdated: 'Catégorie du menu mise à jour avec succès',
+        categoryDeleted: 'Catégorie du menu supprimée avec succès',
+        categoryNotFound: 'Catégorie du menu non trouvée',
+        itemOutOfStock: 'Élément du menu en rupture de stock',
+        invalidPrice: 'Prix invalide spécifié',
+        duplicateItem: 'L\'élément du menu existe déjà'
+      },
+      orders: {
+        orderCreated: 'Commande créée avec succès',
+        orderUpdated: 'Commande mise à jour avec succès',
+        orderCancelled: 'Commande annulée avec succès',
+        orderNotFound: 'Commande non trouvée',
+        orderStatusUpdated: 'Statut de la commande mis à jour avec succès',
+        invalidOrderStatus: 'Statut de commande invalide',
+        orderAlreadyCancelled: 'La commande est déjà annulée',
+        orderCannotBeCancelled: 'La commande ne peut pas être annulée à ce stade',
+        paymentRequired: 'Le paiement est requis pour finaliser la commande',
+        insufficientInventory: 'Inventaire insuffisant pour certains articles',
+        orderTotal: 'Total de la commande: {{amount}}',
+        estimatedDelivery: 'Temps de livraison estimé: {{time}} minutes'
+      },
+      reservations: {
+        reservationCreated: 'Réservation créée avec succès',
+        reservationUpdated: 'Réservation mise à jour avec succès',
+        reservationCancelled: 'Réservation annulée avec succès',
+        reservationNotFound: 'Réservation non trouvée',
+        reservationConfirmed: 'Réservation confirmée',
+        tableNotAvailable: 'La table n\'est pas disponible à l\'heure demandée',
+        invalidReservationTime: 'Heure de réservation invalide',
+        reservationTooEarly: 'L\'heure de réservation est trop éloignée dans le futur',
+        reservationTooLate: 'L\'heure de réservation est déjà passée',
+        capacityExceeded: 'La taille du groupe dépasse la capacité de la table'
+      }
+    },
+    home: {
       hero: {
         badge: 'Nuevo: Lanzamiento de recompensas — gana puntos en cada pedido',
         title: 'Mexicano auténtico. <primary>Entregado rápido.</primary>',
