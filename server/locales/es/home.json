@@ -6,7 +6,13 @@
     "imageAlt": "Plato colorido de tacos con ingredientes frescos y salsa vibrante",
     "orderNow": "Ordenar Ahora",
     "reserve": "Reservar Mesa",
-    "browseMenu": "Ver Menú"
+    "browseMenu": "Ver Menú",
+    "rating": "4.9/5 de 2,400+ locales",
+    "avgTime": "25-35 min promedio",
+    "card": {
+      "title": "Fresco Diario",
+      "desc": "Obtenemos ingredientes de mercados locales cada mañana"
+    }
   },
   "features": {
     "title": "Por qué elegir Cantina",
@@ -65,14 +71,23 @@
     "tacos": "Tacos",
     "bowls": "Bowls",
     "drinks": "Bebidas",
-    "viewMore": "Ver Más",
-    "coming": "Próximamente"
+    "coming": "Próximamente",
+    "viewMore": "Ver Menú Completo"
+  },
+  "popular": {
+    "heading": "Popular Esta Semana",
+    "seeMenu": "Ver Menú Completo",
+    "coming": "Próximamente",
+    "chefSpecial": "Especial del Chef {{num}}",
+    "notify": "Notifícame",
+    "add": "Agregar al Carrito",
+    "rating": "4.9/5 de más de 2,400 locales"
   },
   "loyalty": {
-    "heading": "Programa de Lealtad",
+    "heading": "Lealtad y Recompensas",
     "membersSave": "Los miembros ahorran 10%",
-    "points": "Gana 1 punto por $1 gastado",
-    "nextAt": "Próxima recompensa en {{points}} puntos",
+    "points": "1,250 puntos",
+    "nextAt": "Próxima recompensa en 1,500 puntos",
     "freeDessert": "Postre gratis en tu cumpleaños",
     "join": "Únete Ahora",
     "perks": "Ver Beneficios"
@@ -93,6 +108,37 @@
   },
   "testimonials": {
     "heading": "Lo Que Dicen Nuestros Clientes"
+  },
+  "faq": {
+    "heading": "Preguntas Frecuentes",
+    "q1": {
+      "question": "¿Cuál es su tiempo de entrega?",
+      "answer": "Nuestro tiempo de entrega promedio es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido."
+    },
+    "q2": {
+      "question": "¿Ofrecen opciones vegetarianas y veganas?",
+      "answer": "¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y acompañamientos a base de plantas."
+    },
+    "q3": {
+      "question": "¿Puedo personalizar mi pedido?",
+      "answer": "¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznoslo saber al ordenar."
+    }
+  },
+  "cta": {
+    "endsTonight": "⚡ Termina Esta Noche",
+    "title": "Tiempo Limitado: Combo Taco Tuesday",
+    "desc": "2 tacos + bebida por solo $9.99. Perfecto para compartir o quedártelo todo para ti.",
+    "socialProof": "🔥 Más de 2,400 pedidos esta semana",
+    "limited": "Oferta por Tiempo Limitado",
+    "start": "Comenzar a Ordenar",
+    "reserve": "Reservar Mesa"
+  },
+  "sticky": {
+    "order": "Ordenar Ahora",
+    "reserve": "Reservar"
+  },
+  "logo": {
+    "heading": "Confiado por negocios locales y amantes de la comida"
   },
   "values": {
     "heading": "Nuestros Valores y Abastecimiento",
@@ -130,41 +176,6 @@
       "title": "Rastrea y Disfruta",
       "desc": "Sigue tu pedido en tiempo real y disfruta comida fresca"
     }
-  },
-  "popular": {
-    "heading": "Popular Esta Semana",
-    "seeMenu": "Ver Menú Completo",
-    "coming": "Próximamente",
-    "chefSpecial": "Especial del Chef {{num}}",
-    "notify": "Notifícame",
-    "rating": "4.9/5 de más de 2,400 locales"
-  },
-  "faq": {
-    "heading": "Preguntas Frecuentes",
-    "q1": {
-      "question": "¿Cuál es su tiempo de entrega?",
-      "answer": "Nuestro tiempo de entrega promedio es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido."
-    },
-    "q2": {
-      "question": "¿Ofrecen opciones vegetarianas y veganas?",
-      "answer": "¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y acompañamientos a base de plantas."
-    },
-    "q3": {
-      "question": "¿Puedo personalizar mi pedido?",
-      "answer": "¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznoslo saber al ordenar."
-    }
-  },
-  "cta": {
-    "endsTonight": "⚡ Termina Esta Noche",
-    "title": "Tiempo Limitado: Combo Taco Tuesday",
-    "desc": "2 tacos + bebida por solo $9.99. Perfecto para compartir o quedártelo todo para ti.",
-    "socialProof": "🔥 Más de 2,400 pedidos esta semana",
-    "limited": "Oferta por Tiempo Limitado",
-    "start": "Comenzar a Ordenar",
-    "reserve": "Reservar Mesa"
-  },
-  "sticky": {
-    "order": "Ordenar Ahora"
   },
   "seo": {
     "title": "Cantina Mariachi – Experiencia Mexicana Auténtica y Moderna",

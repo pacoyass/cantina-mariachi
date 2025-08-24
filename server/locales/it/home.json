@@ -39,6 +39,43 @@
     "orderBundle": "Ordina pacchetto",
     "viewDetails": "Vedi dettagli"
   },
+  "values": {
+    "heading": "I Nostri Valori",
+    "desc": "Siamo impegnati per la qualità, la sostenibilità e la comunità.",
+    "badges": {
+      "localProduce": "Prodotti Locali",
+      "sustainableSeafood": "Frutti di Mare Sostenibili",
+      "fairTrade": "Commercio Equo",
+      "lowWaste": "Basso Spreco"
+    },
+    "cards": {
+      "dailyMarket": "Mercato Quotidiano",
+      "houseSalsas": "Salse della Casa",
+      "localTortillas": "Tortillas Locali",
+      "compostablePackaging": "Imballaggio Compostabile"
+    }
+  },
+  "value": {
+    "reorderDesc": "Riordino rapido per i tuoi pasti preferiti",
+    "trustedTitle": "Fidato da Migliaia",
+    "trustedDesc": "Unisciti alla nostra comunità di clienti soddisfatti"
+  },
+  "how": {
+    "heading": "Come Funziona",
+    "desc": "Passi semplici per delizioso cibo messicano",
+    "step1": {
+      "title": "Scegli il Tuo Pasto",
+      "desc": "Sfoglia il nostro menu e seleziona i tuoi piatti preferiti"
+    },
+    "step2": {
+      "title": "Piazza il Tuo Ordine",
+      "desc": "Ordina online o chiamaci per un servizio rapido"
+    },
+    "step3": {
+      "title": "Goditi e Traccia",
+      "desc": "Traccia la tua consegna in tempo reale e goditi cibo fresco"
+    }
+  },
   "seo": {
     "title": "Cantina Mariachi – Messicano Autentico, Esperienza Moderna",
     "description": "Ordina online in pochi secondi, prenota istantaneamente e segui la tua consegna dal vivo.",
