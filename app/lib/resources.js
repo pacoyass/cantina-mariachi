@@ -41,16 +41,6 @@ export const uiResources = {
         answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
       }
     },
-    offers: {
-      heading: 'Seasonal Offers',
-      badge: 'Limited time',
-      bundle: 'Taco Tuesday Bundle',
-      deal: '2 tacos + drink — $9.99',
-      endsIn: 'Ends in',
-      orderBundle: 'Order bundle',
-      viewDetails: 'View details',
-      freeDelivery: 'Today only: free delivery on orders over $25'
-    },
     navbar: {
       home: 'Home',
       menu: 'Menu',
@@ -375,6 +365,31 @@ export const uiResources = {
       },
       logo: {
         heading: 'Trusted by local businesses and food lovers'
+      },
+      offers: {
+        heading: 'Seasonal Offers',
+        badge: 'Limited time',
+        bundle: 'Taco Tuesday Bundle',
+        deal: '2 tacos + drink — $9.99',
+        endsIn: 'Ends in',
+        orderBundle: 'Order bundle',
+        viewDetails: 'View details',
+        coming: 'New offers are coming soon.',
+        freeDelivery: 'Today only: free delivery on orders over $25'
+      },
+      events: {
+        heading: 'Events & Catering',
+        desc: 'We organize special events and catering for large groups. From birthdays to corporate events.',
+        plan: 'Plan Event',
+        catering: 'Catering Service',
+        q1: {
+          question: 'What is the minimum group size for events?',
+          answer: 'Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations.'
+        },
+        q2: {
+          question: 'Do you offer vegetarian and vegan options?',
+          answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
+        }
       }
     }
   },
@@ -420,16 +435,6 @@ export const uiResources = {
         question: '¿Ofrecen opciones vegetarianas y veganas?',
         answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
       }
-    },
-    offers: {
-      heading: 'Ofertas de Temporada',
-      badge: 'Tiempo Limitado',
-      bundle: 'Paquete Taco Tuesday',
-      deal: '2 tacos + bebida — $9.99',
-      endsIn: 'Termina en',
-      orderBundle: 'Ordenar Paquete',
-      viewDetails: 'Ver Detalles',
-      freeDelivery: 'Solo hoy: envío gratuito en pedidos superiores a $25'
     },
     navbar: {
       home: 'Inicio',
@@ -519,6 +524,7 @@ export const uiResources = {
       contentTypeRequired: 'En-tête Content-Type requis',
       jsonParseError: 'Format JSON invalide',
       missingRequiredField: 'Champ requis manquant: {{field}}',
+      invalidFieldValue: 'Valeur invalide pour le champ: {{field}}',
       invalidFieldValue: 'Valeur invalide pour le champ: {{field}}',
       duplicateEntry: 'Entrée en double trouvée',
       constraintViolation: 'Violation de contrainte de base de données',
@@ -737,7 +743,7 @@ export const uiResources = {
         },
         q3: {
           question: '¿Puedo personalizar mi pedido?',
-          answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznoslo saber al ordenar.'
+          answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznos saber tus preferencias al ordenar.'
         }
       },
       cta: {
@@ -755,6 +761,31 @@ export const uiResources = {
       },
       logo: {
         heading: 'Confiado por negocios locales y amantes de la comida'
+      },
+      offers: {
+        heading: 'Ofertas de Temporada',
+        badge: 'Tiempo Limitado',
+        bundle: 'Paquete Taco Tuesday',
+        deal: '2 tacos + bebida — $9.99',
+        endsIn: 'Termina en',
+        orderBundle: 'Ordenar Paquete',
+        viewDetails: 'Ver Detalles',
+        coming: 'Nuevas ofertas están llegando pronto.',
+        freeDelivery: 'Solo hoy: envío gratuito en pedidos superiores a $25'
+      },
+      events: {
+        heading: 'Eventos y Catering',
+        desc: 'Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.',
+        plan: 'Planear Evento',
+        catering: 'Servicio de Catering',
+        q1: {
+          question: '¿Cuál es el tamaño mínimo del grupo para eventos?',
+          answer: 'Nuestro tamaño mínimo de grupo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares.'
+        },
+        q2: {
+          question: '¿Ofrecen opciones vegetarianas y veganas?',
+          answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
+        }
       }
     }
   }
