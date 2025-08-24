@@ -41,6 +41,41 @@ export const uiResources = {
         answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
       }
     },
+    offers: {
+      heading: 'Seasonal Offers',
+      badge: 'Limited time',
+      bundle: 'Taco Tuesday Bundle',
+      deal: '2 tacos + drink — $9.99',
+      endsIn: 'Ends in',
+      orderBundle: 'Order bundle',
+      viewDetails: 'View details',
+      freeDelivery: 'Today only: free delivery on orders over $25'
+    },
+    navbar: {
+      home: 'Home',
+      menu: 'Menu',
+      orders: 'Orders',
+      reservations: 'Reservations',
+      account: 'Account',
+      profile: 'Profile',
+      login: 'Login',
+      register: 'Register',
+      orderNow: 'Order Now',
+      toggleLanguage: 'Toggle language',
+      toggleTheme: 'Toggle theme',
+      close: 'Close'
+    },
+    footer: {
+      tagline: 'Authentic Mexican flavors, modern experience.',
+      quickLinks: 'Quick Links',
+      contact: 'Contact',
+      newsletter: 'Get 20% off your first order + exclusive deals 📧',
+      emailPlaceholder: 'Email address',
+      join: 'Join',
+      privacy: 'Privacy',
+      terms: 'Terms',
+      copyright: '© {{year}} {{brand}}. All rights reserved.'
+    },
     faq: {
       heading: 'Frequently Asked Questions',
       q1: {
@@ -386,6 +421,41 @@ export const uiResources = {
         answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
       }
     },
+    offers: {
+      heading: 'Ofertas de Temporada',
+      badge: 'Tiempo Limitado',
+      bundle: 'Paquete Taco Tuesday',
+      deal: '2 tacos + bebida — $9.99',
+      endsIn: 'Termina en',
+      orderBundle: 'Ordenar Paquete',
+      viewDetails: 'Ver Detalles',
+      freeDelivery: 'Solo hoy: envío gratuito en pedidos superiores a $25'
+    },
+    navbar: {
+      home: 'Inicio',
+      menu: 'Menú',
+      orders: 'Pedidos',
+      reservations: 'Reservas',
+      account: 'Cuenta',
+      profile: 'Perfil',
+      login: 'Iniciar Sesión',
+      register: 'Registrarse',
+      orderNow: 'Ordenar Ahora',
+      toggleLanguage: 'Cambiar idioma',
+      toggleTheme: 'Cambiar tema',
+      close: 'Cerrar'
+    },
+    footer: {
+      tagline: 'Sabores mexicanos auténticos, experiencia moderna.',
+      quickLinks: 'Enlaces Rápidos',
+      contact: 'Contacto',
+      newsletter: 'Obtén 20% de descuento en tu primer pedido + ofertas exclusivas 📧',
+      emailPlaceholder: 'Dirección de correo electrónico',
+      join: 'Unirse',
+      privacy: 'Privacidad',
+      terms: 'Términos',
+      copyright: '© {{year}} {{brand}}. Todos los derechos reservados.'
+    },
     faq: {
       heading: 'Preguntas Frecuentes',
       q1: {
@@ -394,7 +464,7 @@ export const uiResources = {
       },
       q2: {
         question: '¿Ofrecen opciones vegetarianas y veganas?',
-        answer: '¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y guarniciones a base de plantas.'
+        answer: '¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y acompañamientos a base de plantas.'
       },
       q3: {
         question: '¿Puedo personalizar mi pedido?',
@@ -659,7 +729,7 @@ export const uiResources = {
         heading: 'Preguntas Frecuentes',
         q1: {
           question: '¿Cuál es su tiempo de entrega?',
-          answer: 'Nuestro tiempo de entrega promedio es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido.'
+          answer: 'Nuestro tiempo promedio de entrega es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido.'
         },
         q2: {
           question: '¿Ofrecen opciones vegetarianas y veganas?',
@@ -680,8 +750,8 @@ export const uiResources = {
         reserve: 'Reservar Mesa'
       },
       sticky: {
-        order: 'Ordenar Ahora',
-        reserve: 'Reservar'
+        order: 'Order Now',
+        reserve: 'Reserve'
       },
       logo: {
         heading: 'Confiado por negocios locales y amantes de la comida'
