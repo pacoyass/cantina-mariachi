@@ -225,7 +225,12 @@ export const uiResources = {
         drinks: 'Drinks',
         coming: 'Coming soon.',
         chefNotes: 'Chef notes: crowd favorite with fresh cilantro and lime.',
-        viewMore: 'View more'
+        viewMore: 'View more',
+        tabs: {
+          tacos: 'Tacos',
+          bowls: 'Bowls',
+          drinks: 'Drinks'
+        }
       },
       loyalty: {
         heading: 'Loyalty & rewards',

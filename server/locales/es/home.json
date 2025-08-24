@@ -72,7 +72,12 @@
     "bowls": "Bowls",
     "drinks": "Bebidas",
     "coming": "Próximamente",
-    "viewMore": "Ver Menú Completo"
+    "viewMore": "Ver Menú Completo",
+    "tabs": {
+      "tacos": "Tacos",
+      "bowls": "Bowls",
+      "drinks": "Bebidas"
+    }
   },
   "popular": {
     "heading": "Popular Esta Semana",
