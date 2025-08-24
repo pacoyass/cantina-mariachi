@@ -6,7 +6,13 @@
     "imageAlt": "Colorful tacos platter with fresh ingredients and vibrant salsa",
     "orderNow": "Order Now",
     "reserve": "Reserve Table",
-    "browseMenu": "Browse Menu"
+    "browseMenu": "Browse Menu",
+    "rating": "4.9/5 from 2,400+ locals",
+    "avgTime": "25-35 min avg",
+    "card": {
+      "title": "Fresh Daily",
+      "desc": "We source ingredients from local markets every morning"
+    }
   },
   "features": {
     "title": "Why choose Cantina",
@@ -65,14 +71,23 @@
     "tacos": "Tacos",
     "bowls": "Bowls",
     "drinks": "Drinks",
-    "viewMore": "View More",
-    "coming": "Coming Soon"
+    "coming": "Coming Soon",
+    "viewMore": "View Full Menu"
+  },
+  "popular": {
+    "heading": "Popular This Week",
+    "seeMenu": "See Full Menu",
+    "coming": "Coming Soon",
+    "chefSpecial": "Chef Special {{num}}",
+    "notify": "Notify Me",
+    "add": "Add to Cart",
+    "rating": "4.9/5 from 2,400+ locals"
   },
   "loyalty": {
-    "heading": "Loyalty Program",
+    "heading": "Loyalty & Rewards",
     "membersSave": "Members save 10%",
-    "points": "Earn 1 point per $1 spent",
-    "nextAt": "Next reward at {{points}} points",
+    "points": "1,250 points",
+    "nextAt": "Next reward at 1,500 points",
     "freeDessert": "Free dessert on your birthday",
     "join": "Join Now",
     "perks": "View Perks"
@@ -93,6 +108,37 @@
   },
   "testimonials": {
     "heading": "What Our Customers Say"
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions",
+    "q1": {
+      "question": "What is your delivery time?",
+      "answer": "Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive."
+    },
+    "q2": {
+      "question": "Do you offer vegetarian and vegan options?",
+      "answer": "Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides."
+    },
+    "q3": {
+      "question": "Can I customize my order?",
+      "answer": "Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering."
+    }
+  },
+  "cta": {
+    "endsTonight": "⚡ Ends Tonight",
+    "title": "Limited Time: Taco Tuesday Bundle",
+    "desc": "2 tacos + drink for just $9.99. Perfect for sharing or keeping all to yourself.",
+    "socialProof": "🔥 2,400+ orders this week",
+    "limited": "Limited Time Offer",
+    "start": "Start Ordering",
+    "reserve": "Reserve Table"
+  },
+  "sticky": {
+    "order": "Order Now",
+    "reserve": "Reserve"
+  },
+  "logo": {
+    "heading": "Trusted by local businesses and food lovers"
   },
   "values": {
     "heading": "Our Values & Sourcing",
@@ -130,41 +176,6 @@
       "title": "Track & Enjoy",
       "desc": "Follow your order in real-time and enjoy fresh food"
     }
-  },
-  "popular": {
-    "heading": "Popular This Week",
-    "seeMenu": "See Full Menu",
-    "coming": "Coming Soon",
-    "chefSpecial": "Chef Special {{num}}",
-    "notify": "Notify Me",
-    "rating": "4.9/5 from 2,400+ locals"
-  },
-  "faq": {
-    "heading": "Frequently Asked Questions",
-    "q1": {
-      "question": "What is your delivery time?",
-      "answer": "Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive."
-    },
-    "q2": {
-      "question": "Do you offer vegetarian and vegan options?",
-      "answer": "Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides."
-    },
-    "q3": {
-      "question": "Can I customize my order?",
-      "answer": "Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering."
-    }
-  },
-  "cta": {
-    "endsTonight": "⚡ Ends Tonight",
-    "title": "Limited Time: Taco Tuesday Bundle",
-    "desc": "2 tacos + drink for just $9.99. Perfect for sharing or keeping all to yourself.",
-    "socialProof": "🔥 2,400+ orders this week",
-    "limited": "Limited Time Offer",
-    "start": "Start Ordering",
-    "reserve": "Reserve Table"
-  },
-  "sticky": {
-    "order": "Order Now"
   },
   "seo": {
     "title": "Cantina Mariachi – Authentic Mexican, Modern Experience",

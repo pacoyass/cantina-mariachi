@@ -19,5 +19,6 @@
   "invalidFileType": "Ungültiger Dateityp. Erlaubte Typen: {{types}}",
   "fileSizeExceeded": "Dateigröße darf {{maxSize}} nicht überschreiten",
   "invalidImageFormat": "Ungültiges Bildformat",
-  "duplicateValue": "{{field}} existiert bereits"
+  "duplicateValue": "{{field}} existiert bereits",
+  "invalidLanguage": "Ungültige Sprachauswahl"
 }

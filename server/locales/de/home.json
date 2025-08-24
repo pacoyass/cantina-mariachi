@@ -39,6 +39,43 @@
     "orderBundle": "Paket bestellen",
     "viewDetails": "Details anzeigen"
   },
+  "values": {
+    "heading": "Unsere Werte",
+    "desc": "Wir setzen uns für Qualität, Nachhaltigkeit und Gemeinschaft ein.",
+    "badges": {
+      "localProduce": "Lokale Produkte",
+      "sustainableSeafood": "Nachhaltige Meeresfrüchte",
+      "fairTrade": "Fairen Handel",
+      "lowWaste": "Weniger Abfall"
+    },
+    "cards": {
+      "dailyMarket": "Täglicher Markt",
+      "houseSalsas": "Haus-Salsas",
+      "localTortillas": "Lokale Tortillas",
+      "compostablePackaging": "Kompostierbare Verpackung"
+    }
+  },
+  "value": {
+    "reorderDesc": "Schnelle Nachbestellung für Ihre Lieblingsgerichte",
+    "trustedTitle": "Vertraut von Tausenden",
+    "trustedDesc": "Werden Sie Teil unserer Gemeinschaft zufriedener Kunden"
+  },
+  "how": {
+    "heading": "Wie es funktioniert",
+    "desc": "Einfache Schritte zu köstlicher mexikanischer Küche",
+    "step1": {
+      "title": "Wählen Sie Ihr Gericht",
+      "desc": "Durchsuchen Sie unsere Speisekarte und wählen Sie Ihre Lieblingsgerichte"
+    },
+    "step2": {
+      "title": "Geben Sie Ihre Bestellung auf",
+      "desc": "Bestellen Sie online oder rufen Sie uns für schnellen Service an"
+    },
+    "step3": {
+      "title": "Genießen und Verfolgen",
+      "desc": "Verfolgen Sie Ihre Lieferung in Echtzeit und genießen Sie frisches Essen"
+    }
+  },
   "seo": {
     "title": "Cantina Mariachi – Authentisches Mexikanisch, Moderne Erfahrung",
     "description": "Online bestellen in Sekunden, sofort reservieren und Lieferung live verfolgen.",

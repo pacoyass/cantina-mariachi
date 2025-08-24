@@ -11,8 +11,65 @@
     "speed": { "title": "Livraison ultra-rapide", "desc": "De la cuisine à votre porte, sans retards tiers." },
     "service": { "title": "Service exceptionnel", "desc": "Suivi en direct, confirmations instantanées et support 24/7." }
   },
-  "about": { "title": "Notre histoire", "content": "Guidés par la passion de la cuisine mexicaine, nous apportons des saveurs authentiques avec une expérience moderne." },
-  "contact": { "title": "Contact", "address": "123 Rue Mexicaine, Ville Foodie, FC 12345", "phone": "+1 (555) 123-4567", "email": "bonjour@cantina.com" },
-  "offers": { "heading": "Offres de saison", "badge": "Temps limité", "bundle": "Pack Taco Tuesday", "deal": "2 tacos + boisson — 9,99 $", "endsIn": "Se termine dans", "orderBundle": "Commander le pack", "viewDetails": "Voir les détails" },
-  "seo": { "title": "Cantina Mariachi – Mexicain authentique, expérience moderne", "description": "Commandez en ligne, réservez instantanément et suivez la livraison en direct.", "keywords": "mexicain, tacos, livraison, restaurant" }
+  "about": { 
+    "title": "Notre histoire", 
+    "content": "Guidés par la passion de la cuisine mexicaine, nous apportons des saveurs authentiques avec une expérience moderne." 
+  },
+  "contact": { 
+    "title": "Contact", 
+    "address": "123 Rue Mexicaine, Ville Foodie, FC 12345", 
+    "phone": "+1 (555) 123-4567", 
+    "email": "bonjour@cantina.com" 
+  },
+  "offers": { 
+    "heading": "Offres de saison", 
+    "badge": "Temps limité", 
+    "bundle": "Pack Taco Tuesday", 
+    "deal": "2 tacos + boisson — 9,99 $", 
+    "endsIn": "Se termine dans", 
+    "orderBundle": "Commander le pack", 
+    "viewDetails": "Voir les détails" 
+  },
+  "values": {
+    "heading": "Nos Valeurs",
+    "desc": "Nous nous engageons pour la qualité, la durabilité et la communauté.",
+    "badges": {
+      "localProduce": "Produits Locaux",
+      "sustainableSeafood": "Fruits de Mer Durables",
+      "fairTrade": "Commerce Équitable",
+      "lowWaste": "Faible Gaspillage"
+    },
+    "cards": {
+      "dailyMarket": "Marché Quotidien",
+      "houseSalsas": "Salsas Maison",
+      "localTortillas": "Tortillas Locales",
+      "compostablePackaging": "Emballage Compostable"
+    }
+  },
+  "value": {
+    "reorderDesc": "Commande rapide pour vos plats préférés",
+    "trustedTitle": "Approuvé par des Milliers",
+    "trustedDesc": "Rejoignez notre communauté de clients satisfaits"
+  },
+  "how": {
+    "heading": "Comment ça Marche",
+    "desc": "Étapes simples pour une délicieuse cuisine mexicaine",
+    "step1": {
+      "title": "Choisissez votre Repas",
+      "desc": "Parcourez notre menu et sélectionnez vos plats préférés"
+    },
+    "step2": {
+      "title": "Passez votre Commande",
+      "desc": "Commandez en ligne ou appelez-nous pour un service rapide"
+    },
+    "step3": {
+      "title": "Savourez et Suivez",
+      "desc": "Suivez votre livraison en temps réel et savourez une nourriture fraîche"
+    }
+  },
+  "seo": { 
+    "title": "Cantina Mariachi – Mexicain authentique, expérience moderne", 
+    "description": "Commandez en ligne, réservez instantanément et suivez la livraison en direct.", 
+    "keywords": "mexicain, tacos, livraison, restaurant" 
+  }
 }

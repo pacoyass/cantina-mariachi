@@ -19,5 +19,6 @@
   "invalidFileType": "نوع ملف غير صحيح. الأنواع المسموحة: {{types}}",
   "fileSizeExceeded": "حجم الملف يجب ألا يتجاوز {{maxSize}}",
   "invalidImageFormat": "تنسيق الصورة غير صحيح",
-  "duplicateValue": "{{field}} موجود بالفعل"
+  "duplicateValue": "{{field}} موجود بالفعل",
+  "invalidLanguage": "اختيار لغة غير صحيح"
 }
