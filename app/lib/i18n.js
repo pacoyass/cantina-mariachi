@@ -30,15 +30,16 @@ export async function initI18n({ lng = 'en', resources }) {
     return i18n;
   }
 
-  // Initialize with frontend resource structure (language-first)
+  // Initialize with namespace support for components
   await i18n.init({
     lng,
     fallbackLng: 'en',
     supportedLngs,
     interpolation: { escapeValue: false },
     resources,
-    // Use default namespace configuration for language-first structure
-    defaultNS: 'translation',
+    // Configure namespaces for component access
+    ns: ['home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
+    defaultNS: 'home',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
@@ -76,11 +77,10 @@ export function createServerI18n({ lng = 'en', resources }) {
   i18n.init({
     lng,
     fallbackLng: 'en',
-    supportedLngs,
-    interpolation: { escapeValue: false },
     resources,
-    // Use default namespace configuration for language-first structure
-    defaultNS: 'translation',
+    // Configure namespaces for component access
+    ns: ['home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
+    defaultNS: 'home',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
