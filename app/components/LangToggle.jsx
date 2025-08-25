@@ -13,11 +13,6 @@ export function LangToggle() {
   const languages = [
     { code: 'en', label: 'English' },
     { code: 'es', label: 'Español' },
-    { code: 'fr', label: 'Français' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'it', label: 'Italiano' },
-    { code: 'pt', label: 'Português' },
-    { code: 'ar', label: 'العربية' },
   ];
 
   const handleLanguageChange = async (code) => {
