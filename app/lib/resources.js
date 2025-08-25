@@ -138,7 +138,10 @@ export const uiResources = {
       richChocolateCake: 'Rich chocolate cake',
       chilledCola: 'Chilled cola',
       beefTacosSalsa: 'Beef tacos with salsa',
-      price: '${{price}}'
+      price: '${{price}}',
+      trending: 'Trending',
+      unavailable: 'Unavailable',
+      rating: '{{rating}}/5 from {{reviews}}+ locals'
     },
     auth: {
       loginSuccess: 'Login successful',
@@ -584,7 +587,10 @@ export const uiResources = {
       richChocolateCake: 'Pastel de chocolate rico',
       chilledCola: 'Cola fría',
       beefTacosSalsa: 'Tacos de res con salsa',
-      price: '${{price}}'
+      price: '${{price}}',
+      trending: 'Tendencia',
+      unavailable: 'No Disponible',
+      rating: '{{rating}}/5 de más de {{reviews}} locales'
     },
     auth: {
       loginSuccess: 'Inicio de sesión exitoso',
@@ -1027,7 +1033,10 @@ export const uiResources = {
       richChocolateCake: 'Gâteau au chocolat riche',
       chilledCola: 'Cola fraîche',
       beefTacosSalsa: 'Tacos au bœuf avec salsa',
-      price: '{{price}}€'
+      price: '{{price}}€',
+      trending: 'Tendance',
+      unavailable: 'Indisponible',
+      rating: '{{rating}}/5 de plus de {{reviews}} locaux'
     },
     auth: {
       loginSuccess: 'Connexion réussie',
@@ -1473,7 +1482,10 @@ export const uiResources = {
       richChocolateCake: 'Reicher Schokoladenkuchen',
       chilledCola: 'Gekühlte Cola',
       beefTacosSalsa: 'Rindfleisch-Tacos mit Salsa',
-      price: '{{price}}€'
+      price: '{{price}}€',
+      trending: 'Trend',
+      unavailable: 'Nicht Verfügbar',
+      rating: '{{rating}}/5 von über {{reviews}} Einheimischen'
     },
     auth: {
       loginSuccess: 'Anmeldung erfolgreich',
@@ -1919,7 +1931,10 @@ export const uiResources = {
       richChocolateCake: 'Torta al cioccolato ricca',
       chilledCola: 'Cola fredda',
       beefTacosSalsa: 'Tacos di manzo con salsa',
-      price: '{{price}}€'
+      price: '{{price}}€',
+      trending: 'Tendenza',
+      unavailable: 'Non Disponibile',
+      rating: '{{rating}}/5 da oltre {{reviews}} locali'
     },
     auth: {
       loginSuccess: 'Accesso riuscito',
@@ -2365,7 +2380,10 @@ export const uiResources = {
       richChocolateCake: 'Bolo de chocolate rico',
       chilledCola: 'Cola gelada',
       beefTacosSalsa: 'Tacos de carne com salsa',
-      price: 'R$ {{price}}'
+      price: 'R$ {{price}}',
+      trending: 'Tendência',
+      unavailable: 'Indisponível',
+      rating: '{{rating}}/5 de mais de {{reviews}} locais'
     },
     auth: {
       loginSuccess: 'Login realizado com sucesso',
@@ -2811,7 +2829,10 @@ export const uiResources = {
       richChocolateCake: 'كيك شوكولاتة غني',
       chilledCola: 'كولا باردة',
       beefTacosSalsa: 'تاكوس لحم بقري مع صلصة',
-      price: '{{price}}$'
+      price: '{{price}}$',
+      trending: 'رائج',
+      unavailable: 'غير متوفر',
+      rating: '{{rating}}/5 من أكثر من {{reviews}} محلي'
     },
     auth: {
       loginSuccess: 'تم تسجيل الدخول بنجاح',
