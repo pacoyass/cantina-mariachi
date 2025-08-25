@@ -982,7 +982,14 @@ export const uiResources = {
       coming: 'Bientôt Disponible',
       chefSpecial: 'Spécial du Chef {{num}}',
       notify: 'Me Notifier',
-      rating: '4.9/5 de plus de 2,400 locaux'
+      rating: '4.9/5 de plus de 2,400 locaux',
+      numberOne: 'Numéro 1',
+      filters: {
+        vegetarian: 'Végétarien'
+      },
+      items: {
+        chocolateCake: 'Gâteau au Chocolat'
+      }
     },
     auth: {
       loginSuccess: 'Connexion réussie',
@@ -1211,12 +1218,12 @@ export const uiResources = {
             desc: 'Parcourez notre menu et sélectionnez vos plats préférés'
           },
                   step2: {
-          title: 'Geben Sie Ihre Bestellung Auf',
-          desc: 'Passen Sie Ihre Bestellung an und bezahlen Sie sicher'
+          title: 'Passez Votre Commande',
+          desc: 'Personnalisez votre commande et payez en toute sécurité'
         },
         step3: {
-          title: 'Verfolgen & Genießen',
-          desc: 'Verfolgen Sie Ihre Bestellung in Echtzeit und genießen Sie frisches Essen'
+          title: 'Suivez et Savourez',
+          desc: 'Suivez votre commande en temps réel et savourez une nourriture fraîche'
         }
         },
         testimonials: {
