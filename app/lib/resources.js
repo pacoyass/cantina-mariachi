@@ -1013,11 +1013,11 @@ export const uiResources = {
       dataCreated: 'Données créées avec succès',
       dataDeleted: 'Données supprimées avec succès',
       noDataFound: 'Aucune donnée trouvée',
-      invalidApiKey: 'Clé API inválida',
-      apiKeyExpired: 'La clé API a expiré',
-      apiKeyRequired: 'Clé API requise',
-      quotaExceeded: 'Cuota API excedida',
-      methodNotAllowed: 'Méthode no permitido',
+      invalidApiKey: 'Ungültiger API-Schlüssel',
+      apiKeyExpired: 'API-Schlüssel ist abgelaufen',
+      apiKeyRequired: 'API-Schlüssel erforderlich',
+      quotaExceeded: 'API-Kontingent überschritten',
+      methodNotAllowed: 'Methode nicht erlaubt',
       unsupportedMediaType: 'Type de média non pris en charge',
       payloadTooLarge: 'Charge utile trop volumineuse',
       requestEntityTooLarge: 'Entité de requête trop volumineuse',
@@ -1117,176 +1117,176 @@ export const uiResources = {
         capacityExceeded: 'La taille du groupe dépasse la capacité de la table'
       }
     },
-    home: {
-      hero: {
-        badge: 'Nouveau: Lancement des récompenses — gagnez des points sur chaque commande',
-        title: 'Authentisch mexikanisch. <primary>Schnell geliefert.</primary>',
-        desc: 'Von Straßentacos bis zu langsam gekochten Spezialitäten. Bestellen Sie in Sekunden, reservieren Sie sofort einen Tisch und verfolgen Sie Ihre Lieferung in Echtzeit — alles an einem Ort.',
-        orderNow: 'Jetzt Bestellen',
-        reserve: 'Tisch Reservieren',
-        browseMenu: 'Menü Durchsuchen',
-        rating: '4.9/5 von über 2,400 Einheimischen',
-        avgTime: '25-35 Min Durchschnitt',
-        imageAlt: 'Bunte Tacos-Platte mit frischen Zutaten und lebendiger Salsa',
-        card: {
-          title: 'Täglich Frisch',
-          desc: 'Wir beziehen Zutaten jeden Morgen von lokalen Märkten'
-        }
-      },
-      explore: {
-        heading: 'Entdecken Sie Unser Menü',
-        tacos: 'Tacos',
-        bowls: 'Bowls',
-        drinks: 'Getränke',
-        coming: 'Demnächst Verfügbar',
-        viewMore: 'Vollständiges Menü Anzeigen',
-        tabs: {
+          home: {
+        hero: {
+          badge: 'Nouveau: Lancement des récompenses — gagnez des points sur chaque commande',
+          title: 'Mexicain authentique. <primary>Livré rapidement.</primary>',
+          desc: 'Des tacos style rue aux spécialités mijotées. Commandez en secondes, réservez une table instantanément et suivez votre livraison en temps réel — le tout en un seul endroit.',
+          orderNow: 'Commander Maintenant',
+          reserve: 'Réserver une Table',
+          browseMenu: 'Parcourir le Menu',
+          rating: '4.9/5 de plus de 2,400 locaux',
+          avgTime: '25-35 min en moyenne',
+          imageAlt: 'Assiette colorée de tacos avec des ingrédients frais et une salsa vibrante',
+          card: {
+            title: 'Frais Quotidien',
+            desc: 'Nous nous approvisionnons en ingrédients des marchés locaux chaque matin'
+          }
+        },
+        explore: {
+          heading: 'Explorez Notre Menu',
           tacos: 'Tacos',
-          bowls: 'Bowls',
-          drinks: 'Getränke'
-        }
-      },
-      loyalty: {
-        heading: 'Treue & Belohnungen',
-        membersSave: 'Mitglieder sparen 10%',
-        points: '1,250 Punkte',
-        nextAt: 'Nächste Belohnung bei {{points}}',
-        freeDessert: 'Kostenloses Dessert zu Ihrem Geburtstag',
-        join: 'Jetzt Beitreten',
-        perks: 'Vorteile Anzeigen'
-      },
-      why: {
-        heading: 'Warum Cantina Mariachi Wählen',
-        faster: {
-          title: 'Schneller als Liefer-Apps',
-          desc: 'Direkt von unserer Küche zu Ihrer Tür in 25-35 Minuten'
+          bowls: 'Bol',
+          drinks: 'Boissons',
+          coming: 'Bientôt Disponible',
+          viewMore: 'Voir le Menu Complet',
+          tabs: {
+            tacos: 'Tacos',
+            bowls: 'Bol',
+            drinks: 'Boissons'
+          }
         },
-        fees: {
-          title: 'Keine versteckten Gebühren',
-          desc: 'Transparente Preise ohne Überraschungsgebühren'
+        loyalty: {
+          heading: 'Fidélité et Récompenses',
+          membersSave: 'Les membres économisent 10%',
+          points: '1,250 points',
+          nextAt: 'Prochaine récompense à {{points}}',
+          freeDessert: 'Dessert gratuit pour votre anniversaire',
+          join: 'Rejoindre Maintenant',
+          perks: 'Voir les Avantages'
         },
-        oneTap: {
-          title: 'Ein-Tap-Nachbestellung',
-          desc: 'Bestellen Sie Ihre Favoriten mit nur einem Tap nach'
+        why: {
+          heading: 'Pourquoi Choisir Cantina Mariachi',
+          faster: {
+            title: 'Plus rapide que les applications de livraison',
+            desc: 'Directement de notre cuisine à votre porte en 25-35 minutes'
+          },
+          fees: {
+            title: 'Aucun frais caché',
+            desc: 'Prix transparents sans frais surprise'
+          },
+          oneTap: {
+            title: 'Commande en un tap',
+            desc: 'Recommandez vos favoris en un seul tap'
+          },
+          tracking: {
+            title: 'Suivi en direct',
+            desc: 'Voyez exactement quand votre nourriture arrivera'
+          },
+          chef: {
+            title: 'Qualité de chef',
+            desc: 'Chaque plat préparé par nos chefs experts'
+          },
+          rewards: {
+            title: 'Gagnez des récompenses',
+            desc: 'Obtenez des points sur chaque commande et débloquez des avantages exclusifs'
+          }
         },
-        tracking: {
-          title: 'Live-Bestellverfolgung',
-          desc: 'Sehen Sie genau, wann Ihr Essen ankommt'
+        values: {
+          heading: 'Nos Valeurs et Approvisionnement',
+          desc: 'Nous nous engageons pour la qualité, la durabilité et le soutien aux communautés locales grâce à un approvisionnement responsable et des pratiques écologiques.',
+          badges: {
+            localProduce: 'Produits Locaux',
+            sustainableSeafood: 'Fruits de Mer Durables',
+            fairTrade: 'Commerce Équitable',
+            lowWaste: 'Faible Gaspillage'
+          },
+          cards: {
+            dailyMarket: 'Frais du Marché Quotidien',
+            houseSalsas: 'Salsas Maison',
+            localTortillas: 'Tortillas Locales',
+            compostablePackaging: 'Emballage Compostable'
+          }
         },
-        chef: {
-          title: 'Chef-gefertigte Qualität',
-          desc: 'Jedes Gericht wird von unseren Experten-Chefs zubereitet'
+        value: {
+          reorderDesc: 'Recommandez vos favoris en secondes',
+          trustedTitle: 'Approuvé par plus de 10,000 locaux',
+          trustedDesc: 'Rejoignez des milliers de clients satisfaits'
         },
-        rewards: {
-          title: 'Verdienen Sie Belohnungen',
-          desc: 'Erhalten Sie Punkte bei jeder Bestellung und schalten Sie exklusive Vorteile frei'
-        }
-      },
-      values: {
-        heading: 'Unsere Werte & Beschaffung',
-        desc: 'Wir setzen uns für Qualität, Nachhaltigkeit und die Unterstützung lokaler Gemeinschaften durch verantwortungsvolle Beschaffung und umweltfreundliche Praktiken ein.',
-        badges: {
-          localProduce: 'Lokale Produkte',
-          sustainableSeafood: 'Nachhaltige Meeresfrüchte',
-          fairTrade: 'Fairen Handel',
-          lowWaste: 'Weniger Abfall'
-        },
-        cards: {
-          dailyMarket: 'Täglich Frisch vom Markt',
-          houseSalsas: 'Hausgemachte Salsas',
-          localTortillas: 'Lokale Tortillas',
-          compostablePackaging: 'Kompostierbare Verpackung'
-        }
-      },
-      value: {
-        reorderDesc: 'Bestellen Sie Ihre Favoriten in Sekunden nach',
-        trustedTitle: 'Vertraut von über 10,000 Einheimischen',
-        trustedDesc: 'Schließen Sie sich Tausenden zufriedener Kunden an'
-      },
-      how: {
-        heading: 'Wie Es Funktioniert',
-        desc: 'Bestellen bei Cantina Mariachi ist einfach und schnell',
-        step1: {
-          title: 'Wählen Sie Ihre Favoriten',
-          desc: 'Durchsuchen Sie unser Menü und wählen Sie Ihre Lieblingsgerichte'
-        },
-        step2: {
-          title: 'Passez Votre Commande',
-          desc: 'Personnalisez votre commande et payez en toute sécurité'
+        how: {
+          heading: 'Comment Ça Marche',
+          desc: 'Commander avec Cantina Mariachi est simple et rapide',
+          step1: {
+            title: 'Choisissez Vos Favoris',
+            desc: 'Parcourez notre menu et sélectionnez vos plats préférés'
+          },
+                  step2: {
+          title: 'Geben Sie Ihre Bestellung Auf',
+          desc: 'Passen Sie Ihre Bestellung an und bezahlen Sie sicher'
         },
         step3: {
-          title: 'Suivez et Savourez',
-          desc: 'Suivez votre commande en temps réel et savourez une nourriture fraîche'
+          title: 'Verfolgen & Genießen',
+          desc: 'Verfolgen Sie Ihre Bestellung in Echtzeit und genießen Sie frisches Essen'
         }
-      },
-      testimonials: {
-        heading: 'Was Unsere Kunden Sagen'
-      },
-      popular: {
-        heading: 'Diese Woche Beliebt',
-        seeMenu: 'Vollständiges Menü Anzeigen',
-        coming: 'Demnächst Verfügbar',
-        chefSpecial: 'Chef-Spezial {{num}}',
-        notify: 'Benachrichtigen Sie Mich',
-        rating: '4.9/5 von über 2,400 Einheimischen'
-      },
-      faq: {
-        heading: 'Häufig Gestellte Fragen',
-        q1: {
-          question: 'Wie lange dauert die Lieferung?',
-          answer: 'Unsere durchschnittliche Lieferzeit beträgt 25-35 Minuten. Wir verwenden Echtzeit-Tracking, damit Sie genau sehen können, wann Ihre Bestellung ankommt.'
         },
-        q2: {
-          question: 'Bieten Sie vegetarische und vegane Optionen an?',
-          answer: 'Ja! Wir haben eine große Auswahl an vegetarischen und veganen Gerichten. Unser Menü umfasst pflanzliche Tacos, Bowls und Beilagen.'
+        testimonials: {
+          heading: 'Ce Que Disent Nos Clients'
         },
-        q3: {
-          question: 'Kann ich meine Bestellung anpassen?',
-          answer: 'Absolut! Sie können jedes Gericht anpassen, indem Sie Zutaten hinzufügen oder entfernen. Teilen Sie uns einfach Ihre Vorlieben bei der Bestellung mit.'
-        }
-      },
-      cta: {
-        endsTonight: '⚡ Endet Heute Nacht',
-        title: 'Zeitlich Begrenzt: Taco Tuesday Bundle',
-        desc: '2 Tacos + Getränk für nur 9,99€. Perfekt zum Teilen oder alles für sich zu behalten.',
-        socialProof: '🔥 2,400+ orders this week',
-        limited: 'Limited Time Offer',
-        start: 'Start Ordering',
-        reserve: 'Reserve Table'
-      },
-      sticky: {
-        order: 'Order Now',
-        reserve: 'Reservieren'
-      },
-      logo: {
-        heading: 'Trusted by local businesses and food lovers'
-      },
-      offers: {
-        heading: 'Saisonale Angebote',
-        badge: 'Limited time',
-        bundle: 'Taco Tuesday Bundle',
-        deal: '2 tacos + drink — $9.99',
-        endsIn: 'Ends in',
-        orderBundle: 'Order bundle',
-        viewDetails: 'View details',
-        coming: 'New offers are coming soon.',
-        freeDelivery: 'Today only: free delivery on orders over $25'
-      },
-      events: {
-        heading: 'Events & Catering',
-        desc: 'We organize special events and catering for large groups. From birthdays to corporate events.',
-        plan: 'Plan Event',
-        catering: 'Catering Service',
-        q1: {
-          question: 'What is the minimum group size for events?',
-          answer: 'Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations.'
+        popular: {
+          heading: 'Populaire Cette Semaine',
+          seeMenu: 'Voir le Menu Complet',
+          coming: 'Bientôt Disponible',
+          chefSpecial: 'Spécial du Chef {{num}}',
+          notify: 'Me Notifier',
+          rating: '4.9/5 de plus de 2,400 locaux'
         },
-        q2: {
-          question: 'Do you offer vegetarian and vegan options?',
-          answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
+        faq: {
+          heading: 'Questions Fréquemment Posées',
+          q1: {
+            question: 'Quel est votre temps de livraison?',
+            answer: 'Notre temps de livraison moyen est de 25-35 minutes. Nous utilisons un suivi en temps réel pour que vous puissiez voir exactement quand votre commande arrivera.'
+          },
+          q2: {
+            question: 'Offrez-vous des options végétariennes et véganes?',
+            answer: 'Oui! Nous avons une large sélection de plats végétariens et véganes. Notre menu comprend des tacos, des bols et des accompagnements à base de plantes.'
+          },
+          q3: {
+            question: 'Puis-je personnaliser ma commande?',
+            answer: 'Absolument! Vous pouvez personnaliser n\'importe quel plat en ajoutant ou en supprimant des ingrédients. Faites-nous simplement savoir vos préférences lors de la commande.'
+          }
+        },
+        cta: {
+          endsTonight: '⚡ Se Termine Ce Soir',
+          title: 'Temps Limité: Pack Taco Tuesday',
+          desc: '2 tacos + boisson pour seulement 9,99€. Parfait pour partager ou tout garder pour vous.',
+          socialProof: '🔥 Plus de 2,400 commandes cette semaine',
+          limited: 'Offre à Temps Limité',
+          start: 'Commencer à Commander',
+          reserve: 'Réserver une Table'
+        },
+        sticky: {
+          order: 'Commander Maintenant',
+          reserve: 'Réserver'
+        },
+        logo: {
+          heading: 'Approuvé par les entreprises locales et les amateurs de cuisine'
+        },
+        offers: {
+          heading: 'Offres Saisonnières',
+          badge: 'Temps limité',
+          bundle: 'Pack Taco Tuesday',
+          deal: '2 tacos + boisson — 9,99€',
+          endsIn: 'Se termine dans',
+          orderBundle: 'Commander le pack',
+          viewDetails: 'Voir les détails',
+          coming: 'De nouvelles offres arrivent bientôt.',
+          freeDelivery: 'Aujourd\'hui seulement: livraison gratuite pour les commandes de plus de 25€'
+        },
+        events: {
+          heading: 'Événements et Traiteur',
+          desc: 'Nous organisons des événements spéciaux et des services de traiteur pour de grands groupes. Des anniversaires aux événements d\'entreprise.',
+          plan: 'Planifier l\'Événement',
+          catering: 'Service de Traiteur',
+          q1: {
+            question: 'Quelle est la taille minimale du groupe pour les événements?',
+            answer: 'Notre taille minimale de groupe pour les événements est de 20 personnes. Pour les groupes plus petits, nous recommandons des réservations régulières.'
+          },
+          q2: {
+            question: 'Offrez-vous des options végétariennes et véganes?',
+            answer: 'Oui, nous avons un menu complet d\'options végétariennes et véganes. Nous pouvons également personnaliser les menus selon vos besoins alimentaires.'
+          }
         }
       }
-    }
   },
   
   // German translations
@@ -1541,10 +1541,10 @@ export const uiResources = {
         reservationNotFound: 'Reservierung nicht gefunden',
         reservationConfirmed: 'Reservierung bestätigt',
         tableNotAvailable: 'Tisch ist zur gewünschten Zeit nicht verfügbar',
-        invalidReservationTime: 'Heure de réservation invalide',
-        reservationTooEarly: 'L\'heure de réservation est trop éloignée dans le futur',
-        reservationTooLate: 'L\'heure de réservation est déjà passée',
-        capacityExceeded: 'La taille du groupe dépasse la capacité de la table'
+        invalidReservationTime: 'Ungültige Reservierungszeit',
+        reservationTooEarly: 'Die Reservierungszeit liegt zu weit in der Zukunft',
+        reservationTooLate: 'Die Reservierungszeit ist bereits vergangen',
+        capacityExceeded: 'Die Gruppengröße überschreitet die Tischkapazität'
       }
     },
     home: {
@@ -1560,162 +1560,162 @@ export const uiResources = {
         imageAlt: 'Bunte Tacos-Platte mit frischen Zutaten und lebendiger Salsa',
         card: {
           title: 'Täglich Frisch',
-          desc: 'Nós nos abastecemos de ingredientes dos mercados locais todas as manhãs'
-        }
-      },
-      explore: {
-        heading: 'Entdecken Sie Unser Menü',
+                  desc: 'Wir beziehen Zutaten jeden Morgen von lokalen Märkten'
+      }
+    },
+    explore: {
+      heading: 'Entdecken Sie Unser Menü',
+      tacos: 'Tacos',
+      bowls: 'Bowls',
+      drinks: 'Getränke',
+      coming: 'Demnächst Verfügbar',
+      viewMore: 'Vollständiges Menü Anzeigen',
+      tabs: {
         tacos: 'Tacos',
         bowls: 'Bowls',
-        drinks: 'Bebidas',
-        coming: 'Próximamente',
-        viewMore: 'Ver Menú Completo',
-        tabs: {
-          tacos: 'Tacos',
-          bowls: 'Bowls',
-          drinks: 'Bebidas'
-        }
-      },
-      loyalty: {
-        heading: 'Fidelidade e Recompensas',
-        membersSave: 'Membros economizam 10%',
-        points: '1,250 pontos',
-        nextAt: 'Próxima recompensa em {{points}}',
-        freeDessert: 'Sobremesa grátis no seu aniversário',
-        join: 'Participar Agora',
-        perks: 'Ver Benefícios'
-      },
-      why: {
-        heading: 'Por Que Escolher Cantina Mariachi',
-        faster: {
-          title: 'Mais rápido que aplicativos de entrega',
-          desc: 'Diretamente da nossa cozinha para sua porta em 25-35 minutos'
-        },
-        fees: {
-          title: 'Nenhuma taxa oculta',
-          desc: 'Preços transparentes sem surpresas'
-        },
-        oneTap: {
-          title: 'Refazer pedido com um toque',
-          desc: 'Refaça seus favoritos com apenas um toque'
-        },
-        tracking: {
-          title: 'Rastreamento ao vivo',
-          desc: 'Veja exatamente quando sua comida chegará'
-        },
-        chef: {
-          title: 'Qualidade de chef',
-          desc: 'Cada prato preparado por nossos chefs especialistas'
-        },
-        rewards: {
-          title: 'Ganhe recompensas',
-          desc: 'Obtenha pontos em cada pedido e desbloqueie benefícios exclusivos'
-        }
-      },
-      values: {
-        heading: 'Nossos Valores e Abastecimento',
-        desc: 'Estamos comprometidos com qualidade, sustentabilidade e apoio às comunidades locais através de abastecimento responsável e práticas ecológicas.',
-        badges: {
-          localProduce: 'Produtos Locais',
-          sustainableSeafood: 'Frutos do Mar Sustentáveis',
-          fairTrade: 'Comércio Justo',
-          lowWaste: 'Baixo Desperdício'
-        },
-        cards: {
-          dailyMarket: 'Fresco do Mercado Diário',
-          houseSalsas: 'Salsas Caseiras',
-          localTortillas: 'Tortillas Locais',
-          compostablePackaging: 'Embalagem Compostável'
-        }
-      },
-      value: {
-        reorderDesc: 'Refaça seus favoritos em segundos',
-        trustedTitle: 'Confiado por mais de 10,000 locais',
-        trustedDesc: 'Junte-se a milhares de clientes satisfeitos'
-      },
-      how: {
-        heading: 'Como Funciona',
-        desc: 'Fazer pedidos com Cantina Mariachi é simples e rápido',
-        step1: {
-          title: 'Escolha Seus Favoritos',
-          desc: 'Navegue pelo nosso cardápio e selecione seus pratos favoritos'
-        },
-        step2: {
-          title: 'Faça Seu Pedido',
-          desc: 'Personalize seu pedido e pague com segurança'
-        },
-        step3: {
-          title: 'Rastreie e Aproveite',
-          desc: 'Acompanhe seu pedido em tempo real e aproveite comida fresca'
-        }
-      },
-      testimonials: {
-        heading: 'O Que Nossos Clientes Dizem'
-      },
-      popular: {
-        heading: 'Popular Esta Semana',
-        seeMenu: 'Ver Cardápio Completo',
-        coming: 'Em Breve',
-        chefSpecial: 'Especial do Chef {{num}}',
-        notify: 'Me Notifique',
-        rating: '4.9/5 de mais de 2,400 locais'
-      },
-      faq: {
-        heading: 'Perguntas Frequentes',
-        q1: {
-          question: 'Qual é o tempo de entrega?',
-          answer: 'Nosso tempo médio de entrega é de 25-35 minutos. Usamos rastreamento em tempo real para você ver exatamente quando seu pedido chegará.'
-        },
-        q2: {
-          question: 'Vocês oferecem opções vegetarianas e veganas?',
-          answer: 'Sim! Temos uma ampla seleção de pratos vegetarianos e veganos. Nosso cardápio inclui tacos, bowls e acompanhamentos à base de plantas.'
-        },
-        q3: {
-          question: 'Posso personalizar meu pedido?',
-          answer: 'Absolutamente! Você pode personalizar qualquer prato adicionando ou removendo ingredientes. Apenas nos informe suas preferências ao fazer o pedido.'
-        }
-      },
-      cta: {
-        endsTonight: '⚡ Termina Esta Noite',
-        title: 'Tempo Limitado: Pacote Taco Tuesday',
-        desc: '2 tacos + bebida por apenas R$ 9,99. Perfeito para compartilhar ou manter tudo para você.',
-        socialProof: '🔥 Mais de 2,400 pedidos esta semana',
-        limited: 'Oferta por Tempo Limitado',
-        start: 'Começar a Fazer Pedidos',
-        reserve: 'Reservar Mesa'
-      },
-      sticky: {
-        order: 'Fazer Pedido Agora',
-        reserve: 'Reservar'
-      },
-      logo: {
-        heading: 'Confiado por empresas locais e amantes da comida'
-      },
-      offers: {
-        heading: 'Ofertas Sazonais',
-        badge: 'Tempo limitado',
-        bundle: 'Pacote Taco Tuesday',
-        deal: '2 tacos + bebida — R$ 9,99',
-        endsIn: 'Termina em',
-        orderBundle: 'Pedir pacote',
-        viewDetails: 'Ver detalhes',
-        coming: 'Novas ofertas estão chegando em breve.',
-        freeDelivery: 'Só hoje: entrega grátis em pedidos acima de R$ 25'
-      },
-      events: {
-        heading: 'Eventos e Catering',
-        desc: 'Organizamos eventos especiais e serviços de catering para grandes grupos. De aniversários a eventos corporativos.',
-        plan: 'Planejar Evento',
-        catering: 'Serviço de Catering',
-        q1: {
-          question: 'Qual é o tamanho mínimo do grupo para eventos?',
-          answer: 'Nosso tamanho mínimo de grupo para eventos é de 20 pessoas. Para grupos menores, recomendamos reservas regulares.'
-        },
-        q2: {
-          question: 'Vocês oferecem opções vegetarianas e veganas?',
-          answer: 'Sim, temos um cardápio completo de opções vegetarianas e veganas. Também podemos personalizar cardápios de acordo com suas necessidades dietéticas.'
-        }
+        drinks: 'Getränke'
       }
+    },
+    loyalty: {
+      heading: 'Treue & Belohnungen',
+      membersSave: 'Mitglieder sparen 10%',
+      points: '1,250 Punkte',
+      nextAt: 'Nächste Belohnung bei {{points}}',
+      freeDessert: 'Kostenloses Dessert zu Ihrem Geburtstag',
+      join: 'Jetzt Beitreten',
+      perks: 'Vorteile Anzeigen'
+    },
+    why: {
+      heading: 'Warum Cantina Mariachi Wählen',
+      faster: {
+        title: 'Schneller als Liefer-Apps',
+        desc: 'Direkt von unserer Küche zu Ihrer Tür in 25-35 Minuten'
+      },
+      fees: {
+        title: 'Keine versteckten Gebühren',
+        desc: 'Transparente Preise ohne Überraschungsgebühren'
+      },
+      oneTap: {
+        title: 'Ein-Tap-Nachbestellung',
+        desc: 'Bestellen Sie Ihre Favoriten mit nur einem Tap nach'
+      },
+      tracking: {
+        title: 'Live-Bestellverfolgung',
+        desc: 'Sehen Sie genau, wann Ihr Essen ankommt'
+      },
+      chef: {
+        title: 'Chef-gefertigte Qualität',
+        desc: 'Jedes Gericht wird von unseren Experten-Chefs zubereitet'
+      },
+      rewards: {
+        title: 'Verdienen Sie Belohnungen',
+        desc: 'Erhalten Sie Punkte bei jeder Bestellung und schalten Sie exklusive Vorteile frei'
+      }
+    },
+    values: {
+      heading: 'Unsere Werte & Beschaffung',
+      desc: 'Wir setzen uns für Qualität, Nachhaltigkeit und die Unterstützung lokaler Gemeinschaften durch verantwortungsvolle Beschaffung und umweltfreundliche Praktiken ein.',
+      badges: {
+        localProduce: 'Lokale Produkte',
+        sustainableSeafood: 'Nachhaltige Meeresfrüchte',
+        fairTrade: 'Fairen Handel',
+        lowWaste: 'Weniger Abfall'
+      },
+      cards: {
+        dailyMarket: 'Täglich Frisch vom Markt',
+        houseSalsas: 'Hausgemachte Salsas',
+        localTortillas: 'Lokale Tortillas',
+        compostablePackaging: 'Kompostierbare Verpackung'
+      }
+    },
+    value: {
+      reorderDesc: 'Bestellen Sie Ihre Favoriten in Sekunden nach',
+      trustedTitle: 'Vertraut von über 10,000 Einheimischen',
+      trustedDesc: 'Schließen Sie sich Tausenden zufriedener Kunden an'
+    },
+    how: {
+      heading: 'Wie Es Funktioniert',
+      desc: 'Bestellen bei Cantina Mariachi ist einfach und schnell',
+      step1: {
+        title: 'Wählen Sie Ihre Favoriten',
+        desc: 'Durchsuchen Sie unser Menü und wählen Sie Ihre Lieblingsgerichte'
+      },
+      step2: {
+        title: 'Geben Sie Ihre Bestellung Auf',
+        desc: 'Passen Sie Ihre Bestellung an und bezahlen Sie sicher'
+      },
+      step3: {
+        title: 'Verfolgen & Genießen',
+        desc: 'Verfolgen Sie Ihre Bestellung in Echtzeit und genießen Sie frisches Essen'
+      }
+    },
+    testimonials: {
+      heading: 'Was Unsere Kunden Sagen'
+    },
+    popular: {
+      heading: 'Diese Woche Beliebt',
+      seeMenu: 'Vollständiges Menü Anzeigen',
+      coming: 'Demnächst Verfügbar',
+      chefSpecial: 'Chef-Spezial {{num}}',
+      notify: 'Benachrichtigen Sie Mich',
+      rating: '4.9/5 von über 2,400 Einheimischen'
+    },
+    faq: {
+      heading: 'Häufig Gestellte Fragen',
+      q1: {
+        question: 'Wie lange dauert die Lieferung?',
+        answer: 'Unsere durchschnittliche Lieferzeit beträgt 25-35 Minuten. Wir verwenden Echtzeit-Tracking, damit Sie genau sehen können, wann Ihre Bestellung ankommt.'
+      },
+      q2: {
+        question: 'Bieten Sie vegetarische und vegane Optionen an?',
+        answer: 'Ja! Wir haben eine große Auswahl an vegetarischen und veganen Gerichten. Unser Menü umfasst pflanzliche Tacos, Bowls und Beilagen.'
+      },
+      q3: {
+        question: 'Kann ich meine Bestellung anpassen?',
+        answer: 'Absolut! Sie können jedes Gericht anpassen, indem Sie Zutaten hinzufügen oder entfernen. Teilen Sie uns einfach Ihre Vorlieben bei der Bestellung mit.'
+      }
+    },
+    cta: {
+      endsTonight: '⚡ Endet Heute Nacht',
+      title: 'Zeitlich Begrenzt: Taco Tuesday Bundle',
+      desc: '2 Tacos + Getränk für nur 9,99€. Perfekt zum Teilen oder alles für sich zu behalten.',
+      socialProof: '🔥 Über 2,400 Bestellungen diese Woche',
+      limited: 'Zeitlich Begrenztes Angebot',
+      start: 'Jetzt Bestellen Beginnen',
+      reserve: 'Tisch Reservieren'
+    },
+    sticky: {
+      order: 'Jetzt Bestellen',
+      reserve: 'Reservieren'
+    },
+    logo: {
+      heading: 'Vertraut von lokalen Unternehmen und Feinschmeckern'
+    },
+    offers: {
+      heading: 'Saisonale Angebote',
+      badge: 'Zeitlich begrenzt',
+      bundle: 'Taco Tuesday Bundle',
+      deal: '2 Tacos + Getränk — 9,99€',
+      endsIn: 'Endet in',
+      orderBundle: 'Bundle bestellen',
+      viewDetails: 'Details anzeigen',
+      coming: 'Neue Angebote kommen bald.',
+      freeDelivery: 'Nur heute: kostenlose Lieferung bei Bestellungen über 25€'
+    },
+    events: {
+      heading: 'Veranstaltungen & Catering',
+      desc: 'Wir organisieren besondere Veranstaltungen und Catering für große Gruppen. Von Geburtstagen bis zu Firmenveranstaltungen.',
+      plan: 'Veranstaltung Planen',
+      catering: 'Catering-Service',
+      q1: {
+        question: 'Was ist die Mindestgruppengröße für Veranstaltungen?',
+        answer: 'Unsere Mindestgruppengröße für Veranstaltungen beträgt 20 Personen. Für kleinere Gruppen empfehlen wir reguläre Reservierungen.'
+      },
+      q2: {
+        question: 'Bieten Sie vegetarische und vegane Optionen an?',
+        answer: 'Ja, wir haben ein vollständiges Menü mit vegetarischen und veganen Optionen. Wir können auch Menüs nach Ihren Ernährungsbedürfnissen anpassen.'
+      }
+    }
     }
   },
   
