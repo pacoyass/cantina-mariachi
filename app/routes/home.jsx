@@ -143,7 +143,7 @@ const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
 
 export default function Home() {
   const { items, offers, testimonials, drinks, config, cms } = useLoaderData();
-  const { t, i18n } = useTranslation(['home', 'popular']);
+  const { t, i18n } = useTranslation(['home']);
   const safeCms = cms || {};
 
   return (
