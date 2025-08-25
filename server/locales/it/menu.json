@@ -1,19 +1,45 @@
 {
-  "filters": {
-    "all": "All Items",
-    "vegetarian": "Vegetarian",
-    "vegan": "Vegan", 
-    "glutenFree": "Gluten Free",
-    "spicy": "Spicy",
-    "popular": "Popular",
-    "new": "New"
-  },
   "categories": {
     "tacos": "Tacos",
-    "bowls": "Bowls", 
-    "drinks": "Drinks",
-    "sides": "Sides",
-    "desserts": "Desserts",
-    "specials": "Chef Specials"
+    "bowls": "Ciotole",
+    "drinks": "Bevande",
+    "sides": "Contorni",
+    "desserts": "Dolci",
+    "specials": "Specialità dello Chef"
+  },
+  "filters": {
+    "all": "Tutti gli Articoli",
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano",
+    "glutenFree": "Senza Glutine",
+    "spicy": "Piccante",
+    "popular": "Popolare",
+    "new": "Nuovo"
+  },
+  "sort": {
+    "popularity": "Più Popolare",
+    "price": "Prezzo",
+    "name": "Nome",
+    "rating": "Valutazione"
+  },
+  "actions": {
+    "addToCart": "Aggiungi al Carrello",
+    "customize": "Personalizza",
+    "viewDetails": "Vedi Dettagli",
+    "outOfStock": "Esaurito",
+    "comingSoon": "Prossimamente"
+  },
+  "dietary": {
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano",
+    "glutenFree": "Senza Glutine",
+    "dairyFree": "Senza Lattosio",
+    "nutFree": "Senza Noci"
+  },
+  "prep": {
+    "mild": "Leggero",
+    "medium": "Medio",
+    "hot": "Piccante",
+    "extraHot": "Molto Piccante"
   }
 }

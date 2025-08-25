@@ -3,7 +3,16 @@
     "badge": "Nouveau : Lancement des récompenses — gagnez des points à chaque commande",
     "title": "Cuisine mexicaine authentique. <primary>Livraison rapide.</primary>",
     "desc": "Des tacos de rue aux spécialités mijotées. Commandez en quelques secondes, réservez instantanément et suivez votre livraison en temps réel — le tout au même endroit.",
-    "imageAlt": "Assortiment de tacos colorés avec ingrédients frais"
+    "imageAlt": "Assortiment de tacos colorés avec ingrédients frais",
+    "orderNow": "Commander Maintenant",
+    "reserve": "Réserver Table",
+    "browseMenu": "Parcourir Menu",
+    "rating": "4,9/5 de 2 400+ locaux",
+    "avgTime": "25-35 min moyenne",
+    "card": {
+      "title": "Frais Quotidien",
+      "desc": "Nous nous approvisionnons en ingrédients des marchés locaux chaque matin"
+    }
   },
   "features": {
     "title": "Pourquoi choisir Cantina",
@@ -30,41 +39,44 @@
     "orderBundle": "Commander le pack", 
     "viewDetails": "Voir les détails" 
   },
-  "values": {
-    "heading": "Nos Valeurs",
-    "desc": "Nous nous engageons pour la qualité, la durabilité et la communauté.",
-    "badges": {
-      "localProduce": "Produits Locaux",
-      "sustainableSeafood": "Fruits de Mer Durables",
-      "fairTrade": "Commerce Équitable",
-      "lowWaste": "Faible Gaspillage"
+  "why": {
+    "heading": "Pourquoi Choisir Cantina Mariachi",
+    "faster": {
+      "title": "Plus rapide que les apps de livraison",
+      "desc": "Directement de notre cuisine à votre porte en 25-35 minutes"
     },
-    "cards": {
-      "dailyMarket": "Marché Quotidien",
-      "houseSalsas": "Salsas Maison",
-      "localTortillas": "Tortillas Locales",
-      "compostablePackaging": "Emballage Compostable"
+    "fees": {
+      "title": "Aucuns frais cachés",
+      "desc": "Prix transparents sans frais surprises"
+    },
+    "oneTap": {
+      "title": "Recommandez en un clic",
+      "desc": "Recommandez vos favoris en un seul clic"
+    },
+    "tracking": {
+      "title": "Suivi de commande en direct",
+      "desc": "Voyez exactement quand votre nourriture arrivera"
+    },
+    "chef": {
+      "title": "Qualité de chef",
+      "desc": "Chaque plat préparé par nos chefs experts"
+    },
+    "rewards": {
+      "title": "Gagnez des récompenses",
+      "desc": "Obtenez des points sur chaque commande et débloquez des avantages exclusifs"
     }
   },
-  "value": {
-    "reorderDesc": "Commande rapide pour vos plats préférés",
-    "trustedTitle": "Approuvé par des Milliers",
-    "trustedDesc": "Rejoignez notre communauté de clients satisfaits"
-  },
-  "how": {
-    "heading": "Comment ça Marche",
-    "desc": "Étapes simples pour une délicieuse cuisine mexicaine",
-    "step1": {
-      "title": "Choisissez votre Repas",
-      "desc": "Parcourez notre menu et sélectionnez vos plats préférés"
-    },
-    "step2": {
-      "title": "Passez votre Commande",
-      "desc": "Commandez en ligne ou appelez-nous pour un service rapide"
-    },
-    "step3": {
-      "title": "Savourez et Suivez",
-      "desc": "Suivez votre livraison en temps réel et savourez une nourriture fraîche"
+  "explore": {
+    "heading": "Explorez Notre Menu",
+    "tacos": "Tacos",
+    "bowls": "Bolées",
+    "drinks": "Boissons",
+    "coming": "Bientôt",
+    "viewMore": "Voir Menu Complet",
+    "tabs": {
+      "tacos": "Tacos",
+      "bowls": "Bolées",
+      "drinks": "Boissons"
     }
   },
   "popular": {
@@ -81,9 +93,103 @@
     "onlyLeftToday": "Plus que quelques-uns aujourd'hui",
     "orderNowDelivery": "Commander maintenant pour la livraison"
   },
+  "loyalty": {
+    "heading": "Fidélité et Récompenses",
+    "membersSave": "Les membres économisent 10%",
+    "points": "1 250 points",
+    "nextAt": "Prochaine récompense à 1 500 points",
+    "freeDessert": "Dessert gratuit pour votre anniversaire",
+    "join": "Rejoindre Maintenant",
+    "perks": "Voir les Avantages"
+  },
+  "events": {
+    "heading": "Événements et Traiteur",
+    "desc": "Nous organisons des événements spéciaux et des services traiteur pour de grands groupes. Des anniversaires aux événements d'entreprise.",
+    "plan": "Planifier Événement",
+    "catering": "Service Traiteur",
+    "q1": {
+      "question": "Quelle est la taille minimale du groupe pour les événements ?",
+      "answer": "Notre taille minimale de groupe pour les événements est de 20 personnes. Pour les groupes plus petits, nous recommandons des réservations régulières."
+    },
+    "q2": {
+      "question": "Offrez-vous des options végétariennes et véganes ?",
+      "answer": "Oui, nous avons un menu complet d'options végétariennes et véganes. Nous pouvons aussi personnaliser les menus selon vos besoins alimentaires."
+    }
+  },
+  "testimonials": {
+    "heading": "Ce que Disent Nos Clients"
+  },
+  "faq": {
+    "heading": "Questions Fréquentes",
+    "q1": {
+      "question": "Quel est votre temps de livraison ?",
+      "answer": "Notre temps de livraison moyen est de 25-35 minutes. Nous utilisons le suivi en temps réel pour que vous puissiez voir exactement quand votre commande arrivera."
+    },
+    "q2": {
+      "question": "Offrez-vous des options végétariennes et véganes ?",
+      "answer": "Oui ! Nous avons une large sélection de plats végétariens et véganes. Notre menu comprend des tacos à base de plantes, des bolées et des accompagnements."
+    },
+    "q3": {
+      "question": "Puis-je personnaliser ma commande ?",
+      "answer": "Absolument ! Vous pouvez personnaliser n'importe quel plat en ajoutant ou en retirant des ingrédients. Faites-nous simplement savoir vos préférences lors de la commande."
+    }
+  },
+  "cta": {
+    "endsTonight": "⚡ Se Termine Ce Soir",
+    "title": "Temps Limité : Pack Taco Tuesday",
+    "desc": "2 tacos + boisson pour seulement 9,99 $. Parfait pour partager ou garder tout pour vous.",
+    "socialProof": "🔥 2 400+ commandes cette semaine",
+    "limited": "Offre Limitée",
+    "start": "Commencer à Commander",
+    "reserve": "Réserver Table"
+  },
+  "sticky": {
+    "order": "Commander Maintenant",
+    "reserve": "Réserver"
+  },
+  "logo": {
+    "heading": "Approuvé par les entreprises locales et les amateurs de cuisine"
+  },
+  "values": {
+    "heading": "Nos Valeurs et Approvisionnement",
+    "desc": "Nous nous engageons pour la qualité, la durabilité et le soutien aux communautés locales grâce à un approvisionnement responsable et des pratiques écologiques.",
+    "badges": {
+      "localProduce": "Produits Locaux",
+      "sustainableSeafood": "Fruits de Mer Durables",
+      "fairTrade": "Commerce Équitable",
+      "lowWaste": "Faible Gaspillage"
+    },
+    "cards": {
+      "dailyMarket": "Frais Quotidien du Marché",
+      "houseSalsas": "Salsas Maison",
+      "localTortillas": "Tortillas Locales",
+      "compostablePackaging": "Emballage Compostable"
+    }
+  },
+  "value": {
+    "reorderDesc": "Commande rapide pour vos plats préférés",
+    "trustedTitle": "Approuvé par 10 000+ locaux",
+    "trustedDesc": "Rejoignez notre communauté de clients satisfaits"
+  },
+  "how": {
+    "heading": "Comment ça Marche",
+    "desc": "Commander chez Cantina Mariachi est simple et rapide",
+    "step1": {
+      "title": "Choisissez Vos Favoris",
+      "desc": "Parcourez notre menu et sélectionnez vos plats préférés"
+    },
+    "step2": {
+      "title": "Passez votre Commande",
+      "desc": "Personnalisez votre commande et payez en sécurité"
+    },
+    "step3": {
+      "title": "Suivez et Savourez",
+      "desc": "Suivez votre commande en temps réel et savourez une nourriture fraîche"
+    }
+  },
   "seo": { 
     "title": "Cantina Mariachi – Mexicain authentique, expérience moderne", 
-    "description": "Commandez en ligne, réservez instantanément et suivez la livraison en direct.", 
-    "keywords": "mexicain, tacos, livraison, restaurant" 
+    "description": "Commandez en ligne en quelques secondes, réservez instantanément et suivez la livraison en direct. Cuisine mexicaine authentique livrée rapidement.", 
+    "keywords": "mexicain, tacos, livraison, restaurant, commande en ligne, réservation de table" 
   }
 }

@@ -1,19 +1,45 @@
 {
-  "filters": {
-    "all": "All Items",
-    "vegetarian": "Vegetarian",
-    "vegan": "Vegan", 
-    "glutenFree": "Gluten Free",
-    "spicy": "Spicy",
-    "popular": "Popular",
-    "new": "New"
-  },
   "categories": {
-    "tacos": "Tacos",
-    "bowls": "Bowls", 
-    "drinks": "Drinks",
-    "sides": "Sides",
-    "desserts": "Desserts",
-    "specials": "Chef Specials"
+    "tacos": "تاكو",
+    "bowls": "أوعية",
+    "drinks": "مشروبات",
+    "sides": "مقبلات",
+    "desserts": "حلويات",
+    "specials": "أطباق الطاهي الخاصة"
+  },
+  "filters": {
+    "all": "جميع العناصر",
+    "vegetarian": "نباتي",
+    "vegan": "نباتي صرف",
+    "glutenFree": "خالي من الغلوتين",
+    "spicy": "حار",
+    "popular": "شعبي",
+    "new": "جديد"
+  },
+  "sort": {
+    "popularity": "الأكثر شعبية",
+    "price": "السعر",
+    "name": "الاسم",
+    "rating": "التقييم"
+  },
+  "actions": {
+    "addToCart": "أضف إلى السلة",
+    "customize": "خصص",
+    "viewDetails": "عرض التفاصيل",
+    "outOfStock": "نفذت الكمية",
+    "comingSoon": "قريبًا"
+  },
+  "dietary": {
+    "vegetarian": "نباتي",
+    "vegan": "نباتي صرف",
+    "glutenFree": "خالي من الغلوتين",
+    "dairyFree": "خالي من الألبان",
+    "nutFree": "خالي من المكسرات"
+  },
+  "prep": {
+    "mild": "خفيف",
+    "medium": "متوسط",
+    "hot": "حار",
+    "extraHot": "حار جدًا"
   }
 }
