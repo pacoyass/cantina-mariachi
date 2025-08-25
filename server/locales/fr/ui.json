@@ -1,0 +1,56 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "menu": "Menu", 
+    "reservations": "Réservations",
+    "catering": "Traiteur",
+    "about": "À Propos",
+    "contact": "Contact",
+    "account": "Compte",
+    "orders": "Commandes",
+    "settings": "Paramètres"
+  },
+  "topbar": {
+    "open": "Ouvert maintenant",
+    "closed": "Fermé",
+    "eta": "{{mins}} min livraison",
+    "noSignup": "Aucune inscription requise",
+    "browse": "Parcourir le menu"
+  },
+  "offer": {
+    "freeDelivery": "Livraison gratuite sur les commandes de plus de 25€"
+  },
+  "buttons": {
+    "orderNow": "Commander Maintenant",
+    "reserve": "Réserver une Table", 
+    "addToCart": "Ajouter au Panier",
+    "viewCart": "Voir le Panier",
+    "checkout": "Passer Commande",
+    "login": "Se Connecter",
+    "signup": "S'inscrire",
+    "logout": "Se Déconnecter"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier"
+  },
+  "cart": {
+    "empty": "Votre panier est vide",
+    "total": "Total",
+    "subtotal": "Sous-total", 
+    "tax": "Taxe",
+    "delivery": "Livraison",
+    "itemCount": "{{count}} article",
+    "itemCount_plural": "{{count}} articles"
+  }
+}
