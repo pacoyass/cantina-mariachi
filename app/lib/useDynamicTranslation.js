@@ -10,10 +10,15 @@ export function useDynamicTranslation() {
   const [languages] = useState([
     { code: 'en', name: 'English', rtl: false },
     { code: 'es', name: 'Spanish', rtl: false },
+    { code: 'fr', name: 'French', rtl: false },
+    { code: 'de', name: 'German', rtl: false },
+    { code: 'it', name: 'Italian', rtl: false },
+    { code: 'pt', name: 'Portuguese', rtl: false },
+    { code: 'ar', name: 'Arabic', rtl: true },
   ]);
 
   const [namespaces] = useState(['ui', 'home', 'common', 'events', 'navbar', 'footer', 'faq', 'popular', 'auth', 'api', 'validation', 'email', 'business']);
-  // No RTL languages needed since we only have English and Spanish
+  const [rtlLanguages] = useState(['ar']);
 
   // Persist language changes to localStorage and cookies
   useEffect(() => {
@@ -55,7 +60,7 @@ export function useDynamicTranslation() {
     // State
     languages,
     namespaces,
-    rtlLanguages: [], // No RTL languages needed
+    rtlLanguages: rtlLanguages,
     loading: false,
     error: null,
     
