@@ -38,8 +38,8 @@ export async function initI18n({ lng = 'en', resources }) {
     interpolation: { escapeValue: false },
     resources,
     // Configure namespaces for component access
-    ns: ['home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
-    defaultNS: 'home',
+    ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
+    defaultNS: 'ui',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
@@ -79,8 +79,8 @@ export function createServerI18n({ lng = 'en', resources }) {
     fallbackLng: 'en',
     resources,
     // Configure namespaces for component access
-    ns: ['home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
-    defaultNS: 'home',
+    ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
+    defaultNS: 'ui',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
