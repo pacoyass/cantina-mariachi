@@ -127,21 +127,48 @@ export function useLanguageSwitcher() {
       // Get resources for the new language
       const newResources = uiResources[code] || uiResources['en'];
       
-      // Add resources to i18n instance
+      // Add resources to i18n instance - only add what exists
       if (newResources) {
-        i18n.addResourceBundle(code, 'ui', newResources.ui, true, true);
-        i18n.addResourceBundle(code, 'home', newResources.home, true, true);
-        i18n.addResourceBundle(code, 'common', newResources.common, true, true);
-        i18n.addResourceBundle(code, 'events', newResources.events, true, true);
-        i18n.addResourceBundle(code, 'navbar', newResources.navbar, true, true);
-        i18n.addResourceBundle(code, 'footer', newResources.footer, true, true);
-        i18n.addResourceBundle(code, 'faq', newResources.faq, true, true);
-        i18n.addResourceBundle(code, 'popular', newResources.popular, true, true);
-        i18n.addResourceBundle(code, 'auth', newResources.auth, true, true);
-        i18n.addResourceBundle(code, 'api', newResources.api, true, true);
-        i18n.addResourceBundle(code, 'validation', newResources.validation, true, true);
-        i18n.addResourceBundle(code, 'email', newResources.email, true, true);
-        i18n.addResourceBundle(code, 'business', newResources.business, true, true);
+        // Only add namespaces that exist for this language
+        if (newResources.ui) {
+          i18n.addResourceBundle(code, 'ui', newResources.ui, true, true);
+        }
+        if (newResources.home) {
+          i18n.addResourceBundle(code, 'home', newResources.home, true, true);
+        }
+        if (newResources.common) {
+          i18n.addResourceBundle(code, 'common', newResources.common, true, true);
+        }
+        if (newResources.events) {
+          i18n.addResourceBundle(code, 'events', newResources.events, true, true);
+        }
+        if (newResources.navbar) {
+          i18n.addResourceBundle(code, 'navbar', newResources.navbar, true, true);
+        }
+        if (newResources.footer) {
+          i18n.addResourceBundle(code, 'footer', newResources.footer, true, true);
+        }
+        if (newResources.faq) {
+          i18n.addResourceBundle(code, 'faq', newResources.faq, true, true);
+        }
+        if (newResources.popular) {
+          i18n.addResourceBundle(code, 'popular', newResources.popular, true, true);
+        }
+        if (newResources.auth) {
+          i18n.addResourceBundle(code, 'auth', newResources.auth, true, true);
+        }
+        if (newResources.api) {
+          i18n.addResourceBundle(code, 'api', newResources.api, true, true);
+        }
+        if (newResources.validation) {
+          i18n.addResourceBundle(code, 'validation', newResources.validation, true, true);
+        }
+        if (newResources.email) {
+          i18n.addResourceBundle(code, 'email', newResources.email, true, true);
+        }
+        if (newResources.business) {
+          i18n.addResourceBundle(code, 'business', newResources.business, true, true);
+        }
       }
 
       // Change i18n language
