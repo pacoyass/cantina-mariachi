@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef,useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { uiResources } from './resources';
 
 /**
  * Simple hook for language management - SSR compatible
@@ -123,7 +124,27 @@ export function useLanguageSwitcher() {
 
       console.log(`🌍 Changing language from ${i18n.language} to ${code}`);
 
-      // Change i18n language first
+      // Get resources for the new language
+      const newResources = uiResources[code] || uiResources['en'];
+      
+      // Add resources to i18n instance
+      if (newResources) {
+        i18n.addResourceBundle(code, 'ui', newResources.ui, true, true);
+        i18n.addResourceBundle(code, 'home', newResources.home, true, true);
+        i18n.addResourceBundle(code, 'common', newResources.common, true, true);
+        i18n.addResourceBundle(code, 'events', newResources.events, true, true);
+        i18n.addResourceBundle(code, 'navbar', newResources.navbar, true, true);
+        i18n.addResourceBundle(code, 'footer', newResources.footer, true, true);
+        i18n.addResourceBundle(code, 'faq', newResources.faq, true, true);
+        i18n.addResourceBundle(code, 'popular', newResources.popular, true, true);
+        i18n.addResourceBundle(code, 'auth', newResources.auth, true, true);
+        i18n.addResourceBundle(code, 'api', newResources.api, true, true);
+        i18n.addResourceBundle(code, 'validation', newResources.validation, true, true);
+        i18n.addResourceBundle(code, 'email', newResources.email, true, true);
+        i18n.addResourceBundle(code, 'business', newResources.business, true, true);
+      }
+
+      // Change i18n language
       await i18n.changeLanguage(code);
       
       // Update document attributes
