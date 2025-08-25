@@ -81,12 +81,15 @@
   },
   "popular": {
     "heading": "Popular This Week",
-    "seeMenu": "See Full Menu",
+    "seeMenu": "See Full Menu", 
     "coming": "Coming Soon",
     "chefSpecial": "Chef Special {{num}}",
     "notify": "Notify Me",
     "add": "Add to Cart",
-    "rating": "4.9/5 from 2,400+ locals"
+    "rating": "4.9/5 from 2,400+ locals",
+    "numberOne": "#1",
+    "trending": "Trending",
+    "unavailable": "Unavailable"
   },
   "loyalty": {
     "heading": "Loyalty & Rewards",

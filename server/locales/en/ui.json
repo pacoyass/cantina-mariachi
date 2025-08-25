@@ -1,0 +1,56 @@
+{
+  "navigation": {
+    "home": "Home",
+    "menu": "Menu", 
+    "reservations": "Reservations",
+    "catering": "Catering",
+    "about": "About",
+    "contact": "Contact",
+    "account": "Account",
+    "orders": "Orders",
+    "settings": "Settings"
+  },
+  "topbar": {
+    "open": "Open now",
+    "closed": "Closed",
+    "eta": "{{mins}} min delivery",
+    "noSignup": "No signup required",
+    "browse": "Browse menu"
+  },
+  "offer": {
+    "freeDelivery": "Free delivery on orders over $25"
+  },
+  "buttons": {
+    "orderNow": "Order Now",
+    "reserve": "Reserve Table", 
+    "addToCart": "Add to Cart",
+    "viewCart": "View Cart",
+    "checkout": "Checkout",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort"
+  },
+  "cart": {
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "subtotal": "Subtotal", 
+    "tax": "Tax",
+    "delivery": "Delivery",
+    "itemCount": "{{count}} item",
+    "itemCount_plural": "{{count}} items"
+  }
+}
