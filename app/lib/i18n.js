@@ -80,7 +80,7 @@ export function createServerI18n({ lng = 'en', resources }) {
     resources,
     // Configure namespaces for component access
     ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
-    defaultNS: 'ui',
+    defaultNS: 'translation',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,
