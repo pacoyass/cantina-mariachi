@@ -89,7 +89,9 @@
     "rating": "4.9/5 from 2,400+ locals",
     "numberOne": "#1",
     "trending": "Trending",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "onlyLeftToday": "Only a few left today",
+    "orderNowDelivery": "Order now for delivery"
   },
   "loyalty": {
     "heading": "Loyalty & Rewards",

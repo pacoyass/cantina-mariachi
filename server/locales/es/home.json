@@ -86,7 +86,12 @@
     "chefSpecial": "Especial del Chef {{num}}",
     "notify": "Notifícame",
     "add": "Agregar al Carrito",
-    "rating": "4.9/5 de más de 2,400 locales"
+    "rating": "4.9/5 de más de 2,400 locales",
+    "numberOne": "#1",
+    "trending": "Tendencia",
+    "unavailable": "No Disponible",
+    "onlyLeftToday": "Solo quedan algunos hoy",
+    "orderNowDelivery": "Ordenar ahora para entrega"
   },
   "loyalty": {
     "heading": "Lealtad y Recompensas",
