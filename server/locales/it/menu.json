@@ -1,0 +1,19 @@
+{
+  "filters": {
+    "all": "All Items",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan", 
+    "glutenFree": "Gluten Free",
+    "spicy": "Spicy",
+    "popular": "Popular",
+    "new": "New"
+  },
+  "categories": {
+    "tacos": "Tacos",
+    "bowls": "Bowls", 
+    "drinks": "Drinks",
+    "sides": "Sides",
+    "desserts": "Desserts",
+    "specials": "Chef Specials"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "offer": {
+    "freeDelivery": "Free delivery on orders over $25"
+  },
+  "topbar": {
+    "open": "Open now",
+    "closed": "Closed", 
+    "eta": "{{mins}} min delivery",
+    "noSignup": "No signup required",
+    "browse": "Browse menu"
+  }
+}
