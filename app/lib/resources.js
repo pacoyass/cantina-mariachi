@@ -122,7 +122,23 @@ export const uiResources = {
       coming: 'Coming Soon',
       chefSpecial: 'Chef Special {{num}}',
       notify: 'Notify Me',
-      rating: '4.9/5 from 2,400+ locals'
+      rating: '4.9/5 from 2,400+ locals',
+      numberOne: 'Number 1',
+      filters: {
+        vegetarian: 'Vegetarian',
+        vegan: 'Vegan'
+      },
+      items: {
+        chocolateCake: 'Chocolate Cake',
+        cola: 'Cola',
+        tacos: 'Tacos'
+      },
+      onlyLeftToday: 'Only a few left today',
+      orderNowDelivery: 'Order now for delivery',
+      richChocolateCake: 'Rich chocolate cake',
+      chilledCola: 'Chilled cola',
+      beefTacosSalsa: 'Beef tacos with salsa',
+      price: '${{price}}'
     },
     auth: {
       loginSuccess: 'Login successful',
@@ -552,7 +568,23 @@ export const uiResources = {
       coming: 'Próximamente',
       chefSpecial: 'Especial del Chef {{num}}',
       notify: 'Notifícame',
-      rating: '4.9/5 de más de 2,400 locales'
+      rating: '4.9/5 de más de 2,400 locales',
+      numberOne: 'Número 1',
+      filters: {
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano'
+      },
+      items: {
+        chocolateCake: 'Pastel de Chocolate',
+        cola: 'Cola',
+        tacos: 'Tacos'
+      },
+      onlyLeftToday: 'Solo quedan algunos hoy',
+      orderNowDelivery: 'Ordenar ahora para entrega',
+      richChocolateCake: 'Pastel de chocolate rico',
+      chilledCola: 'Cola fría',
+      beefTacosSalsa: 'Tacos de res con salsa',
+      price: '${{price}}'
     },
     auth: {
       loginSuccess: 'Inicio de sesión exitoso',
@@ -989,7 +1021,13 @@ export const uiResources = {
       },
       items: {
         chocolateCake: 'Gâteau au Chocolat'
-      }
+      },
+      onlyLeftToday: 'Plus que quelques-uns aujourd\'hui',
+      orderNowDelivery: 'Commander maintenant pour la livraison',
+      richChocolateCake: 'Gâteau au chocolat riche',
+      chilledCola: 'Cola fraîche',
+      beefTacosSalsa: 'Tacos au bœuf avec salsa',
+      price: '{{price}}€'
     },
     auth: {
       loginSuccess: 'Connexion réussie',
@@ -1419,7 +1457,23 @@ export const uiResources = {
       coming: 'Demnächst Verfügbar',
       chefSpecial: 'Chef-Spezial {{num}}',
       notify: 'Benachrichtigen Sie Mich',
-      rating: '4.9/5 von über 2,400 Einheimischen'
+      rating: '4.9/5 von über 2,400 Einheimischen',
+      numberOne: 'Nummer 1',
+      filters: {
+        vegetarian: 'Vegetarisch',
+        vegan: 'Vegan'
+      },
+      items: {
+        chocolateCake: 'Schokoladenkuchen',
+        cola: 'Cola',
+        tacos: 'Tacos'
+      },
+      onlyLeftToday: 'Nur noch wenige heute übrig',
+      orderNowDelivery: 'Jetzt für Lieferung bestellen',
+      richChocolateCake: 'Reicher Schokoladenkuchen',
+      chilledCola: 'Gekühlte Cola',
+      beefTacosSalsa: 'Rindfleisch-Tacos mit Salsa',
+      price: '{{price}}€'
     },
     auth: {
       loginSuccess: 'Anmeldung erfolgreich',
@@ -1849,7 +1903,23 @@ export const uiResources = {
       coming: 'Prossimamente',
       chefSpecial: 'Speciale dello Chef {{num}}',
       notify: 'Notificami',
-      rating: '4.9/5 da oltre 2,400 locali'
+      rating: '4.9/5 da oltre 2,400 locali',
+      numberOne: 'Numero 1',
+      filters: {
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano'
+      },
+      items: {
+        chocolateCake: 'Torta al Cioccolato',
+        cola: 'Cola',
+        tacos: 'Tacos'
+      },
+      onlyLeftToday: 'Solo pochi rimasti oggi',
+      orderNowDelivery: 'Ordina ora per la consegna',
+      richChocolateCake: 'Torta al cioccolato ricca',
+      chilledCola: 'Cola fredda',
+      beefTacosSalsa: 'Tacos di manzo con salsa',
+      price: '{{price}}€'
     },
     auth: {
       loginSuccess: 'Accesso riuscito',
@@ -2279,7 +2349,23 @@ export const uiResources = {
       coming: 'Em Breve',
       chefSpecial: 'Especial do Chef {{num}}',
       notify: 'Me Notifique',
-      rating: '4.9/5 de mais de 2,400 locais'
+      rating: '4.9/5 de mais de 2,400 locais',
+      numberOne: 'Número 1',
+      filters: {
+        vegetarian: 'Vegetariano',
+        vegan: 'Vegano'
+      },
+      items: {
+        chocolateCake: 'Bolo de Chocolate',
+        cola: 'Cola',
+        tacos: 'Tacos'
+      },
+      onlyLeftToday: 'Só alguns restam hoje',
+      orderNowDelivery: 'Peça agora para entrega',
+      richChocolateCake: 'Bolo de chocolate rico',
+      chilledCola: 'Cola gelada',
+      beefTacosSalsa: 'Tacos de carne com salsa',
+      price: 'R$ {{price}}'
     },
     auth: {
       loginSuccess: 'Login realizado com sucesso',
@@ -2709,7 +2795,23 @@ export const uiResources = {
       coming: 'قريباً',
       chefSpecial: 'خاص الشيف {{num}}',
       notify: 'أخبرني',
-      rating: '4.9/5 من أكثر من 2,400 محلي'
+      rating: '4.9/5 من أكثر من 2,400 محلي',
+      numberOne: 'رقم 1',
+      filters: {
+        vegetarian: 'نباتي',
+        vegan: 'خالي من اللحوم'
+      },
+      items: {
+        chocolateCake: 'كيك الشوكولاتة',
+        cola: 'كولا',
+        tacos: 'تاكوس'
+      },
+      onlyLeftToday: 'بقي القليل فقط اليوم',
+      orderNowDelivery: 'اطلب الآن للتوصيل',
+      richChocolateCake: 'كيك شوكولاتة غني',
+      chilledCola: 'كولا باردة',
+      beefTacosSalsa: 'تاكوس لحم بقري مع صلصة',
+      price: '{{price}}$'
     },
     auth: {
       loginSuccess: 'تم تسجيل الدخول بنجاح',
