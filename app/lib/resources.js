@@ -658,7 +658,7 @@ export const uiResources = {
         categoryNotFound: 'Categoría del menú no encontrada',
         itemOutOfStock: 'Elemento del menú agotado',
         invalidPrice: 'Precio inválido especificado',
-        duplicateItem: 'El elemento del menú ya existe'
+        duplicateItem: 'L\'elemento del menú ya existe'
       },
       orders: {
         orderCreated: 'Pedido creado exitosamente',
@@ -764,7 +764,7 @@ export const uiResources = {
         cards: {
           dailyMarket: 'Fresco del Mercado Diario',
           houseSalsas: 'Salsas Caseras',
-          localTortillas: 'Tortillas Locales',
+          localTortillas: 'Local Tortillas',
           compostablePackaging: 'Empaque Compostable'
         }
       },
@@ -795,44 +795,44 @@ export const uiResources = {
       popular: {
         heading: 'Popular Esta Semana',
         seeMenu: 'Ver Menú Completo',
-        coming: 'Próximamente',
-        chefSpecial: 'Especial del Chef {{num}}',
-        notify: 'Notifícame',
-        rating: '4.9/5 de más de 2,400 locales'
+        coming: 'Coming Soon',
+        chefSpecial: 'Chef Special {{num}}',
+        notify: 'Notify Me',
+        rating: '4.9/5 from 2,400+ locals'
       },
       faq: {
-        heading: 'Preguntas Frecuentes',
+        heading: 'Frequently Asked Questions',
         q1: {
-          question: '¿Cuál es su tiempo de entrega?',
-          answer: 'Nuestro tiempo promedio de entrega es de 25-35 minutos. Usamos seguimiento en tiempo real para que puedas ver exactamente cuándo llegará tu pedido.'
+          question: 'What is your delivery time?',
+          answer: 'Our average delivery time is 25-35 minutes. We use real-time tracking so you can see exactly when your order will arrive.'
         },
         q2: {
-          question: '¿Ofrecen opciones vegetarianas y veganas?',
-          answer: '¡Sí! Tenemos una amplia selección de platos vegetarianos y veganos. Nuestro menú incluye tacos, bowls y acompañamientos a base de plantas.'
+          question: 'Do you offer vegetarian and vegan options?',
+          answer: 'Yes! We have a wide selection of vegetarian and vegan dishes. Our menu includes plant-based tacos, bowls, and sides.'
         },
         q3: {
-          question: '¿Puedo personalizar mi pedido?',
-          answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznos saber tus preferencias al ordenar.'
+          question: 'Can I customize my order?',
+          answer: 'Absolutely! You can customize any dish by adding or removing ingredients. Just let us know your preferences when ordering.'
         }
       },
       cta: {
-        endsTonight: '⚡ Termina Esta Noche',
-        title: 'Tiempo Limitado: Combo Taco Tuesday',
-        desc: '2 tacos + bebida por solo $9.99. Perfecto para compartir o quedártelo todo para ti.',
-        socialProof: '🔥 Más de 2,400 pedidos esta semana',
-        limited: 'Oferta por Tiempo Limitado',
-        start: 'Comenzar a Ordenar',
-        reserve: 'Reservar Mesa'
+        endsTonight: '⚡ Ends Tonight',
+        title: 'Limited Time: Taco Tuesday Bundle',
+        desc: '2 tacos + drink for just $9.99. Perfect for sharing or keeping all to yourself.',
+        socialProof: '🔥 2,400+ orders this week',
+        limited: 'Limited Time Offer',
+        start: 'Start Ordering',
+        reserve: 'Reserve Table'
       },
       sticky: {
-        order: 'Ordenar Ahora',
-        reserve: 'Reservar'
+        order: 'Order Now',
+        reserve: 'Reserve'
       },
       logo: {
-        heading: 'Confiado por negocios locales y amantes de la comida'
+        heading: 'Trusted by local businesses and food lovers'
       },
       offers: {
-        heading: 'Ofertas de Temporada',
+        heading: 'Seasonal Offers',
         badge: 'Limited time',
         bundle: 'Taco Tuesday Bundle',
         deal: '2 tacos + drink — $9.99',
@@ -843,17 +843,17 @@ export const uiResources = {
         freeDelivery: 'Today only: free delivery on orders over $25'
       },
       events: {
-        heading: 'Eventos y Catering',
-        desc: 'Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.',
-        plan: 'Planear Evento',
-        catering: 'Servicio de Catering',
+        heading: 'Events & Catering',
+        desc: 'We organize special events and catering for large groups. From birthdays to corporate events.',
+        plan: 'Plan Event',
+        catering: 'Catering Service',
         q1: {
-          question: '¿Cuál es el tamaño mínimo del grupo para eventos?',
-          answer: 'Nuestro tamaño mínimo de grupo para eventos es de 20 personas. Para grupos más pequeños, recomendamos reservas regulares.'
+          question: 'What is the minimum group size for events?',
+          answer: 'Our minimum group size for events is 20 people. For smaller groups, we recommend regular reservations.'
         },
         q2: {
-          question: '¿Ofrecen opciones vegetarianas y veganas?',
-          answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
+          question: 'Do you offer vegetarian and vegan options?',
+          answer: 'Yes, we have a complete menu of vegetarian and vegan options. We can also customize menus according to your dietary needs.'
         }
       }
     }
@@ -1013,11 +1013,11 @@ export const uiResources = {
       dataCreated: 'Données créées avec succès',
       dataDeleted: 'Données supprimées avec succès',
       noDataFound: 'Aucune donnée trouvée',
-      invalidApiKey: 'Clé API invalide',
+      invalidApiKey: 'Clé API inválida',
       apiKeyExpired: 'La clé API a expiré',
       apiKeyRequired: 'Clé API requise',
-      quotaExceeded: 'Quota API dépassé',
-      methodNotAllowed: 'Méthode non autorisée',
+      quotaExceeded: 'Cuota API excedida',
+      methodNotAllowed: 'Méthode no permitido',
       unsupportedMediaType: 'Type de média non pris en charge',
       payloadTooLarge: 'Charge utile trop volumineuse',
       requestEntityTooLarge: 'Entité de requête trop volumineuse',
@@ -1120,95 +1120,95 @@ export const uiResources = {
     home: {
       hero: {
         badge: 'Nouveau: Lancement des récompenses — gagnez des points sur chaque commande',
-        title: 'Mexicain authentique. <primary>Livré rapidement.</primary>',
-        desc: 'Des tacos style rue aux spécialités mijotées. Commandez en secondes, réservez une table instantanément et suivez votre livraison en temps réel — le tout en un seul endroit.',
-        orderNow: 'Commander Maintenant',
-        reserve: 'Réserver une Table',
-        browseMenu: 'Parcourir le Menu',
-        rating: '4.9/5 de plus de 2,400 locaux',
-        avgTime: '25-35 min en moyenne',
-        imageAlt: 'Assiette colorée de tacos avec des ingrédients frais et une salsa vibrante',
+        title: 'Authentisch mexikanisch. <primary>Schnell geliefert.</primary>',
+        desc: 'Von Straßentacos bis zu langsam gekochten Spezialitäten. Bestellen Sie in Sekunden, reservieren Sie sofort einen Tisch und verfolgen Sie Ihre Lieferung in Echtzeit — alles an einem Ort.',
+        orderNow: 'Jetzt Bestellen',
+        reserve: 'Tisch Reservieren',
+        browseMenu: 'Menü Durchsuchen',
+        rating: '4.9/5 von über 2,400 Einheimischen',
+        avgTime: '25-35 Min Durchschnitt',
+        imageAlt: 'Bunte Tacos-Platte mit frischen Zutaten und lebendiger Salsa',
         card: {
-          title: 'Frais Quotidien',
-          desc: 'Nous nous approvisionnons en ingrédients des marchés locaux chaque matin'
+          title: 'Täglich Frisch',
+          desc: 'Wir beziehen Zutaten jeden Morgen von lokalen Märkten'
         }
       },
       explore: {
-        heading: 'Explorez Notre Menu',
+        heading: 'Entdecken Sie Unser Menü',
         tacos: 'Tacos',
-        bowls: 'Bol',
-        drinks: 'Boissons',
-        coming: 'Bientôt Disponible',
-        viewMore: 'Voir le Menu Complet',
+        bowls: 'Bowls',
+        drinks: 'Getränke',
+        coming: 'Demnächst Verfügbar',
+        viewMore: 'Vollständiges Menü Anzeigen',
         tabs: {
           tacos: 'Tacos',
-          bowls: 'Bol',
-          drinks: 'Boissons'
+          bowls: 'Bowls',
+          drinks: 'Getränke'
         }
       },
       loyalty: {
-        heading: 'Fidélité et Récompenses',
-        membersSave: 'Les membres économisent 10%',
-        points: '1,250 points',
-        nextAt: 'Prochaine récompense à {{points}}',
-        freeDessert: 'Dessert gratuit pour votre anniversaire',
-        join: 'Rejoindre Maintenant',
-        perks: 'Voir les Avantages'
+        heading: 'Treue & Belohnungen',
+        membersSave: 'Mitglieder sparen 10%',
+        points: '1,250 Punkte',
+        nextAt: 'Nächste Belohnung bei {{points}}',
+        freeDessert: 'Kostenloses Dessert zu Ihrem Geburtstag',
+        join: 'Jetzt Beitreten',
+        perks: 'Vorteile Anzeigen'
       },
       why: {
-        heading: 'Pourquoi Choisir Cantina Mariachi',
+        heading: 'Warum Cantina Mariachi Wählen',
         faster: {
-          title: 'Plus rapide que les applications de livraison',
-          desc: 'Directement de notre cuisine à votre porte en 25-35 minutes'
+          title: 'Schneller als Liefer-Apps',
+          desc: 'Direkt von unserer Küche zu Ihrer Tür in 25-35 Minuten'
         },
         fees: {
-          title: 'Aucun frais caché',
-          desc: 'Prix transparents sans frais surprise'
+          title: 'Keine versteckten Gebühren',
+          desc: 'Transparente Preise ohne Überraschungsgebühren'
         },
         oneTap: {
-          title: 'Commande en un tap',
-          desc: 'Recommandez vos favoris en un seul tap'
+          title: 'Ein-Tap-Nachbestellung',
+          desc: 'Bestellen Sie Ihre Favoriten mit nur einem Tap nach'
         },
         tracking: {
-          title: 'Suivi en direct',
-          desc: 'Voyez exactement quand votre nourriture arrivera'
+          title: 'Live-Bestellverfolgung',
+          desc: 'Sehen Sie genau, wann Ihr Essen ankommt'
         },
         chef: {
-          title: 'Qualité de chef',
-          desc: 'Chaque plat préparé par nos chefs experts'
+          title: 'Chef-gefertigte Qualität',
+          desc: 'Jedes Gericht wird von unseren Experten-Chefs zubereitet'
         },
         rewards: {
-          title: 'Gagnez des récompenses',
-          desc: 'Obtenez des points sur chaque commande et débloquez des avantages exclusifs'
+          title: 'Verdienen Sie Belohnungen',
+          desc: 'Erhalten Sie Punkte bei jeder Bestellung und schalten Sie exklusive Vorteile frei'
         }
       },
       values: {
-        heading: 'Nos Valeurs et Approvisionnement',
-        desc: 'Nous nous engageons pour la qualité, la durabilité et le soutien aux communautés locales grâce à un approvisionnement responsable et des pratiques écologiques.',
+        heading: 'Unsere Werte & Beschaffung',
+        desc: 'Wir setzen uns für Qualität, Nachhaltigkeit und die Unterstützung lokaler Gemeinschaften durch verantwortungsvolle Beschaffung und umweltfreundliche Praktiken ein.',
         badges: {
-          localProduce: 'Produits Locaux',
-          sustainableSeafood: 'Fruits de Mer Durables',
-          fairTrade: 'Commerce Équitable',
-          lowWaste: 'Faible Gaspillage'
+          localProduce: 'Lokale Produkte',
+          sustainableSeafood: 'Nachhaltige Meeresfrüchte',
+          fairTrade: 'Fairen Handel',
+          lowWaste: 'Weniger Abfall'
         },
         cards: {
-          dailyMarket: 'Frais du Marché Quotidien',
-          houseSalsas: 'Salsas Maison',
+          dailyMarket: 'Täglich Frisch vom Markt',
+          houseSalsas: 'Hausgemachte Salsas',
           localTortillas: 'Lokale Tortillas',
-          compostablePackaging: 'Emballage Compostable'
+          compostablePackaging: 'Kompostierbare Verpackung'
         }
       },
       value: {
-        reorderDesc: 'Recommandez vos favoris en secondes',
-        trustedTitle: 'Approuvé par plus de 10,000 locaux',
-        trustedDesc: 'Rejoignez des milliers de clients satisfaits'
+        reorderDesc: 'Bestellen Sie Ihre Favoriten in Sekunden nach',
+        trustedTitle: 'Vertraut von über 10,000 Einheimischen',
+        trustedDesc: 'Schließen Sie sich Tausenden zufriedener Kunden an'
       },
       how: {
-        heading: 'Comment Ça Marche',
-        desc: 'Commander avec Cantina Mariachi est simple et rapide',
+        heading: 'Wie Es Funktioniert',
+        desc: 'Bestellen bei Cantina Mariachi ist einfach und schnell',
         step1: {
-          title: 'Choisissez Vos Favoris',
-          desc: 'Parcourez notre menu et sélectionnez vos plats préférés'
+          title: 'Wählen Sie Ihre Favoriten',
+          desc: 'Durchsuchen Sie unser Menü und wählen Sie Ihre Lieblingsgerichte'
         },
         step2: {
           title: 'Passez Votre Commande',
@@ -1220,63 +1220,63 @@ export const uiResources = {
         }
       },
       testimonials: {
-        heading: 'Ce Que Disent Nos Clients'
+        heading: 'Was Unsere Kunden Sagen'
       },
       popular: {
-        heading: 'Populaire Cette Semaine',
-        seeMenu: 'Voir le Menu Complet',
-        coming: 'Bientôt Disponible',
-        chefSpecial: 'Spécial du Chef {{num}}',
-        notify: 'Me Notifier',
-        rating: '4.9/5 de plus de 2,400 locaux'
+        heading: 'Diese Woche Beliebt',
+        seeMenu: 'Vollständiges Menü Anzeigen',
+        coming: 'Demnächst Verfügbar',
+        chefSpecial: 'Chef-Spezial {{num}}',
+        notify: 'Benachrichtigen Sie Mich',
+        rating: '4.9/5 von über 2,400 Einheimischen'
       },
       faq: {
-        heading: 'Questions Fréquemment Posées',
+        heading: 'Häufig Gestellte Fragen',
         q1: {
-          question: 'Quel est votre temps de livraison?',
-          answer: 'Notre temps de livraison moyen est de 25-35 minutes. Nous utilisons un suivi en temps réel pour que vous puissiez voir exactement quand votre commande arrivera.'
+          question: 'Wie lange dauert die Lieferung?',
+          answer: 'Unsere durchschnittliche Lieferzeit beträgt 25-35 Minuten. Wir verwenden Echtzeit-Tracking, damit Sie genau sehen können, wann Ihre Bestellung ankommt.'
         },
         q2: {
-          question: 'Offrez-vous des options végétariennes et véganes?',
-          answer: 'Oui! Nous avons une large sélection de plats végétariens et véganes. Notre menu comprend des tacos, des bols et des accompagnements à base de plantes.'
+          question: 'Bieten Sie vegetarische und vegane Optionen an?',
+          answer: 'Ja! Wir haben eine große Auswahl an vegetarischen und veganen Gerichten. Unser Menü umfasst pflanzliche Tacos, Bowls und Beilagen.'
         },
         q3: {
-          question: 'Puis-je personnaliser ma commande?',
-          answer: 'Absolutamente! Vous pouvez personnaliser n\'importe quel plat en ajoutant ou en supprimant des ingrédients. Faites-nous simplement savoir vos préférences lors de la commande.'
+          question: 'Kann ich meine Bestellung anpassen?',
+          answer: 'Absolut! Sie können jedes Gericht anpassen, indem Sie Zutaten hinzufügen oder entfernen. Teilen Sie uns einfach Ihre Vorlieben bei der Bestellung mit.'
         }
       },
       cta: {
-        endsTonight: '⚡ Se Termine Ce Soir',
-        title: 'Temps Limité: Pack Taco Tuesday',
+        endsTonight: '⚡ Endet Heute Nacht',
+        title: 'Zeitlich Begrenzt: Taco Tuesday Bundle',
         desc: '2 Tacos + Getränk für nur 9,99€. Perfekt zum Teilen oder alles für sich zu behalten.',
-        socialProof: '🔥 Plus de 2,400 commandes cette semaine',
-        limited: 'Offre à Temps Limité',
-        start: 'Commencer à Commander',
-        reserve: 'Réserver une Table'
+        socialProof: '🔥 Über 2,400 Bestellungen diese Woche',
+        limited: 'Zeitlich Begrenztes Angebot',
+        start: 'Jetzt Bestellen Beginnen',
+        reserve: 'Tisch Reservieren'
       },
       sticky: {
-        order: 'Commander Maintenant',
-        reserve: 'Réserver'
+        order: 'Jetzt Bestellen',
+        reserve: 'Reservieren'
       },
       logo: {
-        heading: 'Approuvé par les entreprises locales et les amateurs de cuisine'
+        heading: 'Vertraut von lokalen Unternehmen und Feinschmeckern'
       },
       offers: {
-        heading: 'Offres Saisonnières',
-        badge: 'Temps limité',
-        bundle: 'Pack Taco Tuesday',
+        heading: 'Saisonale Angebote',
+        badge: 'Zeitlich begrenzt',
+        bundle: 'Taco Tuesday Bundle',
         deal: '2 Tacos + Getränk — 9,99€',
-        endsIn: 'Se termine dans',
-        orderBundle: 'Commander le pack',
+        endsIn: 'Endet in',
+        orderBundle: 'Bundle bestellen',
         viewDetails: 'Voir les détails',
         coming: 'De nouvelles offres arrivent bientôt.',
         freeDelivery: 'Aujourd\'hui seulement: livraison gratuite pour les commandes de plus de 25€'
       },
       events: {
-        heading: 'Événements et Traiteur',
-        desc: 'Nous organisons des événements spéciaux et des services de traiteur pour de grands groupes. Des anniversaires aux événements d\'entreprise.',
-        plan: 'Planifier l\'Événement',
-        catering: 'Service de Traiteur',
+        heading: 'Veranstaltungen & Catering',
+        desc: 'Wir organisieren besondere Veranstaltungen und Catering für große Gruppen. Von Geburtstagen bis zu Firmenveranstaltungen.',
+        plan: 'Veranstaltung Planen',
+        catering: 'Catering-Service',
         q1: {
           question: 'Quelle est la taille minimale du groupe pour les événements?',
           answer: 'Notre taille minimale de groupe pour les événements est de 20 personnes. Pour les groupes plus petits, nous recommandons des réservations régulières.'
@@ -1560,160 +1560,1020 @@ export const uiResources = {
         imageAlt: 'Bunte Tacos-Platte mit frischen Zutaten und lebendiger Salsa',
         card: {
           title: 'Täglich Frisch',
-          desc: 'Wir beziehen Zutaten jeden Morgen von lokalen Märkten'
+          desc: 'Nós nos abastecemos de ingredientes dos mercados locais todas as manhãs'
         }
       },
       explore: {
         heading: 'Entdecken Sie Unser Menü',
         tacos: 'Tacos',
         bowls: 'Bowls',
-        drinks: 'Getränke',
-        coming: 'Demnächst Verfügbar',
-        viewMore: 'Vollständiges Menü Anzeigen',
+        drinks: 'Bebidas',
+        coming: 'Próximamente',
+        viewMore: 'Ver Menú Completo',
         tabs: {
           tacos: 'Tacos',
           bowls: 'Bowls',
-          drinks: 'Getränke'
+          drinks: 'Bebidas'
         }
       },
       loyalty: {
-        heading: 'Treue & Belohnungen',
-        membersSave: 'Mitglieder sparen 10%',
-        points: '1,250 Punkte',
-        nextAt: 'Nächste Belohnung bei {{points}}',
-        freeDessert: 'Kostenloses Dessert zu Ihrem Geburtstag',
-        join: 'Jetzt Beitreten',
-        perks: 'Vorteile Anzeigen'
+        heading: 'Fidelidade e Recompensas',
+        membersSave: 'Membros economizam 10%',
+        points: '1,250 pontos',
+        nextAt: 'Próxima recompensa em {{points}}',
+        freeDessert: 'Sobremesa grátis no seu aniversário',
+        join: 'Participar Agora',
+        perks: 'Ver Benefícios'
       },
       why: {
-        heading: 'Warum Cantina Mariachi Wählen',
+        heading: 'Por Que Escolher Cantina Mariachi',
         faster: {
-          title: 'Schneller als Liefer-Apps',
-          desc: 'Direkt von unserer Küche zu Ihrer Tür in 25-35 Minuten'
+          title: 'Mais rápido que aplicativos de entrega',
+          desc: 'Diretamente da nossa cozinha para sua porta em 25-35 minutos'
         },
         fees: {
-          title: 'Keine versteckten Gebühren',
-          desc: 'Transparente Preise ohne Überraschungsgebühren'
+          title: 'Nenhuma taxa oculta',
+          desc: 'Preços transparentes sem surpresas'
         },
         oneTap: {
-          title: 'Ein-Tap-Nachbestellung',
-          desc: 'Bestellen Sie Ihre Favoriten mit nur einem Tap nach'
+          title: 'Refazer pedido com um toque',
+          desc: 'Refaça seus favoritos com apenas um toque'
         },
         tracking: {
-          title: 'Live-Bestellverfolgung',
-          desc: 'Sehen Sie genau, wann Ihr Essen ankommt'
+          title: 'Rastreamento ao vivo',
+          desc: 'Veja exatamente quando sua comida chegará'
         },
         chef: {
-          title: 'Chef-gefertigte Qualität',
-          desc: 'Jedes Gericht wird von unseren Experten-Chefs zubereitet'
+          title: 'Qualidade de chef',
+          desc: 'Cada prato preparado por nossos chefs especialistas'
         },
         rewards: {
-          title: 'Verdienen Sie Belohnungen',
-          desc: 'Erhalten Sie Punkte bei jeder Bestellung und schalten Sie exklusive Vorteile frei'
+          title: 'Ganhe recompensas',
+          desc: 'Obtenha pontos em cada pedido e desbloqueie benefícios exclusivos'
         }
       },
       values: {
-        heading: 'Unsere Werte & Beschaffung',
-        desc: 'Wir setzen uns für Qualität, Nachhaltigkeit und die Unterstützung lokaler Gemeinschaften durch verantwortungsvolle Beschaffung und umweltfreundliche Praktiken ein.',
+        heading: 'Nossos Valores e Abastecimento',
+        desc: 'Estamos comprometidos com qualidade, sustentabilidade e apoio às comunidades locais através de abastecimento responsável e práticas ecológicas.',
         badges: {
-          localProduce: 'Lokale Produkte',
-          sustainableSeafood: 'Nachhaltige Meeresfrüchte',
-          fairTrade: 'Fairen Handel',
-          lowWaste: 'Weniger Abfall'
+          localProduce: 'Produtos Locais',
+          sustainableSeafood: 'Frutos do Mar Sustentáveis',
+          fairTrade: 'Comércio Justo',
+          lowWaste: 'Baixo Desperdício'
         },
         cards: {
-          dailyMarket: 'Täglich Frisch vom Markt',
-          houseSalsas: 'Hausgemachte Salsas',
-          localTortillas: 'Lokale Tortillas',
-          compostablePackaging: 'Kompostierbare Verpackung'
+          dailyMarket: 'Fresco do Mercado Diário',
+          houseSalsas: 'Salsas Caseiras',
+          localTortillas: 'Tortillas Locais',
+          compostablePackaging: 'Embalagem Compostável'
         }
       },
       value: {
-        reorderDesc: 'Bestellen Sie Ihre Favoriten in Sekunden nach',
-        trustedTitle: 'Vertraut von über 10,000 Einheimischen',
-        trustedDesc: 'Schließen Sie sich Tausenden zufriedener Kunden an'
+        reorderDesc: 'Refaça seus favoritos em segundos',
+        trustedTitle: 'Confiado por mais de 10,000 locais',
+        trustedDesc: 'Junte-se a milhares de clientes satisfeitos'
       },
       how: {
-        heading: 'Wie Es Funktioniert',
-        desc: 'Bestellen bei Cantina Mariachi ist einfach und schnell',
+        heading: 'Como Funciona',
+        desc: 'Fazer pedidos com Cantina Mariachi é simples e rápido',
         step1: {
-          title: 'Wählen Sie Ihre Favoriten',
-          desc: 'Durchsuchen Sie unser Menü und wählen Sie Ihre Lieblingsgerichte'
+          title: 'Escolha Seus Favoritos',
+          desc: 'Navegue pelo nosso cardápio e selecione seus pratos favoritos'
         },
         step2: {
-          title: 'Passez Votre Commande',
-          desc: 'Personnalisez votre commande et payez en toute sécurité'
+          title: 'Faça Seu Pedido',
+          desc: 'Personalize seu pedido e pague com segurança'
         },
         step3: {
-          title: 'Suivez et Savourez',
-          desc: 'Suivez votre commande en temps réel et savourez une nourriture fraîche'
+          title: 'Rastreie e Aproveite',
+          desc: 'Acompanhe seu pedido em tempo real e aproveite comida fresca'
         }
       },
       testimonials: {
-        heading: 'Was Unsere Kunden Sagen'
+        heading: 'O Que Nossos Clientes Dizem'
       },
       popular: {
-        heading: 'Diese Woche Beliebt',
-        seeMenu: 'Vollständiges Menü Anzeigen',
-        coming: 'Demnächst Verfügbar',
-        chefSpecial: 'Chef-Spezial {{num}}',
-        notify: 'Benachrichtigen Sie Mich',
-        rating: '4.9/5 von über 2,400 Einheimischen'
+        heading: 'Popular Esta Semana',
+        seeMenu: 'Ver Cardápio Completo',
+        coming: 'Em Breve',
+        chefSpecial: 'Especial do Chef {{num}}',
+        notify: 'Me Notifique',
+        rating: '4.9/5 de mais de 2,400 locais'
       },
       faq: {
-        heading: 'Häufig Gestellte Fragen',
+        heading: 'Perguntas Frequentes',
         q1: {
-          question: 'Wie lange dauert die Lieferung?',
-          answer: 'Unsere durchschnittliche Lieferzeit beträgt 25-35 Minuten. Wir verwenden Echtzeit-Tracking, damit Sie genau sehen können, wann Ihre Bestellung ankommt.'
+          question: 'Qual é o tempo de entrega?',
+          answer: 'Nosso tempo médio de entrega é de 25-35 minutos. Usamos rastreamento em tempo real para você ver exatamente quando seu pedido chegará.'
         },
         q2: {
-          question: 'Bieten Sie vegetarische und vegane Optionen an?',
-          answer: 'Ja! Wir haben eine große Auswahl an vegetarischen und veganen Gerichten. Unser Menü umfasst pflanzliche Tacos, Bowls und Beilagen.'
+          question: 'Vocês oferecem opções vegetarianas e veganas?',
+          answer: 'Sim! Temos uma ampla seleção de pratos vegetarianos e veganos. Nosso cardápio inclui tacos, bowls e acompanhamentos à base de plantas.'
         },
         q3: {
-          question: 'Kann ich meine Bestellung anpassen?',
-          answer: 'Absolut! Sie können jedes Gericht anpassen, indem Sie Zutaten hinzufügen oder entfernen. Teilen Sie uns einfach Ihre Vorlieben bei der Bestellung mit.'
+          question: 'Posso personalizar meu pedido?',
+          answer: 'Absolutamente! Você pode personalizar qualquer prato adicionando ou removendo ingredientes. Apenas nos informe suas preferências ao fazer o pedido.'
         }
       },
       cta: {
-        endsTonight: '⚡ Endet Heute Nacht',
-        title: 'Zeitlich Begrenzt: Taco Tuesday Bundle',
-        desc: '2 Tacos + Getränk für nur 9,99€. Perfekt zum Teilen oder alles für sich zu behalten.',
-        socialProof: '🔥 Über 2,400 Bestellungen diese Woche',
-        limited: 'Zeitlich Begrenztes Angebot',
-        start: 'Jetzt Bestellen Beginnen',
-        reserve: 'Tisch Reservieren'
+        endsTonight: '⚡ Termina Esta Noite',
+        title: 'Tempo Limitado: Pacote Taco Tuesday',
+        desc: '2 tacos + bebida por apenas R$ 9,99. Perfeito para compartilhar ou manter tudo para você.',
+        socialProof: '🔥 Mais de 2,400 pedidos esta semana',
+        limited: 'Oferta por Tempo Limitado',
+        start: 'Começar a Fazer Pedidos',
+        reserve: 'Reservar Mesa'
       },
       sticky: {
-        order: 'Jetzt Bestellen',
-        reserve: 'Reservieren'
+        order: 'Fazer Pedido Agora',
+        reserve: 'Reservar'
       },
       logo: {
-        heading: 'Vertraut von lokalen Unternehmen und Feinschmeckern'
+        heading: 'Confiado por empresas locais e amantes da comida'
       },
       offers: {
-        heading: 'Saisonale Angebote',
-        badge: 'Zeitlich begrenzt',
-        bundle: 'Taco Tuesday Bundle',
-        deal: '2 Tacos + Getränk — 9,99€',
-        endsIn: 'Endet in',
-        orderBundle: 'Bundle bestellen',
-        viewDetails: 'Voir les détails',
-        coming: 'De nouvelles offres arrivent bientôt.',
-        freeDelivery: 'Aujourd\'hui seulement: livraison gratuite pour les commandes de plus de 25€'
+        heading: 'Ofertas Sazonais',
+        badge: 'Tempo limitado',
+        bundle: 'Pacote Taco Tuesday',
+        deal: '2 tacos + bebida — R$ 9,99',
+        endsIn: 'Termina em',
+        orderBundle: 'Pedir pacote',
+        viewDetails: 'Ver detalhes',
+        coming: 'Novas ofertas estão chegando em breve.',
+        freeDelivery: 'Só hoje: entrega grátis em pedidos acima de R$ 25'
       },
       events: {
-        heading: 'Veranstaltungen & Catering',
-        desc: 'Wir organisieren besondere Veranstaltungen und Catering für große Gruppen. Von Geburtstagen bis zu Firmenveranstaltungen.',
-        plan: 'Veranstaltung Planen',
-        catering: 'Catering-Service',
+        heading: 'Eventos e Catering',
+        desc: 'Organizamos eventos especiais e serviços de catering para grandes grupos. De aniversários a eventos corporativos.',
+        plan: 'Planejar Evento',
+        catering: 'Serviço de Catering',
         q1: {
-          question: 'Was ist die Mindestgruppengröße für Veranstaltungen?',
-          answer: 'Unsere Mindestgruppengröße für Veranstaltungen beträgt 20 Personen. Für kleinere Gruppen empfehlen wir reguläre Reservierungen.'
+          question: 'Qual é o tamanho mínimo do grupo para eventos?',
+          answer: 'Nosso tamanho mínimo de grupo para eventos é de 20 pessoas. Para grupos menores, recomendamos reservas regulares.'
         },
         q2: {
-          question: 'Bieten Sie vegetarische und vegane Optionen an?',
-          answer: 'Ja, wir haben ein vollständiges Menü mit vegetarischen und veganen Optionen. Wir können auch Menüs nach Ihren Ernährungsbedürfnissen anpassen.'
+          question: 'Vocês oferecem opções vegetarianas e veganas?',
+          answer: 'Sim, temos um cardápio completo de opções vegetarianas e veganas. Também podemos personalizar cardápios de acordo com suas necessidades dietéticas.'
+        }
+      }
+    }
+  },
+  
+  // Italian translations
+  it: {
+    common: {
+      success: 'Successo',
+      error: 'Errore',
+      statusSuccess: 'successo',
+      statusError: 'errore',
+      welcome: 'Benvenuto',
+      loading: 'Caricamento...',
+      notFound: 'Non trovato',
+      unauthorized: 'Accesso non autorizzato',
+      forbidden: 'Accesso vietato',
+      internalError: 'Errore interno del server',
+      badRequest: 'Richiesta non valida',
+      created: 'Creato con successo',
+      updated: 'Aggiornato con successo',
+      deleted: 'Eliminato con successo',
+      operationFailed: 'Operazione fallita',
+      invalidRequest: 'Richiesta non valida',
+      resourceNotFound: 'Risorsa non trovata',
+      serverError: 'Errore del server',
+      maintenance: 'Il server è in manutenzione',
+      rateLimited: 'Troppe richieste. Riprova più tardi.',
+      timeout: 'Timeout della richiesta',
+      dataRetrieved: 'Dati recuperati con successo',
+      languageUpdated: 'Lingua aggiornata con successo',
+      languageReset: 'Lingua reimpostata al valore predefinito con successo'
+    },
+    ui: {
+      brand: 'Cantina Mariachi',
+      nav: {
+        home: 'Home',
+        menu: 'Menu',
+        orders: 'Ordini',
+        reservations: 'Prenotazioni',
+        account: 'Account',
+        profile: 'Profilo',
+        login: 'Accedi',
+        register: 'Registrati',
+        orderNow: 'Ordina Ora'
+      },
+      topbar: {
+        open: 'Aperto',
+        closed: 'Chiuso',
+        eta: '{{mins}} min',
+        noSignup: 'Nessuna registrazione richiesta',
+        browse: 'Sfoglia Menu'
+      },
+      a11y: {
+        toggleLanguage: 'Cambia lingua'
+      },
+      footer: {
+        tagline: 'Sapori messicani autentici, esperienza moderna.',
+        quickLinks: 'Link Rapidi',
+        contact: 'Contatto',
+        newsletter: 'Ottieni 20% di sconto sul tuo primo ordine + offerte esclusive 📧',
+        emailPlaceholder: 'Indirizzo email',
+        join: 'Unisciti',
+        privacy: 'Privacy',
+        terms: 'Termini',
+        copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.'
+      }
+    },
+    events: {
+      heading: 'Eventi e Catering',
+      desc: 'Organizziamo eventi speciali e servizi di catering per grandi gruppi. Dai compleanni agli eventi aziendali.',
+      plan: 'Pianifica Evento',
+      catering: 'Servizio Catering',
+      q1: {
+        question: 'Qual è la dimensione minima del gruppo per gli eventi?',
+        answer: 'La nostra dimensione minima del gruppo per gli eventi è di 20 persone. Per gruppi più piccoli, raccomandiamo prenotazioni regolari.'
+      },
+      q2: {
+        question: 'Offrite opzioni vegetariane e vegane?',
+        answer: 'Sì, abbiamo un menu completo di opzioni vegetariane e vegane. Possiamo anche personalizzare i menu secondo le vostre esigenze dietetiche.'
+      }
+    },
+    navbar: {
+      home: 'Home',
+      menu: 'Menu',
+      orders: 'Ordini',
+      reservations: 'Prenotazioni',
+      account: 'Account',
+      profile: 'Profilo',
+      login: 'Accedi',
+      register: 'Registrati',
+      orderNow: 'Ordina Ora',
+      toggleLanguage: 'Cambia lingua',
+      toggleTheme: 'Cambia tema',
+      close: 'Chiudi'
+    },
+    footer: {
+      tagline: 'Sapori messicani autentici, esperienza moderna.',
+      quickLinks: 'Link Rapidi',
+      contact: 'Contatto',
+      newsletter: 'Ottieni 20% di sconto sul tuo primo ordine + offerte esclusive 📧',
+      emailPlaceholder: 'Indirizzo email',
+      join: 'Unisciti',
+      privacy: 'Privacy',
+      terms: 'Termini',
+      copyright: '© {{year}} {{brand}}. Tutti i diritti riservati.'
+    },
+    faq: {
+      heading: 'Domande Frequenti',
+      q1: {
+        question: 'Qual è il tempo di consegna?',
+        answer: 'Il nostro tempo di consegna medio è di 25-35 minuti. Utilizziamo il tracking in tempo reale per farti vedere esattamente quando arriverà il tuo ordine.'
+      },
+      q2: {
+        question: 'Offrite opzioni vegetariane e vegane?',
+        answer: 'Sì! Abbiamo una vasta selezione di piatti vegetariani e vegani. Il nostro menu include tacos, bowl e contorni a base vegetale.'
+      },
+      q3: {
+        question: 'Posso personalizzare il mio ordine?',
+        answer: 'Assolutamente! Puoi personalizzare qualsiasi piatto aggiungendo o rimuovendo ingredienti. Faccelo semplicemente sapere le tue preferenze quando ordini.'
+      }
+    },
+    popular: {
+      heading: 'Popolare Questa Settimana',
+      seeMenu: 'Vedi Menu Completo',
+      coming: 'Prossimamente',
+      chefSpecial: 'Speciale dello Chef {{num}}',
+      notify: 'Notificami',
+      rating: '4.9/5 da oltre 2,400 locali'
+    },
+    auth: {
+      loginSuccess: 'Accesso riuscito',
+      loginFailed: 'Accesso fallito',
+      logoutSuccess: 'Disconnessione riuscita',
+      registerSuccess: 'Registrazione riuscita',
+      registerFailed: 'Registrazione fallita',
+      invalidCredentials: 'Credenziali non valide',
+      accountLocked: 'L\'account è bloccato',
+      accountNotVerified: 'L\'account non è verificato',
+      passwordResetSent: 'Link per il reset della password inviato alla tua email',
+      passwordResetSuccess: 'Reset della password riuscito',
+      passwordResetFailed: 'Reset della password fallito',
+      tokenExpired: 'Il token è scaduto',
+      tokenInvalid: 'Token non valido',
+      accessDenied: 'Accesso negato',
+      sessionExpired: 'La sessione è scaduta',
+      emailAlreadyExists: 'L\'email esiste già',
+      usernameAlreadyExists: 'Il nome utente esiste già',
+      accountCreated: 'Account creato con successo',
+      verificationEmailSent: 'Email di verifica inviata',
+      emailVerified: 'Email verificata con successo',
+      invalidVerificationToken: 'Token di verifica non valido'
+    },
+    api: {
+      dataRetrieved: 'Dati recuperati con successo',
+      dataUpdated: 'Dati aggiornati con successo',
+      dataCreated: 'Dati creati con successo',
+      dataDeleted: 'Dati eliminati con successo',
+      noDataFound: 'Nessun dato trovato',
+      invalidApiKey: 'Chiave API non valida',
+      apiKeyExpired: 'La chiave API è scaduta',
+      apiKeyRequired: 'Chiave API richiesta',
+      quotaExceeded: 'Quota API superata',
+      methodNotAllowed: 'Metodo non consentito',
+      unsupportedMediaType: 'Tipo di media non supportato',
+      payloadTooLarge: 'Carico utile troppo grande',
+      requestEntityTooLarge: 'Entità richiesta troppo grande',
+      contentTypeRequired: 'Header Content-Type richiesto',
+      jsonParseError: 'Formato JSON non valido',
+      missingRequiredField: 'Campo richiesto mancante: {{field}}',
+      invalidFieldValue: 'Valore non valido per il campo: {{field}}',
+      duplicateEntry: 'Voce duplicata trovata',
+      constraintViolation: 'Violazione del vincolo del database',
+      connectionError: 'Errore di connessione al database',
+      checkApiDocsAction: 'Controlla l\'URL o consulta la documentazione API per endpoint validi.'
+    },
+    validation: {
+      required: '{{field}} è richiesto',
+      email: 'Inserisci un indirizzo email valido',
+      minLength: '{{field}} deve contenere almeno {{min}} caratteri',
+      maxLength: '{{field}} non deve superare {{max}} caratteri',
+      passwordStrength: 'La password deve contenere almeno 8 caratteri, una lettera maiuscola, una minuscola e un numero',
+      passwordMatch: 'Le password non corrispondono',
+      invalidFormat: 'Formato non valido per {{field}}',
+      invalidDate: 'Formato data non valido',
+      futureDateRequired: 'La data deve essere nel futuro',
+      pastDateRequired: 'La data deve essere nel passato',
+      invalidPhone: 'Formato numero di telefono non valido',
+      invalidUrl: 'Formato URL non valido',
+      numericOnly: '{{field}} deve contenere solo numeri',
+      alphabeticOnly: '{{field}} deve contenere solo lettere',
+      alphanumericOnly: '{{field}} deve contenere solo lettere e numeri',
+      invalidRange: '{{field}} deve essere tra {{min}} e {{max}}',
+      fileRequired: 'Il file è richiesto',
+      invalidFileType: 'Tipo di file non valido. Tipi consentiti: {{types}}',
+      fileSizeExceeded: 'La dimensione del file non deve superare {{maxSize}}',
+      invalidImageFormat: 'Formato immagine non valido',
+      duplicateValue: '{{field}} esiste già'
+    },
+    email: {
+      subject: {
+        welcome: 'Benvenuto su {{appName}}',
+        passwordReset: 'Richiesta Reset Password',
+        emailVerification: 'Verifica il Tuo Indirizzo Email',
+        accountLocked: 'Avviso Sicurezza Account',
+        loginAlert: 'Nuovo Accesso Rilevato'
+      },
+      greeting: 'Ciao {{name}},',
+      welcomeMessage: 'Benvenuto su {{appName}}! Siamo entusiasti di averti con noi.',
+      passwordResetMessage: 'Hai richiesto un reset della password. Clicca sul link qui sotto per continuare:',
+      verificationMessage: 'Verifica il tuo indirizzo email cliccando sul link qui sotto:',
+      accountLockedMessage: 'Il tuo account è stato temporaneamente bloccato a causa di diversi tentativi di accesso falliti.',
+      loginAlertMessage: 'Abbiamo rilevato un nuovo accesso al tuo account da {{location}} alle {{time}}.',
+      footer: 'Se non hai richiesto questo, ignora questa email o contatta il supporto.',
+      buttonText: {
+        resetPassword: 'Reset Password',
+        verifyEmail: 'Verifica Email',
+        contactSupport: 'Contatta Supporto'
+      },
+      expiryNotice: 'Questo link scadrà in {{hours}} ore.',
+      supportContact: 'Se hai bisogno di aiuto, contattaci a {{email}}'
+    },
+    business: {
+      menu: {
+        itemCreated: 'Elemento del menu creato con successo',
+        itemUpdated: 'Elemento del menu aggiornato con successo',
+        itemDeleted: 'Elemento del menu eliminato con successo',
+        itemNotFound: 'Elemento del menu non trovato',
+        categoryCreated: 'Categoria del menu creata con successo',
+        categoryUpdated: 'Categoria del menu aggiornata con successo',
+        categoryDeleted: 'Categoria del menu eliminata con successo',
+        categoryNotFound: 'Categoria del menu non trovata',
+        itemOutOfStock: 'Elemento del menu esaurito',
+        invalidPrice: 'Prezzo non valido specificato',
+        duplicateItem: 'L\'elemento del menu esiste già'
+      },
+      orders: {
+        orderCreated: 'Ordine creato con successo',
+        orderUpdated: 'Ordine aggiornato con successo',
+        orderCancelled: 'Ordine cancellato con successo',
+        orderNotFound: 'Ordine non trovato',
+        orderStatusUpdated: 'Stato dell\'ordine aggiornato con successo',
+        invalidOrderStatus: 'Stato ordine non valido',
+        orderAlreadyCancelled: 'L\'ordine è già stato cancellato',
+        orderCannotBeCancelled: 'L\'ordine non può essere cancellato in questa fase',
+        paymentRequired: 'Il pagamento è richiesto per completare l\'ordine',
+        insufficientInventory: 'Inventario insufficiente per alcuni articoli',
+        orderTotal: 'Totale ordine: {{amount}}',
+        estimatedDelivery: 'Tempo di consegna stimato: {{time}} minuti'
+      },
+      reservations: {
+        reservationCreated: 'Prenotazione creata con successo',
+        reservationUpdated: 'Prenotazione aggiornata con successo',
+        reservationCancelled: 'Prenotazione cancellata con successo',
+        reservationNotFound: 'Prenotazione non trovata',
+        reservationConfirmed: 'Prenotazione confermata',
+        tableNotAvailable: 'Il tavolo non è disponibile all\'ora richiesta',
+        invalidReservationTime: 'Ora prenotazione non valida',
+        reservationTooEarly: 'L\'ora di prenotazione è troppo lontana nel futuro',
+        reservationTooLate: 'L\'ora di prenotazione è già passata',
+        capacityExceeded: 'La dimensione del gruppo supera la capacità del tavolo'
+      }
+    },
+    home: {
+      hero: {
+        badge: 'Nuovo: Lancio ricompense — guadagna punti su ogni ordine',
+        title: 'Messicano autentico. <primary>Consegnato velocemente.</primary>',
+        desc: 'Dai tacos stile strada alle specialità cucinate lentamente. Ordina in secondi, prenota un tavolo istantaneamente e traccia la tua consegna in tempo reale — tutto in un posto.',
+        orderNow: 'Ordina Ora',
+        reserve: 'Prenota Tavolo',
+        browseMenu: 'Sfoglia Menu',
+        rating: '4.9/5 da oltre 2,400 locali',
+        avgTime: '25-35 min media',
+        imageAlt: 'Piatto colorato di tacos con ingredienti freschi e salsa vibrante',
+        card: {
+          title: 'Fresco Quotidiano',
+          desc: 'Ci riforniamo di ingredienti dai mercati locali ogni mattina'
+        }
+      },
+      explore: {
+        heading: 'Esplora il Nostro Menu',
+        tacos: 'Tacos',
+        bowls: 'Bowl',
+        drinks: 'Bevande',
+        coming: 'Prossimamente',
+        viewMore: 'Vedi Menu Completo',
+        tabs: {
+          tacos: 'Tacos',
+          bowls: 'Bowl',
+          drinks: 'Bevande'
+        }
+      },
+      loyalty: {
+        heading: 'Fedeltà e Ricompense',
+        membersSave: 'I membri risparmiano 10%',
+        points: '1,250 punti',
+        nextAt: 'Prossima ricompensa a {{points}}',
+        freeDessert: 'Dolce gratuito per il tuo compleanno',
+        join: 'Unisciti Ora',
+        perks: 'Vedi Vantaggi'
+      },
+      why: {
+        heading: 'Perché Scegliere Cantina Mariachi',
+        faster: {
+          title: 'Più veloce delle app di consegna',
+          desc: 'Direttamente dalla nostra cucina alla tua porta in 25-35 minuti'
+        },
+        fees: {
+          title: 'Nessuna tassa nascosta',
+          desc: 'Prezzi trasparenti senza sorprese'
+        },
+        oneTap: {
+          title: 'Riordino con un tap',
+          desc: 'Riordina i tuoi preferiti con un solo tap'
+        },
+        tracking: {
+          title: 'Tracciamento live',
+          desc: 'Vedi esattamente quando arriverà il tuo cibo'
+        },
+        chef: {
+          title: 'Qualità chef',
+          desc: 'Ogni piatto preparato dai nostri chef esperti'
+        },
+        rewards: {
+          title: 'Guadagna ricompense',
+          desc: 'Ottieni punti su ogni ordine e sblocca vantaggi esclusivi'
+        }
+      },
+      values: {
+        heading: 'I Nostri Valori e Approvvigionamento',
+        desc: 'Ci impegniamo per la qualità, la sostenibilità e il supporto alle comunità locali attraverso un approvvigionamento responsabile e pratiche eco-compatibili.',
+        badges: {
+          localProduce: 'Prodotti Locali',
+          sustainableSeafood: 'Frutti di Mer Sostenibili',
+          fairTrade: 'Commercio Equo',
+          lowWaste: 'Basso Spreco'
+        },
+        cards: {
+          dailyMarket: 'Fresco dal Mercato Quotidiano',
+          houseSalsas: 'Salse Fatte in Casa',
+          localTortillas: 'Lokale Tortillas',
+          compostablePackaging: 'Imballaggio Compostabile'
+        }
+      },
+      value: {
+        reorderDesc: 'Riordina i tuoi preferiti in secondi',
+        trustedTitle: 'Fidato da oltre 10,000 locali',
+        trustedDesc: 'Unisciti a migliaia di clienti soddisfatti'
+      },
+      how: {
+        heading: 'Come Funziona',
+        desc: 'Ordinare con Cantina Mariachi è semplice e veloce',
+        step1: {
+          title: 'Scegli i Tuoi Preferiti',
+          desc: 'Sfoglia il nostro menu e seleziona i tuoi piatti preferiti'
+        },
+        step2: {
+          title: 'Piazza il Tuo Ordine',
+          desc: 'Personalizza il tuo ordine e paga in sicurezza'
+        },
+        step3: {
+          title: 'Traccia e Goditi',
+          desc: 'Segui il tuo ordine in tempo reale e goditi cibo fresco'
+        }
+      },
+      testimonials: {
+        heading: 'Cosa Dicono i Nostri Clienti'
+      },
+      popular: {
+        heading: 'Popolare Questa Settimana',
+        seeMenu: 'Vedi Menu Completo',
+        coming: 'Prossimamente',
+        chefSpecial: 'Speciale dello Chef {{num}}',
+        notify: 'Notificami',
+        rating: '4.9/5 da oltre 2,400 locali'
+      },
+      faq: {
+        heading: 'Domande Frequenti',
+        q1: {
+          question: 'Qual è il tempo di consegna?',
+          answer: 'Il nostro tempo di consegna medio è di 25-35 minuti. Utilizziamo il tracking in tempo reale per farti vedere esattamente quando arriverà il tuo ordine.'
+        },
+        q2: {
+          question: 'Offrite opzioni vegetariane e vegane?',
+          answer: 'Sì! Abbiamo una vasta selezione di piatti vegetariani e vegani. Il nostro menu include tacos, bowl e contorni a base vegetale.'
+        },
+        q3: {
+          question: 'Posso personalizzare il mio ordine?',
+          answer: 'Assolutamente! Puoi personalizzare qualsiasi piatto aggiungendo o rimuovendo ingredienti. Faccelo semplicemente sapere le tue preferenze quando ordini.'
+        }
+      },
+      cta: {
+        endsTonight: '⚡ Finisce Stasera',
+        title: 'Tempo Limitato: Pacchetto Taco Tuesday',
+        desc: '2 tacos + bevanda per solo 9,99€. Perfetto per condividere o tenere tutto per te.',
+        socialProof: '🔥 Oltre 2,400 ordini questa settimana',
+        limited: 'Offerta a Tempo Limitato',
+        start: 'Inizia a Ordinare',
+        reserve: 'Prenota Tavolo'
+      },
+      sticky: {
+        order: 'Ordina Ora',
+        reserve: 'Prenota'
+      },
+      logo: {
+        heading: 'Fidato da aziende locali e amanti del cibo'
+      },
+      offers: {
+        heading: 'Offerte Stagionali',
+        badge: 'Tempo limitato',
+        bundle: 'Pacchetto Taco Tuesday',
+        deal: '2 tacos + bevanda — 9,99€',
+        endsIn: 'Finisce in',
+        orderBundle: 'Ordina pacchetto',
+        viewDetails: 'Vedi dettagli',
+        coming: 'Nuove offerte stanno arrivando presto.',
+        freeDelivery: 'Solo oggi: consegna gratuita su ordini superiori a 25€'
+      },
+      events: {
+        heading: 'Eventi e Catering',
+        desc: 'Organizziamo eventi speciali e servizi di catering per grandi gruppi. Dai compleanni agli eventi aziendali.',
+        plan: 'Pianifica Evento',
+        catering: 'Servizio Catering',
+        q1: {
+          question: 'Qual è la dimensione minima del gruppo per gli eventi?',
+          answer: 'La nostra dimensione minima del gruppo per gli eventi è di 20 persone. Per gruppi più piccoli, raccomandiamo prenotazioni regolari.'
+        },
+        q2: {
+          question: 'Offrite opzioni vegetariane e vegane?',
+          answer: 'Sì, abbiamo un menu completo di opzioni vegetariane e vegane. Possiamo anche personalizzare i menu secondo le vostre esigenze dietetiche.'
+        }
+      }
+    }
+  },
+  
+  // Portuguese translations
+  pt: {
+    common: {
+      success: 'Sucesso',
+      error: 'Erro',
+      statusSuccess: 'sucesso',
+      statusError: 'erro',
+      welcome: 'Bem-vindo',
+      loading: 'Carregando...',
+      notFound: 'Não encontrado',
+      unauthorized: 'Acesso não autorizado',
+      forbidden: 'Acesso proibido',
+      internalError: 'Erro interno do servidor',
+      badRequest: 'Requisição inválida',
+      created: 'Criado com sucesso',
+      updated: 'Atualizado com sucesso',
+      deleted: 'Excluído com sucesso',
+      operationFailed: 'Operação falhou',
+      invalidRequest: 'Requisição inválida',
+      resourceNotFound: 'Recurso não encontrado',
+      serverError: 'Erro do servidor',
+      maintenance: 'Servidor em manutenção',
+      rateLimited: 'Muitas requisições. Tente novamente mais tarde.',
+      timeout: 'Timeout da requisição',
+      dataRetrieved: 'Dados recuperados com sucesso',
+      languageUpdated: 'Idioma atualizado com sucesso',
+      languageReset: 'Idioma redefinido para o padrão com sucesso'
+    },
+    ui: {
+      brand: 'Cantina Mariachi',
+      nav: {
+        home: 'Início',
+        menu: 'Cardápio',
+        orders: 'Pedidos',
+        reservations: 'Reservas',
+        account: 'Conta',
+        profile: 'Perfil',
+        login: 'Entrar',
+        register: 'Registrar',
+        orderNow: 'Fazer Pedido Agora'
+      },
+      topbar: {
+        open: 'Aberto',
+        closed: 'Fechado',
+        eta: '{{mins}} min',
+        noSignup: 'Nenhum cadastro necessário',
+        browse: 'Ver Cardápio'
+      },
+      a11y: {
+        toggleLanguage: 'Alternar idioma'
+      },
+      footer: {
+        tagline: 'Sabores mexicanos autênticos, experiência moderna.',
+        quickLinks: 'Links Rápidos',
+        contact: 'Contato',
+        newsletter: 'Obtenha 20% de desconto no seu primeiro pedido + ofertas exclusivas 📧',
+        emailPlaceholder: 'Endereço de email',
+        join: 'Participar',
+        privacy: 'Privacidade',
+        terms: 'Termos',
+        copyright: '© {{year}} {{brand}}. Todos os direitos reservados.'
+      }
+    },
+    events: {
+      heading: 'Eventos e Catering',
+      desc: 'Organizamos eventos especiais e serviços de catering para grandes grupos. De aniversários a eventos corporativos.',
+      plan: 'Planejar Evento',
+      catering: 'Serviço de Catering',
+      q1: {
+        question: 'Qual é o tamanho mínimo do grupo para eventos?',
+        answer: 'Nosso tamanho mínimo de grupo para eventos é de 20 pessoas. Para grupos menores, recomendamos reservas regulares.'
+      },
+      q2: {
+        question: 'Vocês oferecem opções vegetarianas e veganas?',
+        answer: 'Sim, temos um cardápio completo de opções vegetarianas e veganas. Também podemos personalizar cardápios de acordo com suas necessidades dietéticas.'
+      }
+    },
+    navbar: {
+      home: 'Início',
+      menu: 'Cardápio',
+      orders: 'Pedidos',
+      reservations: 'Reservas',
+      account: 'Conta',
+      profile: 'Perfil',
+      login: 'Entrar',
+      register: 'Registrar',
+      orderNow: 'Fazer Pedido Agora',
+      toggleLanguage: 'Alternar idioma',
+      toggleTheme: 'Alternar tema',
+      close: 'Fechar'
+    },
+    footer: {
+      tagline: 'Sabores mexicanos autênticos, experiência moderna.',
+      quickLinks: 'Links Rápidos',
+      contact: 'Contato',
+      newsletter: 'Obtenha 20% de desconto no seu primeiro pedido + ofertas exclusivas 📧',
+      emailPlaceholder: 'Endereço de email',
+      join: 'Participar',
+      privacy: 'Privacidade',
+      terms: 'Termos',
+      copyright: '© {{year}} {{brand}}. Todos os direitos reservados.'
+    },
+    faq: {
+      heading: 'Perguntas Frequentes',
+      q1: {
+        question: 'Qual é o tempo de entrega?',
+        answer: 'Nosso tempo médio de entrega é de 25-35 minutos. Usamos rastreamento em tempo real para você ver exatamente quando seu pedido chegará.'
+      },
+      q2: {
+        question: 'Vocês oferecem opções vegetarianas e veganas?',
+        answer: 'Sim! Temos uma ampla seleção de pratos vegetarianos e veganos. Nosso cardápio inclui tacos, bowls e acompanhamentos à base de plantas.'
+      },
+      q3: {
+        question: 'Posso personalizar meu pedido?',
+        answer: 'Absolutamente! Você pode personalizar qualquer prato adicionando ou removendo ingredientes. Apenas nos informe suas preferências ao fazer o pedido.'
+      }
+    },
+    popular: {
+      heading: 'Popular Esta Semana',
+      seeMenu: 'Ver Cardápio Completo',
+      coming: 'Em Breve',
+      chefSpecial: 'Especial do Chef {{num}}',
+      notify: 'Me Notifique',
+      rating: '4.9/5 de mais de 2,400 locais'
+    },
+    auth: {
+      loginSuccess: 'Login realizado com sucesso',
+      loginFailed: 'Falha no login',
+      logoutSuccess: 'Logout realizado com sucesso',
+      registerSuccess: 'Registro realizado com sucesso',
+      registerFailed: 'Falha no registro',
+      invalidCredentials: 'Credenciais inválidas',
+      accountLocked: 'Conta está bloqueada',
+      accountNotVerified: 'Conta não está verificada',
+      passwordResetSent: 'Link para redefinir senha enviado para seu email',
+      passwordResetSuccess: 'Redefinição de senha realizada com sucesso',
+      passwordResetFailed: 'Falha na redefinição de senha',
+      tokenExpired: 'Token expirou',
+      tokenInvalid: 'Token inválido',
+      accessDenied: 'Acesso negado',
+      sessionExpired: 'Sessão expirou',
+      emailAlreadyExists: 'Email já existe',
+      usernameAlreadyExists: 'Nome de usuário já existe',
+      accountCreated: 'Conta criada com sucesso',
+      verificationEmailSent: 'Email de verificação enviado',
+      emailVerified: 'Email verificado com sucesso',
+      invalidVerificationToken: 'Token de verificação inválido'
+    },
+    api: {
+      dataRetrieved: 'Dados recuperados com sucesso',
+      dataUpdated: 'Dados atualizados com sucesso',
+      dataCreated: 'Dados criados com sucesso',
+      dataDeleted: 'Dados excluídos com sucesso',
+      noDataFound: 'Nenhum dado encontrado',
+      invalidApiKey: 'Chave API inválida',
+      apiKeyExpired: 'Chave API expirou',
+      apiKeyRequired: 'Chave API necessária',
+      quotaExceeded: 'Cota da API excedida',
+      methodNotAllowed: 'Método não permitido',
+      unsupportedMediaType: 'Tipo de mídia não suportado',
+      payloadTooLarge: 'Carga útil muito grande',
+      requestEntityTooLarge: 'Entidade da requisição muito grande',
+      contentTypeRequired: 'Cabeçalho Content-Type necessário',
+      jsonParseError: 'Formato JSON inválido',
+      missingRequiredField: 'Campo obrigatório ausente: {{field}}',
+      invalidFieldValue: 'Valor inválido para o campo: {{field}}',
+      duplicateEntry: 'Entrada duplicada encontrada',
+      constraintViolation: 'Violação de restrição do banco de dados',
+      connectionError: 'Erro de conexão com o banco de dados',
+      checkApiDocsAction: 'Verifique a URL ou consulte a documentação da API para endpoints válidos.'
+    },
+    validation: {
+      required: '{{field}} é obrigatório',
+      email: 'Por favor, insira um endereço de email válido',
+      minLength: '{{field}} deve ter pelo menos {{min}} caracteres',
+      maxLength: '{{field}} não deve exceder {{max}} caracteres',
+      passwordStrength: 'A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma minúscula e um número',
+      passwordMatch: 'As senhas não coincidem',
+      invalidFormat: 'Formato inválido para {{field}}',
+      invalidDate: 'Formato de data inválido',
+      futureDateRequired: 'A data deve estar no futuro',
+      pastDateRequired: 'A data deve estar no passado',
+      invalidPhone: 'Formato de número de telefone inválido',
+      invalidUrl: 'Formato de URL inválido',
+      numericOnly: '{{field}} deve conter apenas números',
+      alphabeticOnly: '{{field}} deve conter apenas letras',
+      alphanumericOnly: '{{field}} deve conter apenas letras e números',
+      invalidRange: '{{field}} deve estar entre {{min}} e {{max}}',
+      fileRequired: 'Arquivo é obrigatório',
+      invalidFileType: 'Tipo de arquivo inválido. Tipos permitidos: {{types}}',
+      fileSizeExceeded: 'O tamanho do arquivo não deve exceder {{maxSize}}',
+      invalidImageFormat: 'Formato de imagem inválido',
+      duplicateValue: '{{field}} já existe'
+    },
+    email: {
+      subject: {
+        welcome: 'Bem-vindo ao {{appName}}',
+        passwordReset: 'Solicitação de Redefinição de Senha',
+        emailVerification: 'Verifique Seu Endereço de Email',
+        accountLocked: 'Alerta de Segurança da Conta',
+        loginAlert: 'Novo Login Detectado'
+      },
+      greeting: 'Olá {{name}},',
+      welcomeMessage: 'Bem-vindo ao {{appName}}! Estamos empolgados em tê-lo conosco.',
+      passwordResetMessage: 'Você solicitou uma redefinição de senha. Clique no link abaixo para continuar:',
+      verificationMessage: 'Por favor, verifique seu endereço de email clicando no link abaixo:',
+      accountLockedMessage: 'Sua conta foi temporariamente bloqueada devido a várias tentativas de login mal-sucedidas.',
+      loginAlertMessage: 'Detectamos um novo login na sua conta de {{location}} às {{time}}.',
+      footer: 'Se você não solicitou isso, ignore este email ou entre em contato com o suporte.',
+      buttonText: {
+        resetPassword: 'Redefinir Senha',
+        verifyEmail: 'Verificar Email',
+        contactSupport: 'Entrar em Contato com o Suporte'
+      },
+      expiryNotice: 'Este link expirará em {{hours}} horas.',
+      supportContact: 'Se você precisar de ajuda, entre em contato conosco em {{email}}'
+    },
+    business: {
+      menu: {
+        itemCreated: 'Item do cardápio criado com sucesso',
+        itemUpdated: 'Item do cardápio atualizado com sucesso',
+        itemDeleted: 'Item do cardápio excluído com sucesso',
+        itemNotFound: 'Item do cardápio não encontrado',
+        categoryCreated: 'Categoria do cardápio criada com sucesso',
+        categoryUpdated: 'Categoria do cardápio atualizada com sucesso',
+        categoryDeleted: 'Categoria do cardápio excluída com sucesso',
+        categoryNotFound: 'Categoria do cardápio não encontrada',
+        itemOutOfStock: 'Item do cardápio em falta',
+        invalidPrice: 'Preço inválido especificado',
+        duplicateItem: 'O item do cardápio já existe'
+      },
+      orders: {
+        orderCreated: 'Pedido criado com sucesso',
+        orderUpdated: 'Pedido atualizado com sucesso',
+        orderCancelled: 'Pedido cancelado com sucesso',
+        orderNotFound: 'Pedido não encontrado',
+        orderStatusUpdated: 'Status do pedido atualizado com sucesso',
+        invalidOrderStatus: 'Status do pedido inválido',
+        orderAlreadyCancelled: 'O pedido já foi cancelado',
+        orderCannotBeCancelled: 'O pedido não pode ser cancelado nesta fase',
+        paymentRequired: 'Pagamento é necessário para completar o pedido',
+        insufficientInventory: 'Inventário insuficiente para alguns itens',
+        orderTotal: 'Total do pedido: {{amount}}',
+        estimatedDelivery: 'Tempo de entrega estimado: {{time}} minutos'
+      },
+      reservations: {
+        reservationCreated: 'Reserva criada com sucesso',
+        reservationUpdated: 'Reserva atualizada com sucesso',
+        reservationCancelled: 'Reserva cancelada com sucesso',
+        reservationNotFound: 'Reserva não encontrada',
+        reservationConfirmed: 'Reserva confirmada',
+        tableNotAvailable: 'A mesa não está disponível no horário solicitado',
+        invalidReservationTime: 'Horário de reserva inválido',
+        reservationTooEarly: 'O horário de reserva está muito longe no futuro',
+        reservationTooLate: 'O horário de reserva já passou',
+        capacityExceeded: 'O tamanho do grupo excede a capacidade da mesa'
+      }
+    },
+    home: {
+      hero: {
+        badge: 'Novo: Lançamento de recompensas — ganhe pontos em cada pedido',
+        title: 'Mexicano autêntico. <primary>Entregue rapidamente.</primary>',
+        desc: 'De tacos estilo rua a especialidades cozidas lentamente. Faça pedidos em segundos, reserve uma mesa instantaneamente e rastreie sua entrega em tempo real — tudo em um lugar.',
+        orderNow: 'Fazer Pedido Agora',
+        reserve: 'Reservar Mesa',
+        browseMenu: 'Ver Cardápio',
+        rating: '4.9/5 de mais de 2,400 locais',
+        avgTime: '25-35 min média',
+        imageAlt: 'Prato colorido de tacos com ingredientes frescos e salsa vibrante',
+        card: {
+          title: 'Fresco Diário',
+          desc: 'Nós nos abastecemos de ingredientes dos mercados locais todas as manhãs'
+        }
+      },
+      explore: {
+        heading: 'Explore Nosso Cardápio',
+        tacos: 'Tacos',
+        bowls: 'Bowls',
+        drinks: 'Bebidas',
+        coming: 'Em Breve',
+        viewMore: 'Ver Cardápio Completo',
+        tabs: {
+          tacos: 'Tacos',
+          bowls: 'Bowls',
+          drinks: 'Bebidas'
+        }
+      },
+      loyalty: {
+        heading: 'Fidelidade e Recompensas',
+        membersSave: 'Membros economizam 10%',
+        points: '1,250 pontos',
+        nextAt: 'Próxima recompensa em {{points}}',
+        freeDessert: 'Sobremesa grátis no seu aniversário',
+        join: 'Participar Agora',
+        perks: 'Ver Benefícios'
+      },
+      why: {
+        heading: 'Por Que Escolher Cantina Mariachi',
+        faster: {
+          title: 'Mais rápido que aplicativos de entrega',
+          desc: 'Diretamente da nossa cozinha para sua porta em 25-35 minutos'
+        },
+        fees: {
+          title: 'Nenhuma taxa oculta',
+          desc: 'Preços transparentes sem surpresas'
+        },
+        oneTap: {
+          title: 'Refazer pedido com um toque',
+          desc: 'Refaça seus favoritos com apenas um toque'
+        },
+        tracking: {
+          title: 'Rastreamento ao vivo',
+          desc: 'Veja exatamente quando sua comida chegará'
+        },
+        chef: {
+          title: 'Qualidade de chef',
+          desc: 'Cada prato preparado por nossos chefs especialistas'
+        },
+        rewards: {
+          title: 'Ganhe recompensas',
+          desc: 'Obtenha pontos em cada pedido e desbloqueie benefícios exclusivos'
+        }
+      },
+      values: {
+        heading: 'Nossos Valores e Abastecimento',
+        desc: 'Estamos comprometidos com qualidade, sustentabilidade e apoio às comunidades locais através de abastecimento responsável e práticas ecológicas.',
+        badges: {
+          localProduce: 'Produtos Locais',
+          sustainableSeafood: 'Frutos do Mar Sustentáveis',
+          fairTrade: 'Comércio Justo',
+          lowWaste: 'Baixo Desperdício'
+        },
+        cards: {
+          dailyMarket: 'Fresco do Mercado Diário',
+          houseSalsas: 'Salsas Caseiras',
+          localTortillas: 'Tortillas Locais',
+          compostablePackaging: 'Embalagem Compostável'
+        }
+      },
+      value: {
+        reorderDesc: 'Refaça seus favoritos em segundos',
+        trustedTitle: 'Confiado por mais de 10,000 locais',
+        trustedDesc: 'Junte-se a milhares de clientes satisfeitos'
+      },
+      how: {
+        heading: 'Como Funciona',
+        desc: 'Fazer pedidos com Cantina Mariachi é simples e rápido',
+        step1: {
+          title: 'Escolha Seus Favoritos',
+          desc: 'Navegue pelo nosso cardápio e selecione seus pratos favoritos'
+        },
+        step2: {
+          title: 'Faça Seu Pedido',
+          desc: 'Personalize seu pedido e pague com segurança'
+        },
+        step3: {
+          title: 'Rastreie e Aproveite',
+          desc: 'Acompanhe seu pedido em tempo real e aproveite comida fresca'
+        }
+      },
+      testimonials: {
+        heading: 'O Que Nossos Clientes Dizem'
+      },
+      popular: {
+        heading: 'Popular Esta Semana',
+        seeMenu: 'Ver Cardápio Completo',
+        coming: 'Em Breve',
+        chefSpecial: 'Especial do Chef {{num}}',
+        notify: 'Me Notifique',
+        rating: '4.9/5 de mais de 2,400 locais'
+      },
+      faq: {
+        heading: 'Perguntas Frequentes',
+        q1: {
+          question: 'Qual é o tempo de entrega?',
+          answer: 'Nosso tempo médio de entrega é de 25-35 minutos. Usamos rastreamento em tempo real para você ver exatamente quando seu pedido chegará.'
+        },
+        q2: {
+          question: 'Vocês oferecem opções vegetarianas e veganas?',
+          answer: 'Sim! Temos uma ampla seleção de pratos vegetarianos e veganos. Nosso cardápio inclui tacos, bowls e acompanhamentos à base de plantas.'
+        },
+        q3: {
+          question: 'Posso personalizar meu pedido?',
+          answer: 'Absolutamente! Você pode personalizar qualquer prato adicionando ou removendo ingredientes. Apenas nos informe suas preferências ao fazer o pedido.'
+        }
+      },
+      cta: {
+        endsTonight: '⚡ Termina Esta Noite',
+        title: 'Tempo Limitado: Pacote Taco Tuesday',
+        desc: '2 tacos + bebida por apenas R$ 9,99. Perfeito para compartilhar ou manter tudo para você.',
+        socialProof: '🔥 Mais de 2,400 pedidos esta semana',
+        limited: 'Oferta por Tempo Limitado',
+        start: 'Começar a Fazer Pedidos',
+        reserve: 'Reservar Mesa'
+      },
+      sticky: {
+        order: 'Fazer Pedido Agora',
+        reserve: 'Reservar'
+      },
+      logo: {
+        heading: 'Confiado por empresas locais e amantes da comida'
+      },
+      offers: {
+        heading: 'Ofertas Sazonais',
+        badge: 'Tempo limitado',
+        bundle: 'Pacote Taco Tuesday',
+        deal: '2 tacos + bebida — R$ 9,99',
+        endsIn: 'Termina em',
+        orderBundle: 'Pedir pacote',
+        viewDetails: 'Ver detalhes',
+        coming: 'Novas ofertas estão chegando em breve.',
+        freeDelivery: 'Só hoje: entrega grátis em pedidos acima de R$ 25'
+      },
+      events: {
+        heading: 'Eventos e Catering',
+        desc: 'Organizamos eventos especiais e serviços de catering para grandes grupos. De aniversários a eventos corporativos.',
+        plan: 'Planejar Evento',
+        catering: 'Serviço de Catering',
+        q1: {
+          question: 'Qual é o tamanho mínimo do grupo para eventos?',
+          answer: 'Nosso tamanho mínimo de grupo para eventos é de 20 pessoas. Para grupos menores, recomendamos reservas regulares.'
+        },
+        q2: {
+          question: 'Vocês oferecem opções vegetarianas e veganas?',
+          answer: 'Sim, temos um cardápio completo de opções vegetarianas e veganas. Também podemos personalizar cardápios de acordo com suas necessidades dietéticas.'
         }
       }
     }
