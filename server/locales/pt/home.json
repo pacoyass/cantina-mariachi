@@ -3,7 +3,16 @@
     "badge": "Novo: Lançamento de recompensas — ganhe pontos em cada pedido",
     "title": "Comida mexicana autêntica. <primary>Entrega rápida.</primary>",
     "desc": "De tacos de rua a especialidades cozidas lentamente. Peça em segundos, reserve instantaneamente e acompanhe sua entrega em tempo real — tudo em um lugar.",
-    "imageAlt": "Prato colorido de tacos com ingredientes frescos e salsa vibrante"
+    "imageAlt": "Prato colorido de tacos com ingredientes frescos e salsa vibrante",
+    "orderNow": "Peça Agora",
+    "reserve": "Reserve Mesa",
+    "browseMenu": "Navegar Menu",
+    "rating": "4,9/5 de 2.400+ locais",
+    "avgTime": "25-35 min média",
+    "card": {
+      "title": "Fresco Diário",
+      "desc": "Nós obtemos ingredientes dos mercados locais todas as manhãs"
+    }
   },
   "features": {
     "title": "Por que escolher a Cantina",
@@ -39,9 +48,120 @@
     "orderBundle": "Pedir pacote",
     "viewDetails": "Ver detalhes"
   },
+  "why": {
+    "heading": "Por que Escolher Cantina Mariachi",
+    "faster": {
+      "title": "Mais rápido que apps de entrega",
+      "desc": "Direto da nossa cozinha para sua porta em 25-35 minutos"
+    },
+    "fees": {
+      "title": "Sem taxas ocultas",
+      "desc": "Preços transparentes sem cobranças surpresa"
+    },
+    "oneTap": {
+      "title": "Reordenação com um toque",
+      "desc": "Reordene seus favoritos com apenas um toque"
+    },
+    "tracking": {
+      "title": "Rastreamento de pedido ao vivo",
+      "desc": "Veja exatamente quando sua comida chegará"
+    },
+    "chef": {
+      "title": "Qualidade criada pelo chef",
+      "desc": "Cada prato preparado pelos nossos chefs especialistas"
+    },
+    "rewards": {
+      "title": "Ganhe recompensas",
+      "desc": "Obtenha pontos em cada pedido e desbloqueie benefícios exclusivos"
+    }
+  },
+  "explore": {
+    "heading": "Explore Nosso Menu",
+    "tacos": "Tacos",
+    "bowls": "Tigelas",
+    "drinks": "Bebidas",
+    "coming": "Em Breve",
+    "viewMore": "Ver Menu Completo",
+    "tabs": {
+      "tacos": "Tacos",
+      "bowls": "Tigelas",
+      "drinks": "Bebidas"
+    }
+  },
+  "popular": {
+    "heading": "Popular Esta Semana",
+    "seeMenu": "Ver Menu Completo",
+    "coming": "Em Breve",
+    "chefSpecial": "Especial do Chef {{num}}",
+    "notify": "Notifique-me",
+    "add": "Adicionar ao Carrinho",
+    "rating": "4,9/5 de 2.400+ locais",
+    "numberOne": "#1",
+    "trending": "Tendência",
+    "unavailable": "Indisponível",
+    "onlyLeftToday": "Só alguns restam hoje",
+    "orderNowDelivery": "Peça agora para entrega"
+  },
+  "loyalty": {
+    "heading": "Fidelidade e Recompensas",
+    "membersSave": "Membros economizam 10%",
+    "points": "1.250 pontos",
+    "nextAt": "Próxima recompensa em 1.500 pontos",
+    "freeDessert": "Sobremesa grátis no seu aniversário",
+    "join": "Junte-se Agora",
+    "perks": "Ver Benefícios"
+  },
+  "events": {
+    "heading": "Eventos e Catering",
+    "desc": "Organizamos eventos especiais e catering para grandes grupos. De aniversários a eventos corporativos.",
+    "plan": "Planejar Evento",
+    "catering": "Serviço de Catering",
+    "q1": {
+      "question": "Qual é o tamanho mínimo do grupo para eventos?",
+      "answer": "Nosso tamanho mínimo de grupo para eventos é de 20 pessoas. Para grupos menores, recomendamos reservas regulares."
+    },
+    "q2": {
+      "question": "Vocês oferecem opções vegetarianas e veganas?",
+      "answer": "Sim, temos um menu completo de opções vegetarianas e veganas. Também podemos personalizar menus de acordo com suas necessidades dietéticas."
+    }
+  },
+  "testimonials": {
+    "heading": "O que Nossos Clientes Dizem"
+  },
+  "faq": {
+    "heading": "Perguntas Frequentes",
+    "q1": {
+      "question": "Qual é o tempo de entrega?",
+      "answer": "Nosso tempo médio de entrega é de 25-35 minutos. Usamos rastreamento em tempo real para que você possa ver exatamente quando seu pedido chegará."
+    },
+    "q2": {
+      "question": "Vocês oferecem opções vegetarianas e veganas?",
+      "answer": "Sim! Temos uma ampla seleção de pratos vegetarianos e veganos. Nosso menu inclui tacos à base de plantas, tigelas e acompanhamentos."
+    },
+    "q3": {
+      "question": "Posso personalizar meu pedido?",
+      "answer": "Absolutamente! Você pode personalizar qualquer prato adicionando ou removendo ingredientes. Apenas nos informe suas preferências ao fazer o pedido."
+    }
+  },
+  "cta": {
+    "endsTonight": "⚡ Termina Hoje à Noite",
+    "title": "Tempo Limitado: Pacote Taco Tuesday",
+    "desc": "2 tacos + bebida por apenas R$ 9,99. Perfeito para compartilhar ou manter tudo para você.",
+    "socialProof": "🔥 2.400+ pedidos esta semana",
+    "limited": "Oferta Limitada",
+    "start": "Começar a Pedir",
+    "reserve": "Reserve Mesa"
+  },
+  "sticky": {
+    "order": "Peça Agora",
+    "reserve": "Reserve"
+  },
+  "logo": {
+    "heading": "Confiado por empresas locais e amantes da comida"
+  },
   "values": {
-    "heading": "Nossos Valores",
-    "desc": "Estamos comprometidos com qualidade, sustentabilidade e comunidade.",
+    "heading": "Nossos Valores e Abastecimento",
+    "desc": "Estamos comprometidos com qualidade, sustentabilidade e apoio às comunidades locais através de abastecimento responsável e práticas ecológicas.",
     "badges": {
       "localProduce": "Produtos Locais",
       "sustainableSeafood": "Frutos do Mar Sustentáveis",
@@ -49,7 +169,7 @@
       "lowWaste": "Baixo Desperdício"
     },
     "cards": {
-      "dailyMarket": "Mercado Diário",
+      "dailyMarket": "Fresco Diário do Mercado",
       "houseSalsas": "Salsas da Casa",
       "localTortillas": "Tortillas Locais",
       "compostablePackaging": "Embalagem Compostável"
@@ -57,28 +177,28 @@
   },
   "value": {
     "reorderDesc": "Reordenação rápida para suas refeições favoritas",
-    "trustedTitle": "Confiado por Milhares",
+    "trustedTitle": "Confiado por 10.000+ locais",
     "trustedDesc": "Junte-se à nossa comunidade de clientes satisfeitos"
   },
   "how": {
     "heading": "Como Funciona",
-    "desc": "Passos simples para deliciosa comida mexicana",
+    "desc": "Fazer pedidos na Cantina Mariachi é simples e rápido",
     "step1": {
-      "title": "Escolha sua Refeição",
+      "title": "Escolha Seus Favoritos",
       "desc": "Navegue pelo nosso menu e selecione seus pratos favoritos"
     },
     "step2": {
       "title": "Faça seu Pedido",
-      "desc": "Peça online ou ligue para nós para serviço rápido"
+      "desc": "Personalize seu pedido e pague com segurança"
     },
     "step3": {
-      "title": "Aproveite e Acompanhe",
-      "desc": "Acompanhe sua entrega em tempo real e aproveite comida fresca"
+      "title": "Acompanhe e Aproveite",
+      "desc": "Acompanhe seu pedido em tempo real e aproveite comida fresca"
     }
   },
   "seo": {
     "title": "Cantina Mariachi – Mexicano Autêntico, Experiência Moderna",
-    "description": "Peça online em segundos, reserve instantaneamente e acompanhe sua entrega ao vivo.",
-    "keywords": "comida mexicana, tacos, entrega, restaurante"
+    "description": "Peça online em segundos, reserve instantaneamente e acompanhe sua entrega ao vivo. Comida mexicana autêntica entregue rapidamente.",
+    "keywords": "comida mexicana, tacos, entrega, restaurante, pedido online, reserva de mesa"
   }
 }

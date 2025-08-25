@@ -1,12 +1,56 @@
 {
-  "offer": {
-    "freeDelivery": "Free delivery on orders over $25"
+  "navigation": {
+    "home": "Início",
+    "menu": "Menu",
+    "reservations": "Reservas",
+    "catering": "Catering",
+    "about": "Sobre",
+    "contact": "Contato",
+    "account": "Conta",
+    "orders": "Pedidos",
+    "settings": "Configurações"
   },
   "topbar": {
-    "open": "Open now",
-    "closed": "Closed", 
-    "eta": "{{mins}} min delivery",
-    "noSignup": "No signup required",
-    "browse": "Browse menu"
+    "open": "Aberto agora",
+    "closed": "Fechado",
+    "eta": "{{mins}} min entrega",
+    "noSignup": "Nenhum cadastro necessário",
+    "browse": "Navegar menu"
+  },
+  "offer": {
+    "freeDelivery": "Entrega gratuita para pedidos acima de R$ 25"
+  },
+  "buttons": {
+    "orderNow": "Peça Agora",
+    "reserve": "Reserve Mesa",
+    "addToCart": "Adicionar ao Carrinho",
+    "viewCart": "Ver Carrinho",
+    "checkout": "Finalizar Compra",
+    "login": "Entrar",
+    "signup": "Cadastrar",
+    "logout": "Sair"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Algo deu errado",
+    "retry": "Tentar novamente",
+    "close": "Fechar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "sort": "Ordenar"
+  },
+  "cart": {
+    "empty": "Seu carrinho está vazio",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Imposto",
+    "delivery": "Entrega",
+    "itemCount": "{{count}} item",
+    "itemCount_plural": "{{count}} itens"
   }
 }

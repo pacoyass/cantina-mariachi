@@ -1,12 +1,56 @@
 {
-  "offer": {
-    "freeDelivery": "Free delivery on orders over $25"
+  "navigation": {
+    "home": "Startseite",
+    "menu": "Speisekarte",
+    "reservations": "Reservierungen",
+    "catering": "Catering",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "account": "Konto",
+    "orders": "Bestellungen",
+    "settings": "Einstellungen"
   },
   "topbar": {
-    "open": "Open now",
-    "closed": "Closed", 
-    "eta": "{{mins}} min delivery",
-    "noSignup": "No signup required",
-    "browse": "Browse menu"
+    "open": "Jetzt geöffnet",
+    "closed": "Geschlossen",
+    "eta": "{{mins}} Min. Lieferung",
+    "noSignup": "Keine Anmeldung erforderlich",
+    "browse": "Speisekarte durchsuchen"
+  },
+  "offer": {
+    "freeDelivery": "Kostenlose Lieferung bei Bestellungen über 25 $"
+  },
+  "buttons": {
+    "orderNow": "Jetzt bestellen",
+    "reserve": "Tisch reservieren",
+    "addToCart": "Zum Warenkorb hinzufügen",
+    "viewCart": "Warenkorb anzeigen",
+    "checkout": "Zur Kasse",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "logout": "Abmelden"
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen",
+    "close": "Schließen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "submit": "Absenden",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "search": "Suchen",
+    "filter": "Filter",
+    "sort": "Sortieren"
+  },
+  "cart": {
+    "empty": "Ihr Warenkorb ist leer",
+    "total": "Gesamt",
+    "subtotal": "Zwischensumme",
+    "tax": "Steuer",
+    "delivery": "Lieferung",
+    "itemCount": "{{count}} Artikel",
+    "itemCount_plural": "{{count}} Artikel"
   }
 }

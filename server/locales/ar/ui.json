@@ -1,12 +1,56 @@
 {
-  "offer": {
-    "freeDelivery": "Free delivery on orders over $25"
+  "navigation": {
+    "home": "الرئيسية",
+    "menu": "القائمة",
+    "reservations": "الحجوزات",
+    "catering": "الخدمات",
+    "about": "حول",
+    "contact": "اتصل بنا",
+    "account": "الحساب",
+    "orders": "الطلبات",
+    "settings": "الإعدادات"
   },
   "topbar": {
-    "open": "Open now",
-    "closed": "Closed", 
-    "eta": "{{mins}} min delivery",
-    "noSignup": "No signup required",
-    "browse": "Browse menu"
+    "open": "مفتوح الآن",
+    "closed": "مغلق",
+    "eta": "{{mins}} دقيقة توصيل",
+    "noSignup": "لا حاجة للتسجيل",
+    "browse": "تصفح القائمة"
+  },
+  "offer": {
+    "freeDelivery": "توصيل مجاني للطلبات أكثر من $25"
+  },
+  "buttons": {
+    "orderNow": "اطلب الآن",
+    "reserve": "احجز طاولة",
+    "addToCart": "أضف إلى السلة",
+    "viewCart": "عرض السلة",
+    "checkout": "إتمام الطلب",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "logout": "تسجيل الخروج"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ ما",
+    "retry": "حاول مرة أخرى",
+    "close": "إغلاق",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "submit": "إرسال",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "sort": "ترتيب"
+  },
+  "cart": {
+    "empty": "سلتك فارغة",
+    "total": "المجموع",
+    "subtotal": "المجموع الفرعي",
+    "tax": "الضريبة",
+    "delivery": "التوصيل",
+    "itemCount": "{{count}} عنصر",
+    "itemCount_plural": "{{count}} عناصر"
   }
 }
