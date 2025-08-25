@@ -123,7 +123,7 @@ export const uiResources = {
       chefSpecial: 'Chef Special {{num}}',
       notify: 'Notify Me',
       rating: '4.9/5 from 2,400+ locals',
-      numberOne: 'Number 1',
+      numberOne: '#1',
       filters: {
         vegetarian: 'Vegetarian',
         vegan: 'Vegan'
