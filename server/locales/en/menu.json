@@ -1,0 +1,45 @@
+{
+  "categories": {
+    "tacos": "Tacos",
+    "bowls": "Bowls", 
+    "drinks": "Drinks",
+    "sides": "Sides",
+    "desserts": "Desserts",
+    "specials": "Chef Specials"
+  },
+  "filters": {
+    "all": "All Items",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan", 
+    "glutenFree": "Gluten Free",
+    "spicy": "Spicy",
+    "popular": "Popular",
+    "new": "New"
+  },
+  "sort": {
+    "popularity": "Most Popular",
+    "price": "Price",
+    "name": "Name",
+    "rating": "Rating"
+  },
+  "actions": {
+    "addToCart": "Add to Cart",
+    "customize": "Customize",
+    "viewDetails": "View Details",
+    "outOfStock": "Out of Stock",
+    "comingSoon": "Coming Soon"
+  },
+  "dietary": {
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "glutenFree": "Gluten Free",
+    "dairyFree": "Dairy Free",
+    "nutFree": "Nut Free"
+  },
+  "prep": {
+    "mild": "Mild",
+    "medium": "Medium", 
+    "hot": "Hot",
+    "extraHot": "Extra Hot"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "menu": "Menú", 
+    "reservations": "Reservaciones",
+    "catering": "Catering",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "account": "Cuenta",
+    "orders": "Pedidos",
+    "settings": "Configuración"
+  },
+  "topbar": {
+    "open": "Abierto ahora",
+    "closed": "Cerrado",
+    "eta": "{{mins}} min entrega",
+    "noSignup": "No requiere registro",
+    "browse": "Ver menú"
+  },
+  "offer": {
+    "freeDelivery": "Entrega gratis en pedidos sobre $25"
+  },
+  "buttons": {
+    "orderNow": "Ordenar Ahora",
+    "reserve": "Reservar Mesa", 
+    "addToCart": "Agregar al Carrito",
+    "viewCart": "Ver Carrito",
+    "checkout": "Pagar",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar Sesión"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Intentar de nuevo",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar"
+  },
+  "cart": {
+    "empty": "Tu carrito está vacío",
+    "total": "Total",
+    "subtotal": "Subtotal", 
+    "tax": "Impuesto",
+    "delivery": "Entrega",
+    "itemCount": "{{count}} artículo",
+    "itemCount_plural": "{{count}} artículos"
+  }
+}
