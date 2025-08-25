@@ -40,6 +40,16 @@ export const uiResources = {
         register: 'Register',
         orderNow: 'Order Now'
       },
+      topbar: {
+        open: 'Open',
+        closed: 'Closed',
+        eta: '{{mins}} min',
+        noSignup: 'No signup required',
+        browse: 'Browse Menu'
+      },
+      a11y: {
+        toggleLanguage: 'Toggle language'
+      },
       footer: {
         tagline: 'Authentic Mexican flavors, modern experience.',
         quickLinks: 'Quick Links',
@@ -459,6 +469,16 @@ export const uiResources = {
         login: 'Iniciar Sesión',
         register: 'Registrarse',
         orderNow: 'Ordenar Ahora'
+      },
+      topbar: {
+        open: 'Abrir',
+        closed: 'Cerrado',
+        eta: '{{mins}} min',
+        noSignup: 'No se requiere registro',
+        browse: 'Ver Menú'
+      },
+      a11y: {
+        toggleLanguage: 'Cambiar idioma'
       },
       footer: {
         tagline: 'Sabores mexicanos auténticos, experiencia moderna.',
