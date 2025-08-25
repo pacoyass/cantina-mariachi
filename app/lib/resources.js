@@ -27,6 +27,31 @@ export const uiResources = {
       languageUpdated: 'Language updated successfully',
       languageReset: 'Language reset to default successfully'
     },
+    ui: {
+      brand: 'Cantina Mariachi',
+      nav: {
+        home: 'Home',
+        menu: 'Menu',
+        orders: 'Orders',
+        reservations: 'Reservations',
+        account: 'Account',
+        profile: 'Profile',
+        login: 'Login',
+        register: 'Register',
+        orderNow: 'Order Now'
+      },
+      footer: {
+        tagline: 'Authentic Mexican flavors, modern experience.',
+        quickLinks: 'Quick Links',
+        contact: 'Contact',
+        newsletter: 'Get 20% off your first order + exclusive deals 📧',
+        emailPlaceholder: 'Email address',
+        join: 'Join',
+        privacy: 'Privacy',
+        terms: 'Terms',
+        copyright: '© {{year}} {{brand}}. All rights reserved.'
+      }
+    },
     events: {
       heading: 'Events & Catering',
       desc: 'We organize special events and catering for large groups. From birthdays to corporate events.',
@@ -422,6 +447,31 @@ export const uiResources = {
       languageUpdated: 'Idioma actualizado exitosamente',
       languageReset: 'Idioma restablecido al predeterminado exitosamente'
     },
+    ui: {
+      brand: 'Cantina Mariachi',
+      nav: {
+        home: 'Inicio',
+        menu: 'Menú',
+        orders: 'Pedidos',
+        reservations: 'Reservas',
+        account: 'Cuenta',
+        profile: 'Perfil',
+        login: 'Iniciar Sesión',
+        register: 'Registrarse',
+        orderNow: 'Ordenar Ahora'
+      },
+      footer: {
+        tagline: 'Sabores mexicanos auténticos, experiencia moderna.',
+        quickLinks: 'Enlaces Rápidos',
+        contact: 'Contacto',
+        newsletter: 'Obtén 20% de descuento en tu primer pedido + ofertas exclusivas 📧',
+        emailPlaceholder: 'Dirección de correo electrónico',
+        join: 'Unirse',
+        privacy: 'Privacidad',
+        terms: 'Términos',
+        copyright: '© {{year}} {{brand}}. Todos los derechos reservados.'
+      }
+    },
     events: {
       heading: 'Eventos y Catering',
       desc: 'Organizamos eventos especiales y catering para grupos grandes. Desde cumpleaños hasta eventos corporativos.',
@@ -460,6 +510,11 @@ export const uiResources = {
       privacy: 'Privacidad',
       terms: 'Términos',
       copyright: '© {{year}} {{brand}}. Todos los derechos reservados.'
+      },
+      q3: {
+        question: '¿Puedo personalizar mi pedido?',
+        answer: '¡Absolutamente! Puedes personalizar cualquier plato agregando o quitando ingredientes. Solo háznos saber tus preferencias al ordenar.'
+      }
     },
     faq: {
       heading: 'Preguntas Frecuentes',
@@ -785,7 +840,6 @@ export const uiResources = {
         q2: {
           question: '¿Ofrecen opciones vegetarianas y veganas?',
           answer: 'Sí, tenemos un menú completo de opciones vegetarianas y veganas. También podemos personalizar menús según tus necesidades dietéticas.'
-        }
       }
     }
   }
