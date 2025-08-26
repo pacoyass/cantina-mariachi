@@ -3,7 +3,7 @@ import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
 import { I18nextProvider } from 'react-i18next';
 import { initI18n } from './lib/i18n.js';
-import { rtlLngs } from './lib/i18n.js';
+import { rtlLngs } from './lib/resources.js';
 import { uiResources } from './lib/resources.js';
 
 /**
@@ -11,70 +11,71 @@ import { uiResources } from './lib/resources.js';
  */
 startTransition(async () => {
   try {
-    // Get language from various sources (React Router loader data is handled in root.jsx)
-    const urlLang = new URLSearchParams(window.location.search).get('lng');
-    const storedLang = localStorage.getItem('lng');
-    // Note: Server sets httpOnly cookies, so we can't read them from client
-    // We'll rely on URL, localStorage, and server context instead
+    // Get language from server-rendered HTML to prevent hydration mismatch
+    const serverLang = document.documentElement.lang || 'en';
     
-    // Language priority: URL > localStorage > Default
-    // Note: Server language is accessed through React Router loader in root.jsx
-    const lng = urlLang || storedLang || 'en';
-    
-    console.log('🌍 Client language detection:', {
-      url: urlLang,
-      stored: storedLang,
-      final: lng,
-      note: 'Server cookies are httpOnly and not accessible from client'
-    });
+    // Initialize i18n with the server-provided language first
+    const i18n = await initI18n({ lng: serverLang });
 
-    // Set document attributes immediately to prevent flash
-    document.documentElement.lang = lng;
-    document.documentElement.dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';
-
-    // Initialize i18n with the detected language
-    // Let it try to load from API first, then fallback to hardcoded resources
-    const i18n = await initI18n({ lng });
-
-    // Ensure the language is actually set correctly
-    if (i18n.language !== lng) {
-      console.log(`🔄 Correcting i18n language from ${i18n.language} to ${lng}`);
-      await i18n.changeLanguage(lng);
-    }
-
-    // Update localStorage if needed
-    if (storedLang !== lng) {
-      try {
-        localStorage.setItem('lng', lng);
-      } catch {}
-    }
-    
-    // Note: Server handles cookie updates automatically via httpOnly cookies
-    // No need to manually set cookies on the client side
-
-    // Listen for language changes and update document attributes
-    i18n.on('languageChanged', (newLng) => {
-      document.documentElement.lang = newLng;
-      document.documentElement.dir = rtlLngs.includes(newLng) ? 'rtl' : 'ltr';
-      
-      // Update URL if not already set
-      const currentUrlLang = new URLSearchParams(window.location.search).get('lng');
-      if (currentUrlLang !== newLng) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('lng', newLng);
-        window.history.replaceState({}, '', url.toString());
-      }
-    });
-
-    // Hydrate the React app
+    // Hydrate the React app with server-provided language
     hydrateRoot(
       document,
       <StrictMode>
-        <I18nextProvider i18n={i18n}>
+        <I18nextProvider i18n={i18n} key={serverLang}>
           <HydratedRouter />
         </I18nextProvider>
       </StrictMode>
     );
+
+    // After hydration, sync with client preferences
+    setTimeout(async () => {
+      try {
+        const urlLang = new URLSearchParams(window.location.search).get('lng');
+        const storedLang = localStorage.getItem('lng');
+        
+        // Language priority: URL > localStorage > Server
+        const clientLang = urlLang || storedLang || serverLang;
+        
+        if (clientLang !== serverLang && i18n?.changeLanguage) {
+          console.log('🌍 Client language sync:', {
+            server: serverLang,
+            client: clientLang,
+            url: urlLang,
+            stored: storedLang
+          });
+          
+          await i18n.changeLanguage(clientLang);
+          
+          // Update document attributes
+          document.documentElement.lang = clientLang;
+          document.documentElement.dir = rtlLngs.includes(clientLang) ? 'rtl' : 'ltr';
+          
+          // Update localStorage if needed
+          if (storedLang !== clientLang) {
+            try {
+              localStorage.setItem('lng', clientLang);
+            } catch {}
+          }
+        }
+        
+        // Listen for language changes
+        i18n.on('languageChanged', (newLng) => {
+          document.documentElement.lang = newLng;
+          document.documentElement.dir = rtlLngs.includes(newLng) ? 'rtl' : 'ltr';
+          
+          // Update URL if not already set
+          const currentUrlLang = new URLSearchParams(window.location.search).get('lng');
+          if (currentUrlLang !== newLng) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lng', newLng);
+            window.history.replaceState({}, '', url.toString());
+          }
+        });
+        
+      } catch (error) {
+        console.warn('Failed to sync client language:', error);
+      }
+    }, 100); // Small delay to ensure hydration is complete
 
   } catch (error) {
     console.error('Failed to initialize app:', error);
@@ -89,7 +90,7 @@ startTransition(async () => {
     hydrateRoot(
       document,
       <StrictMode>
-        <I18nextProvider i18n={fallbackI18n}>
+        <I18nextProvider i18n={fallbackI18n} key="en">
           <HydratedRouter />
         </I18nextProvider>
       </StrictMode>

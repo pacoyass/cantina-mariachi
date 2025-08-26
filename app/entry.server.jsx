@@ -41,7 +41,7 @@ export default function handleRequest(
         : "onShellReady";
 
     const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={i18n}>
+      <I18nextProvider i18n={i18n} key={lng}>
         <ServerRouter
           context={routerContext}
           url={request.url}

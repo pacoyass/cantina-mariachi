@@ -53,44 +53,57 @@ export function Layout( { children } )
   const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
   
-  // Get language from URL or fallback to server context
-  const urlLang = (() => { 
-    try { 
-      return new URLSearchParams(window.location.search).get('lng'); 
-    } catch { 
-      return null; 
-    } 
-  })();
-  
-  const lang = urlLang || i18n?.language || initialLang;
+  // Use server-provided language to prevent hydration mismatch
+  // Don't try to detect URL language on client during initial render
+  const lang = initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
 
-  // Sync client-side language changes with server context
+  // Client-side language sync (after hydration)
   useEffect(() => {
+    // Only run after hydration is complete
+    if (typeof window === 'undefined') return;
+    
+    // Ensure i18n is properly initialized
+    if (!i18n || !i18n.isInitialized) return;
+    
     try {
-      if (urlLang && i18n?.changeLanguage) {
-        i18n.changeLanguage(urlLang);
-      }
+      // Only update language after initial hydration
+      const urlLang = new URLSearchParams(window.location.search).get('lng');
+      const storedLang = localStorage.getItem('lng');
       
-      // Update document attributes
-      document.documentElement.lang = lang;
-      document.documentElement.dir = dir;
+      // Language priority: URL > localStorage > Server context
+      const clientLang = urlLang || storedLang || initialLang;
+      
+      if (clientLang !== initialLang && i18n?.changeLanguage) {
+        i18n.changeLanguage(clientLang);
+        
+        // Update document attributes
+        document.documentElement.lang = clientLang;
+        document.documentElement.dir = rtlLngs.includes(clientLang) ? 'rtl' : 'ltr';
+        
+        // Update localStorage if needed
+        if (storedLang !== clientLang) {
+          try {
+            localStorage.setItem('lng', clientLang);
+          } catch {}
+        }
+      }
       
       // Update meta tags for better SEO
       const metaLang = document.querySelector('meta[name="language"]');
       if (metaLang) {
-        metaLang.setAttribute('content', lang);
+        metaLang.setAttribute('content', clientLang);
       } else {
         const newMeta = document.createElement('meta');
         newMeta.name = 'language';
-        newMeta.content = lang;
+        newMeta.content = clientLang;
         document.head.appendChild(newMeta);
       }
       
     } catch (error) {
       console.warn('Failed to sync language:', error);
     }
-  }, [urlLang, lang, dir, i18n]);
+  }, [initialLang, i18n]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
@@ -121,7 +134,14 @@ export function Layout( { children } )
         )}
       </head>
       <body className="antialiased">
-        <ThemeProvider attribute="class" nonce={nonce} defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider 
+          attribute="class" 
+          nonce={nonce} 
+          defaultTheme="system" 
+          enableSystem 
+          disableTransitionOnChange
+          suppressHydrationWarning
+        >
           {children}
         </ThemeProvider>
         
