@@ -6,7 +6,6 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { I18nextProvider } from 'react-i18next';
 import { createServerI18n, rtlLngs } from './lib/i18n.js';
-import { uiResources } from './lib/resources.js';
 
 export const streamTimeout = 5000;
 
@@ -21,7 +20,8 @@ export default function handleRequest(
   const lng = loadContext?.lng || 'en';
   
   // Create server i18n instance with the detected language
-  const i18n = createServerI18n({ lng, resources: uiResources });
+  // For SSR, we'll use a minimal setup since translations will be loaded client-side
+  const i18n = createServerI18n({ lng, resources: {} });
   
   // Set document attributes for SSR
   const dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';
