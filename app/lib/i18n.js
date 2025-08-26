@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../../i18n.config.js';
 import { loadTranslationsFromAPI } from './loadTranslations.js';
+import { uiResources } from './resources.js';
 
 let initialized = false;
 
@@ -36,9 +37,11 @@ export async function initI18n({ lng = 'en', resources }) {
   if (!translationResources) {
     try {
       translationResources = await loadTranslationsFromAPI(lng);
+      console.log('✅ Successfully loaded translations from API for language:', lng);
     } catch (error) {
-      console.warn('Failed to load translations from API, using fallback:', error);
-      translationResources = {};
+      console.warn('⚠️ Failed to load translations from API, using fallback resources:', error);
+      // Use hardcoded resources as fallback
+      translationResources = uiResources[lng] || uiResources.en;
     }
   }
 
@@ -86,13 +89,16 @@ export function createServerI18n({ lng = 'en', resources }) {
   const i18n = i18next.createInstance();
   i18n.use(initReactI18next);
   
+  // Use provided resources or fallback to hardcoded resources
+  const serverResources = resources || uiResources[lng] || uiResources.en;
+  
   i18n.init({
     lng,
     fallbackLng: 'en',
-    resources,
+    resources: serverResources,
     // Configure namespaces for component access
     ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
-    defaultNS: 'translation',
+    defaultNS: 'ui',
     react: { useSuspense: false },
     returnEmptyString: false,
     cleanCode: true,

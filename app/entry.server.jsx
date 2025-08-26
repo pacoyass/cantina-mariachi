@@ -20,8 +20,8 @@ export default function handleRequest(
   const lng = loadContext?.lng || 'en';
   
   // Create server i18n instance with the detected language
-  // For SSR, we'll use a minimal setup since translations will be loaded client-side
-  const i18n = createServerI18n({ lng, resources: {} });
+  // For SSR, we'll use fallback resources to ensure proper rendering
+  const i18n = createServerI18n({ lng });
   
   // Set document attributes for SSR
   const dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';
