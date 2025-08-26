@@ -45,13 +45,19 @@ export async function initI18n({ lng = 'en', resources }) {
     }
   }
 
+  // Ensure resources are properly structured for i18next
+  // i18next expects: { [lng]: { [ns]: { ... } } }
+  const structuredResources = {
+    [lng]: translationResources
+  };
+
   // Initialize with namespace support for components
   await i18n.init({
     lng,
     fallbackLng: 'en',
     supportedLngs,
     interpolation: { escapeValue: false },
-    resources: translationResources,
+    resources: structuredResources,
     // Configure namespaces for component access
     ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
     defaultNS: 'ui',
@@ -92,10 +98,15 @@ export function createServerI18n({ lng = 'en', resources }) {
   // Use provided resources or fallback to hardcoded resources
   const serverResources = resources || uiResources[lng] || uiResources.en;
   
+  // Ensure resources are properly structured for i18next
+  const structuredServerResources = {
+    [lng]: serverResources
+  };
+  
   i18n.init({
     lng,
     fallbackLng: 'en',
-    resources: serverResources,
+    resources: structuredServerResources,
     // Configure namespaces for component access
     ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
     defaultNS: 'ui',
