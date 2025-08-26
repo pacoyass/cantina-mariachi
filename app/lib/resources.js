@@ -47,6 +47,9 @@ export const uiResources = {
         noSignup: 'No signup required',
         browse: 'Browse Menu'
       },
+      offer: {
+        freeDelivery: 'Free delivery on orders over $25'
+      },
       a11y: {
         toggleLanguage: 'Toggle language'
       },
@@ -506,6 +509,9 @@ export const uiResources = {
         noSignup: 'No se requiere registro',
         browse: 'Ver Menú'
       },
+      offer: {
+        freeDelivery: 'Entrega gratis en pedidos sobre $25'
+      },
       a11y: {
         toggleLanguage: 'Cambiar idioma'
       },
@@ -956,6 +962,9 @@ export const uiResources = {
         noSignup: 'Aucune inscription requise',
         browse: 'Parcourir le Menu'
       },
+      offer: {
+        freeDelivery: 'Livraison gratuite pour les commandes de plus de 25€'
+      },
       a11y: {
         toggleLanguage: 'Changer de langue'
       },
@@ -1403,6 +1412,9 @@ export const uiResources = {
         eta: '{{mins}} Min',
         noSignup: 'Keine Anmeldung erforderlich',
         browse: 'Menü Durchsuchen'
+      },
+      offer: {
+        freeDelivery: 'Kostenlose Lieferung bei Bestellungen über 25€'
       },
       a11y: {
         toggleLanguage: 'Sprache wechseln'
@@ -1854,6 +1866,9 @@ export const uiResources = {
         noSignup: 'Nessuna registrazione richiesta',
         browse: 'Sfoglia Menu'
       },
+      offer: {
+        freeDelivery: 'Consegna gratuita su ordini superiori a 25€'
+      },
       a11y: {
         toggleLanguage: 'Cambia lingua'
       },
@@ -2304,6 +2319,9 @@ export const uiResources = {
         noSignup: 'Nenhum cadastro necessário',
         browse: 'Ver Cardápio'
       },
+      offer: {
+        freeDelivery: 'Entrega grátis em pedidos acima de R$ 25'
+      },
       a11y: {
         toggleLanguage: 'Alternar idioma'
       },
@@ -2753,6 +2771,9 @@ export const uiResources = {
         eta: '{{mins}} دقيقة',
         noSignup: 'لا يلزم التسجيل',
         browse: 'تصفح القائمة'
+      },
+      offer: {
+        freeDelivery: 'توصيل مجاني للطلبات فوق 25$'
       },
       a11y: {
         toggleLanguage: 'تبديل اللغة'

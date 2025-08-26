@@ -33,8 +33,8 @@ startTransition(async () => {
     document.documentElement.dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';
 
     // Initialize i18n with the detected language
-    // Use fallback resources immediately to prevent raw key display
-    const i18n = await initI18n({ lng, resources: uiResources[lng] || uiResources.en });
+    // Let it try to load from API first, then fallback to hardcoded resources
+    const i18n = await initI18n({ lng });
 
     // Ensure the language is actually set correctly
     if (i18n.language !== lng) {
