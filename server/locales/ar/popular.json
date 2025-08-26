@@ -1,0 +1,18 @@
+{
+  "heading": "الأكثر شعبية هذا الأسبوع",
+  "seeMenu": "عرض القائمة الكاملة",
+  "coming": "قريبًا",
+  "chefSpecial": "طبق الطاهي الخاص {{num}}",
+  "notify": "أخبرني",
+  "add": "أضف إلى السلة",
+  "rating": "4.9/5 من 2,400+ عميل محلي",
+  "numberOne": "#1",
+  "trending": "رائج",
+  "unavailable": "غير متوفر",
+  "onlyLeftToday": "بقي القليل فقط اليوم",
+  "orderNowDelivery": "اطلب الآن للتوصيل",
+  "filters": {
+    "vegetarian": "نباتي",
+    "vegan": "خالي من اللحوم"
+  }
+}

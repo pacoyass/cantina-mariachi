@@ -1,0 +1,18 @@
+{
+  "heading": "Popular This Week",
+  "seeMenu": "See Full Menu",
+  "coming": "Coming Soon",
+  "chefSpecial": "Chef Special {{num}}",
+  "notify": "Notify Me",
+  "add": "Add to Cart",
+  "rating": "4.9/5 from 2,400+ locals",
+  "numberOne": "#1",
+  "trending": "Trending",
+  "unavailable": "Unavailable",
+  "onlyLeftToday": "Only a few left today",
+  "orderNowDelivery": "Order now for delivery",
+  "filters": {
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "heading": "Diese Woche beliebt",
+  "seeMenu": "Vollständiges Menü anzeigen",
+  "coming": "Demnächst verfügbar",
+  "chefSpecial": "Chef-Spezial {{num}}",
+  "notify": "Benachrichtige mich",
+  "add": "Zum Warenkorb hinzufügen",
+  "rating": "4,9/5 von über 2.400 Einheimischen",
+  "numberOne": "#1",
+  "trending": "Trend",
+  "unavailable": "Nicht verfügbar",
+  "onlyLeftToday": "Nur noch wenige heute übrig",
+  "orderNowDelivery": "Jetzt für Lieferung bestellen",
+  "filters": {
+    "vegetarian": "Vegetarisch",
+    "vegan": "Vegan"
+  }
+}

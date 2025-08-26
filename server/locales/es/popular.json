@@ -1,0 +1,18 @@
+{
+  "heading": "Popular Esta Semana",
+  "seeMenu": "Ver Menú Completo",
+  "coming": "Próximamente",
+  "chefSpecial": "Especial del Chef {{num}}",
+  "notify": "Notifícame",
+  "add": "Agregar al Carrito",
+  "rating": "4.9/5 de más de 2,400 locales",
+  "numberOne": "#1",
+  "trending": "Tendencia",
+  "unavailable": "No Disponible",
+  "onlyLeftToday": "Solo quedan algunos hoy",
+  "orderNowDelivery": "Ordenar ahora para entrega",
+  "filters": {
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano"
+  }
+}
