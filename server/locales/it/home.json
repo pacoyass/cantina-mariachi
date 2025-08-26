@@ -100,15 +100,11 @@
     "trending": "Di Tendenza",
     "unavailable": "Non Disponibile",
     "onlyLeftToday": "Solo pochi rimasti oggi",
-<<<<<<< HEAD
-    "orderNowDelivery": "Ordina ora per la consegna"
-=======
     "orderNowDelivery": "Ordina ora per la consegna",
     "filters": {
       "vegetarian": "Vegetariano",
       "vegan": "Vegano"
     }
->>>>>>> 44a3342162954101a8bdeec81437db3240ef8f80
   },
   "loyalty": {
     "heading": "Fedeltà e Ricompense",
