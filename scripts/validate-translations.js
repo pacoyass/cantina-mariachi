@@ -43,7 +43,7 @@ function getLanguages() {
 function getNamespaces(lang) {
   const langDir = join(LOCALES_DIR, lang);
   return readdirSync(langDir)
-    .filter(file => file.endsWith('.json'))
+    .filter(file => file.endsWith('.json') && !file.includes('.missing.'))
     .map(file => file.replace('.json', ''));
 }
 
@@ -131,6 +131,7 @@ function validateTranslations() {
     let langFiles = 0;
     let langTotalKeys = 0;
     let langMissingKeys = 0;
+    let langMissingKeysByNamespace = {};
     
     // Check for missing namespace files
     const missingNamespaces = referenceNamespaces.filter(ns => !langNamespaces.includes(ns));
@@ -154,6 +155,11 @@ function validateTranslations() {
       
       langTotalKeys += comparison.referenceCount;
       langMissingKeys += comparison.missingKeys.length;
+      
+      // Track missing keys by namespace for accurate reporting
+      if (comparison.missingKeys.length > 0) {
+        langMissingKeysByNamespace[namespace] = comparison.missingKeys;
+      }
       
       if (comparison.missingKeys.length === 0 && comparison.extraKeys.length === 0) {
         log(`✅ ${namespace}.json: Complete (${comparison.targetCount} keys)`, 'green');
@@ -185,8 +191,23 @@ function validateTranslations() {
       }
     }
     
-    // Language summary
+    // Language summary with accurate missing key reporting
     const langCompleteness = Math.round(((langTotalKeys - langMissingKeys) / langTotalKeys) * 100);
+    
+    // Show missing keys by namespace if any exist
+    if (langMissingKeys > 0) {
+      log(`\n🔍 Missing keys breakdown:`, 'yellow');
+      for (const [ns, keys] of Object.entries(langMissingKeysByNamespace)) {
+        log(`  ${ns}.json: ${keys.length} missing keys`, 'yellow');
+        keys.slice(0, 3).forEach(key => {
+          log(`    - ${key}`, 'red');
+        });
+        if (keys.length > 3) {
+          log(`    ... and ${keys.length - 3} more`, 'red');
+        }
+      }
+    }
+    
     languageStats[lang] = {
       completeness: langCompleteness,
       issues: langIssues,
