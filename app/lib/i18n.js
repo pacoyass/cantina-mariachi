@@ -1,6 +1,7 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../../i18n.config.js';
+import { loadTranslationsFromAPI } from './loadTranslations.js';
 
 let initialized = false;
 
@@ -16,7 +17,7 @@ export function getI18nInstance() {
  * Initialize i18n with the specified language
  * @param {Object} options - Configuration options
  * @param {string} options.lng - Language code (default: 'en')
- * @param {Object} options.resources - Translation resources
+ * @param {Object} options.resources - Translation resources (optional, will load from API if not provided)
  * @returns {Promise<Object>} Initialized i18n instance
  */
 export async function initI18n({ lng = 'en', resources }) {
@@ -30,13 +31,24 @@ export async function initI18n({ lng = 'en', resources }) {
     return i18n;
   }
 
+  // Load translations from API if not provided
+  let translationResources = resources;
+  if (!translationResources) {
+    try {
+      translationResources = await loadTranslationsFromAPI(lng);
+    } catch (error) {
+      console.warn('Failed to load translations from API, using fallback:', error);
+      translationResources = {};
+    }
+  }
+
   // Initialize with namespace support for components
   await i18n.init({
     lng,
     fallbackLng: 'en',
     supportedLngs,
     interpolation: { escapeValue: false },
-    resources,
+    resources: translationResources,
     // Configure namespaces for component access
     ns: ['ui', 'home', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'popular'],
     defaultNS: 'ui',
