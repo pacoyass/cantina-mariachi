@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -159,10 +159,10 @@ model CashTransaction {
   id                String    @id @default(uuid())
   orderId           String    @unique
   driverId          String
-  amount            Decimal   @db.Decimal(10, 2) // Must match Order.total
+  amount            Float // Must match Order.total
   confirmed         Boolean   @default(false)
   adminVerified     Boolean   @default(false) // Admin verification of cash payment
-  discrepancyAmount Decimal?  @db.Decimal(10, 2) // Amount paid if different from Order.total
+  discrepancyAmount Float? // Amount paid if different from Order.total
   paymentTimestamp  DateTime?
   customerNotes     String? // e.g., "Exact change provided"
   discrepancyNotes  String? // e.g., "Customer paid $20, owed $2"
@@ -182,9 +182,9 @@ model CashSummary {
   id               String   @id @default(uuid())
   driverId         String?
   date             DateTime // Date of summary (e.g., 2025-07-30)
-  totalAmount      Decimal  @db.Decimal(10, 2) // Total cash collected
+  totalAmount      Float // Total cash collected
   unconfirmedCount Int // Number of unconfirmed transactions
-  discrepancyTotal Decimal? @db.Decimal(10, 2) // Sum of discrepancies
+  discrepancyTotal Float? // Sum of discrepancies
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -201,9 +201,9 @@ model AppConfig {
   id             String   @id @default(uuid())
   restaurantName String? // e.g., "Cantina Cafe"
   operatingHours Json? // e.g., { "monday": "9AM-9PM" }
-  taxRate        Decimal? @db.Decimal(5, 2) // e.g., 0.08 for 8% tax
+  taxRate        Float? // e.g., 0.08 for 8% tax
   deliveryRadius Float? // e.g., 5.0 miles
-  minOrderAmount Decimal? @db.Decimal(10, 2) // e.g., 10.00
+  minOrderAmount Float? // e.g., 10.00
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -423,7 +423,7 @@ model MenuItem {
   id           String  @id @default(cuid())
   name         String
   description  String
-  price        Decimal @db.Decimal(10, 2)
+  price        Float
   image        String?
   isVegetarian Boolean @default(false)
   isVegan      Boolean @default(false)
@@ -446,9 +446,9 @@ model Order {
   customerPhone        String
   type                 OrderType
   status               OrderStatus @default(PENDING)
-  subtotal             Decimal     @db.Decimal(10, 2)
-  tax                  Decimal     @db.Decimal(10, 2)
-  total                Decimal     @db.Decimal(10, 2)
+  subtotal             Float
+  tax                  Float
+  total                Float
   notes                String?
   deliveryAddress      String?
   deliveryInstructions String?
@@ -478,7 +478,7 @@ model OrderItem {
   orderId    String
   menuItemId String
   quantity   Int
-  price      Decimal @db.Decimal(10, 2)
+  price      Float
   notes      String?
 
   order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
