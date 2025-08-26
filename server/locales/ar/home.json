@@ -100,7 +100,11 @@
     "trending": "رائج",
     "unavailable": "غير متوفر",
     "onlyLeftToday": "بقي القليل فقط اليوم",
-    "orderNowDelivery": "اطلب الآن للتوصيل"
+    "orderNowDelivery": "اطلب الآن للتوصيل",
+    "filters": {
+      "vegetarian": "نباتي",
+      "vegan": "خالي من اللحوم"
+    }
   },
   "loyalty": {
     "heading": "الولاء والمكافآت",

@@ -91,7 +91,11 @@
     "trending": "Tendencia",
     "unavailable": "No Disponible",
     "onlyLeftToday": "Solo quedan algunos hoy",
-    "orderNowDelivery": "Ordenar ahora para entrega"
+    "orderNowDelivery": "Ordenar ahora para entrega",
+    "filters": {
+      "vegetarian": "Vegetariano",
+      "vegan": "Vegano"
+    }
   },
   "loyalty": {
     "heading": "Lealtad y Recompensas",
