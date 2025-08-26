@@ -586,8 +586,7 @@ function LogoCloudSkeleton() {
 }
 
 function MenuItemCard({ item, t, locale }) {
-  const { t: tMenu } = useTranslation('menu')
-  const tags = [item.isVegetarian ? tMenu('filters.vegetarian') : null, item.isVegan ? tMenu('filters.vegan') : null].filter(Boolean)
+  const tags = [item.isVegetarian ? t('popular.filters.vegetarian') : null, item.isVegan ? t('popular.filters.vegan') : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
@@ -616,8 +615,7 @@ function MenuItemCard({ item, t, locale }) {
 }
 
 function PopularItemCard({ item, idx, t, locale }) {
-  const { t: tMenu } = useTranslation('menu')
-  const tags = [item.isVegetarian ? tMenu('filters.vegetarian') : null, item.isVegan ? tMenu('filters.vegan') : null].filter(Boolean)
+  const tags = [item.isVegetarian ? t('popular.filters.vegetarian') : null, item.isVegan ? t('popular.filters.vegan') : null].filter(Boolean)
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>

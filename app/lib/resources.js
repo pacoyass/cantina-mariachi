@@ -387,7 +387,17 @@ export const uiResources = {
         coming: 'Coming Soon',
         chefSpecial: 'Chef Special {{num}}',
         notify: 'Notify Me',
-        rating: '4.9/5 from 2,400+ locals'
+        add: 'Add to Cart',
+        rating: '4.9/5 from 2,400+ locals',
+        numberOne: '#1',
+        trending: 'Trending',
+        unavailable: 'Unavailable',
+        onlyLeftToday: 'Only a few left today',
+        orderNowDelivery: 'Order now for delivery',
+        filters: {
+          vegetarian: 'Vegetarian',
+          vegan: 'Vegan'
+        }
       },
       faq: {
         heading: 'Frequently Asked Questions',
@@ -567,31 +577,32 @@ export const uiResources = {
     },
     popular: {
       heading: 'Popular Esta Semana',
-      seeMenu: 'Ver Menú Completo',
-      coming: 'Próximamente',
-      chefSpecial: 'Especial del Chef {{num}}',
-      notify: 'Notifícame',
-      rating: '4.9/5 de más de 2,400 locales',
-      numberOne: 'Número 1',
-      filters: {
-        vegetarian: 'Vegetariano',
-        vegan: 'Vegano'
+        seeMenu: 'Ver Menú Completo',
+        coming: 'Próximamente',
+        chefSpecial: 'Especial del Chef {{num}}',
+        notify: 'Notifícame',
+        add: 'Agregar al Carrito',
+        rating: '4.9/5 de más de 2,400 locales',
+        numberOne: 'Número 1',
+        trending: 'Tendencia',
+        unavailable: 'No Disponible',
+        onlyLeftToday: 'Solo quedan algunos hoy',
+        orderNowDelivery: 'Ordenar ahora para entrega',
+        filters: {
+          vegetarian: 'Vegetariano',
+          vegan: 'Vegano'
+        },
+        items: {
+          chocolateCake: 'Pastel de Chocolate',
+          cola: 'Cola',
+          tacos: 'Tacos'
+        },
+        richChocolateCake: 'Pastel de chocolate rico',
+        chilledCola: 'Cola fría',
+        beefTacosSalsa: 'Tacos de res con salsa',
+        price: '${{price}}',
+        rating: '{{rating}}/5 de más de {{reviews}} locales'
       },
-      items: {
-        chocolateCake: 'Pastel de Chocolate',
-        cola: 'Cola',
-        tacos: 'Tacos'
-      },
-      onlyLeftToday: 'Solo quedan algunos hoy',
-      orderNowDelivery: 'Ordenar ahora para entrega',
-      richChocolateCake: 'Pastel de chocolate rico',
-      chilledCola: 'Cola fría',
-      beefTacosSalsa: 'Tacos de res con salsa',
-      price: '${{price}}',
-      trending: 'Tendencia',
-      unavailable: 'No Disponible',
-      rating: '{{rating}}/5 de más de {{reviews}} locales'
-    },
     auth: {
       loginSuccess: 'Inicio de sesión exitoso',
       loginFailed: 'Falló el inicio de sesión',
@@ -1020,22 +1031,24 @@ export const uiResources = {
       coming: 'Bientôt Disponible',
       chefSpecial: 'Spécial du Chef {{num}}',
       notify: 'Me Notifier',
+      add: 'Ajouter au Panier',
       rating: '4.9/5 de plus de 2,400 locaux',
       numberOne: 'Numéro 1',
+      trending: 'Tendance',
+      unavailable: 'Indisponible',
+      onlyLeftToday: 'Plus que quelques-uns aujourd\'hui',
+      orderNowDelivery: 'Commander maintenant pour la livraison',
       filters: {
-        vegetarian: 'Végétarien'
+        vegetarian: 'Végétarien',
+        vegan: 'Végan'
       },
       items: {
         chocolateCake: 'Gâteau au Chocolat'
       },
-      onlyLeftToday: 'Plus que quelques-uns aujourd\'hui',
-      orderNowDelivery: 'Commander maintenant pour la livraison',
       richChocolateCake: 'Gâteau au chocolat riche',
       chilledCola: 'Cola fraîche',
       beefTacosSalsa: 'Tacos au bœuf avec salsa',
       price: '{{price}}€',
-      trending: 'Tendance',
-      unavailable: 'Indisponible',
       rating: '{{rating}}/5 de plus de {{reviews}} locaux'
     },
     auth: {
@@ -1466,6 +1479,7 @@ export const uiResources = {
       coming: 'Demnächst Verfügbar',
       chefSpecial: 'Chef-Spezial {{num}}',
       notify: 'Benachrichtigen Sie Mich',
+      add: 'Zum Warenkorb Hinzufügen',
       rating: '4.9/5 von über 2,400 Einheimischen',
       numberOne: 'Nummer 1',
       filters: {
@@ -1915,6 +1929,7 @@ export const uiResources = {
       coming: 'Prossimamente',
       chefSpecial: 'Speciale dello Chef {{num}}',
       notify: 'Notificami',
+      add: 'Aggiungi al Carrello',
       rating: '4.9/5 da oltre 2,400 locali',
       numberOne: 'Numero 1',
       filters: {
@@ -2364,6 +2379,7 @@ export const uiResources = {
       coming: 'Em Breve',
       chefSpecial: 'Especial do Chef {{num}}',
       notify: 'Me Notifique',
+      add: 'Adicionar ao Carrinho',
       rating: '4.9/5 de mais de 2,400 locais',
       numberOne: 'Número 1',
       filters: {
