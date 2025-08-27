@@ -14,18 +14,10 @@ import {
 import { useTranslation } from 'react-i18next'
 
 export function ModeToggle() {
-  const { theme, setTheme, mounted } = useTheme()
+  const { theme, setTheme } = useTheme()
   const { t } = useTranslation('ui')
-
-  // Don't render until mounted to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <Button variant="outline" size="icon">
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
-        <span className="sr-only">{t('theme.toggle')}</span>
-      </Button>
-    )
-  }
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
 
   return (
     <DropdownMenu>
