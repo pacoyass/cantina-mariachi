@@ -22,6 +22,10 @@ startTransition(async () => {
       }
       ensureNs('home')
       ensureNs('ui')
+      ensureNs('popular')
+      if (i18n?.options?.react) {
+        i18n.options.react.useSuspense = true
+      }
     } catch {}
     
     hydrateRoot(document, <StrictMode><I18nextProvider i18n={i18n} key={serverLang}><HydratedRouter /></I18nextProvider></StrictMode>);
