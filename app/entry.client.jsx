@@ -2,8 +2,7 @@ import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
 import { I18nextProvider } from 'react-i18next';
-import { initI18n } from './lib/i18n.js';
-import { rtlLngs } from './lib/resources.js';
+import { initI18n, rtlLngs } from './lib/i18n.js';
 import { uiResources } from './lib/resources.js';
 
 /**
