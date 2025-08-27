@@ -21,7 +21,7 @@ export function Navbar() {
     return () => { active = false }
   }, [])
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto grid grid-cols-3 h-14 items-center px-4">
         <div className="flex items-center gap-3">
           <div className="md:hidden">
@@ -83,23 +83,47 @@ export function Navbar() {
 function DesktopOrderBar({ isOpen, eta }) {
   const { t } = useTranslation('ui')
   const [visible, setVisible] = useState(true)
+  
   useEffect(() => {
     if (typeof window === 'undefined') return
+    
     let raf = 0
+    let lastScrollY = 0
+    
     const onScroll = () => {
       if (raf) cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
-        const y = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0)
-        setVisible(y <= 0)
+        const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0
+        
+        // Hide when scrolling down, show when scrolling up or at top
+        if (currentScrollY > 0 && currentScrollY > lastScrollY) {
+          // Scrolling down - hide the bar
+          setVisible(false)
+        } else if (currentScrollY === 0 || currentScrollY < lastScrollY) {
+          // At top or scrolling up - show the bar
+          setVisible(true)
+        }
+        
+        lastScrollY = currentScrollY
       })
     }
+    
+    // Initial check
     onScroll()
+    
+    // Add scroll listener
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
+    
+    return () => { 
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
   return (
-    <div className={`hidden lg:block overflow-hidden transition-[height] duration-300 ${visible ? 'h-12' : 'h-0'}`}>
+    <div className={`hidden lg:block overflow-hidden transition-all duration-300 ease-in-out ${
+      visible ? 'h-12 opacity-100' : 'h-0 opacity-0'
+    }`}>
       <div className="border-b bg-background/95 backdrop-blur">
         <div className="container mx-auto h-12 px-4 grid grid-cols-3 items-center text-sm">
           <div className="flex items-center whitespace-nowrap">

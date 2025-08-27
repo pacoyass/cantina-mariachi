@@ -50,7 +50,7 @@ export function LangToggle() {
           <Globe className={`h-[1.2rem] w-[1.2rem] ${loading ? 'animate-spin' : ''}`} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="flex items-center mx-auto">
+      <DropdownMenuContent align="end" side="bottom" className="min-w-[140px]">
         {languages.map((lang) => (
           <DropdownMenuItem 
             key={lang.code} 

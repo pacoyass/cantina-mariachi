@@ -54,7 +54,7 @@ export function ModeToggle() {
           <span className="sr-only">{t('theme.toggle')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="flex items-center mx-auto">
+      <DropdownMenuContent align="end" side="bottom" className="min-w-[120px]">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           {t('theme.light')}
         </DropdownMenuItem>

@@ -53,6 +53,12 @@ export const uiResources = {
       a11y: {
         toggleLanguage: 'Toggle language'
       },
+      theme: {
+        toggle: 'Toggle theme',
+        light: 'Light',
+        dark: 'Dark',
+        system: 'System'
+      },
       footer: {
         tagline: 'Authentic Mexican flavors, modern experience.',
         quickLinks: 'Quick Links',
@@ -515,6 +521,12 @@ export const uiResources = {
       a11y: {
         toggleLanguage: 'Cambiar idioma'
       },
+      theme: {
+        toggle: 'Cambiar tema',
+        light: 'Claro',
+        dark: 'Oscuro',
+        system: 'Sistema'
+      },
       footer: {
         tagline: 'Sabores mexicanos auténticos, experiencia moderna.',
         quickLinks: 'Enlaces Rápidos',
@@ -968,6 +980,12 @@ export const uiResources = {
       a11y: {
         toggleLanguage: 'Changer de langue'
       },
+      theme: {
+        toggle: 'Changer de thème',
+        light: 'Clair',
+        dark: 'Sombre',
+        system: 'Système'
+      },
       footer: {
         tagline: 'Saveurs mexicaines authentiques, expérience moderne.',
         quickLinks: 'Liens Rapides',
@@ -1418,6 +1436,12 @@ export const uiResources = {
       },
       a11y: {
         toggleLanguage: 'Sprache wechseln'
+      },
+      theme: {
+        toggle: 'Theme wechseln',
+        light: 'Hell',
+        dark: 'Dunkel',
+        system: 'System'
       },
       footer: {
         tagline: 'Authentische mexikanische Aromen, moderne Erfahrung.',
@@ -1872,6 +1896,12 @@ export const uiResources = {
       a11y: {
         toggleLanguage: 'Cambia lingua'
       },
+      theme: {
+        toggle: 'Cambia tema',
+        light: 'Chiaro',
+        dark: 'Scuro',
+        system: 'Sistema'
+      },
       footer: {
         tagline: 'Sapori messicani autentici, esperienza moderna.',
         quickLinks: 'Link Rapidi',
@@ -2325,6 +2355,12 @@ export const uiResources = {
       a11y: {
         toggleLanguage: 'Alternar idioma'
       },
+      theme: {
+        toggle: 'Alternar tema',
+        light: 'Claro',
+        dark: 'Escuro',
+        system: 'Sistema'
+      },
       footer: {
         tagline: 'Sabores mexicanos autênticos, experiência moderna.',
         quickLinks: 'Links Rápidos',
@@ -2777,6 +2813,12 @@ export const uiResources = {
       },
       a11y: {
         toggleLanguage: 'تبديل اللغة'
+      },
+      theme: {
+        toggle: 'تبديل المظهر',
+        light: 'فاتح',
+        dark: 'داكن',
+        system: 'النظام'
       },
       footer: {
         tagline: 'نكهات مكسيكية أصيلة، تجربة حديثة.',
