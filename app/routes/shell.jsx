@@ -1,4 +1,5 @@
-// Deprecated ShellLayout removed to prevent duplicate Navbar/Footer rendering.
+import { Outlet } from "react-router";
+
 export default function ShellLayout() {
-  return null;
+  return <Outlet />;
 }
