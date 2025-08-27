@@ -94,13 +94,13 @@ function DesktopOrderBar({ isOpen, eta }) {
     if (typeof window === 'undefined') return
     
     // Delay initial appearance to smooth out page load
-    const INITIAL_APPEAR_DELAY_MS = 600
+    const INITIAL_APPEAR_DELAY_MS = 120
     revealDelayRef.current = setTimeout(() => setMounted(true), INITIAL_APPEAR_DELAY_MS)
     
     let raf = 0
     let lastScrollY = 0
-    const SCROLL_THRESHOLD_PX = 24
-    const TOGGLE_DEBOUNCE_MS = 150
+    const SCROLL_THRESHOLD_PX = 8
+    const TOGGLE_DEBOUNCE_MS = 80
     
     const onScroll = () => {
       if (raf) cancelAnimationFrame(raf)
