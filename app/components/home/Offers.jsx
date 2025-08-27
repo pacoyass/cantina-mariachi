@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
   const list = (cmsOffers && cmsOffers.length) ? cmsOffers : offers;
   const primary = list?.[0];
   const expiry = useMemo(() => (primary?.expiresAt ? new Date(primary.expiresAt).getTime() : Date.now() + 1000 * 60 * 60 * 24), [primary?.expiresAt]);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
   if (!primary) {
     return (
       <Card>
@@ -36,7 +38,7 @@ export default function Offers({ offers, t, cmsOffers = [], heading, badge }) {
             <div>
               <div className="text-sm text-muted-foreground">{primary.bundleName || t?.('home:offers.bundle') || 'Taco Tuesday Bundle'}</div>
               <div className="text-xl font-semibold">{primary.title || t?.('home:offers.deal') || '2 tacos + drink — $9.99'}</div>
-              <div className="text-xs text-muted-foreground">{t?.('home:offers.endsIn') || 'Ends in'} <span data-offer-id={primary.id}>{formatCountdown(expiry)}</span></div>
+              <div className="text-xs text-muted-foreground">{t?.('home:offers.endsIn') || 'Ends in'} <span data-offer-id={primary.id}>{hydrated ? formatCountdown(expiry) : '--:--:--'}</span></div>
             </div>
             <div className="flex gap-2">
               <Button>{t?.('home:offers.orderBundle') || 'Order bundle'}</Button>

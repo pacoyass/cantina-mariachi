@@ -698,7 +698,7 @@ function CarouselTestimonials({ testimonials }) {
                       <Star key={i} className={`size-3 ${i < Number(t.rating || 0) ? 'fill-current' : ''}`} />
                     ))}
                   </div>
-                  <div className="text-xs text-muted-foreground">{new Date(t.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                  <div className="text-xs text-muted-foreground">{new Date(t.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}</div>
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">{t.content} <Link to="/reviews" className="underline">Read more</Link></div>
               </div>
@@ -808,7 +808,7 @@ function Testimonial({ name, initials, rating, date, children }) {
                   <Star key={i} className={`size-3 ${i < Number(rating || 0) ? 'fill-current' : ''}`} />
                 ))}
               </div>
-              <div className="text-xs text-muted-foreground">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+              <div className="text-xs text-muted-foreground">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}</div>
             </div>
             <div className="text-sm text-muted-foreground mt-1">{children}</div>
           </div>

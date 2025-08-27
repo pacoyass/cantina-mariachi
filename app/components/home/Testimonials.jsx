@@ -37,7 +37,7 @@ export default function Testimonials({ testimonials = [] }) {
                       <Star key={i} className={`size-3 ${i < Number(tst.rating || 5) ? 'fill-current' : ''}`} />
                     ))}
                   </div>
-                  {tst.date && <div className="text-xs text-muted-foreground">{new Date(tst.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>}
+                  {tst.date && <div className="text-xs text-muted-foreground">{new Date(tst.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}</div>}
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {tst.content || fallbacks[idx % fallbacks.length]} <button className="underline text-xs">{t('testimonials.readMore')}</button>
