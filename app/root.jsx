@@ -25,12 +25,23 @@ export async function loader( { request, context } )
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
   const lng = context?.lng || 'en';
+  // SSR fetch of public config to avoid hydration flicker in Navbar status
+  let status = { isOpen: true, etaMins: 25 };
+  try {
+    const url = new URL(request.url);
+    const cookie = request.headers.get("cookie") || "";
+    const res = await fetch(`${url.origin}/api/config/public`, { headers: { cookie } });
+    if (res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json?.data?.status) status = json.data.status;
+    }
+  } catch {}
   
   if ( nonce ) {
-    return { nonce: nonce, csrfToken: csrfToken, lng };
+    return { nonce: nonce, csrfToken: csrfToken, lng, status };
   }
   
-  return { nonce: "", lng }; 
+  return { nonce: "", lng, status }; 
 }
 
 export const links = () => [
@@ -52,6 +63,7 @@ export function Layout( { children } )
   const loaderData = useLoaderData() || {}; 
   const nonce = loaderData.nonce || ""; 
   const initialLang = loaderData.lng || 'en';
+  const initialStatus = loaderData.status || { isOpen: true, etaMins: 25 };
   
   // Use server-provided language to prevent hydration mismatch
   // Don't try to detect URL language on client during initial render
@@ -138,7 +150,7 @@ export function Layout( { children } )
           suppressHydrationWarning
         >
           <div className="bg-mexican-pattern min-h-screen">
-            <Navbar />
+            <Navbar initialStatus={initialStatus} />
             {children}
             <Footer />
           </div>

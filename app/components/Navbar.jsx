@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next'
 import { LangToggle } from './LangToggle'
 import { track } from '../lib/utils'
 
-export function Navbar() {
+export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
   const { t } = useTranslation('ui')
-  const [status, setStatus] = useState({ isOpen: true, etaMins: 25 })
+  // Start with SSR-provided status to avoid flicker (e.g., Open→Closed)
+  const [status, setStatus] = useState(initialStatus)
   useEffect(() => {
     let active = true
     fetch('/api/config/public').then(r => r.ok ? r.json() : null).then(json => {
