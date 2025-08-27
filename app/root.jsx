@@ -134,14 +134,7 @@ export function Layout( { children } )
         )}
       </head>
       <body className="antialiased">
-        <ThemeProvider 
-          attribute="class" 
-          nonce={nonce} 
-          defaultTheme="system" 
-          enableSystem 
-          disableTransitionOnChange
-          suppressHydrationWarning
-        >
+        <ThemeProvider>
           {children}
         </ThemeProvider>
         

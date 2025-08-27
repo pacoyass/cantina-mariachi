@@ -30,20 +30,30 @@
 
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme } from "./ThemeProvider"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "./ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "./ui/dropdown-menu"
 import { useTranslation } from 'react-i18next'
 
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { theme, setTheme, mounted } = useTheme()
   const { t } = useTranslation('ui')
+
+  // Don't render until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <Button variant="outline" size="icon">
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <span className="sr-only">{t('theme.toggle')}</span>
+      </Button>
+    )
+  }
 
   return (
     <DropdownMenu>
