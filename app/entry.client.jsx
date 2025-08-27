@@ -12,6 +12,17 @@ startTransition(async () => {
     const serverLang = document.documentElement.lang || 'en';
     // Hydrate with the exact same resources used on the server to avoid mismatch
     const i18n = await initI18n({ lng: serverLang, resources: uiResources[serverLang] || uiResources.en });
+    // Ensure critical namespaces exist to avoid initial key strings
+    try {
+      const ensureNs = (ns) => {
+        const res = (uiResources[serverLang] || uiResources.en) || {}
+        if (!i18n.hasResourceBundle(serverLang, ns) && res[ns]) {
+          i18n.addResourceBundle(serverLang, ns, res[ns], true, true)
+        }
+      }
+      ensureNs('home')
+      ensureNs('ui')
+    } catch {}
     
     hydrateRoot(document, <StrictMode><I18nextProvider i18n={i18n} key={serverLang}><HydratedRouter /></I18nextProvider></StrictMode>);
     
