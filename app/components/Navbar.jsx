@@ -99,8 +99,8 @@ function DesktopOrderBar({ isOpen, eta }) {
     
     let raf = 0
     let lastScrollY = 0
-    const SCROLL_THRESHOLD_PX = 8
-    const TOGGLE_DEBOUNCE_MS = 80
+    const SHOW_AT_TOP_PX = 4
+    const TOGGLE_DEBOUNCE_MS = 50
     
     const onScroll = () => {
       if (raf) cancelAnimationFrame(raf)
@@ -114,13 +114,8 @@ function DesktopOrderBar({ isOpen, eta }) {
           return
         }
 
-        // Determine next visibility
-        let nextVisible = visibleRef.current
-        if (currentScrollY > lastScrollY + SCROLL_THRESHOLD_PX) {
-          nextVisible = false
-        } else if (currentScrollY + SCROLL_THRESHOLD_PX < lastScrollY || currentScrollY <= SCROLL_THRESHOLD_PX) {
-          nextVisible = true
-        }
+        // Show ONLY when at (or extremely near) the very top
+        const nextVisible = currentScrollY <= SHOW_AT_TOP_PX
 
         if (nextVisible !== visibleRef.current) {
           visibleRef.current = nextVisible
