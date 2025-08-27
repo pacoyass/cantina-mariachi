@@ -83,9 +83,13 @@ export function Navbar() {
 function DesktopOrderBar({ isOpen, eta }) {
   const { t } = useTranslation('ui')
   const [visible, setVisible] = useState(true)
+  const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
+    // Only run on client after hydration
     if (typeof window === 'undefined') return
+    
+    setMounted(true)
     
     let raf = 0
     let lastScrollY = 0
@@ -108,7 +112,7 @@ function DesktopOrderBar({ isOpen, eta }) {
       })
     }
     
-    // Initial check
+    // Initial check after hydration
     onScroll()
     
     // Add scroll listener
@@ -119,6 +123,33 @@ function DesktopOrderBar({ isOpen, eta }) {
       if (raf) cancelAnimationFrame(raf)
     }
   }, [])
+
+  // Don't render scroll-dependent state until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="hidden lg:block overflow-hidden transition-all duration-300 ease-in-out h-12 opacity-100">
+        <div className="border-b bg-background/95 backdrop-blur">
+          <div className="container mx-auto h-12 px-4 grid grid-cols-3 items-center text-sm">
+            <div className="flex items-center whitespace-nowrap">
+              {isOpen ? t('topbar.open') : t('topbar.closed')} · {t('topbar.eta', { mins: eta })}
+            </div>
+            <div className="flex items-center justify-center">
+              <span className="relative px-3 py-1 rounded-md text-xs font-medium">
+                <span className="absolute inset-0 rounded-md bg-gradient-to-r from-[var(--mex-green)] via-[var(--mex-gold)] to-[var(--mex-red)] opacity-20 blur-[2px]" />
+                <span className="relative bg-clip-text text-transparent bg-gradient-to-r from-[var(--mex-green)] via-[var(--mex-gold)] to-[var(--mex-red)]">
+                  {t('offer.freeDelivery')}
+                </span>
+              </span>
+            </div>
+            <div className="flex items-center justify-end gap-3">
+              <div className="text-muted-foreground hidden md:block whitespace-nowrap">{t('topbar.noSignup')}</div>
+              <NavLink to="/menu" className="underline whitespace-nowrap">{t('topbar.browse')}</NavLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={`hidden lg:block overflow-hidden transition-all duration-300 ease-in-out ${

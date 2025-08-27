@@ -16,3 +16,8 @@
 
 # Env vars
 .env
+
+# Log files
+logs/
+*.log
+*.log.json
