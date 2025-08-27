@@ -15,7 +15,6 @@ import { Button } from "./components/ui/button";
 import {  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/dropdown-menu";
 import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
-import { useTranslation } from 'react-i18next';
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
 import { useEffect, useState } from 'react';
 
@@ -50,7 +49,6 @@ export function Layout( { children } )
 {
   const loaderData = useLoaderData() || {}; 
   const nonce = loaderData.nonce || ""; 
-  const { i18n } = useTranslation();
   const initialLang = loaderData.lng || 'en';
   
   // Use server-provided language to prevent hydration mismatch
@@ -63,9 +61,6 @@ export function Layout( { children } )
     // Only run after hydration is complete
     if (typeof window === 'undefined') return;
     
-    // Ensure i18n is properly initialized
-    if (!i18n || !i18n.isInitialized) return;
-    
     try {
       // Only update language after initial hydration
       const urlLang = new URLSearchParams(window.location.search).get('lng');
@@ -74,9 +69,7 @@ export function Layout( { children } )
       // Language priority: URL > localStorage > Server context
       const clientLang = urlLang || storedLang || initialLang;
       
-      if (clientLang !== initialLang && i18n?.changeLanguage) {
-        i18n.changeLanguage(clientLang);
-        
+      if (clientLang !== initialLang) {
         // Update document attributes
         document.documentElement.lang = clientLang;
         document.documentElement.dir = rtlLngs.includes(clientLang) ? 'rtl' : 'ltr';
@@ -103,7 +96,7 @@ export function Layout( { children } )
     } catch (error) {
       console.warn('Failed to sync language:', error);
     }
-  }, [initialLang, i18n]);
+  }, [initialLang]);
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
@@ -201,7 +194,7 @@ export function ErrorBoundary( { error } )
                           key={code}
                           className="block w-full text-left px-2 py-1 text-sm hover:bg-muted rounded"
                           onClick={() => {
-                            i18n.changeLanguage(code);
+                            // i18n.changeLanguage(code); // Removed as per edit hint
                             localStorage.setItem('lng', code);
                             const url = new URL(window.location.href);
                             url.searchParams.set('lng', code);
@@ -215,7 +208,7 @@ export function ErrorBoundary( { error } )
                       <button
                         className="block w-full text-left px-2 py-1 text-sm text-red-600 hover:bg-muted rounded"
                         onClick={() => {
-                          i18n.changeLanguage('en');
+                          // i18n.changeLanguage('en'); // Removed as per edit hint
                           localStorage.removeItem('lng');
                           const url = new URL(window.location.href);
                           url.searchParams.delete('lng');
@@ -255,7 +248,7 @@ export function ErrorBoundary( { error } )
                   <DropdownMenuItem 
                     key={code} 
                     onClick={() => {
-                      i18n.changeLanguage(code);
+                      // i18n.changeLanguage(code); // Removed as per edit hint
                       localStorage.setItem('lng', code);
                       // Update URL
                       const url = new URL(window.location.href);
@@ -270,7 +263,7 @@ export function ErrorBoundary( { error } )
                 <DropdownMenuItem 
                   onClick={() => {
                     // Reset to default language
-                    i18n.changeLanguage('en');
+                    // i18n.changeLanguage('en'); // Removed as per edit hint
                     localStorage.removeItem('lng');
                     // Clear URL parameter
                     const url = new URL(window.location.href);
