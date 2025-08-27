@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useTranslation } from 'react-i18next'
 import { LangToggle } from './LangToggle'
 import { track } from '../lib/utils'
