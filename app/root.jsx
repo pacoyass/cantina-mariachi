@@ -17,6 +17,8 @@ import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
 import { useEffect, useState } from 'react';
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
 
 export async function loader( { request, context } )
 {
@@ -135,7 +137,11 @@ export function Layout( { children } )
           disableTransitionOnChange
           suppressHydrationWarning
         >
-          {children}
+          <div className="bg-mexican-pattern min-h-screen">
+            <Navbar />
+            {children}
+            <Footer />
+          </div>
         </ThemeProvider>
         
         <ScrollRestoration nonce={nonce} />
