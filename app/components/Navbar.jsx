@@ -87,6 +87,7 @@ function DesktopOrderBar({ isOpen, eta }) {
   const [mounted, setMounted] = useState(false)
   const revealDelayRef = useRef(null)
   const lastToggleRef = useRef(0)
+  const visibleRef = useRef(false)
   
   useEffect(() => {
     // Only run on client after hydration
@@ -113,17 +114,18 @@ function DesktopOrderBar({ isOpen, eta }) {
           return
         }
 
-        // Hide when scrolling down past threshold, show when scrolling up or near top
+        // Determine next visibility
+        let nextVisible = visibleRef.current
         if (currentScrollY > lastScrollY + SCROLL_THRESHOLD_PX) {
-          if (visible) {
-            setVisible(false)
-            lastToggleRef.current = now
-          }
+          nextVisible = false
         } else if (currentScrollY + SCROLL_THRESHOLD_PX < lastScrollY || currentScrollY <= SCROLL_THRESHOLD_PX) {
-          if (!visible) {
-            setVisible(true)
-            lastToggleRef.current = now
-          }
+          nextVisible = true
+        }
+
+        if (nextVisible !== visibleRef.current) {
+          visibleRef.current = nextVisible
+          setVisible(nextVisible)
+          lastToggleRef.current = now
         }
         
         lastScrollY = currentScrollY
