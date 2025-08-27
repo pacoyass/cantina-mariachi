@@ -224,19 +224,19 @@ export function ErrorBoundary( { error } )
               </Sheet>
             </div>
             <div className="hidden md:flex items-center gap-4 text-sm">
-              <NavLink to="/menu">{t('nav.menu', { ns: 'ui' })}</NavLink>
-              <NavLink to="/orders">{t('nav.orders', { ns: 'ui' })}</NavLink>
+              <NavLink to="/menu">Menu</NavLink>
+              <NavLink to="/orders">Orders</NavLink>
             </div>
           </div>
 
           <div className="flex items-center justify-center">
-            <NavLink to="/" className="text-lg font-semibold">{t('brand', { ns: 'ui' })}</NavLink>
+            <NavLink to="/" className="text-lg font-semibold">Cantina Mariachi</NavLink>
           </div>
 
           <div className="flex items-center justify-end gap-2">
             <div className="hidden md:flex items-center gap-4 text-sm mr-2">
-              <NavLink to="/reservations">{t('nav.reservations', { ns: 'ui' })}</NavLink>
-              <NavLink to="/account">{t('nav.account', { ns: 'ui' })}</NavLink>
+              <NavLink to="/reservations">Reservations</NavLink>
+              <NavLink to="/account">Account</NavLink>
             </div>
             <ModeToggle />
             <DropdownMenu>
@@ -281,12 +281,12 @@ export function ErrorBoundary( { error } )
                 <Button variant="ghost" aria-label="Account menu">☰</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild><NavLink to="/account">{t('nav.profile', { ns: 'ui' })}</NavLink></DropdownMenuItem>
-                <DropdownMenuItem asChild><NavLink to="/login">{t('nav.login', { ns: 'ui' })}</NavLink></DropdownMenuItem>
-                <DropdownMenuItem asChild><NavLink to="/register">{t('nav.register', { ns: 'ui' })}</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/account">Profile</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/login">Login</NavLink></DropdownMenuItem>
+                <DropdownMenuItem asChild><NavLink to="/register">Register</NavLink></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button className="hidden md:inline-flex">{t('nav.orderNow', { ns: 'ui' })}</Button>
+            <Button className="hidden md:inline-flex">Order Now</Button>
           </div>
         </nav>
       <div className="flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl rounded-4xl  p-4 sm:p-6 lg:p-8 xl:p-24">
