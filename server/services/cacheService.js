@@ -17,6 +17,7 @@ class CacheService {
       try {
         await LoggerService.logError(errorMessage, errorStack, { service: 'CacheService', errorCode: err.code || null });
       } catch (logError) {
+        // Fallback: use console only if LoggerService fails
         console.error('Failed to log Redis error:', logError.message, logError);
       }
     });
@@ -38,11 +39,13 @@ class CacheService {
 
   async get(key) {
     if (!this.#isConnected) {
-      console.warn('Redis not connected, returning null');
-      try {
-        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
-      } catch (logError) {
-        console.error('Failed to log cache event:', logError.message);
+      // Only warn in development, not in tests
+      if (process.env.NODE_ENV !== 'test') {
+        try {
+          await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key, method: 'get' });
+        } catch (logError) {
+          console.error('Failed to log cache event:', logError.message);
+        }
       }
       return null;
     }
@@ -65,11 +68,13 @@ class CacheService {
   // Backward-compatible JSON cache helpers used by tests
   async getCache(key) {
     if (!this.#isConnected) {
-      console.warn('Redis not connected, returning null');
-      try {
-        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
-      } catch (logError) {
-        console.error('Failed to log cache event:', logError.message);
+      // Only warn in development, not in tests
+      if (process.env.NODE_ENV !== 'test') {
+        try {
+          await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key, method: 'getCache' });
+        } catch (logError) {
+          console.error('Failed to log cache event:', logError.message);
+        }
       }
       return null;
     }
@@ -89,11 +94,13 @@ class CacheService {
 
   async set(key, value, options = {}) {
     if (!this.#isConnected) {
-      console.warn('Redis not connected, skipping set');
-      try {
-        await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key });
-      } catch (logError) {
-        console.error('Failed to log cache event:', logError.message);
+      // Only warn in development, not in tests
+      if (process.env.NODE_ENV !== 'test') {
+        try {
+          await LoggerService.logSystemEvent('CacheService', 'CACHE_DISCONNECTED', { key, method: 'set' });
+        } catch (logError) {
+          console.error('Failed to log cache event:', logError.message);
+        }
       }
       return;
     }
