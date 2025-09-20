@@ -46,6 +46,13 @@ export function LangToggle() {
           size="icon" 
           aria-label={t('a11y.toggleLanguage')}
           disabled={loading}
+          onClick={() => {
+            // Fallback: cycle languages if menu cannot open (e.g., if portal blocked)
+            const order = languages.map(l => l.code);
+            const idx = Math.max(0, order.indexOf(currentLanguage));
+            const next = order[(idx + 1) % order.length];
+            handleLanguageChange(next);
+          }}
         >
           <Globe className={`h-[1.2rem] w-[1.2rem] ${loading ? 'animate-spin' : ''}`} />
         </Button>

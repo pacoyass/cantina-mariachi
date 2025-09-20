@@ -13,6 +13,7 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
   const { t } = useTranslation('ui')
   // Start with SSR-provided status to avoid flicker (e.g., Open→Closed)
   const [status, setStatus] = useState(initialStatus)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   useEffect(() => {
     let active = true
     fetch('/api/config/public').then(r => r.ok ? r.json() : null).then(json => {
@@ -58,9 +59,9 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
           </div>
           <ModeToggle />
           <LangToggle />
-          <DropdownMenu>
+          <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="px-2" aria-label="Account menu">
+              <Button variant="outline" className="px-2" aria-label="Account menu" onClick={() => setUserMenuOpen((o) => !o)}>
                 <Avatar>
                   <AvatarFallback>AC</AvatarFallback>
                 </Avatar>
