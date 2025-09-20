@@ -19,17 +19,31 @@ export function ModeToggle() {
   const [mounted, setMounted] = React.useState(false)
   React.useEffect(() => setMounted(true), [])
 
+  function applyThemeFallback(next) {
+    try {
+      const root = document.documentElement
+      if (!root) return
+      // ensure only one of the classes is present
+      root.classList.remove(next === 'dark' ? 'light' : 'dark')
+      root.classList.add(next)
+      try { localStorage.setItem('theme', next) } catch {}
+    } catch {}
+  }
+
+  function handleQuickToggle() {
+    const next = theme === 'dark' ? 'light' : theme === 'light' ? 'dark' : 'dark'
+    try { setTheme(next) } catch {}
+    applyThemeFallback(next)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           size="icon"
-          onClick={() => {
-            // Quick toggle on click for better UX if menu fails to open
-            const next = theme === "dark" ? "light" : "dark";
-            setTheme(next);
-          }}
+          onClick={handleQuickToggle}
+          onPointerDown={(e) => { if (e.button === 0) handleQuickToggle() }}
         >
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
