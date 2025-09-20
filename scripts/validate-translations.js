@@ -106,7 +106,7 @@ function compareTranslations(referenceLang, targetLang, namespace) {
 // Main validation function
 function validateTranslations() {
   logBright('🌐 Translation Validation Report', 'cyan');
-  log('=' .repeat(50), 'cyan');
+  log('='.repeat(50), 'cyan');
   
   const languages = getLanguages();
   const referenceNamespaces = getNamespaces(REFERENCE_LANG);
@@ -222,7 +222,7 @@ function validateTranslations() {
   
   // Overall summary
   logBright('\n📈 Overall Summary', 'cyan');
-  log('=' .repeat(50), 'cyan');
+  log('='.repeat(50), 'cyan');
   
   for (const [lang, stats] of Object.entries(languageStats)) {
     const statusIcon = stats.completeness === 100 ? '✅' : stats.completeness >= 80 ? '⚠️ ' : '❌';

@@ -78,7 +78,7 @@ app.use((req, res, next) => {
 });
 
 // Helmet security headers
-helmet({
+app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
@@ -107,7 +107,7 @@ helmet({
     },
   },
   frameguard: false,
-})
+}))
 
 app.use(helmet.hsts({
 	maxAge: 31536000,
