@@ -3,7 +3,7 @@
 import { useDynamicTranslation } from '../lib/useDynamicTranslation';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Globe, Languages, FileText } from 'lucide-react';
+import { Globe } from '@/lib/lucide-shim.js';
 
 export function TranslationStatus() {
   const { 

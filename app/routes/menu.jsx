@@ -6,7 +6,7 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { useTranslation } from 'react-i18next';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
-import { LayoutGrid, List, ChevronDown, Star } from "lucide-react";
+import { LayoutGrid, List, ChevronDown, Star } from "../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Menu - Cantina" },

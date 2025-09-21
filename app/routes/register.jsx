@@ -5,7 +5,7 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Label } from "../components/ui/label";
 import { Alert, AlertDescription } from "../components/ui/alert";
-import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, AlertCircle, Check } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight, AlertCircle, Check } from "../lib/lucide-shim.js";
 import { useTranslation } from 'react-i18next';
 
 export const meta = () => [

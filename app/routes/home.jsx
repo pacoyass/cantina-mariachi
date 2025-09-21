@@ -8,7 +8,7 @@ import { Separator } from "../components/ui/separator";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../components/ui/accordion";
-import { Star, Clock, Truck, Smartphone, UtensilsCrossed, ShieldCheck, Sparkles } from "lucide-react";
+import { Star, Clock, Truck, Smartphone, UtensilsCrossed, ShieldCheck, Sparkles } from "../lib/lucide-shim.js";
 import { useTranslation, Trans } from 'react-i18next';
 import { formatCurrency, track } from '../lib/utils'
 
@@ -480,7 +480,11 @@ function HeroSection({ safeCms, t, i18n }) {
         <div className="space-y-6">
           <Badge className="w-fit" variant="secondary">{safeCms.hero?.badge ?? t('hero.badge')}</Badge>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-            {safeCms.hero?.title ? <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} /> : <Trans i18nKey="hero.title" ns="home" components={{ primary: <span className="text-primary" /> }} />}
+            {safeCms.hero?.title ? (
+              <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} />
+            ) : (
+              <Trans i18nKey="hero.title" ns="home" components={{ primary: <span key="primary" className="text-primary" /> }} />
+            )}
           </h1>
           <p className="text-muted-foreground max-w-prose">
             {safeCms.hero?.desc || t('hero.desc')}

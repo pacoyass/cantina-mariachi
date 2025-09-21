@@ -9,7 +9,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Badge } from '../components/ui/badge';
 import { useLoaderData } from 'react-router';
-import { Calendar, Clock, Users, Phone, User, MessageSquare, AlertCircle, CheckCircle, MapPin, Utensils } from 'lucide-react';
+import { Calendar, Clock, Users, Phone, User, MessageSquare, AlertCircle, CheckCircle, MapPin, Utensils } from '../lib/lucide-shim.js';
 
 export const meta = () => [
   { title: 'Table Reservations - Cantina Mariachi' },

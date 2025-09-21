@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Globe } from "lucide-react";
+import { Globe } from "@/lib/lucide-shim.js";
 import { useTranslation } from 'react-i18next';
 import { useLanguageSwitcher } from '../lib/useDynamicTranslation';
 

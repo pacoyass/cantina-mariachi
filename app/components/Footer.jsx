@@ -2,7 +2,7 @@ import { NavLink } from "react-router"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { Separator } from "./ui/separator"
-import { Github, Instagram, Twitter } from "lucide-react"
+import { Github, Instagram, Twitter } from "../lib/lucide-shim.js"
 import { useTranslation } from 'react-i18next'
 
 export function Footer() {
