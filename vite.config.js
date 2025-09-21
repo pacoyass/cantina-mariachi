@@ -19,6 +19,10 @@ export default defineConfig(({ isSsrBuild }) => ({
       "@": path.resolve(__dirname, "app"),
     },
   },
+  optimizeDeps: {
+    // Prevent prebundling lucide-react icons files that can break on Windows path resolution
+    exclude: ["lucide-react"],
+  },
   ssr: {
     noExternal: ['react-i18next', 'i18next'],
   },
