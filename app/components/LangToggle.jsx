@@ -48,7 +48,6 @@ export function LangToggle() {
           size="icon" 
           aria-label={t('a11y.toggleLanguage')}
           disabled={loading}
-          onClick={() => setOpen((o) => !o)}
         >
           <Globe className={`h-[1.2rem] w-[1.2rem] ${loading ? 'animate-spin' : ''}`} />
         </Button>

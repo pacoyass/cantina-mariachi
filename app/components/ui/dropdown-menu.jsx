@@ -17,10 +17,21 @@ function DropdownMenuPortal({
 }
 
 const DropdownMenuTrigger = React.forwardRef(function DropdownMenuTrigger(
-  { ...props },
+  { onClick, ...props },
   ref
 ) {
-  return (<DropdownMenuPrimitive.Trigger ref={ref} data-slot="dropdown-menu-trigger" {...props} />);
+  return (
+    <DropdownMenuPrimitive.Trigger
+      ref={ref}
+      data-slot="dropdown-menu-trigger"
+      // prevent click from toggling a parent-controlled state; let Radix handle open
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onClick) onClick(e);
+      }}
+      {...props}
+    />
+  );
 })
 
 function DropdownMenuContent({

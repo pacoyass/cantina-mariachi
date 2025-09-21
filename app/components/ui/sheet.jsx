@@ -11,10 +11,14 @@ function Sheet({
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
-function SheetTrigger({
-  ...props
-}) {
-  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
+function SheetTrigger({ onClick, ...props }) {
+  return (
+    <SheetPrimitive.Trigger
+      data-slot="sheet-trigger"
+      onClick={(e) => { e.stopPropagation(); if (onClick) onClick(e); }}
+      {...props}
+    />
+  );
 }
 
 function SheetClose({
