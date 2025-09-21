@@ -24,9 +24,10 @@ function SheetClose({
 }
 
 function SheetPortal({
+  container,
   ...props
 }) {
-  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
+  return <SheetPrimitive.Portal data-slot="sheet-portal" container={container || (typeof document !== 'undefined' ? document.body : undefined)} {...props} />;
 }
 
 function SheetOverlay({

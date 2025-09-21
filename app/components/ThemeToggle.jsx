@@ -18,6 +18,7 @@ export function ModeToggle() {
   const { t } = useTranslation('ui')
   const [mounted, setMounted] = React.useState(false)
   React.useEffect(() => setMounted(true), [])
+  const [open, setOpen] = React.useState(false)
 
   function applyThemeFallback(next) {
     try {
@@ -37,13 +38,13 @@ export function ModeToggle() {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           size="icon"
-          onClick={handleQuickToggle}
-          onPointerDown={(e) => { if (e.button === 0) handleQuickToggle() }}
+          onClick={() => setOpen((o) => !o)}
+          onAuxClick={handleQuickToggle}
         >
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />

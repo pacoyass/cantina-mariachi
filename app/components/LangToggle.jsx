@@ -9,6 +9,7 @@ import { useLanguageSwitcher } from '../lib/useDynamicTranslation';
 export function LangToggle() {
   const { t } = useTranslation('ui');
   const { changeLanguage, currentLanguage, loading } = useLanguageSwitcher();
+  const [open, setOpen] = React.useState(false);
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -39,20 +40,14 @@ export function LangToggle() {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenuTrigger asChild>
         <Button 
           variant="outline" 
           size="icon" 
           aria-label={t('a11y.toggleLanguage')}
           disabled={loading}
-          onClick={() => {
-            // Fallback: cycle languages if menu cannot open (e.g., if portal blocked)
-            const order = languages.map(l => l.code);
-            const idx = Math.max(0, order.indexOf(currentLanguage));
-            const next = order[(idx + 1) % order.length];
-            handleLanguageChange(next);
-          }}
+          onClick={() => setOpen((o) => !o)}
         >
           <Globe className={`h-[1.2rem] w-[1.2rem] ${loading ? 'animate-spin' : ''}`} />
         </Button>
