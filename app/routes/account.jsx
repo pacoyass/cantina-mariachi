@@ -14,7 +14,7 @@ import {
   User, Mail, Phone, MapPin, CreditCard, History, 
   Calendar, Star, Package, AlertCircle, CheckCircle,
   Settings, Bell, Shield, LogOut, Edit, Eye, Gift
-} from 'lucide-react';
+} from '../lib/lucide-shim.js';
 
 export const meta = () => [
   { title: 'My Account - Cantina Mariachi' },
