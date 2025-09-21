@@ -1,6 +1,6 @@
 import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Star } from "lucide-react";
+import { Star } from "@/lib/lucide-shim.js";
 import { useTranslation } from 'react-i18next';
 
 export default function Testimonials({ testimonials = [] }) {

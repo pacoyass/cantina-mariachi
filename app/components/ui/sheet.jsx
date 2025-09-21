@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
-import { XIcon } from "lucide-react"
+import { XIcon } from "@/lib/lucide-shim.js"
 
 import { cn } from "@/lib/utils"
 import { useTranslation } from 'react-i18next'
