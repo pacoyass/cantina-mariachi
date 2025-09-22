@@ -13,17 +13,17 @@ export function Footer() {
       <div className="container mx-auto px-6 py-10 grid gap-8 md:grid-cols-4">
         <div className="space-y-2">
           <div className="text-lg font-semibold">{t('brand')}</div>
-          <p className="text-sm text-muted-foreground">{t('footer.tagline')}</p>
+          <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
         </div>
 
         <div>
           <div className="text-sm font-medium mb-2">{t('footer.quickLinks')}</div>
           <ul className="space-y-1 text-sm text-muted-foreground">
-            <li><NavLink to="/">{t('nav.home')}</NavLink></li>
-            <li><NavLink to="/menu">{t('nav.menu')}</NavLink></li>
-            <li><NavLink to="/orders">{t('nav.orders')}</NavLink></li>
-            <li><NavLink to="/reservations">{t('nav.reservations')}</NavLink></li>
-            <li><NavLink to="/account">{t('nav.account')}</NavLink></li>
+            <li><NavLink to="/">{t('navigation.home')}</NavLink></li>
+            <li><NavLink to="/menu">{t('navigation.menu')}</NavLink></li>
+            <li><NavLink to="/orders">{t('navigation.orders')}</NavLink></li>
+            <li><NavLink to="/reservations">{t('navigation.reservations')}</NavLink></li>
+            <li><NavLink to="/account">{t('navigation.account')}</NavLink></li>
           </ul>
         </div>
 

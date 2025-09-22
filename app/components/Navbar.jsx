@@ -6,7 +6,7 @@ import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { useEffect, useState, useRef } from "react"
 import { useTranslation } from 'react-i18next'
-// removed LangToggle per spec
+import { LangToggle } from './LangToggle'
 import { track } from '../lib/utils'
 
 export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
@@ -33,17 +33,17 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
               </SheetTrigger>
               <SheetContent>
                 <div className="flex flex-col gap-3">
-                  <NavLink to="/menu">{t('nav.menu')}</NavLink>
-                  <NavLink to="/orders">{t('nav.orders')}</NavLink>
-                  <NavLink to="/reservations">{t('nav.reservations')}</NavLink>
-                  <NavLink to="/account">{t('nav.account')}</NavLink>
+                  <NavLink to="/menu">{t('navigation.menu')}</NavLink>
+                  <NavLink to="/orders">{t('navigation.orders')}</NavLink>
+                  <NavLink to="/reservations">{t('navigation.reservations')}</NavLink>
+                  <NavLink to="/account">{t('navigation.account')}</NavLink>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm">
-            <NavLink to="/menu">{t('nav.menu')}</NavLink>
-            <NavLink to="/orders">{t('nav.orders')}</NavLink>
+            <NavLink to="/menu">{t('navigation.menu')}</NavLink>
+            <NavLink to="/orders">{t('navigation.orders')}</NavLink>
           </div>
         </div>
 
@@ -53,10 +53,11 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
 
         <div className="flex items-center justify-end gap-2">
           <div className="hidden md:flex items-center gap-4 text-sm mr-2">
-            <NavLink to="/reservations">{t('nav.reservations')}</NavLink>
-            <NavLink to="/account">{t('nav.account')}</NavLink>
+            <NavLink to="/reservations">{t('navigation.reservations')}</NavLink>
+            <NavLink to="/account">{t('navigation.account')}</NavLink>
           </div>
           <ModeToggle />
+          <LangToggle />
           <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="px-2" aria-label="Account menu" onClick={() => setUserMenuOpen((o) => !o)}>
@@ -66,12 +67,12 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild><NavLink to="/account">{t('nav.profile')}</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to="/login">{t('nav.login')}</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to="/register">{t('nav.register')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to="/account">{t('navigation.account')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to="/login">{t('buttons.login')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to="/register">{t('buttons.signup')}</NavLink></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button className="hidden md:inline-flex" onClick={() => track('click_order_now_nav')}>{t('nav.orderNow')}</Button>
+          <Button className="hidden md:inline-flex" onClick={() => track('click_order_now_nav')}>{t('buttons.orderNow')}</Button>
         </div>
       </nav>
       <div className="mex-divider" />
