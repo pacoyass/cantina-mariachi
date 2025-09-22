@@ -6,7 +6,7 @@ import { ModeToggle } from "./ThemeToggle"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { useEffect, useState, useRef } from "react"
 import { useTranslation } from 'react-i18next'
-import { LangToggle } from './LangToggle'
+// removed LangToggle per spec
 import { track } from '../lib/utils'
 
 export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
@@ -33,7 +33,6 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
               </SheetTrigger>
               <SheetContent>
                 <div className="flex flex-col gap-3">
-                  <NavLink to="/">{t('nav.home')}</NavLink>
                   <NavLink to="/menu">{t('nav.menu')}</NavLink>
                   <NavLink to="/orders">{t('nav.orders')}</NavLink>
                   <NavLink to="/reservations">{t('nav.reservations')}</NavLink>
@@ -58,7 +57,6 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
             <NavLink to="/account">{t('nav.account')}</NavLink>
           </div>
           <ModeToggle />
-          <LangToggle />
           <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="px-2" aria-label="Account menu" onClick={() => setUserMenuOpen((o) => !o)}>
