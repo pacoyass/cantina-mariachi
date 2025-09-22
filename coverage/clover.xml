@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1758372622374" clover="3.2.0">
-  <project timestamp="1758372622374" name="All files">
-    <metrics statements="1803" coveredstatements="1387" conditionals="952" coveredconditionals="595" methods="278" coveredmethods="222" elements="3033" coveredelements="2204" complexity="0" loc="1803" ncloc="1803" packages="9" files="35" classes="35"/>
+<coverage generated="1758539434500" clover="3.2.0">
+  <project timestamp="1758539434500" name="All files">
+    <metrics statements="1803" coveredstatements="1387" conditionals="952" coveredconditionals="591" methods="278" coveredmethods="222" elements="3033" coveredelements="2200" complexity="0" loc="1803" ncloc="1803" packages="9" files="35" classes="35"/>
     <package name="workspace">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="i18n.config.js" path="/workspace/i18n.config.js">
@@ -60,9 +60,9 @@
       </file>
     </package>
     <package name="workspace.server.controllers">
-      <metrics statements="785" coveredstatements="650" conditionals="279" coveredconditionals="201" methods="82" coveredmethods="78"/>
+      <metrics statements="785" coveredstatements="650" conditionals="279" coveredconditionals="200" methods="82" coveredmethods="78"/>
       <file name="auth.controller.js" path="/workspace/server/controllers/auth.controller.js">
-        <metrics statements="233" coveredstatements="200" conditionals="124" coveredconditionals="97" methods="14" coveredmethods="13"/>
+        <metrics statements="233" coveredstatements="200" conditionals="124" coveredconditionals="96" methods="14" coveredmethods="13"/>
         <line num="16" count="7" type="stmt"/>
         <line num="17" count="4" type="cond" truecount="2" falsecount="0"/>
         <line num="18" count="4" type="stmt"/>
@@ -154,7 +154,7 @@
         <line num="225" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="228" count="1" type="stmt"/>
         <line num="229" count="1" type="stmt"/>
-        <line num="230" count="1" type="cond" truecount="2" falsecount="2"/>
+        <line num="230" count="1" type="cond" truecount="1" falsecount="3"/>
         <line num="231" count="1" type="cond" truecount="1" falsecount="1"/>
         <line num="232" count="1" type="stmt"/>
         <line num="242" count="1" type="stmt"/>
@@ -1120,15 +1120,15 @@
       </file>
     </package>
     <package name="workspace.server.services">
-      <metrics statements="526" coveredstatements="389" conditionals="339" coveredconditionals="200" methods="115" coveredmethods="88"/>
+      <metrics statements="526" coveredstatements="389" conditionals="339" coveredconditionals="197" methods="115" coveredmethods="88"/>
       <file name="authService.js" path="/workspace/server/services/authService.js">
-        <metrics statements="93" coveredstatements="50" conditionals="51" coveredconditionals="25" methods="12" coveredmethods="6"/>
+        <metrics statements="93" coveredstatements="50" conditionals="51" coveredconditionals="23" methods="12" coveredmethods="6"/>
         <line num="2" count="5" type="stmt"/>
         <line num="7" count="5" type="stmt"/>
         <line num="8" count="5" type="stmt"/>
         <line num="9" count="5" type="cond" truecount="1" falsecount="1"/>
-        <line num="11" count="5" type="cond" truecount="4" falsecount="0"/>
-        <line num="12" count="4" type="stmt"/>
+        <line num="11" count="5" type="cond" truecount="2" falsecount="2"/>
+        <line num="12" count="5" type="stmt"/>
         <line num="16" count="5" type="stmt"/>
         <line num="17" count="5" type="stmt"/>
         <line num="18" count="5" type="stmt"/>
@@ -1218,7 +1218,7 @@
         <line num="173" count="0" type="stmt"/>
       </file>
       <file name="cacheService.js" path="/workspace/server/services/cacheService.js">
-        <metrics statements="142" coveredstatements="97" conditionals="108" coveredconditionals="51" methods="13" coveredmethods="12"/>
+        <metrics statements="142" coveredstatements="97" conditionals="108" coveredconditionals="50" methods="13" coveredmethods="12"/>
         <line num="6" count="10" type="stmt"/>
         <line num="9" count="10" type="stmt"/>
         <line num="13" count="10" type="stmt"/>
