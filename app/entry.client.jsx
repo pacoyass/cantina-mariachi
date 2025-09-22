@@ -10,23 +10,19 @@ startTransition(async () => {
   try {
     // Use server-rendered language for initial hydration to prevent mismatch
     const serverLang = document.documentElement.lang || 'en';
-    // Hydrate with the exact same resources used on the server to avoid mismatch
-    const i18n = await initI18n({ lng: serverLang, resources: uiResources[serverLang] || uiResources.en });
-    // Ensure critical namespaces exist to avoid initial key strings
+    // Hydrate with the full resources from the server API to avoid mismatch
+    let initialResources = uiResources[serverLang] || uiResources.en;
     try {
-      const ensureNs = (ns) => {
-        const res = (uiResources[serverLang] || uiResources.en) || {}
-        if (!i18n.hasResourceBundle(serverLang, ns) && res[ns]) {
-          i18n.addResourceBundle(serverLang, ns, res[ns], true, true)
+      const res = await fetch(`/api/translations/${serverLang}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.success && data?.data?.translations) {
+          initialResources = data.data.translations;
         }
       }
-      ensureNs('home')
-      ensureNs('ui')
-      ensureNs('popular')
-      if (i18n?.options?.react) {
-        i18n.options.react.useSuspense = true
-      }
     } catch {}
+    const i18n = await initI18n({ lng: serverLang, resources: initialResources });
+    try { if (i18n?.options?.react) { i18n.options.react.useSuspense = true } } catch {}
     
     hydrateRoot(document, <StrictMode><I18nextProvider i18n={i18n} key={serverLang}><HydratedRouter /></I18nextProvider></StrictMode>);
     
@@ -37,7 +33,7 @@ startTransition(async () => {
         const storedLang = localStorage.getItem('lng');
         const clientLang = urlLang || storedLang || serverLang;
         
-        // Merge server translations after hydration to enrich resources without breaking keys used by SSR
+        // Merge server translations after hydration to enrich resources if needed
         try {
           const apiTranslations = await loadTranslationsFromAPI(clientLang);
           if (apiTranslations && typeof apiTranslations === 'object') {
