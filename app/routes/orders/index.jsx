@@ -13,7 +13,7 @@ export async function loader({ request }) {
 	const cookie = request.headers.get("cookie") || "";
 	const [ordersRes, cmsRes] = await Promise.all([
 		fetch(`${url.origin}/api/orders/mine/list`, { headers: { cookie } }).catch(() => null),
-    fetch(`${url.origin}/api/cms/orders?locale=${encodeURIComponent(request?.language || 'en')}`, { headers: { cookie } }).catch(() => null),
+    fetch(`${url.origin}/api/cms/orders?locale=${encodeURIComponent(url.searchParams.get('lng') || request?.language || 'en')}`, { headers: { cookie } }).catch(() => null),
 	]);
 	const ordersJson = ordersRes ? await ordersRes.json().catch(() => null) : null;
 	const cmsJson = cmsRes ? await cmsRes.json().catch(() => null) : null;

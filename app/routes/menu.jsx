@@ -22,7 +22,7 @@ export async function loader({ request }) {
     try { return await res.json(); } catch { return null; }
   }
 
-  const lng = request?.language || 'en';
+  const lng = url.searchParams.get('lng') || request?.language || 'en';
   const [catRes, itemsRes, cmsRes] = await Promise.all([
     fetch(`${url.origin}/api/menu/categories`, { headers: { cookie } }),
     fetch(`${url.origin}/api/menu/items${categoryId ? `?categoryId=${encodeURIComponent(categoryId)}` : ""}`, { headers: { cookie } }),

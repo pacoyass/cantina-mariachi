@@ -164,6 +164,10 @@ export function useLanguageSwitcher() {
 
       // Change i18n language
       await i18n.changeLanguage(code);
+      // Hint server to persist cookie for SSR refreshes
+      try {
+        fetch(`/api/config/public?lng=${encodeURIComponent(code)}`, { credentials: 'include' }).catch(() => {});
+      } catch {}
       
       // Update document attributes
       document.documentElement.lang = code;
