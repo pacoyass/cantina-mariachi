@@ -1,0 +1,69 @@
+{
+  "title": "حسابي",
+  "welcomeBack": "مرحبًا بعودتك، {{name}}!",
+  "header": {
+    "orders": "الطلبات",
+    "reservations": "الحجوزات",
+    "points": "النقاط"
+  },
+  "tabs": {
+    "profile": "الملف الشخصي",
+    "orders": "الطلبات",
+    "reservations": "الحجوزات",
+    "rewards": "المكافآت",
+    "settings": "الإعدادات"
+  },
+  "profile": {
+    "title": "معلومات الملف الشخصي",
+    "name": "الاسم الكامل",
+    "email": "عنوان البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "address": "العنوان الافتراضي",
+    "update": "تحديث الملف الشخصي",
+    "success": "تم تحديث الملف الشخصي بنجاح",
+    "error": "فشل في تحديث الملف الشخصي"
+  },
+  "security": {
+    "title": "إعدادات الأمان",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "change": "تغيير كلمة المرور",
+    "success": "تم تغيير كلمة المرور بنجاح",
+    "error": "فشل تغيير كلمة المرور"
+  },
+  "orders": {
+    "title": "سجل الطلبات",
+    "empty": "لا توجد طلبات بعد",
+    "viewDetails": "عرض التفاصيل",
+    "reorder": "إعادة الطلب"
+  },
+  "reservations": {
+    "title": "حجوزاتي",
+    "empty": "لا توجد حجوزات",
+    "modify": "تعديل",
+    "cancel": "إلغاء",
+    "partyOf": "مجموعة من {{count}}"
+  },
+  "rewards": {
+    "title": "نقاط المكافأة",
+    "available": "النقاط المتاحة",
+    "progress": "التقدم نحو المكافأة التالية",
+    "left": "متبقٍ {{points}} نقطة",
+    "viewRewards": "عرض المكافآت المتاحة",
+    "recentActivity": "النشاط الأخير"
+  },
+  "settings": {
+    "notifications": "تفضيلات الإشعارات",
+    "orderUpdates": "تحديثات الطلب",
+    "orderUpdatesDesc": "احصل على إشعارات حول حالة طلبك",
+    "promotions": "العروض الترويجية",
+    "promotionsDesc": "استلم عروضًا وترقيات حصرية",
+    "reservationReminders": "تذكيرات الحجوزات",
+    "reservationRemindersDesc": "احصل على تذكيرات بالحجوزات القادمة",
+    "actions": "إجراءات الحساب",
+    "signOut": "تسجيل الخروج",
+    "delete": "حذف الحساب"
+  }
+}
+

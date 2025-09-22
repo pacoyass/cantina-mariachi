@@ -13,7 +13,7 @@ export async function loader({ request }) {
 	const cookie = request.headers.get("cookie") || "";
 	const [ordersRes, cmsRes] = await Promise.all([
 		fetch(`${url.origin}/api/orders/mine/list`, { headers: { cookie } }).catch(() => null),
-		fetch(`${url.origin}/api/cms/orders?locale=${encodeURIComponent('en')}`, { headers: { cookie } }).catch(() => null),
+    fetch(`${url.origin}/api/cms/orders?locale=${encodeURIComponent(request?.language || 'en')}`, { headers: { cookie } }).catch(() => null),
 	]);
 	const ordersJson = ordersRes ? await ordersRes.json().catch(() => null) : null;
 	const cmsJson = cmsRes ? await cmsRes.json().catch(() => null) : null;
@@ -24,7 +24,7 @@ export async function loader({ request }) {
 }
 
 export default function OrdersIndexPage() {
-	const { t } = useTranslation('orders');
+  const { t } = useTranslation('orders');
 	const { orders, cms } = useLoaderData();
 	return (
 		<Card>
@@ -39,11 +39,11 @@ export default function OrdersIndexPage() {
 							<TableHead>{cms?.table?.actions || t('table.actions')}</TableHead>
 						</TableRow>
 					</TableHeader>
-					<TableBody>
-						{orders.length === 0 ? (
+                <TableBody>
+                {orders.length === 0 ? (
 							<TableRow>
 								<TableCell colSpan={5}>
-									<div className="p-6 text-center text-muted-foreground text-sm">{cms?.empty || t('empty')}</div>
+                      <div className="p-6 text-center text-muted-foreground text-sm">{cms?.empty || t('empty')}</div>
 								</TableCell>
 							</TableRow>
 						) : orders.map((o) => (
@@ -53,7 +53,7 @@ export default function OrdersIndexPage() {
 								<TableCell>{o.total}</TableCell>
 								<TableCell>{new Date(o.createdAt).toLocaleString()}</TableCell>
 								<TableCell>
-									<Button variant="outline" size="sm">{cms?.actions?.view || t('actions.view')}</Button>
+                      <Button variant="outline" size="sm">{cms?.actions?.view || t('actions.view')}</Button>
 								</TableCell>
 							</TableRow>
 						))}

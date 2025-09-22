@@ -11,7 +11,7 @@ export default function OrderDetailPage() {
   return (
     <div className="p-4">
       <h2 className="text-lg font-semibold">{t('detailTitle', { orderNumber })}</h2>
-      <p className="text-sm text-muted-foreground">Order details will appear here.</p>
+      <p className="text-sm text-muted-foreground">{t('detailPlaceholder', { defaultValue: 'Order details will appear here.' })}</p>
     </div>
   );
 }

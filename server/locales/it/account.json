@@ -1,0 +1,69 @@
+{
+  "title": "Il Mio Account",
+  "welcomeBack": "Bentornato, {{name}}!",
+  "header": {
+    "orders": "Ordini",
+    "reservations": "Prenotazioni",
+    "points": "Punti"
+  },
+  "tabs": {
+    "profile": "Profilo",
+    "orders": "Ordini",
+    "reservations": "Prenotazioni",
+    "rewards": "Ricompense",
+    "settings": "Impostazioni"
+  },
+  "profile": {
+    "title": "Informazioni del Profilo",
+    "name": "Nome Completo",
+    "email": "Indirizzo Email",
+    "phone": "Numero di Telefono",
+    "address": "Indirizzo Predefinito",
+    "update": "Aggiorna Profilo",
+    "success": "Profilo aggiornato con successo",
+    "error": "Aggiornamento del profilo non riuscito"
+  },
+  "security": {
+    "title": "Impostazioni di Sicurezza",
+    "currentPassword": "Password Attuale",
+    "newPassword": "Nuova Password",
+    "confirmPassword": "Conferma Nuova Password",
+    "change": "Cambia Password",
+    "success": "Password cambiata con successo",
+    "error": "Cambio password non riuscito"
+  },
+  "orders": {
+    "title": "Storico Ordini",
+    "empty": "Nessun ordine ancora",
+    "viewDetails": "Vedi Dettagli",
+    "reorder": "Riordina"
+  },
+  "reservations": {
+    "title": "Le Mie Prenotazioni",
+    "empty": "Nessuna prenotazione",
+    "modify": "Modifica",
+    "cancel": "Annulla",
+    "partyOf": "Gruppo di {{count}}"
+  },
+  "rewards": {
+    "title": "Punti Ricompensa",
+    "available": "Punti Disponibili",
+    "progress": "Progresso alla prossima ricompensa",
+    "left": "Mancano {{points}} punti",
+    "viewRewards": "Vedi Ricompense Disponibili",
+    "recentActivity": "Attività Recente"
+  },
+  "settings": {
+    "notifications": "Preferenze di Notifica",
+    "orderUpdates": "Aggiornamenti Ordine",
+    "orderUpdatesDesc": "Ricevi notifiche sullo stato del tuo ordine",
+    "promotions": "Offerte Promozionali",
+    "promotionsDesc": "Ricevi offerte e promozioni esclusive",
+    "reservationReminders": "Promemoria Prenotazioni",
+    "reservationRemindersDesc": "Ricevi promemoria per le prossime prenotazioni",
+    "actions": "Azioni Account",
+    "signOut": "Esci",
+    "delete": "Elimina Account"
+  }
+}
+

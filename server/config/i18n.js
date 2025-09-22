@@ -56,7 +56,7 @@ async function initializeI18n() {
       },
       
       // Namespaces
-      ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'popular'],
+      ns: ['common', 'auth', 'api', 'validation', 'email', 'business', 'home', 'ui', 'menu', 'popular', 'orders', 'account', 'reservations'],
       defaultNS: 'common',
       
       // Resource loading options
@@ -123,7 +123,7 @@ async function initializeI18n() {
         caches: ['cookie']
       },
       interpolation: { escapeValue: false },
-      ns: ['common', 'ui', 'menu', 'home'],
+      ns: ['common', 'ui', 'menu', 'home', 'orders', 'account', 'reservations'],
       defaultNS: 'common',
       load: 'languageOnly',
       preload: ['en'],

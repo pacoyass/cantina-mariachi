@@ -22,10 +22,11 @@ export async function loader({ request }) {
     try { return await res.json(); } catch { return null; }
   }
 
+  const lng = request?.language || 'en';
   const [catRes, itemsRes, cmsRes] = await Promise.all([
     fetch(`${url.origin}/api/menu/categories`, { headers: { cookie } }),
     fetch(`${url.origin}/api/menu/items${categoryId ? `?categoryId=${encodeURIComponent(categoryId)}` : ""}`, { headers: { cookie } }),
-    fetch(`${url.origin}/api/cms/menu?locale=${encodeURIComponent('en')}`, { headers: { cookie } }),
+    fetch(`${url.origin}/api/cms/menu?locale=${encodeURIComponent(lng)}`, { headers: { cookie } }),
   ]);
   const cats = await jsonOrNull(catRes);
   const items = await jsonOrNull(itemsRes);

@@ -9,7 +9,8 @@ export async function loader({ request }) {
   const url = new URL(request.url);
   const cookie = request.headers.get("cookie") || "";
   try {
-    const res = await fetch(`${url.origin}/api/cms/orders?locale=${encodeURIComponent('en')}`, { headers: { cookie } });
+    const lng = req?.language || req?.lng || 'en';
+    const res = await fetch(`${url.origin}/api/cms/orders?locale=${encodeURIComponent(lng)}`, { headers: { cookie } });
     const json = await res.json().catch(() => null);
     return { cms: json?.data?.page?.data || {} };
   } catch {

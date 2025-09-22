@@ -1,0 +1,33 @@
+{
+  "title": "Mes Commandes",
+  "nav": {
+    "mine": "Mes Commandes",
+    "track": "Suivre la Commande"
+  },
+  "table": {
+    "order": "Commande",
+    "status": "Statut",
+    "total": "Total",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "actions": {
+    "view": "Voir",
+    "track": "Suivre",
+    "reorder": "Commander à nouveau"
+  },
+  "empty": "Aucune commande pour le moment",
+  "create": "Commencer une Commande",
+  "trackTitle": "Suivez votre commande",
+  "trackDesc": "Entrez votre numéro de commande et code de suivi pour voir le statut.",
+  "trackForm": {
+    "orderNumber": "Numéro de commande",
+    "trackingCode": "Code de suivi",
+    "placeholderOrder": "ex. 12345",
+    "placeholderTracking": "ex. ABCD-1234",
+    "submit": "Suivre"
+  },
+  "detailTitle": "Commande #{{orderNumber}}",
+  "detailPlaceholder": "Les détails de la commande apparaîtront ici."
+}
+

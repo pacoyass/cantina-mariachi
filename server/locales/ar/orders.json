@@ -1,0 +1,33 @@
+{
+  "title": "طلباتي",
+  "nav": {
+    "mine": "طلباتي",
+    "track": "تتبع الطلب"
+  },
+  "table": {
+    "order": "الطلب",
+    "status": "الحالة",
+    "total": "الإجمالي",
+    "date": "التاريخ",
+    "actions": "الإجراءات"
+  },
+  "actions": {
+    "view": "عرض",
+    "track": "تتبع",
+    "reorder": "إعادة الطلب"
+  },
+  "empty": "لا توجد طلبات بعد",
+  "create": "ابدأ طلبًا",
+  "trackTitle": "تتبع طلبك",
+  "trackDesc": "أدخل رقم الطلب ورمز التتبع لعرض الحالة.",
+  "trackForm": {
+    "orderNumber": "رقم الطلب",
+    "trackingCode": "رمز التتبع",
+    "placeholderOrder": "مثال 12345",
+    "placeholderTracking": "مثال ABCD-1234",
+    "submit": "تتبع"
+  },
+  "detailTitle": "طلب #{{orderNumber}}",
+  "detailPlaceholder": "ستظهر تفاصيل الطلب هنا."
+}
+

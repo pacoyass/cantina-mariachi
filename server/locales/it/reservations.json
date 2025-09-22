@@ -1,0 +1,45 @@
+{
+  "title": "Prenotazioni Tavolo",
+  "header": {
+    "title": "Prenota il Tuo Tavolo",
+    "subtitle": "Prenota la tua esperienza da Cantina Mariachi"
+  },
+  "form": {
+    "contact": "Informazioni di Contatto",
+    "name": "Nome e Cognome",
+    "phone": "Numero di Telefono",
+    "email": "Indirizzo Email",
+    "details": "Dettagli della Prenotazione",
+    "date": "Data",
+    "time": "Ora",
+    "guests": "Ospiti",
+    "specialRequests": "Richieste Speciali (Opzionale)",
+    "placeholders": {
+      "name": "Il tuo nome completo",
+      "phone": "Il tuo numero di telefono",
+      "email": "tua.email@esempio.com",
+      "requests": "Eventuali esigenze alimentari, dettagli della celebrazione o preferenze di posto..."
+    },
+    "submit": "Prenota Tavolo",
+    "submitting": "Prenotazione in corso..."
+  },
+  "info": {
+    "restaurant": "Informazioni del Ristorante",
+    "location": "Posizione",
+    "hours": "Orari di Apertura",
+    "contact": "Contatto",
+    "atmosphereTitle": "Vivi il Messico Autentico",
+    "atmosphereDesc": "Goditi la nostra atmosfera calda e colorata con musica tradizionale, decorazioni artigianali e il profumo della cucina messicana.",
+    "atmosphere": "Atmosfera Messicana Vivace"
+  },
+  "policies": {
+    "title": "Politiche di Prenotazione",
+    "items": [
+      "Le prenotazioni sono mantenute per 15 minuti oltre l'orario",
+      "I gruppi numerosi (8+) possono richiedere un deposito",
+      "Cancellazioni accettate fino a 2 ore prima",
+      "Accomodiamo restrizioni alimentari con preavviso"
+    ]
+  }
+}
+

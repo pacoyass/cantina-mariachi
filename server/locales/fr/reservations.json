@@ -1,0 +1,45 @@
+{
+  "title": "Réservations de Table",
+  "header": {
+    "title": "Réservez Votre Table",
+    "subtitle": "Réservez votre expérience chez Cantina Mariachi"
+  },
+  "form": {
+    "contact": "Informations de Contact",
+    "name": "Nom Complet",
+    "phone": "Numéro de Téléphone",
+    "email": "Adresse E-mail",
+    "details": "Détails de la Réservation",
+    "date": "Date",
+    "time": "Heure",
+    "guests": "Convives",
+    "specialRequests": "Demandes Spéciales (Optionnel)",
+    "placeholders": {
+      "name": "Votre nom complet",
+      "phone": "Votre numéro de téléphone",
+      "email": "votre.email@exemple.com",
+      "requests": "Toute exigence alimentaire, détails de célébration ou préférences de siège..."
+    },
+    "submit": "Réserver une Table",
+    "submitting": "Réservation en cours..."
+  },
+  "info": {
+    "restaurant": "Informations du Restaurant",
+    "location": "Emplacement",
+    "hours": "Heures d'Ouverture",
+    "contact": "Contact",
+    "atmosphereTitle": "Vivez le Mexique Authentique",
+    "atmosphereDesc": "Profitez de notre ambiance chaleureuse et colorée avec musique traditionnelle, décorations artisanales et arômes de cuisine mexicaine.",
+    "atmosphere": "Ambiance Mexicaine Vibrante"
+  },
+  "policies": {
+    "title": "Politiques de Réservation",
+    "items": [
+      "Les réservations sont maintenues 15 minutes après l'heure",
+      "Les grands groupes (8+) peuvent nécessiter un acompte",
+      "Annulations acceptées jusqu'à 2 heures avant",
+      "Nous prenons en charge les restrictions alimentaires avec préavis"
+    ]
+  }
+}
+

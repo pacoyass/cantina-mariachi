@@ -10,7 +10,7 @@ import { uiResources } from './lib/resources.js';
 
 export const streamTimeout = 5000;
 
-export default function handleRequest(
+export default async function handleRequest(
   request,
   responseStatusCode,
   responseHeaders,
@@ -20,9 +20,23 @@ export default function handleRequest(
   // Get language from context (set by server middleware)
   const lng = loadContext?.lng || 'en';
   
-  // Create server i18n instance with the detected language
-  // For SSR, we'll use fallback resources to ensure proper rendering
-  const i18n = createServerI18n({ lng, resources: uiResources[lng] || uiResources.en });
+  // Attempt to load full translations from the backend for SSR
+  let serverResources = uiResources[lng] || uiResources.en;
+  try {
+    const url = new URL(request.url);
+    const res = await fetch(`${url.origin}/api/translations/${lng}`, {
+      headers: { cookie: request.headers.get('cookie') || '' }
+    });
+    if (res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json?.success && json?.data?.translations) {
+        serverResources = json.data.translations;
+      }
+    }
+  } catch {}
+
+  // Create server i18n instance with the detected language and loaded resources
+  const i18n = createServerI18n({ lng, resources: serverResources });
   
   // Set document attributes for SSR
   const dir = rtlLngs.includes(lng) ? 'rtl' : 'ltr';

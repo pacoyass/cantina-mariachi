@@ -1,0 +1,45 @@
+{
+  "title": "Table Reservations",
+  "header": {
+    "title": "Reserve Your Table",
+    "subtitle": "Book your dining experience at Cantina Mariachi"
+  },
+  "form": {
+    "contact": "Contact Information",
+    "name": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "details": "Reservation Details",
+    "date": "Date",
+    "time": "Time",
+    "guests": "Guests",
+    "specialRequests": "Special Requests (Optional)",
+    "placeholders": {
+      "name": "Your full name",
+      "phone": "Your phone number",
+      "email": "your.email@example.com",
+      "requests": "Any special dietary requirements, celebration details, or seating preferences..."
+    },
+    "submit": "Reserve Table",
+    "submitting": "Making Reservation..."
+  },
+  "info": {
+    "restaurant": "Restaurant Information",
+    "location": "Location",
+    "hours": "Operating Hours",
+    "contact": "Contact",
+    "atmosphereTitle": "Experience Authentic Mexico",
+    "atmosphereDesc": "Enjoy our warm, colorful atmosphere with traditional music, handcrafted decorations, and the aroma of fresh Mexican cuisine.",
+    "atmosphere": "Vibrant Mexican Atmosphere"
+  },
+  "policies": {
+    "title": "Reservation Policies",
+    "items": [
+      "Reservations are held for 15 minutes past the reserved time",
+      "Large parties (8+) may require a deposit",
+      "Cancellations accepted up to 2 hours before reservation",
+      "We accommodate dietary restrictions with advance notice"
+    ]
+  }
+}
+

@@ -1,0 +1,33 @@
+{
+  "title": "Meus Pedidos",
+  "nav": {
+    "mine": "Meus Pedidos",
+    "track": "Rastrear Pedido"
+  },
+  "table": {
+    "order": "Pedido",
+    "status": "Status",
+    "total": "Total",
+    "date": "Data",
+    "actions": "Ações"
+  },
+  "actions": {
+    "view": "Ver",
+    "track": "Rastrear",
+    "reorder": "Repetir pedido"
+  },
+  "empty": "Nenhum pedido ainda",
+  "create": "Iniciar um Pedido",
+  "trackTitle": "Rastreie seu pedido",
+  "trackDesc": "Insira o número do pedido e o código de rastreamento para ver o status.",
+  "trackForm": {
+    "orderNumber": "Número do pedido",
+    "trackingCode": "Código de rastreamento",
+    "placeholderOrder": "ex. 12345",
+    "placeholderTracking": "ex. ABCD-1234",
+    "submit": "Rastrear"
+  },
+  "detailTitle": "Pedido #{{orderNumber}}",
+  "detailPlaceholder": "Os detalhes do pedido aparecerão aqui."
+}
+

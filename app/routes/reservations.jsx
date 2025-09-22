@@ -30,7 +30,8 @@ export async function loader({ request }) {
   }
 
   try {
-    const res = await fetch(`${url.origin}/api/cms/reservations?locale=${encodeURIComponent('en')}`, { headers: { cookie } });
+    const lng = request?.language || 'en';
+    const res = await fetch(`${url.origin}/api/cms/reservations?locale=${encodeURIComponent(lng)}`, { headers: { cookie } });
     const json = await res.json().catch(() => null);
     return { 
       cms: json?.data?.page?.data || {},
@@ -148,10 +149,8 @@ export default function ReservationsPage() {
         <div className="space-y-6">
           {/* Header */}
           <div className="text-center lg:text-left">
-            <h1 className="text-3xl font-bold tracking-tight">Reserve Your Table</h1>
-            <p className="text-muted-foreground mt-2">
-              Book your dining experience at Cantina Mariachi
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight">{t('header.title')}</h1>
+            <p className="text-muted-foreground mt-2">{t('header.subtitle')}</p>
           </div>
 
           {/* Reservation Form */}
@@ -159,7 +158,7 @@ export default function ReservationsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Utensils className="h-5 w-5 text-primary" />
-                Reservation Details
+                {t('form.details')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -174,22 +173,18 @@ export default function ReservationsPage() {
               <Form method="post" className="space-y-4">
                 {/* Contact Information */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
-                    Contact Information
-                  </h3>
+                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">{t('form.contact')}</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Name */}
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-sm font-medium">
-                        Full Name *
-                      </Label>
+                      <Label htmlFor="name" className="text-sm font-medium">{t('form.name')} *</Label>
                       <div className="relative">
                         <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="name"
                           name="name"
-                          placeholder="Your full name"
+                          placeholder={t('form.placeholders.name')}
                           defaultValue={actionData?.fields?.name || ''}
                           className="pl-10"
                           required
@@ -202,16 +197,14 @@ export default function ReservationsPage() {
 
                     {/* Phone */}
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium">
-                        Phone Number *
-                      </Label>
+                      <Label htmlFor="phone" className="text-sm font-medium">{t('form.phone')} *</Label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
                           id="phone"
                           name="phone"
                           type="tel"
-                          placeholder="Your phone number"
+                          placeholder={t('form.placeholders.phone')}
                           defaultValue={actionData?.fields?.phone || ''}
                           className="pl-10"
                           required
@@ -225,14 +218,12 @@ export default function ReservationsPage() {
 
                   {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">
-                      Email Address *
-                    </Label>
+                    <Label htmlFor="email" className="text-sm font-medium">{t('form.email')} *</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="your.email@example.com"
+                      placeholder={t('form.placeholders.email')}
                       defaultValue={actionData?.fields?.email || ''}
                       required
                     />
@@ -244,16 +235,12 @@ export default function ReservationsPage() {
 
                 {/* Reservation Details */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
-                    Reservation Details
-                  </h3>
+                  <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">{t('form.details')}</h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Date */}
                     <div className="space-y-2">
-                      <Label htmlFor="date" className="text-sm font-medium">
-                        Date *
-                      </Label>
+                      <Label htmlFor="date" className="text-sm font-medium">{t('form.date')} *</Label>
                       <div className="relative">
                         <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -276,9 +263,7 @@ export default function ReservationsPage() {
 
                     {/* Time */}
                     <div className="space-y-2">
-                      <Label htmlFor="time" className="text-sm font-medium">
-                        Time *
-                      </Label>
+                      <Label htmlFor="time" className="text-sm font-medium">{t('form.time')} *</Label>
                       <div className="relative">
                         <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <select
@@ -289,7 +274,7 @@ export default function ReservationsPage() {
                           className="w-full pl-10 pr-4 py-2 border border-input bg-background text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                           required
                         >
-                          <option value="">Select time</option>
+                          <option value="">{t('form.time')}</option>
                           {timeSlots.map((slot) => (
                             <option key={slot} value={slot}>
                               {slot}
@@ -304,9 +289,7 @@ export default function ReservationsPage() {
 
                     {/* Guests */}
                     <div className="space-y-2">
-                      <Label htmlFor="guests" className="text-sm font-medium">
-                        Guests *
-                      </Label>
+                      <Label htmlFor="guests" className="text-sm font-medium">{t('form.guests')} *</Label>
                       <div className="relative">
                         <Users className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -331,15 +314,13 @@ export default function ReservationsPage() {
 
                 {/* Special Requests */}
                 <div className="space-y-2">
-                  <Label htmlFor="specialRequests" className="text-sm font-medium">
-                    Special Requests (Optional)
-                  </Label>
+                      <Label htmlFor="specialRequests" className="text-sm font-medium">{t('form.specialRequests')}</Label>
                   <div className="relative">
                     <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Textarea
                       id="specialRequests"
                       name="specialRequests"
-                      placeholder="Any special dietary requirements, celebration details, or seating preferences..."
+                      placeholder={t('form.placeholders.requests')}
                       defaultValue={actionData?.fields?.specialRequests || ''}
                       className="pl-10 min-h-[80px] resize-none"
                     />
@@ -356,12 +337,12 @@ export default function ReservationsPage() {
                   {isSubmitting ? (
                     <div className="flex items-center space-x-2">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Making Reservation...</span>
+                      <span>{t('form.submitting')}</span>
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
                       <CheckCircle className="h-4 w-4" />
-                      <span>Reserve Table</span>
+                      <span>{t('form.submit')}</span>
                     </div>
                   )}
                 </Button>
@@ -377,19 +358,19 @@ export default function ReservationsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-primary" />
-                Restaurant Information
+                {t('info.restaurant')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h4 className="font-semibold">Location</h4>
+                <h4 className="font-semibold">{t('info.location')}</h4>
                 <p className="text-sm text-muted-foreground">
                   123 Mexican Street, Casablanca, Morocco
                 </p>
               </div>
               
               <div>
-                <h4 className="font-semibold">Operating Hours</h4>
+                <h4 className="font-semibold">{t('info.hours')}</h4>
                 <div className="text-sm text-muted-foreground space-y-1">
                   <p>Monday - Thursday: 5:00 PM - 10:00 PM</p>
                   <p>Friday - Saturday: 5:00 PM - 11:00 PM</p>
@@ -398,7 +379,7 @@ export default function ReservationsPage() {
               </div>
 
               <div>
-                <h4 className="font-semibold">Contact</h4>
+                <h4 className="font-semibold">{t('info.contact')}</h4>
                 <p className="text-sm text-muted-foreground">
                   Phone: +212 522 123 456<br />
                   Email: reservations@cantina-mariachi.com
@@ -410,24 +391,24 @@ export default function ReservationsPage() {
           {/* Policies */}
           <Card>
             <CardHeader>
-              <CardTitle>Reservation Policies</CardTitle>
+              <CardTitle>{t('policies.title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div className="flex items-start space-x-2">
                 <Badge variant="secondary" className="mt-0.5">•</Badge>
-                <p>Reservations are held for 15 minutes past the reserved time</p>
+                <p>{t('policies.items.0')}</p>
               </div>
               <div className="flex items-start space-x-2">
                 <Badge variant="secondary" className="mt-0.5">•</Badge>
-                <p>Large parties (8+) may require a deposit</p>
+                <p>{t('policies.items.1')}</p>
               </div>
               <div className="flex items-start space-x-2">
                 <Badge variant="secondary" className="mt-0.5">•</Badge>
-                <p>Cancellations accepted up to 2 hours before reservation</p>
+                <p>{t('policies.items.2')}</p>
               </div>
               <div className="flex items-start space-x-2">
                 <Badge variant="secondary" className="mt-0.5">•</Badge>
-                <p>We accommodate dietary restrictions with advance notice</p>
+                <p>{t('policies.items.3')}</p>
               </div>
             </CardContent>
           </Card>
@@ -438,15 +419,12 @@ export default function ReservationsPage() {
               <div className="aspect-video bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 rounded-t-lg flex items-center justify-center">
                 <div className="text-center space-y-2">
                   <Utensils className="h-12 w-12 mx-auto text-primary/60" />
-                  <p className="text-sm text-muted-foreground">Vibrant Mexican Atmosphere</p>
+                  <p className="text-sm text-muted-foreground">{t('info.atmosphere')}</p>
                 </div>
               </div>
               <div className="p-4">
-                <h4 className="font-semibold mb-2">Experience Authentic Mexico</h4>
-                <p className="text-sm text-muted-foreground">
-                  Enjoy our warm, colorful atmosphere with traditional music, 
-                  handcrafted decorations, and the aroma of fresh Mexican cuisine.
-                </p>
+                <h4 className="font-semibold mb-2">{t('info.atmosphereTitle')}</h4>
+                <p className="text-sm text-muted-foreground">{t('info.atmosphereDesc')}</p>
               </div>
             </CardContent>
           </Card>

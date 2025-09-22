@@ -1,0 +1,69 @@
+{
+  "title": "Mi Cuenta",
+  "welcomeBack": "¡Bienvenido de nuevo, {{name}}!",
+  "header": {
+    "orders": "Pedidos",
+    "reservations": "Reservas",
+    "points": "Puntos"
+  },
+  "tabs": {
+    "profile": "Perfil",
+    "orders": "Pedidos",
+    "reservations": "Reservas",
+    "rewards": "Recompensas",
+    "settings": "Configuración"
+  },
+  "profile": {
+    "title": "Información del Perfil",
+    "name": "Nombre Completo",
+    "email": "Dirección de Email",
+    "phone": "Número de Teléfono",
+    "address": "Dirección Predeterminada",
+    "update": "Actualizar Perfil",
+    "success": "Perfil actualizado con éxito",
+    "error": "Error al actualizar el perfil"
+  },
+  "security": {
+    "title": "Configuración de Seguridad",
+    "currentPassword": "Contraseña Actual",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Nueva Contraseña",
+    "change": "Cambiar Contraseña",
+    "success": "Contraseña cambiada con éxito",
+    "error": "Error al cambiar la contraseña"
+  },
+  "orders": {
+    "title": "Historial de Pedidos",
+    "empty": "Aún no hay pedidos",
+    "viewDetails": "Ver Detalles",
+    "reorder": "Reordenar"
+  },
+  "reservations": {
+    "title": "Mis Reservas",
+    "empty": "Sin reservas",
+    "modify": "Modificar",
+    "cancel": "Cancelar",
+    "partyOf": "Grupo de {{count}}"
+  },
+  "rewards": {
+    "title": "Puntos de Recompensa",
+    "available": "Puntos Disponibles",
+    "progress": "Progreso hasta la siguiente recompensa",
+    "left": "Faltan {{points}} puntos",
+    "viewRewards": "Ver Recompensas Disponibles",
+    "recentActivity": "Actividad Reciente"
+  },
+  "settings": {
+    "notifications": "Preferencias de Notificación",
+    "orderUpdates": "Actualizaciones de Pedido",
+    "orderUpdatesDesc": "Recibe notificaciones sobre el estado de tu pedido",
+    "promotions": "Ofertas Promocionales",
+    "promotionsDesc": "Recibe ofertas y promociones exclusivas",
+    "reservationReminders": "Recordatorios de Reservas",
+    "reservationRemindersDesc": "Recibe recordatorios de próximas reservas",
+    "actions": "Acciones de la Cuenta",
+    "signOut": "Cerrar Sesión",
+    "delete": "Eliminar Cuenta"
+  }
+}
+

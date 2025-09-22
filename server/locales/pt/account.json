@@ -1,0 +1,69 @@
+{
+  "title": "Minha Conta",
+  "welcomeBack": "Bem-vindo de volta, {{name}}!",
+  "header": {
+    "orders": "Pedidos",
+    "reservations": "Reservas",
+    "points": "Pontos"
+  },
+  "tabs": {
+    "profile": "Perfil",
+    "orders": "Pedidos",
+    "reservations": "Reservas",
+    "rewards": "Recompensas",
+    "settings": "Configurações"
+  },
+  "profile": {
+    "title": "Informações do Perfil",
+    "name": "Nome Completo",
+    "email": "Endereço de Email",
+    "phone": "Número de Telefone",
+    "address": "Endereço Padrão",
+    "update": "Atualizar Perfil",
+    "success": "Perfil atualizado com sucesso",
+    "error": "Falha ao atualizar o perfil"
+  },
+  "security": {
+    "title": "Configurações de Segurança",
+    "currentPassword": "Senha Atual",
+    "newPassword": "Nova Senha",
+    "confirmPassword": "Confirmar Nova Senha",
+    "change": "Alterar Senha",
+    "success": "Senha alterada com sucesso",
+    "error": "Falha ao alterar a senha"
+  },
+  "orders": {
+    "title": "Histórico de Pedidos",
+    "empty": "Nenhum pedido ainda",
+    "viewDetails": "Ver Detalhes",
+    "reorder": "Repetir pedido"
+  },
+  "reservations": {
+    "title": "Minhas Reservas",
+    "empty": "Sem reservas",
+    "modify": "Modificar",
+    "cancel": "Cancelar",
+    "partyOf": "Grupo de {{count}}"
+  },
+  "rewards": {
+    "title": "Pontos de Recompensa",
+    "available": "Pontos Disponíveis",
+    "progress": "Progresso para a próxima recompensa",
+    "left": "Faltam {{points}} pontos",
+    "viewRewards": "Ver Recompensas Disponíveis",
+    "recentActivity": "Atividade Recente"
+  },
+  "settings": {
+    "notifications": "Preferências de Notificação",
+    "orderUpdates": "Atualizações de Pedido",
+    "orderUpdatesDesc": "Receba notificações sobre o status do seu pedido",
+    "promotions": "Ofertas Promocionais",
+    "promotionsDesc": "Receba ofertas e promoções exclusivas",
+    "reservationReminders": "Lembretes de Reserva",
+    "reservationRemindersDesc": "Receba lembretes de reservas futuras",
+    "actions": "Ações da Conta",
+    "signOut": "Sair",
+    "delete": "Excluir Conta"
+  }
+}
+

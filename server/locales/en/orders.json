@@ -1,0 +1,33 @@
+{
+  "title": "My Orders",
+  "nav": {
+    "mine": "My Orders",
+    "track": "Track Order"
+  },
+  "table": {
+    "order": "Order",
+    "status": "Status",
+    "total": "Total",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "actions": {
+    "view": "View",
+    "track": "Track",
+    "reorder": "Reorder"
+  },
+  "empty": "No orders yet",
+  "create": "Start an Order",
+  "trackTitle": "Track your order",
+  "trackDesc": "Enter your order number and tracking code to see the latest status.",
+  "trackForm": {
+    "orderNumber": "Order number",
+    "trackingCode": "Tracking code",
+    "placeholderOrder": "e.g. 12345",
+    "placeholderTracking": "e.g. ABCD-1234",
+    "submit": "Track"
+  },
+  "detailTitle": "Order #{{orderNumber}}",
+  "detailPlaceholder": "Order details will appear here."
+}
+

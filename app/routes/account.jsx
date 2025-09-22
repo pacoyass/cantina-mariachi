@@ -105,7 +105,7 @@ export async function action({ request }) {
 
       if (!response.ok) {
         const data = await response.json();
-        return { error: data.error?.message || 'Failed to update profile' };
+      return { error: data.error?.message || 'Failed to update profile' };
       }
 
       return { success: 'Profile updated successfully' };
@@ -153,7 +153,7 @@ export async function action({ request }) {
 
       if (!response.ok) {
         const data = await response.json();
-        return { passwordError: data.error?.message || 'Failed to change password' };
+      return { passwordError: data.error?.message || 'Failed to change password' };
       }
 
       return { passwordSuccess: 'Password changed successfully' };

@@ -1,0 +1,69 @@
+{
+  "title": "My Account",
+  "welcomeBack": "Welcome back, {{name}}!",
+  "header": {
+    "orders": "Orders",
+    "reservations": "Reservations",
+    "points": "Points"
+  },
+  "tabs": {
+    "profile": "Profile",
+    "orders": "Orders",
+    "reservations": "Reservations",
+    "rewards": "Rewards",
+    "settings": "Settings"
+  },
+  "profile": {
+    "title": "Profile Information",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "address": "Default Address",
+    "update": "Update Profile",
+    "success": "Profile updated successfully",
+    "error": "Failed to update profile"
+  },
+  "security": {
+    "title": "Security Settings",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "change": "Change Password",
+    "success": "Password changed successfully",
+    "error": "Failed to change password"
+  },
+  "orders": {
+    "title": "Order History",
+    "empty": "No orders yet",
+    "viewDetails": "View Details",
+    "reorder": "Reorder"
+  },
+  "reservations": {
+    "title": "My Reservations",
+    "empty": "No reservations",
+    "modify": "Modify",
+    "cancel": "Cancel",
+    "partyOf": "Party of {{count}}"
+  },
+  "rewards": {
+    "title": "Reward Points",
+    "available": "Available Points",
+    "progress": "Progress to next reward",
+    "left": "{{points}} points to go",
+    "viewRewards": "View Available Rewards",
+    "recentActivity": "Recent Activity"
+  },
+  "settings": {
+    "notifications": "Notification Preferences",
+    "orderUpdates": "Order Updates",
+    "orderUpdatesDesc": "Get notified about your order status",
+    "promotions": "Promotional Offers",
+    "promotionsDesc": "Receive exclusive deals and promotions",
+    "reservationReminders": "Reservation Reminders",
+    "reservationRemindersDesc": "Get reminded about upcoming reservations",
+    "actions": "Account Actions",
+    "signOut": "Sign Out",
+    "delete": "Delete Account"
+  }
+}
+

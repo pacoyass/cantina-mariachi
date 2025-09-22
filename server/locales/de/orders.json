@@ -1,0 +1,33 @@
+{
+  "title": "Meine Bestellungen",
+  "nav": {
+    "mine": "Meine Bestellungen",
+    "track": "Bestellung Verfolgen"
+  },
+  "table": {
+    "order": "Bestellung",
+    "status": "Status",
+    "total": "Summe",
+    "date": "Datum",
+    "actions": "Aktionen"
+  },
+  "actions": {
+    "view": "Ansehen",
+    "track": "Verfolgen",
+    "reorder": "Erneut Bestellen"
+  },
+  "empty": "Noch keine Bestellungen",
+  "create": "Bestellung Starten",
+  "trackTitle": "Bestellung verfolgen",
+  "trackDesc": "Geben Sie Ihre Bestellnummer und den Tracking-Code ein, um den Status zu sehen.",
+  "trackForm": {
+    "orderNumber": "Bestellnummer",
+    "trackingCode": "Tracking-Code",
+    "placeholderOrder": "z. B. 12345",
+    "placeholderTracking": "z. B. ABCD-1234",
+    "submit": "Verfolgen"
+  },
+  "detailTitle": "Bestellung #{{orderNumber}}",
+  "detailPlaceholder": "Bestelldetails werden hier angezeigt."
+}
+

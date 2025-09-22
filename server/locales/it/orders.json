@@ -1,0 +1,33 @@
+{
+  "title": "I Miei Ordini",
+  "nav": {
+    "mine": "I Miei Ordini",
+    "track": "Traccia Ordine"
+  },
+  "table": {
+    "order": "Ordine",
+    "status": "Stato",
+    "total": "Totale",
+    "date": "Data",
+    "actions": "Azioni"
+  },
+  "actions": {
+    "view": "Vedi",
+    "track": "Traccia",
+    "reorder": "Riordina"
+  },
+  "empty": "Nessun ordine ancora",
+  "create": "Inizia un Ordine",
+  "trackTitle": "Traccia il tuo ordine",
+  "trackDesc": "Inserisci il numero d'ordine e il codice di tracciamento per vedere lo stato.",
+  "trackForm": {
+    "orderNumber": "Numero d'ordine",
+    "trackingCode": "Codice di tracciamento",
+    "placeholderOrder": "es. 12345",
+    "placeholderTracking": "es. ABCD-1234",
+    "submit": "Traccia"
+  },
+  "detailTitle": "Ordine #{{orderNumber}}",
+  "detailPlaceholder": "I dettagli dell'ordine appariranno qui."
+}
+

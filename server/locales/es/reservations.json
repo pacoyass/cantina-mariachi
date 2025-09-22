@@ -1,0 +1,45 @@
+{
+  "title": "Reservas de Mesa",
+  "header": {
+    "title": "Reserva Tu Mesa",
+    "subtitle": "Reserva tu experiencia en Cantina Mariachi"
+  },
+  "form": {
+    "contact": "Información de Contacto",
+    "name": "Nombre Completo",
+    "phone": "Número de Teléfono",
+    "email": "Dirección de Email",
+    "details": "Detalles de la Reserva",
+    "date": "Fecha",
+    "time": "Hora",
+    "guests": "Comensales",
+    "specialRequests": "Peticiones Especiales (Opcional)",
+    "placeholders": {
+      "name": "Tu nombre completo",
+      "phone": "Tu número de teléfono",
+      "email": "tu.email@ejemplo.com",
+      "requests": "Cualquier requisito dietético, detalles de celebración o preferencias de asiento..."
+    },
+    "submit": "Reservar Mesa",
+    "submitting": "Realizando la reserva..."
+  },
+  "info": {
+    "restaurant": "Información del Restaurante",
+    "location": "Ubicación",
+    "hours": "Horario de Atención",
+    "contact": "Contacto",
+    "atmosphereTitle": "Vive México Auténtico",
+    "atmosphereDesc": "Disfruta de nuestro ambiente cálido y colorido con música tradicional, decoraciones artesanales y el aroma de la cocina mexicana.",
+    "atmosphere": "Ambiente Mexicano Vibrante"
+  },
+  "policies": {
+    "title": "Políticas de Reserva",
+    "items": [
+      "Las reservas se mantienen 15 minutos después de la hora",
+      "Grupos grandes (8+) pueden requerir un depósito",
+      "Cancelaciones aceptadas hasta 2 horas antes",
+      "Atendemos restricciones dietéticas con aviso previo"
+    ]
+  }
+}
+

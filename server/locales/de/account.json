@@ -1,0 +1,69 @@
+{
+  "title": "Mein Konto",
+  "welcomeBack": "Willkommen zurück, {{name}}!",
+  "header": {
+    "orders": "Bestellungen",
+    "reservations": "Reservierungen",
+    "points": "Punkte"
+  },
+  "tabs": {
+    "profile": "Profil",
+    "orders": "Bestellungen",
+    "reservations": "Reservierungen",
+    "rewards": "Belohnungen",
+    "settings": "Einstellungen"
+  },
+  "profile": {
+    "title": "Profilinformationen",
+    "name": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "phone": "Telefonnummer",
+    "address": "Standardadresse",
+    "update": "Profil Aktualisieren",
+    "success": "Profil erfolgreich aktualisiert",
+    "error": "Profilaktualisierung fehlgeschlagen"
+  },
+  "security": {
+    "title": "Sicherheitseinstellungen",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Neues Passwort Bestätigen",
+    "change": "Passwort Ändern",
+    "success": "Passwort erfolgreich geändert",
+    "error": "Passwortänderung fehlgeschlagen"
+  },
+  "orders": {
+    "title": "Bestellverlauf",
+    "empty": "Noch keine Bestellungen",
+    "viewDetails": "Details Anzeigen",
+    "reorder": "Erneut Bestellen"
+  },
+  "reservations": {
+    "title": "Meine Reservierungen",
+    "empty": "Keine Reservierungen",
+    "modify": "Ändern",
+    "cancel": "Abbrechen",
+    "partyOf": "Gruppe von {{count}}"
+  },
+  "rewards": {
+    "title": "Belohnungspunkte",
+    "available": "Verfügbare Punkte",
+    "progress": "Fortschritt zur nächsten Belohnung",
+    "left": "Noch {{points}} Punkte",
+    "viewRewards": "Verfügbare Belohnungen Anzeigen",
+    "recentActivity": "Letzte Aktivität"
+  },
+  "settings": {
+    "notifications": "Benachrichtigungseinstellungen",
+    "orderUpdates": "Bestellupdates",
+    "orderUpdatesDesc": "Lassen Sie sich über den Status Ihrer Bestellung informieren",
+    "promotions": "Werbeangebote",
+    "promotionsDesc": "Erhalten Sie exklusive Angebote und Aktionen",
+    "reservationReminders": "Reservierungserinnerungen",
+    "reservationRemindersDesc": "Erinnerungen an bevorstehende Reservierungen erhalten",
+    "actions": "Kontohandlungen",
+    "signOut": "Abmelden",
+    "delete": "Konto Löschen"
+  }
+}
+
