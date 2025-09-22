@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef,useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { uiResources } from './resources';
+import { loadTranslationsFromAPI } from './loadTranslations';
 
 /**
  * Simple hook for language management - SSR compatible
@@ -124,51 +125,41 @@ export function useLanguageSwitcher() {
 
       console.log(`🌍 Changing language from ${i18n.language} to ${code}`);
 
-      // Get resources for the new language
-      const newResources = uiResources[code] || uiResources['en'];
-      
-      // Add resources to i18n instance - only add what exists
-      if (newResources) {
-        // Only add namespaces that exist for this language
-        if (newResources.ui) {
-          i18n.addResourceBundle(code, 'ui', newResources.ui, true, true);
+      // 1) Merge static fallback resources (if present)
+      const staticResources = uiResources[code] || uiResources['en'];
+      if (staticResources) {
+        const addNs = (ns) => {
+          if (staticResources[ns]) i18n.addResourceBundle(code, ns, staticResources[ns], true, true);
+        };
+        addNs('ui');
+        addNs('home');
+        addNs('common');
+        addNs('events');
+        addNs('navbar');
+        addNs('footer');
+        addNs('faq');
+        addNs('popular');
+        addNs('auth');
+        addNs('api');
+        addNs('validation');
+        addNs('email');
+        addNs('business');
+        addNs('menu');
+        addNs('orders');
+        addNs('account');
+        addNs('reservations');
+      }
+
+      // 2) Merge authoritative API resources for selected language
+      try {
+        const apiResources = await loadTranslationsFromAPI(code);
+        if (apiResources && typeof apiResources === 'object') {
+          for (const [ns, nsRes] of Object.entries(apiResources)) {
+            i18n.addResourceBundle(code, ns, nsRes, true, true);
+          }
         }
-        if (newResources.home) {
-          i18n.addResourceBundle(code, 'home', newResources.home, true, true);
-        }
-        if (newResources.common) {
-          i18n.addResourceBundle(code, 'common', newResources.common, true, true);
-        }
-        if (newResources.events) {
-          i18n.addResourceBundle(code, 'events', newResources.events, true, true);
-        }
-        if (newResources.navbar) {
-          i18n.addResourceBundle(code, 'navbar', newResources.navbar, true, true);
-        }
-        if (newResources.footer) {
-          i18n.addResourceBundle(code, 'footer', newResources.footer, true, true);
-        }
-        if (newResources.faq) {
-          i18n.addResourceBundle(code, 'faq', newResources.faq, true, true);
-        }
-        if (newResources.popular) {
-          i18n.addResourceBundle(code, 'popular', newResources.popular, true, true);
-        }
-        if (newResources.auth) {
-          i18n.addResourceBundle(code, 'auth', newResources.auth, true, true);
-        }
-        if (newResources.api) {
-          i18n.addResourceBundle(code, 'api', newResources.api, true, true);
-        }
-        if (newResources.validation) {
-          i18n.addResourceBundle(code, 'validation', newResources.validation, true, true);
-        }
-        if (newResources.email) {
-          i18n.addResourceBundle(code, 'email', newResources.email, true, true);
-        }
-        if (newResources.business) {
-          i18n.addResourceBundle(code, 'business', newResources.business, true, true);
-        }
+      } catch (e) {
+        console.warn('Failed to load translations from API on language change:', e);
       }
 
       // Change i18n language
