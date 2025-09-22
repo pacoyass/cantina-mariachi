@@ -1,5 +1,12 @@
 {
+  "hero": {
+    "title": "استكشف قائمتنا",
+    "subtitle": "تصفح الفئات واكتشف طبقك المفضل التالي"
+  },
   "categories": {
+    "heading": "الفئات",
+    "label": "الفئات",
+    "all": "كل العناصر",
     "tacos": "تاكو",
     "bowls": "أوعية",
     "drinks": "مشروبات",
@@ -7,7 +14,13 @@
     "desserts": "حلويات",
     "specials": "أطباق الطاهي الخاصة"
   },
+  "results": "عرض {{count}} عنصرًا",
+  "badges": {
+    "new": "جديد",
+    "popular": "شعبي"
+  },
   "filters": {
+    "heading": "نظام غذائي",
     "all": "جميع العناصر",
     "vegetarian": "نباتي",
     "vegan": "نباتي صرف",
@@ -17,17 +30,32 @@
     "new": "جديد"
   },
   "sort": {
-    "popularity": "الأكثر شعبية",
+    "by": "ترتيب حسب",
+    "popular": "الأكثر شعبية",
+    "priceLow": "السعر: من الأقل إلى الأعلى",
+    "priceHigh": "السعر: من الأعلى إلى الأقل",
+    "newest": "الأحدث",
     "price": "السعر",
     "name": "الاسم",
-    "rating": "التقييم"
+    "rating": "التقييم",
+    "popularity": "الأكثر شعبية"
   },
   "actions": {
+    "searchPlaceholder": "ابحث عن الأطباق، مثل: تاكو",
+    "add": "إضافة",
+    "unavailable": "غير متاح",
+    "noItems": "لا توجد عناصر مطابقة للمرشحات",
     "addToCart": "أضف إلى السلة",
     "customize": "خصص",
     "viewDetails": "عرض التفاصيل",
     "outOfStock": "نفذت الكمية",
-    "comingSoon": "قريبًا"
+    "comingSoon": "قريبًا",
+    "sort": {
+      "popular": "الأكثر شعبية",
+      "priceLow": "السعر: من الأقل إلى الأعلى",
+      "priceHigh": "السعر: من الأعلى إلى الأقل",
+      "newest": "الأحدث"
+    }
   },
   "dietary": {
     "vegetarian": "نباتي",

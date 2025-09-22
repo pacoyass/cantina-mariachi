@@ -1,5 +1,12 @@
 {
+  "hero": {
+    "title": "Esplora il Nostro Menu",
+    "subtitle": "Sfoglia le categorie e scopri il tuo prossimo preferito"
+  },
   "categories": {
+    "heading": "Categorie",
+    "label": "categorie",
+    "all": "Tutti gli Articoli",
     "tacos": "Tacos",
     "bowls": "Ciotole",
     "drinks": "Bevande",
@@ -7,7 +14,13 @@
     "desserts": "Dolci",
     "specials": "Specialità dello Chef"
   },
+  "results": "Visualizzazione di {{count}} articoli",
+  "badges": {
+    "new": "Nuovo",
+    "popular": "Popolare"
+  },
   "filters": {
+    "heading": "Dietetico",
     "all": "Tutti gli Articoli",
     "vegetarian": "Vegetariano",
     "vegan": "Vegano",
@@ -17,17 +30,32 @@
     "new": "Nuovo"
   },
   "sort": {
-    "popularity": "Più Popolare",
+    "by": "Ordina per",
+    "popular": "Più Popolare",
+    "priceLow": "Prezzo: dal più basso",
+    "priceHigh": "Prezzo: dal più alto",
+    "newest": "Più Recenti",
     "price": "Prezzo",
     "name": "Nome",
-    "rating": "Valutazione"
+    "rating": "Valutazione",
+    "popularity": "Più Popolare"
   },
   "actions": {
+    "searchPlaceholder": "Cerca piatti, es. tacos",
+    "add": "Aggiungi",
+    "unavailable": "Non Disponibile",
+    "noItems": "Nessun elemento corrisponde ai filtri",
     "addToCart": "Aggiungi al Carrello",
     "customize": "Personalizza",
     "viewDetails": "Vedi Dettagli",
     "outOfStock": "Esaurito",
-    "comingSoon": "Prossimamente"
+    "comingSoon": "Prossimamente",
+    "sort": {
+      "popular": "Più Popolare",
+      "priceLow": "Prezzo: dal più basso",
+      "priceHigh": "Prezzo: dal più alto",
+      "newest": "Più Recenti"
+    }
   },
   "dietary": {
     "vegetarian": "Vegetariano",

@@ -1,5 +1,12 @@
 {
+  "hero": {
+    "title": "Explora Nuestro Menú",
+    "subtitle": "Explora categorías y descubre tu próximo favorito"
+  },
   "categories": {
+    "heading": "Categorías",
+    "label": "categorías",
+    "all": "Todos los Artículos",
     "tacos": "Tacos",
     "bowls": "Bowls", 
     "drinks": "Bebidas",
@@ -7,7 +14,13 @@
     "desserts": "Postres",
     "specials": "Especialidades del Chef"
   },
+  "results": "Mostrando {{count}} artículos",
+  "badges": {
+    "new": "Nuevo",
+    "popular": "Popular"
+  },
   "filters": {
+    "heading": "Dieta",
     "all": "Todos los Artículos",
     "vegetarian": "Vegetariano",
     "vegan": "Vegano", 
@@ -17,17 +30,32 @@
     "new": "Nuevo"
   },
   "sort": {
-    "popularity": "Más Popular",
+    "by": "Ordenar por",
+    "popular": "Más Popular",
+    "priceLow": "Precio: de menor a mayor",
+    "priceHigh": "Precio: de mayor a menor",
+    "newest": "Más Recientes",
     "price": "Precio",
     "name": "Nombre",
-    "rating": "Calificación"
+    "rating": "Calificación",
+    "popularity": "Más Popular"
   },
   "actions": {
+    "searchPlaceholder": "Buscar platos, p. ej. tacos",
+    "add": "Agregar",
+    "unavailable": "No Disponible",
+    "noItems": "No hay artículos que coincidan con tus filtros",
     "addToCart": "Agregar al Carrito",
     "customize": "Personalizar",
     "viewDetails": "Ver Detalles",
     "outOfStock": "Agotado",
-    "comingSoon": "Próximamente"
+    "comingSoon": "Próximamente",
+    "sort": {
+      "popular": "Más Popular",
+      "priceLow": "Precio: de menor a mayor",
+      "priceHigh": "Precio: de mayor a menor",
+      "newest": "Más Recientes"
+    }
   },
   "dietary": {
     "vegetarian": "Vegetariano",
