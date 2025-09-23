@@ -69,5 +69,23 @@
     "medium": "Medio",
     "hot": "Piccante",
     "extraHot": "Molto Piccante"
+  },
+  "items": {
+    "tacos": {
+      "name": "Tacos",
+      "description": "Tacos di manzo con salsa"
+    },
+    "veganSalad": {
+      "name": "Insalata Vegana",
+      "description": "Insalata fresca con condimento vegano"
+    },
+    "chocolateCake": {
+      "name": "Torta al Cioccolato",
+      "description": "Torta al cioccolato ricca"
+    },
+    "cola": {
+      "name": "Cola",
+      "description": "Cola fredda"
+    }
   }
 }

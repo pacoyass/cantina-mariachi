@@ -69,5 +69,23 @@
     "medium": "متوسط",
     "hot": "حار",
     "extraHot": "حار جدًا"
+  },
+  "items": {
+    "tacos": {
+      "name": "تاكو",
+      "description": "تاكو لحم بقري مع صلصة"
+    },
+    "veganSalad": {
+      "name": "سلطة نباتية",
+      "description": "سلطة طازجة بتتبيلة نباتية"
+    },
+    "chocolateCake": {
+      "name": "كيك الشوكولاتة",
+      "description": "كيك شوكولاتة غني"
+    },
+    "cola": {
+      "name": "كولا",
+      "description": "كولا باردة"
+    }
   }
 }

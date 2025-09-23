@@ -69,5 +69,23 @@
     "medium": "Moyen", 
     "hot": "Épicé",
     "extraHot": "Très Épicé"
+  },
+  "items": {
+    "tacos": {
+      "name": "Tacos",
+      "description": "Tacos au bœuf avec salsa"
+    },
+    "veganSalad": {
+      "name": "Salade Végétalienne",
+      "description": "Salade fraîche avec vinaigrette végane"
+    },
+    "chocolateCake": {
+      "name": "Gâteau au Chocolat",
+      "description": "Gâteau au chocolat riche"
+    },
+    "cola": {
+      "name": "Cola",
+      "description": "Cola fraîche"
+    }
   }
 }
