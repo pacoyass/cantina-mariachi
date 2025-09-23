@@ -7,6 +7,7 @@ import { Button } from "../components/ui/button";
 import { useTranslation } from 'react-i18next';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
 import { LayoutGrid, List, ChevronDown, Star } from "../lib/lucide-shim.js";
+import { formatCurrency } from '../lib/utils';
 
 export const meta = () => [
   { title: "Menu - Cantina" },
@@ -49,7 +50,7 @@ function isNew(createdAt) {
 
 export default function MenuPage() {
   const { categories, items, activeCategoryId, cms } = useLoaderData();
-  const { t } = useTranslation('menu');
+  const { t, i18n } = useTranslation('menu');
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("popular");
   const [view, setView] = useState("grid");
@@ -102,7 +103,7 @@ export default function MenuPage() {
               </a>
             </div>
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <Badge variant="secondary">{categories.length} {cms?.categories?.label || t('categories')}</Badge>
+              <Badge variant="secondary">{categories.length} {cms?.categories?.label || t('categories.label')}</Badge>
               <Badge variant="secondary">{t('results', { count: resultsCount })}</Badge>
             </div>
           </div>
@@ -143,10 +144,10 @@ export default function MenuPage() {
       <section className="grid gap-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="space-y-1 w-full">
-            <h2 className="text-xl font-semibold tracking-tight">{cms?.categories?.heading || t('categories')}</h2>
+            <h2 className="text-xl font-semibold tracking-tight">{cms?.categories?.heading || t('categories.heading')}</h2>
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
               <Link to={`/menu`}>
-                <Badge variant={!activeCategoryId ? "default" : "outline"}>{cms?.categories?.all || t('categoriesAll', { defaultValue: 'All' })}</Badge>
+                <Badge variant={!activeCategoryId ? "default" : "outline"}>{cms?.categories?.all || t('categories.all')}</Badge>
               </Link>
               {categories.map((c) => (
                 <Link key={c.id} to={`/menu?categoryId=${encodeURIComponent(c.id)}`}>
@@ -167,15 +168,15 @@ export default function MenuPage() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">
-                    <span className="mr-2 text-sm text-muted-foreground">{t('actions.sortBy')}</span>
+                    <span className="mr-2 text-sm text-muted-foreground">{t('sort.by')}</span>
                     <ChevronDown className="size-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setSort('popular')}>{t('actions.sort.popular')}</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSort('priceLow')}>{t('actions.sort.priceLow')}</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSort('priceHigh')}>{t('actions.sort.priceHigh')}</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSort('newest')}>{t('actions.sort.newest')}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSort('popular')}>{t('sort.popular')}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSort('priceLow')}>{t('sort.priceLow')}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSort('priceHigh')}>{t('sort.priceHigh')}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSort('newest')}>{t('sort.newest')}</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <div className="ml-auto flex items-center gap-1 rounded-md border p-1">
@@ -188,7 +189,7 @@ export default function MenuPage() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-muted-foreground">{cms?.filters?.heading || t('filters.dietary')}</span>
+              <span className="text-sm text-muted-foreground">{cms?.filters?.heading || t('filters.heading')}</span>
               <FilterChip active={filters.vegetarian} onClick={() => setFilters((f) => ({ ...f, vegetarian: !f.vegetarian }))}>{cms?.filters?.vegetarian || t('filters.vegetarian')}</FilterChip>
               <FilterChip active={filters.vegan} onClick={() => setFilters((f) => ({ ...f, vegan: !f.vegan }))}>{cms?.filters?.vegan || t('filters.vegan')}</FilterChip>
               <FilterChip active={filters.glutenFree} onClick={() => setFilters((f) => ({ ...f, glutenFree: !f.glutenFree }))}>{cms?.filters?.glutenFree || t('filters.glutenFree')}</FilterChip>
@@ -202,48 +203,60 @@ export default function MenuPage() {
       {/* Items */}
       <section id="menu-items">
         <div className={`grid gap-4 ${view === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-          {displayedItems.map((item) => (
-            <Card key={item.id} className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="flex items-center gap-2">
-                    <span>{item.name}</span>
-                    <div className="flex gap-1">
-                      {isNew(item.createdAt) && <Badge variant="secondary">{t('badges.new')}</Badge>}
-                      {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('badges.popular')}</Badge>}
-                    </div>
-                  </CardTitle>
-                  {item.available === false && (
-                    <Badge variant="outline">{t('actions.unavailable')}</Badge>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className={`grid ${view === 'list' ? 'grid-cols-[160px_1fr]' : 'grid-cols-1'} gap-3`}>
-                  <div className="rounded-md overflow-hidden border bg-muted">
-                    {item.imageUrl ? (
-                      <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover aspect-video" />
-                    ) : (
-                      <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />)
-                    }
-                  </div>
-                  <div>
-                    {item.rating ? (
-                      <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
-                        <Star className="size-3 fill-yellow-400 text-yellow-400" />
-                        <span>{Number(item.rating).toFixed(1)}</span>
+          {displayedItems.map((item) => {
+            const keyFromName = (name) => (name || '')
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, ' ')
+              .trim()
+              .split(' ')
+              .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+              .join('');
+            const itemKey = keyFromName(item.name);
+            const translatedName = t(`items.${itemKey}.name`, { defaultValue: item.name });
+            const translatedDesc = t(`items.${itemKey}.description`, { defaultValue: item.description });
+            return (
+              <Card key={item.id} className="overflow-hidden">
+                <CardHeader>
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="flex items-center gap-2">
+                      <span>{translatedName}</span>
+                      <div className="flex gap-1">
+                        {isNew(item.createdAt) && <Badge variant="secondary">{t('badges.new')}</Badge>}
+                        {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('badges.popular')}</Badge>}
                       </div>
-                    ) : null}
-                    <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">${Number(item.price).toFixed(2)}</span>
-                      <Button size="sm">{t('actions.add')}</Button>
+                    </CardTitle>
+                    {item.available === false && (
+                      <Badge variant="outline">{t('actions.unavailable')}</Badge>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className={`grid ${view === 'list' ? 'grid-cols-[160px_1fr]' : 'grid-cols-1'} gap-3`}>
+                    <div className="rounded-md overflow-hidden border bg-muted">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={translatedName} className="w-full h-full object-cover aspect-video" />
+                      ) : (
+                        <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />)
+                      }
+                    </div>
+                    <div>
+                      {item.rating ? (
+                        <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">
+                          <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                          <span>{Number(item.rating).toFixed(1)}</span>
+                        </div>
+                      ) : null}
+                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{translatedDesc}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{formatCurrency(item.price, i18n.language)}</span>
+                        <Button size="sm">{t('actions.add')}</Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
           {displayedItems.length === 0 && (
             <div className="col-span-full text-muted-foreground">{cms?.actions?.noItems || t('actions.noItems')}</div>
           )}
