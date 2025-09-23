@@ -591,11 +591,21 @@ function LogoCloudSkeleton() {
 
 function MenuItemCard({ item, t, locale }) {
   const tags = [item.isVegetarian ? t('popular.filters.vegetarian') : null, item.isVegan ? t('popular.filters.vegan') : null].filter(Boolean)
+  const keyFromName = (name) => (name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+    .join('');
+  const itemKey = keyFromName(item.name);
+  const translatedName = t(`menu:items.${itemKey}.name`, { defaultValue: item.name });
+  const translatedDesc = t(`menu:items.${itemKey}.description`, { defaultValue: item.description });
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>{item.name}</span>
+          <span>{translatedName}</span>
           <span className="flex gap-1">{tags.map(tag => (<Badge key={tag} variant="outline">{tag}</Badge>))}</span>
         </CardTitle>
       </CardHeader>
@@ -603,11 +613,11 @@ function MenuItemCard({ item, t, locale }) {
         <div className="grid grid-cols-1 gap-3">
           <div className="rounded-md overflow-hidden border bg-muted">
             {item.imageUrl ? (
-              <img src={item.imageUrl} alt={`${item.name} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+              <img src={item.imageUrl} alt={`${translatedName} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
             ) : (
               <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
           </div>
-          <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description}</p>
+          <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{translatedDesc}</p>
           <div className="flex items-center justify-between">
             <span className="font-medium">{formatCurrency(item.price, locale)}</span>
             <Button size="sm" onClick={() => track('click_add_from_explore', { itemId: item.id })}>{t('popular.add')}</Button>
@@ -620,12 +630,22 @@ function MenuItemCard({ item, t, locale }) {
 
 function PopularItemCard({ item, idx, t, locale }) {
   const tags = [item.isVegetarian ? t('popular.filters.vegetarian') : null, item.isVegan ? t('popular.filters.vegan') : null].filter(Boolean)
+  const keyFromName = (name) => (name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+    .join('');
+  const itemKey = keyFromName(item.name);
+  const translatedName = t(`menu:items.${itemKey}.name`, { defaultValue: item.name });
+  const translatedDesc = t(`menu:items.${itemKey}.description`, { defaultValue: item.description });
   return (
     <Card key={item.id} className="overflow-hidden">
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="flex items-center gap-2">
-            <span>{item.name}</span>
+            <span>{translatedName}</span>
             <div className="flex gap-1">
               {idx === 0 && <Badge variant="secondary">{t('popular.numberOne')}</Badge>}
               {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('popular.trending')}</Badge>}
@@ -641,14 +661,14 @@ function PopularItemCard({ item, idx, t, locale }) {
         <div className="grid grid-cols-1 gap-3">
           <div className="rounded-md overflow-hidden border bg-muted">
             {item.imageUrl ? (
-              <img src={item.imageUrl} alt={`${item.name} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+              <img src={item.imageUrl} alt={`${translatedName} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
             ) : (
               <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
           </div>
           <div className="text-xs text-muted-foreground" aria-live="polite">
             {t('popular.rating', { rating: (item.rating ?? 4.9).toFixed(1), reviews: item.reviews ?? 127 })}
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2">{translatedDesc}</p>
           <div className="flex items-center justify-between">
             <span className="font-medium">{formatCurrency(item.price, locale)}</span>
             <div className="flex items-center gap-2">
