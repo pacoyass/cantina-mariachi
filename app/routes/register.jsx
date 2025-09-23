@@ -109,7 +109,7 @@ export default function RegisterPage() {
                 <h1 className="text-3xl font-bold text-primary">Cantina Mariachi</h1>
               </Link>
               <p className="mt-2 text-sm text-muted-foreground">
-                Join thousands of satisfied customers
+                {t('auth:register.tagline')}
               </p>
             </div>
 
@@ -117,10 +117,10 @@ export default function RegisterPage() {
             <Card className="border-0 shadow-lg">
               <CardHeader className="space-y-1 pb-4">
                 <CardTitle className="text-2xl font-semibold text-center">
-                  Create Your Account
+                  {t('auth:register.title')}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground text-center">
-                  Get started with faster ordering and exclusive rewards
+                  {t('auth:register.subtitle')}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -137,7 +137,7 @@ export default function RegisterPage() {
                   {/* Name Field */}
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-sm font-medium">
-                      Full Name *
+                      {t('auth:fields.name')} *
                     </Label>
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -145,7 +145,7 @@ export default function RegisterPage() {
                         id="name"
                         name="name"
                         type="text"
-                        placeholder="Enter your full name"
+                        placeholder={t('auth:placeholders.fullName')}
                         defaultValue={actionData?.fields?.name || ""}
                         className="pl-10"
                         required
@@ -161,7 +161,7 @@ export default function RegisterPage() {
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
-                      Email Address *
+                      {t('auth:fields.email')} *
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -169,7 +169,7 @@ export default function RegisterPage() {
                         id="email"
                         name="email"
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder={t('auth:placeholders.email')}
                         defaultValue={actionData?.fields?.email || ""}
                         className="pl-10"
                         required
@@ -184,7 +184,7 @@ export default function RegisterPage() {
                   {/* Phone Field */}
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="text-sm font-medium">
-                      Phone Number *
+                      {t('auth:fields.phone')} *
                     </Label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                         id="phone"
                         name="phone"
                         type="tel"
-                        placeholder="Enter your phone number"
+                        placeholder={t('auth:placeholders.phone')}
                         defaultValue={actionData?.fields?.phone || ""}
                         className="pl-10"
                         required
@@ -209,7 +209,7 @@ export default function RegisterPage() {
                     {/* Password Field */}
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-sm font-medium">
-                        Password *
+                        {t('auth:fields.password')} *
                       </Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -217,7 +217,7 @@ export default function RegisterPage() {
                           id="password"
                           name="password"
                           type={showPassword ? "text" : "password"}
-                          placeholder="Create password"
+                          placeholder={t('auth:placeholders.createPassword')}
                           defaultValue={actionData?.fields?.password || ""}
                           className="pl-10 pr-10"
                           required
@@ -243,7 +243,7 @@ export default function RegisterPage() {
                     {/* Confirm Password Field */}
                     <div className="space-y-2">
                       <Label htmlFor="confirmPassword" className="text-sm font-medium">
-                        Confirm Password *
+                        {t('auth:fields.confirmPassword')} *
                       </Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -251,7 +251,7 @@ export default function RegisterPage() {
                           id="confirmPassword"
                           name="confirmPassword"
                           type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Confirm password"
+                          placeholder={t('auth:placeholders.confirmPassword')}
                           defaultValue={actionData?.fields?.confirmPassword || ""}
                           className="pl-10 pr-10"
                           required
@@ -287,13 +287,13 @@ export default function RegisterPage() {
                         required
                       />
                       <Label htmlFor="terms" className="text-sm leading-5">
-                        I accept the{" "}
+                        {t('auth:register.accept')}{" "}
                         <Link to="/terms" className="text-primary hover:underline">
-                          Terms & Conditions
+                          {t('auth:register.terms')}
                         </Link>{" "}
-                        and{" "}
+                        {t('auth:register.and')}{" "}
                         <Link to="/privacy" className="text-primary hover:underline">
-                          Privacy Policy
+                          {t('auth:register.privacy')}
                         </Link>
                       </Label>
                     </div>
@@ -310,7 +310,7 @@ export default function RegisterPage() {
                         className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded mt-0.5"
                       />
                       <Label htmlFor="marketing" className="text-sm leading-5">
-                        Send me exclusive offers and updates
+                        {t('auth:register.marketingOptIn')}
                       </Label>
                     </div>
                   </div>
@@ -324,11 +324,11 @@ export default function RegisterPage() {
                     {isSubmitting ? (
                       <div className="flex items-center space-x-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        <span>Creating Account...</span>
+                        <span>{t('auth:register.creatingAccount')}</span>
                       </div>
                     ) : (
                       <div className="flex items-center space-x-2">
-                        <span>Create Account</span>
+                        <span>{t('auth:register.createAccount')}</span>
                         <ArrowRight className="h-4 w-4" />
                       </div>
                     )}
@@ -338,12 +338,12 @@ export default function RegisterPage() {
                 {/* Sign In Link */}
                 <div className="text-center">
                   <p className="text-sm text-muted-foreground">
-                    Already have an account?{" "}
+                    {t('auth:register.haveAccount')}{" "}
                     <Link
                       to="/login"
                       className="font-medium text-primary hover:underline"
                     >
-                      Sign In
+                      {t('auth:login.signIn')}
                     </Link>
                   </p>
                 </div>
@@ -352,15 +352,15 @@ export default function RegisterPage() {
 
             {/* Benefits */}
             <div className="text-center space-y-4">
-              <h3 className="text-sm font-medium">Join thousands of satisfied customers</h3>
+              <h3 className="text-sm font-medium">{t('auth:register.benefitsHeading')}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                 <div className="space-y-2">
                   <div className="w-10 h-10 mx-auto bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
                     <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
-                    <p className="font-medium">Faster Ordering</p>
-                    <p className="text-muted-foreground">Save favorites & payment info</p>
+                    <p className="font-medium">{t('auth:register.benefits.fastOrder.title')}</p>
+                    <p className="text-muted-foreground">{t('auth:register.benefits.fastOrder.desc')}</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -368,8 +368,8 @@ export default function RegisterPage() {
                     🏆
                   </div>
                   <div>
-                    <p className="font-medium">Exclusive Rewards</p>
-                    <p className="text-muted-foreground">Earn points on every order</p>
+                    <p className="font-medium">{t('auth:register.benefits.rewards.title')}</p>
+                    <p className="text-muted-foreground">{t('auth:register.benefits.rewards.desc')}</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -377,8 +377,8 @@ export default function RegisterPage() {
                     📱
                   </div>
                   <div>
-                    <p className="font-medium">Order Tracking</p>
-                    <p className="text-muted-foreground">Real-time delivery updates</p>
+                    <p className="font-medium">{t('auth:register.benefits.tracking.title')}</p>
+                    <p className="text-muted-foreground">{t('auth:register.benefits.tracking.desc')}</p>
                   </div>
                 </div>
               </div>
