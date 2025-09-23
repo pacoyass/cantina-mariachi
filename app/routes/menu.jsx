@@ -97,7 +97,7 @@ export default function MenuPage() {
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">{cms?.hero?.title || t('hero.title')}</h1>
             <p className="text-muted-foreground max-w-prose">{cms?.hero?.subtitle || t('hero.subtitle')}</p>
             <div className="flex flex-wrap gap-2">
-              <Button className="px-6" onClick={() => { try { searchRef.current?.focus(); } catch {} }}>{t('nav.orderNow', { ns: 'ui' })}</Button>
+              <Button className="px-6" onClick={() => { try { searchRef.current?.focus(); } catch {} }}>{t('buttons.orderNow', { ns: 'ui' })}</Button>
               <a href="#menu-items" className="px-6 inline-flex items-center justify-center rounded-md border bg-secondary text-secondary-foreground text-sm font-medium">
                 {cms?.hero?.browseMenu || t('hero.browseMenu', { ns: 'home' })}
               </a>
