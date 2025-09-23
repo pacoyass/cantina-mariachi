@@ -69,5 +69,23 @@
     "medium": "Medio", 
     "hot": "Picante",
     "extraHot": "Extra Picante"
+  },
+  "items": {
+    "tacos": {
+      "name": "Tacos",
+      "description": "Tacos de res con salsa"
+    },
+    "veganSalad": {
+      "name": "Ensalada Vegana",
+      "description": "Ensalada fresca con aderezo vegano"
+    },
+    "chocolateCake": {
+      "name": "Pastel de Chocolate",
+      "description": "Pastel de chocolate rico"
+    },
+    "cola": {
+      "name": "Cola",
+      "description": "Cola fría"
+    }
   }
 }

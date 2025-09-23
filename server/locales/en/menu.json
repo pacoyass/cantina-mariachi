@@ -69,5 +69,23 @@
     "medium": "Medium", 
     "hot": "Hot",
     "extraHot": "Extra Hot"
+  },
+  "items": {
+    "tacos": {
+      "name": "Tacos",
+      "description": "Beef tacos with salsa"
+    },
+    "veganSalad": {
+      "name": "Vegan Salad",
+      "description": "Fresh salad with vegan dressing"
+    },
+    "chocolateCake": {
+      "name": "Chocolate Cake",
+      "description": "Rich chocolate cake"
+    },
+    "cola": {
+      "name": "Cola",
+      "description": "Chilled cola"
+    }
   }
 }
