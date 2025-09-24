@@ -21,6 +21,20 @@
   "offer": {
     "freeDelivery": "Consegna gratuita per ordini superiori a $25"
   },
+  "footer": {
+    "tagline": "Sapori messicani autentici, esperienza moderna.",
+    "quickLinks": "Link Rapidi",
+    "contact": "Contatto",
+    "newsletter": "Ottieni 20% di sconto sul tuo primo ordine + offerte esclusive 📧",
+    "emailPlaceholder": "Indirizzo email",
+    "join": "Unisciti",
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "address": "123 Viale della Cocina",
+    "phone": "+1 (555) 123-4567",
+    "email": "support@cantina.example",
+    "copyright": "© {{year}} {{brand}}. Tutti i diritti riservati."
+  },
   "buttons": {
     "orderNow": "Ordina Ora",
     "reserve": "Prenota Tavolo",

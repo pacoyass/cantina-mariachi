@@ -13,7 +13,7 @@ export function Footer() {
       <div className="container mx-auto px-6 py-10 grid gap-8 md:grid-cols-4">
         <div className="space-y-2">
           <div className="text-lg font-semibold">{t('brand')}</div>
-          <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
+          <p className="text-sm text-muted-foreground">{t('footer.tagline')}</p>
         </div>
 
         <div>
@@ -30,9 +30,9 @@ export function Footer() {
         <div>
           <div className="text-sm font-medium mb-2">{t('footer.contact')}</div>
           <ul className="space-y-1 text-sm text-muted-foreground">
-            <li>123 Avenida de la Cocina</li>
-            <li>+1 (555) 123-4567</li>
-            <li>support@cantina.example</li>
+            <li>{t('footer.address')}</li>
+            <li>{t('footer.phone')}</li>
+            <li>{t('footer.email')}</li>
           </ul>
         </div>
 

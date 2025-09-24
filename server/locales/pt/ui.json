@@ -21,6 +21,20 @@
   "offer": {
     "freeDelivery": "Entrega gratuita para pedidos acima de R$ 25"
   },
+  "footer": {
+    "tagline": "Sabores mexicanos autênticos, experiência moderna.",
+    "quickLinks": "Links Rápidos",
+    "contact": "Contato",
+    "newsletter": "Obtenha 20% de desconto no seu primeiro pedido + ofertas exclusivas 📧",
+    "emailPlaceholder": "Endereço de email",
+    "join": "Participar",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "address": "123 Avenida da Cocina",
+    "phone": "+1 (555) 123-4567",
+    "email": "support@cantina.example",
+    "copyright": "© {{year}} {{brand}}. Todos os direitos reservados."
+  },
   "buttons": {
     "orderNow": "Peça Agora",
     "reserve": "Reserve Mesa",

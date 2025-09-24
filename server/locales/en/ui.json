@@ -21,6 +21,20 @@
   "offer": {
     "freeDelivery": "Free delivery on orders over $25"
   },
+  "footer": {
+    "tagline": "Authentic Mexican flavors, modern experience.",
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "newsletter": "Get 20% off your first order + exclusive deals 📧",
+    "emailPlaceholder": "Email address",
+    "join": "Join",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "address": "123 Cocina Avenue",
+    "phone": "+1 (555) 123-4567",
+    "email": "support@cantina.example",
+    "copyright": "© {{year}} {{brand}}. All rights reserved."
+  },
   "buttons": {
     "orderNow": "Order Now",
     "reserve": "Reserve Table", 

@@ -21,6 +21,20 @@
   "offer": {
     "freeDelivery": "Kostenlose Lieferung bei Bestellungen über 25 $"
   },
+  "footer": {
+    "tagline": "Authentische mexikanische Aromen, moderne Erfahrung.",
+    "quickLinks": "Schnelllinks",
+    "contact": "Kontakt",
+    "newsletter": "Erhalten Sie 20% Rabatt auf Ihre erste Bestellung + exklusive Angebote 📧",
+    "emailPlaceholder": "E-Mail-Adresse",
+    "join": "Beitreten",
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "address": "123 Cocina Allee",
+    "phone": "+1 (555) 123-4567",
+    "email": "support@cantina.example",
+    "copyright": "© {{year}} {{brand}}. Alle Rechte vorbehalten."
+  },
   "buttons": {
     "orderNow": "Jetzt bestellen",
     "reserve": "Tisch reservieren",
