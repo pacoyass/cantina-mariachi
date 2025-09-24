@@ -116,7 +116,18 @@ export default function MenuPage() {
                 <Card className="overflow-hidden">
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center gap-2">
-                      <span>{featured.name}</span>
+                      {(() => {
+                        const keyFromName = (name) => (name || '')
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, ' ')
+                          .trim()
+                          .split(' ')
+                          .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+                          .join('');
+                        const itemKey = keyFromName(featured.name);
+                        const translatedName = t(`items.${itemKey}.name`, { defaultValue: featured.name });
+                        return <span>{translatedName}</span>;
+                      })()}
                       <Badge variant="secondary">{cms?.badges?.popular || t('badges.popular')}</Badge>
                     </CardTitle>
                   </CardHeader>
@@ -124,13 +135,35 @@ export default function MenuPage() {
                     <div className="space-y-2">
                       <div className="rounded-md overflow-hidden border bg-muted">
                         {featured.imageUrl ? (
-                          <img src={featured.imageUrl} alt={featured.name} className="w-full h-full object-cover aspect-video" />
+                          (() => {
+                            const keyFromName = (name) => (name || '')
+                              .toLowerCase()
+                              .replace(/[^a-z0-9]+/g, ' ')
+                              .trim()
+                              .split(' ')
+                              .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+                              .join('');
+                            const itemKey = keyFromName(featured.name);
+                            const translatedName = t(`items.${itemKey}.name`, { defaultValue: featured.name });
+                            return <img src={featured.imageUrl} alt={translatedName} className="w-full h-full object-cover aspect-video" />;
+                          })()
                         ) : (
                           <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2">{featured.description}</p>
-                      <div className="text-sm font-medium">${Number(featured.price).toFixed(2)}</div>
+                      {(() => {
+                        const keyFromName = (name) => (name || '')
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, ' ')
+                          .trim()
+                          .split(' ')
+                          .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+                          .join('');
+                        const itemKey = keyFromName(featured.name);
+                        const translatedDesc = t(`items.${itemKey}.description`, { defaultValue: featured.description });
+                        return <p className="text-sm text-muted-foreground line-clamp-2">{translatedDesc}</p>;
+                      })()}
+                      <div className="text-sm font-medium">{formatCurrency(featured.price, i18n.language)}</div>
                     </div>
                   </CardContent>
                 </Card>
