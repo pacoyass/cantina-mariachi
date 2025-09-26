@@ -19,25 +19,60 @@ import { cleanupNotifications } from '../controllers/notifications.controller.js
 import { cleanupCmsDrafts } from '../controllers/cms/page.controller.js';
 import { cleanupAnalyticsLogs } from '../controllers/analytics.controller.js';
 
-const runningJobs = new Set();
+// Cron job configuration
+const CRON_CONFIG = {
+  MAX_JOB_DURATION: 5 * 60 * 1000, // 5 minutes max per job
+  LOG_FLUSH_INTERVAL: '*/15 * * * *', // Every 15 minutes
+  LOG_RETRY_INTERVAL: '*/30 * * * *', // Every 30 minutes  
+  HEALTH_CHECK_INTERVAL: '*/10 * * * *', // Every 10 minutes
+  TIMEZONE: 'Europe/London',
+  ENABLE_VERBOSE_LOGGING: process.env.CRON_VERBOSE_LOGGING === 'true',
+};
+
+const runningJobs = new Map(); // Track job start times
 
 async function runJobSafely(jobName, jobFunction) {
+  const now = Date.now();
+  
+  // Check if job is already running
   if (runningJobs.has(jobName)) {
-    await LoggerService.logSystemEvent('cron', `JOB_SKIPPED_${jobName}`, {
-      reason: 'Already running',
-      timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
-    });
-    return;
+    const startTime = runningJobs.get(jobName);
+    const duration = now - startTime;
+    
+    // If job has been running too long, force cleanup and log warning
+    if (duration > CRON_CONFIG.MAX_JOB_DURATION) {
+      await LoggerService.logError(`Long-running job detected: ${jobName}`, null, {
+        duration: duration,
+        maxDuration: CRON_CONFIG.MAX_JOB_DURATION,
+        action: 'Force cleanup',
+        timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
+      });
+      runningJobs.delete(jobName); // Force cleanup
+    } else {
+      await LoggerService.logSystemEvent('cron', `JOB_SKIPPED_${jobName}`, {
+        reason: 'Already running',
+        duration: duration,
+        timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
+      });
+      return;
+    }
   }
 
-  runningJobs.add(jobName);
+  runningJobs.set(jobName, now);
   const startTime = Date.now();
 
   try {
     await LoggerService.logSystemEvent('cron', `JOB_STARTED_${jobName}`, {
       timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
     });
-    await jobFunction();
+    
+    // Add timeout wrapper to prevent jobs from hanging
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error(`Job ${jobName} timed out after ${CRON_CONFIG.MAX_JOB_DURATION}ms`)), CRON_CONFIG.MAX_JOB_DURATION)
+    );
+    
+    await Promise.race([jobFunction(), timeoutPromise]);
+    
     await LoggerService.logSystemEvent('cron', `JOB_COMPLETED_${jobName}`, {
       duration: Date.now() - startTime,
       timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
@@ -78,27 +113,27 @@ export const registerCronJobs = () => {
     timezone: 'Europe/London',
   });
 
-  // Flush logs every 5 minutes
-  cron.schedule('*/5 * * * *', async () => {
+  // Flush logs (configurable frequency)
+  cron.schedule(CRON_CONFIG.LOG_FLUSH_INTERVAL, async () => {
     await runJobSafely('flushLogs', async () => {
       await flushLogs();
     });
   }, {
     scheduled: true,
-    timezone: 'Europe/London',
+    timezone: CRON_CONFIG.TIMEZONE,
   });
 
-  // Retry failed logs every 10 minutes
-  cron.schedule('*/10 * * * *', async () => {
+  // Retry failed logs (configurable frequency)
+  cron.schedule(CRON_CONFIG.LOG_RETRY_INTERVAL, async () => {
     await runJobSafely('retryFailedLogs', async () => {
       await retryFailedLogs();
     });
   }, {
     scheduled: true,
-    timezone: 'Europe/London',
+    timezone: CRON_CONFIG.TIMEZONE,
   });
-  // Cleanup expired auth data at 3:20 AM
-  cron.schedule('20 3 * * *', async () => {
+  // Cleanup expired auth data at 3:15 AM
+  cron.schedule('15 3 * * *', async () => {
     await runJobSafely('cleanupExpiredAuthData', async () => {
       await cleanupExpiredAuthData();
     });
@@ -107,8 +142,8 @@ export const registerCronJobs = () => {
     timezone: 'Europe/London',
   });
  
-  // Cleanup expired user data at 3:20 AM
-  cron.schedule('20 3 * * *', async () => {
+  // Cleanup expired user data at 3:25 AM (staggered timing)
+  cron.schedule('25 3 * * *', async () => {
     await runJobSafely('cleanupUserData', async () => {
       await cleanupUserData();
     });
@@ -117,8 +152,8 @@ export const registerCronJobs = () => {
     timezone: 'Europe/London',
   });
 
-  // Cleanup expired webhook data at 3:20 AM
-  cron.schedule('20 3 * * *', async () => {
+  // Cleanup expired webhook data at 3:35 AM (staggered timing)
+  cron.schedule('35 3 * * *', async () => {
     await runJobSafely('cleanupExpiredWebhook', async () => {
       await cleanupExpiredWebhooks();
     });
@@ -127,14 +162,14 @@ export const registerCronJobs = () => {
     timezone: 'Europe/London',
   });
 
-  // Health heartbeat every 5 minutes
-  cron.schedule('*/5 * * * *', async () => {
+  // Health heartbeat (configurable frequency)
+  cron.schedule(CRON_CONFIG.HEALTH_CHECK_INTERVAL, async () => {
     await runJobSafely('health_heartbeat', async () => {
       await cleanupHealth();
     });
   }, {
     scheduled: true,
-    timezone: 'Europe/London',
+    timezone: CRON_CONFIG.TIMEZONE,
   });
 
   // Logs retention cleanup daily at 03:30
@@ -233,42 +268,50 @@ export const registerCronJobs = () => {
 }
 
 export const runInitialCleanup = async () => {
+  // Only run initial cleanup if explicitly requested
+  if (process.env.RUN_INITIAL_CLEANUP !== 'true') {
+    await LoggerService.logSystemEvent('cron', 'INITIAL_CLEANUP_SKIPPED', {
+      reason: 'RUN_INITIAL_CLEANUP not set to true',
+      timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
+    });
+    return;
+  }
+
   await LoggerService.logSystemEvent('cron', 'INITIAL_CLEANUP_STARTED', {
     timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
   });
 
-  const cleanupTasks = [
-    { name: 'cleanupOrphanedAssignments', fn: cleanupOrphanedAssignments, delay: 20000 },
-    { name: 'cleanupOrphanedLocks', fn: cleanupOrphanedLocks, delay: 25000 },
-    { name: 'flushLogs', fn: flushLogs, delay: 30000 },
-    { name: 'retryFailedLogs', fn: retryFailedLogs, delay: 35000 },
-    { name: 'cleanupExpiredAuthData', fn: cleanupExpiredAuthData, delay: 20000 },
-    { name: 'cleanupExpiredWebhook', fn: cleanupExpiredWebhooks, delay: 45000 },
-    { name: 'cleanupUserData', fn: cleanupUserData, delay: 50000 },
-    { name: 'logs_retention_cleanup', fn: cleanupLogsRetention, delay: 55000 },
-    { name: 'menu_cache_cleanup', fn: cleanupMenuCache, delay: 60000 },
-    { name: 'health_heartbeat', fn: cleanupHealth, delay: 65000 },
-    { name: 'orders_tracking_cleanup', fn: cleanupExpiredOrderTracking, delay: 70000 },
-    { name: 'drivers_cleanup', fn: cleanupInactiveDrivers, delay: 75000 },
-    { name: 'cash_cleanup', fn: cleanupCashData, delay: 80000 },
-    { name: 'reservations_cleanup', fn: cleanupOldReservations, delay: 85000 },
-    { name: 'notifications_cleanup', fn: cleanupNotifications, delay: 90000 },
-    { name: 'cms_draft_cleanup', fn: cleanupCmsDrafts, delay: 95000 },
-    { name: 'analytics_cleanup', fn: cleanupAnalyticsLogs, delay: 100000 },
+  // Run critical cleanup tasks sequentially with proper delays to avoid overwhelming the system
+  const criticalTasks = [
+    { name: 'initial_flushLogs', fn: flushLogs },
+    { name: 'initial_cleanupOrphanedLocks', fn: cleanupOrphanedLocks },
+    { name: 'initial_cleanupExpiredAuthData', fn: cleanupExpiredAuthData },
   ];
 
-  for (const task of cleanupTasks) {
+  // Run critical tasks sequentially with 10-second delays
+  for (let i = 0; i < criticalTasks.length; i++) {
+    const task = criticalTasks[i];
     setTimeout(async () => {
       await runJobSafely(task.name, task.fn);
-    }, task.delay);
+    }, (i + 1) * 10000); // 10s, 20s, 30s delays
   }
 
   await LoggerService.logSystemEvent('cron', 'INITIAL_CLEANUP_SCHEDULED', {
+    tasksScheduled: criticalTasks.length,
     timestamp: toZonedTime(new Date(), 'Europe/London').toISOString(),
   });
 }
 
+// Development cron jobs (only when explicitly enabled)
 if (process.env.NODE_ENV !== 'test' && process.env.ENABLE_DEV_CRONS === 'true') {
-  cron.schedule('*/30 * * * *', () => runJobSafely('cleanupOrphanedLocks', cleanupOrphanedLocks));
-  runJobSafely('cleanupOrphanedLocks', cleanupOrphanedLocks);
+  // Run cleanup every 2 hours in development (much less frequent)
+  cron.schedule('0 */2 * * *', () => runJobSafely('dev_cleanupOrphanedLocks', cleanupOrphanedLocks), {
+    scheduled: true,
+    timezone: 'Europe/London',
+  });
+  
+  // Only run initial cleanup, not continuous
+  if (process.env.RUN_INITIAL_CLEANUP === 'true') {
+    setTimeout(() => runJobSafely('dev_initial_cleanupOrphanedLocks', cleanupOrphanedLocks), 5000);
+  }
 }
