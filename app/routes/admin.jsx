@@ -1,15 +1,15 @@
+import { redirect } from "react-router";
+
 export const meta = () => [
   { title: "Admin - Cantina" },
 ];
 
-import { useTranslation } from 'react-i18next';
+export async function loader() {
+  // Redirect to the admin dashboard
+  throw redirect("/admin/");
+}
 
 export default function AdminPage() {
-  const { t } = useTranslation('common');
-  return (
-    <main className="p-4 container mx-auto">
-      <h1>{t('adminTitle', { defaultValue: 'Admin' })}</h1>
-      <p>{t('adminPlaceholder', { defaultValue: 'Admin dashboard placeholder.' })}</p>
-    </main>
-  );
+  // This component should never render due to the redirect
+  return null;
 }
