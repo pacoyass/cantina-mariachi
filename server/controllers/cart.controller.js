@@ -1,4 +1,4 @@
-import { createSuccess, createError } from '../utils/response.js';
+import { createResponse, createError } from '../utils/response.js';
 import { LoggerService } from '../utils/logger.js';
 
 // In-memory cart storage for sessions (for simplicity)
@@ -24,14 +24,11 @@ export const getCart = async (req, res) => {
     const cartId = getCartId(req);
     const cart = cartStore.get(cartId) || { items: [], total: 0 };
     
-    LoggerService.logActivity('Cart viewed', { cartId, itemCount: cart.items.length });
+    console.log('Cart GET request:', { cartId, itemCount: cart.items.length });
     
-    return createSuccess(res, 'Cart retrieved successfully', cart);
+    return createResponse(res, 200, 'Cart retrieved successfully', cart);
   } catch (error) {
-    LoggerService.logError('Failed to get cart', error.stack, { 
-      path: req.path,
-      method: req.method 
-    });
+    console.error('Cart GET error:', error);
     return createError(res, 500, 'internalError', 'CART_GET_ERROR');
   }
 };
@@ -72,14 +69,14 @@ export const addToCart = async (req, res) => {
     // Save cart
     cartStore.set(cartId, cart);
     
-    LoggerService.logActivity('Item added to cart', { 
+    LoggerService.logActivity(null, 'CART_ADD', `Item added to cart ${cartId}`, { 
       cartId, 
       itemId, 
       quantity, 
       cartSize: cart.items.length 
     });
     
-    return createSuccess(res, 'Item added to cart successfully', { 
+    return createResponse(res, 200, 'Item added to cart successfully', { 
       cart, 
       addedItem: { itemId, quantity, notes }
     });
@@ -121,13 +118,13 @@ export const removeFromCart = async (req, res) => {
     // Save cart
     cartStore.set(cartId, cart);
     
-    LoggerService.logActivity('Item removed from cart', { 
+    LoggerService.logActivity(null, 'CART_REMOVE', `Item removed from cart ${cartId}`, { 
       cartId, 
       itemId, 
       cartSize: cart.items.length 
     });
     
-    return createSuccess(res, 'Item removed from cart successfully', { 
+    return createResponse(res, 200, 'Item removed from cart successfully', { 
       cart, 
       removedItem: { itemId }
     });
@@ -179,14 +176,14 @@ export const updateCartItem = async (req, res) => {
     // Save cart
     cartStore.set(cartId, cart);
     
-    LoggerService.logActivity('Cart item updated', { 
+    LoggerService.logActivity(null, 'CART_UPDATE', `Cart item updated ${cartId}`, { 
       cartId, 
       itemId, 
       newQuantity: quantity,
       cartSize: cart.items.length 
     });
     
-    return createSuccess(res, 'Cart item updated successfully', { 
+    return createResponse(res, 200, 'Cart item updated successfully', { 
       cart, 
       updatedItem: { itemId, quantity, notes }
     });
@@ -209,9 +206,9 @@ export const clearCart = async (req, res) => {
     // Clear cart
     cartStore.delete(cartId);
     
-    LoggerService.logActivity('Cart cleared', { cartId });
+    LoggerService.logActivity(null, 'CART_CLEAR', `Cart cleared ${cartId}`, { cartId });
     
-    return createSuccess(res, 'Cart cleared successfully', { 
+    return createResponse(res, 200, 'Cart cleared successfully', { 
       cart: { items: [], total: 0 }
     });
     
