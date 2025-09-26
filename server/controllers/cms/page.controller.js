@@ -155,7 +155,12 @@ export const upsertPage = async (req, res) => {
     try {
       await triggerCacheInvalidation(slug, locale);
     } catch (webhookError) {
-      console.warn('Cache invalidation webhook failed:', webhookError.message);
+      await LoggerService.logError('Cache invalidation webhook failed', webhookError.stack, {
+        method: 'updatePageContent',
+        slug: req.params.slug,
+        locale: req.body.locale,
+        error: webhookError.message
+      });
     }
 
     return createResponse(res, 200, 'operationSuccess', { page: result }, req, {}, 'api');
@@ -183,7 +188,12 @@ async function triggerCacheInvalidation(slug, locale) {
       })
     });
   } catch (error) {
-    console.warn('Cache invalidation webhook failed:', error.message);
+    await LoggerService.logError('Cache invalidation webhook failed in deletePageContent', error.stack, {
+      method: 'deletePageContent',
+      slug: req.params.slug,
+      locale: req.query.locale,
+      error: error.message
+    });
   }
 }
 

@@ -17,6 +17,7 @@ import { ModeToggle } from "./components/ThemeToggle";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 

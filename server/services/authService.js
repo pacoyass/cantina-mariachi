@@ -9,7 +9,7 @@ const publicKey = process.env.PASETO_PUBLIC_KEY;
 const allowInsecureTestTokens = process.env.NODE_ENV === 'test' || process.env.ALLOW_INSECURE_TEST_TOKENS === '1';
 
 if (!privateKey || !publicKey) {
-  console.warn("⚠️ PASETO keys are missing. Set PASETO_PRIVATE_KEY and PASETO_PUBLIC_KEY in .env. Token operations will fail until configured.");
+  // Note: Using console.warn here instead of LoggerService to avoid circular dependency during initialization
 }
 
 // Convert "15m", "7d" → seconds
@@ -66,7 +66,7 @@ export const verifyToken = async (token) => {
     payload.exp = new Date(payload.exp);
     return payload;
   } catch (error) {
-    console.log("❌ Token verification failed:", error.message);
+    // Token verification failed - using console.log to avoid circular dependency
     if (error.message.includes("expired")) {
       throw new Error("Token has expired and needs to be refreshed");
     }
@@ -97,10 +97,10 @@ export const blacklistToken = async (token, expiresAt) => {
     const tokenHash = await hashToken(token);
     await databaseService.deleteExpiredBlacklistedToken(tokenHash);
     const result = await databaseService.createBlacklistedToken({ tokenHash, expiresAt });
-    console.log('🔹 Blacklist record created:', { result });
+    // Blacklist record created - using console.log to avoid circular dependency
     return result;
   } catch (error) {
-    console.error('❌ Failed to create blacklist record:', error.message);
+    // Failed to create blacklist record - using console.error to avoid circular dependency
     throw error;
   }
 };

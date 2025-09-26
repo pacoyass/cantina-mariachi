@@ -44,7 +44,11 @@ export const handleCacheInvalidation = async (req, res) => {
           await cacheService.del(key);
         }
       } catch (cacheError) {
-        console.warn(`Cache invalidation failed for key ${key}:`, cacheError.message);
+        await LoggerService.logError(`Cache invalidation failed for key ${key}`, cacheError.stack, {
+          method: 'handleCacheInvalidation',
+          key: key,
+          error: cacheError.message
+        });
       }
     }
 

@@ -58,7 +58,7 @@ async function findAvailablePortInRange(start, end) {
 }
 
 if (DEVELOPMENT) {
-  console.log('Starting development server');
+  console.log('🚀 Starting development server');
   const hmrPort = await findAvailablePortInRange(24678, 25700);
   const viteDevServer = await import('vite').then((vite) =>
     vite.createServer({
@@ -83,7 +83,7 @@ if (DEVELOPMENT) {
     }
   });
 } else {
-  console.log('Starting production server');
+  console.log('🚀 Starting production server');
   app.use(
     '/assets',
     express.static('build/client/assets', { immutable: true, maxAge: '1y' })

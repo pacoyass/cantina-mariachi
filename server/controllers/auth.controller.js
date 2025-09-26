@@ -117,7 +117,11 @@ export const register = async (req, res) => {
     await sendWebhook('USER_REGISTERED', { userId: user.id, email, role, name, phone });
     return createResponse(res, 201, 'registerSuccess', { data:user }, req, {}, 'auth');
   } catch (error) {
-    console.error(error);
+    await LoggerService.logError('Authentication error in refreshToken', error.stack, {
+      method: 'refreshToken',
+      error: error.message,
+      context: req.body
+    });
     
     await LoggerService.logError('Registration failed', error.stack, { email: req.body.email });
     await LoggerService.logAudit(null, 'USER_REGISTER_FAILED', null, { reason: error.message, email: req.body.email });
@@ -158,7 +162,10 @@ const ip = req.ip || null;
     }
   } catch (cacheErr) {
     await LoggerService.logError('Cache error during login attempt tracking', cacheErr.stack, { email, error: cacheErr.message });
-    console.warn('Cache service unavailable, skipping rate-limiting');
+    await LoggerService.logSystemEvent('auth.controller', 'CACHE_SERVICE_UNAVAILABLE', {
+      method: 'refreshToken',
+      message: 'Cache service unavailable, skipping rate-limiting'
+    });
   }
 
   // Fetch user
