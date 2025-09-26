@@ -17,6 +17,7 @@ import configRoutes from './config.routes.js';
 import analyticsRoutes from './analytics.routes.js';
 import cmsRoutes from './cms.routes.js';
 import translationsRoutes from './translations.routes.js';
+import cartRoutes from './cart.routes.js';
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.use('/config', configRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/cms', cmsRoutes);
 router.use('/translations', translationsRoutes);
+router.use('/cart', cartRoutes);
 
 router.use((req, res, next) => {
   createError(
