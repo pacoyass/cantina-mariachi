@@ -5,17 +5,26 @@ import { LoggerService } from '../utils/logger.js';
 // In production, you'd use Redis or database
 const cartStore = new Map();
 
-// Get cart ID from session/cookies
+// Get cart ID from session/cookies - React Router compatible
 function getCartId(req) {
-  // Try session first, then fallback to a simple session ID
+  // Try session first
   if (req.session?.id) {
     return req.session.id;
   }
   
-  // Create a simple session ID from IP + user agent (basic approach)
+  // Try to extract cart ID from cookies (React Router sends these in headers)
+  const cookies = req.headers.cookie || '';
+  const cartCookieMatch = cookies.match(/cart_id=([^;]+)/);
+  if (cartCookieMatch) {
+    return cartCookieMatch[1];
+  }
+  
+  // Create a new cart ID and it will be set as cookie in response
   const userAgent = req.headers['user-agent'] || 'unknown';
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
-  return `cart_${Buffer.from(`${ip}_${userAgent}`).toString('base64').slice(0, 16)}`;
+  const cartId = `cart_${Buffer.from(`${ip}_${userAgent}_${Date.now()}`).toString('base64').slice(0, 20)}`;
+  
+  return cartId;
 }
 
 // Get current cart
@@ -23,6 +32,13 @@ export const getCart = async (req, res) => {
   try {
     const cartId = getCartId(req);
     const cart = cartStore.get(cartId) || { items: [], total: 0 };
+    
+    // Set cart ID as cookie for React Router to use
+    res.cookie('cart_id', cartId, { 
+      httpOnly: false, // Allow client access for React Router
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: 'lax'
+    });
     
     console.log('Cart GET request:', { cartId, itemCount: cart.items.length });
     
@@ -68,6 +84,13 @@ export const addToCart = async (req, res) => {
     
     // Save cart
     cartStore.set(cartId, cart);
+    
+    // Set cart ID as cookie for React Router to use
+    res.cookie('cart_id', cartId, { 
+      httpOnly: false, // Allow client access for React Router
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: 'lax'
+    });
     
     LoggerService.logActivity(null, 'CART_ADD', `Item added to cart ${cartId}`, { 
       cartId, 

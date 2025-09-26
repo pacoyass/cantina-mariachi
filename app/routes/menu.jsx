@@ -1,4 +1,4 @@
-import { useLoaderData, Link } from "react-router";
+import { useLoaderData, Link, Form, redirect } from "react-router";
 import { useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
@@ -13,6 +13,48 @@ export const meta = () => [
   { title: "Menu - Cantina" },
   { name: "description", content: "Explore our categories and items" },
 ];
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const action = formData.get("action");
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
+
+  if (action === "add") {
+    const itemId = formData.get("itemId");
+    const quantity = formData.get("quantity") || "1";
+    const notes = formData.get("notes") || "";
+
+    try {
+      const response = await fetch(`${url.origin}/api/cart/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Cookie": cookie
+        },
+        body: JSON.stringify({
+          itemId,
+          quantity: parseInt(quantity),
+          notes
+        })
+      });
+
+      if (response.ok) {
+        // Redirect back to menu to show updated state
+        return redirect(`/menu${url.search}`);
+      } else {
+        // Handle error - for now just redirect back
+        return redirect(`/menu${url.search}`);
+      }
+    } catch (error) {
+      console.error('Failed to add item to cart:', error);
+      return redirect(`/menu${url.search}`);
+    }
+  }
+
+  // Default: redirect back to menu
+  return redirect(`/menu${url.search}`);
+}
 
 export async function loader({ request }) {
   const url = new URL(request.url);
@@ -282,7 +324,14 @@ export default function MenuPage() {
                       <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{translatedDesc}</p>
                       <div className="flex items-center justify-between">
                         <span className="font-medium">{formatCurrency(item.price, i18n.language)}</span>
-                        <Button size="sm">{t('actions.add')}</Button>
+                        <Form method="post">
+                          <input type="hidden" name="action" value="add" />
+                          <input type="hidden" name="itemId" value={item.id} />
+                          <input type="hidden" name="quantity" value="1" />
+                          <Button type="submit" size="sm" disabled={item.available === false}>
+                            {t('actions.add')}
+                          </Button>
+                        </Form>
                       </div>
                     </div>
                   </div>
