@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -37,7 +37,7 @@ model User {
   NotificationLog NotificationLog[]
 
   @@index([role])
-  @@map("users")
+  @@map("public.users")
 }
 
 model RefreshToken {
@@ -53,7 +53,7 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
   @@index([userId, expiresAt])
-  @@map("refresh_tokens")
+  @@map("public.refresh_tokens")
 }
 
 model BlacklistedToken {
@@ -63,7 +63,7 @@ model BlacklistedToken {
   createdAt DateTime @default(now())
 
   @@index([expiresAt])
-  @@map("blacklisted_tokens")
+  @@map("public.blacklisted_tokens")
 }
 
 // DRIVER
@@ -86,7 +86,7 @@ model Driver {
 
   @@index([active, deliveryZone])
   @@index([currentStatus])
-  @@map("drivers") // Ensure table name is 'drivers'
+  @@map("public.drivers") // Ensure table name is 'drivers'
 }
 
 model ActivityLog {
@@ -99,7 +99,7 @@ model ActivityLog {
   createdAt DateTime @default(now())
 
   @@index([type, createdAt])
-  @@map("activity_logs")
+  @@map("public.activity_logs")
 }
 
 model LoginLog {
@@ -112,7 +112,7 @@ model LoginLog {
   createdAt DateTime @default(now())
 
   @@index([status, createdAt])
-  @@map("login_logs")
+  @@map("public.login_logs")
 }
 
 model ErrorLog {
@@ -123,7 +123,7 @@ model ErrorLog {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
-  @@map("error_logs")
+  @@map("public.error_logs")
 }
 
 model NotificationLog {
@@ -139,7 +139,7 @@ model NotificationLog {
   createdAt    DateTime @default(now())
 
   @@index([type, status, createdAt])
-  @@map("notification_logs")
+  @@map("public.notification_logs")
 }
 
 model SystemLog {
@@ -151,7 +151,7 @@ model SystemLog {
   createdAt DateTime @default(now())
 
   @@index([source, event, createdAt])
-  @@map("system_logs")
+  @@map("public.system_logs")
 }
 
 // CASH TRANSACTION
@@ -174,7 +174,7 @@ model CashTransaction {
 
   @@index([driverId, createdAt])
   @@index([orderId])
-  @@map("cash_transactions")
+  @@map("public.cash_transactions")
 }
 
 // CASH SUMMARY
@@ -193,7 +193,7 @@ model CashSummary {
   @@index([driverId, date])
   @@index([date])
   @@unique([driverId, date])
-  @@map("cash_summary")
+  @@map("public.cash_summary")
 }
 
 // APP CONFIG
@@ -207,7 +207,7 @@ model AppConfig {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  @@map("app_config")
+  @@map("public.app_config")
 }
 
 // AUDIT
@@ -223,7 +223,7 @@ model AuditLog {
   deletedAt DateTime?
 
   @@index([action, createdAt])
-  @@map("audit_logs")
+  @@map("public.audit_logs")
 }
 
 // NOTIFICATIONS
@@ -238,7 +238,7 @@ model Notification {
   updatedAt  DateTime @updatedAt
 
   @@index([userId, read, createdAt])
-  @@map("notifications")
+  @@map("public.notifications")
 }
 
 // CRON
@@ -249,7 +249,7 @@ model CronLock {
   lockedAt   DateTime
 
   @@index([lockedAt])
-  @@map("cron_locks")
+  @@map("public.cron_locks")
 }
 
 model CronRun {
@@ -262,7 +262,7 @@ model CronRun {
   updatedAt DateTime @updatedAt
 
   @@index([taskName, lastRunAt])
-  @@map("cron_runs")
+  @@map("public.cron_runs")
 }
 
 // WEBHOOKS
@@ -280,7 +280,7 @@ model Webhook {
 
   logs WebhookLog[] @relation("WebhookToWebhookLogs") // Reverse relation to logs
 
-  @@map("webhooks")
+  @@map("public.webhooks")
 }
 
 model WebhookLog {
@@ -296,7 +296,7 @@ model WebhookLog {
   webhook Webhook @relation("WebhookToWebhookLogs", fields: [webhookId], references: [id], onDelete: Cascade)
 
   @@index([webhookId, status, createdAt])
-  @@map("webhook_logs")
+  @@map("public.webhook_logs")
 }
 
 model Integration {
@@ -308,7 +308,7 @@ model Integration {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  @@map("integrations")
+  @@map("public.integrations")
 }
 
 // PREFERENCES
@@ -325,7 +325,7 @@ model UserPreference {
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
 
-  @@map("user_preferences")
+  @@map("public.user_preferences")
 }
 
 // LOCALIZATION
@@ -337,7 +337,7 @@ model Localization {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  @@map("localizations")
+  @@map("public.localizations")
 }
 
 // DYNAMIC TRANSLATION MANAGEMENT
@@ -351,7 +351,7 @@ model ContentSchema {
   updatedAt   DateTime @updatedAt
 
   @@unique([slug, locale])
-  @@map("content_schemas")
+  @@map("public.content_schemas")
 }
 
 model Language {
@@ -365,7 +365,7 @@ model Language {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@map("languages")
+  @@map("public.languages")
 }
 
 model Namespace {
@@ -378,7 +378,7 @@ model Namespace {
   updatedAt   DateTime @updatedAt
 
   @@unique([name, locale])
-  @@map("namespaces")
+  @@map("public.namespaces")
 }
 
 model FallbackRule {
@@ -391,7 +391,7 @@ model FallbackRule {
   updatedAt     DateTime @updatedAt
 
   @@unique([sourceLocale, targetLocale])
-  @@map("fallback_rules")
+  @@map("public.fallback_rules")
 }
 
 model PageContent {
@@ -404,7 +404,7 @@ model PageContent {
   updatedAt DateTime @updatedAt
 
   @@unique([slug, locale])
-  @@map("page_contents")
+  @@map("public.page_contents")
 }
 
 // CATEGORY + MENU + ORDER + RESERVATION
@@ -416,7 +416,7 @@ model Category {
 
   menuItems MenuItem[]
 
-  @@map("categories")
+  @@map("public.categories")
 }
 
 model MenuItem {
@@ -434,7 +434,7 @@ model MenuItem {
   category   Category    @relation(fields: [categoryId], references: [id])
   orderItems OrderItem[]
 
-  @@map("menu_items")
+  @@map("public.menu_items")
 }
 
 model Order {
@@ -470,7 +470,7 @@ model Order {
   @@index([userId])
   @@index([createdAt])
   @@index([customerEmail])
-  @@map("orders")
+  @@map("public.orders")
 }
 
 model OrderItem {
@@ -484,7 +484,7 @@ model OrderItem {
   order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   menuItem MenuItem @relation(fields: [menuItemId], references: [id])
 
-  @@map("order_items")
+  @@map("public.order_items")
 }
 
 model Reservation {
@@ -504,7 +504,7 @@ model Reservation {
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([date, time, status])
-  @@map("reservations")
+  @@map("public.reservations")
 }
 
 // ENUMS
