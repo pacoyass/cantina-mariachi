@@ -17,7 +17,7 @@ export default function Login( { error } )
     const navigation = useNavigation();
     const pending = navigation.state === "submitting";
     const isNavigating = Boolean( navigation.location );
-const [showPassword,setShowPassword]=useState("")
+const [showPassword, setShowPassword] = useState(false)
   
     // Helper function to safely get translations as strings
     const getText = (key, fallback = '') => {
@@ -55,16 +55,15 @@ const [showPassword,setShowPassword]=useState("")
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Error Alert */}
-                    {(error || error) && (
+                    {error && (
                       <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
-                        {/* <AlertDescription>{error || error}</AlertDescription> */}
                         <AlertDescription>
-      {typeof (error || error) === 'object' 
-        ? JSON.stringify(error || error)
-        : String(error || error)
-      }
-    </AlertDescription>
+                          {typeof error === 'object' 
+                            ? JSON.stringify(error)
+                            : String(error)
+                          }
+                        </AlertDescription>
                       </Alert>
                     )}
     
@@ -82,7 +81,6 @@ const [showPassword,setShowPassword]=useState("")
                              type="email"
                             name="email"
                             placeholder={getText('auth:placeholders.email', 'Enter your email')}
-                            // defaultValue={actionData?.fields?.email || ""}
                             className="pl-10"
                             required
                             autoComplete="email"
@@ -103,7 +101,6 @@ const [showPassword,setShowPassword]=useState("")
                             name="password"
                             type={showPassword ? "text" : "password"}
                             placeholder={String(getText('auth:placeholders.password', 'Enter your password') || 'Enter your password')}
-                            // defaultValue={actionData?.fields?.password || ""}
                             className="pl-10 pr-10"
                             required
                             autoComplete="current-password"
@@ -129,7 +126,6 @@ const [showPassword,setShowPassword]=useState("")
                             id="remember"
                             name="remember"
                             type="checkbox"
-                            // defaultChecked={actionData?.fields?.remember}
                             className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                           />
                           <Label htmlFor="remember" className="text-sm">
