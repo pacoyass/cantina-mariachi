@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Link, useActionData, useNavigation, redirect } from "react-router";
+import { Form, Link, useActionData, useNavigation, redirect, useNavigate } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
@@ -22,17 +22,17 @@ export async function action({ request }) {
 
   // Basic validation
   if (!email || !password) {
-    return {
+    return Response.json({
       error: "Please fill in all fields",
       fields: { email, password, remember }
-    };
+    }, { status: 400 });
   }
 
   if (!email.includes("@")) {
-    return {
+    return Response.json({
       error: "Please enter a valid email address",
       fields: { email, password, remember }
-    };
+    }, { status: 400 });
   }
 
   try {
@@ -40,26 +40,44 @@ export async function action({ request }) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
+        // Pass along original request headers for authentication
+        "Cookie": request.headers.get("Cookie") || "",
       },
       body: JSON.stringify({ email, password, remember: !!remember }),
     });
 
+    if (!response.ok) {
+      // Try to parse JSON, fallback to text if it fails
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { error: { message: "Network error occurred" } };
+      }
+      
+      return Response.json({
+        error: errorData.error?.message || "Invalid credentials",
+        fields: { email, password, remember }
+      }, { status: response.status });
+    }
+
     const data = await response.json();
 
-    if (!response.ok) {
-      return {
-        error: data.error?.message || "Invalid credentials",
-        fields: { email, password, remember }
-      };
+    // Set cookies if they were returned
+    const headers = new Headers();
+    const setCookieHeader = response.headers.get("Set-Cookie");
+    if (setCookieHeader) {
+      headers.set("Set-Cookie", setCookieHeader);
     }
 
     // Redirect to account page or intended destination
-    return redirect("/account");
+    return redirect("/account", { headers });
   } catch (error) {
-    return {
+    return Response.json({
       error: "Network error. Please try again.",
       fields: { email, password, remember }
-    };
+    }, { status: 500 });
   }
 }
 
@@ -67,8 +85,61 @@ export default function LoginPage() {
   const { t } = useTranslation(['auth', 'common']);
   const actionData = useActionData();
   const navigation = useNavigation();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const isSubmitting = navigation.state === "submitting";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  // Client-side form submission to bypass Single Fetch issues
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
+    const formData = new FormData(event.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const remember = formData.get("remember");
+
+    // Basic validation
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError("Please enter a valid email address");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password, remember: !!remember }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        setError(errorData.error?.message || "Invalid credentials");
+        setIsSubmitting(false);
+        return;
+      }
+
+      const data = await response.json();
+      // Navigate to account page on success
+      navigate("/account");
+    } catch (error) {
+      setError("Network error. Please try again.");
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -97,15 +168,15 @@ export default function LoginPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Error Alert */}
-                {actionData?.error && (
+                {(actionData?.error || error) && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{actionData.error}</AlertDescription>
+                    <AlertDescription>{actionData?.error || error}</AlertDescription>
                   </Alert>
                 )}
 
                 {/* Login Form */}
-                <Form method="post" className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
@@ -198,7 +269,7 @@ export default function LoginPage() {
                       </div>
                     )}
                   </Button>
-                </Form>
+                </form>
 
                 {/* Divider */}
                 <div className="relative">

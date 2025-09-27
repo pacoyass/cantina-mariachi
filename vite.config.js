@@ -13,7 +13,14 @@ export default defineConfig(({ isSsrBuild }) => ({
       : undefined,
   },
   
-  plugins: [tailwindcss(), reactRouter()],
+  plugins: [
+    tailwindcss(), 
+    reactRouter({
+      future: {
+        v3_singleFetch: false,
+      },
+    })
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "app"),
