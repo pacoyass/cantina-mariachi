@@ -62,7 +62,7 @@ export async function initI18n({ lng = 'en', resources }) {
     ns: ['ui', 'home', 'popular', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'menu', 'orders', 'account', 'reservations'],
     defaultNS: 'ui',
     react: { useSuspense: false },
-    returnEmptyString: false,
+    returnEmptyString: true,
     cleanCode: true,
     // SSR optimizations
     initImmediate: false,
@@ -111,7 +111,7 @@ export function createServerI18n({ lng = 'en', resources }) {
     ns: ['ui', 'home', 'popular', 'common', 'auth', 'api', 'validation', 'email', 'business', 'events', 'navbar', 'footer', 'faq', 'menu', 'orders', 'account', 'reservations'],
     defaultNS: 'ui',
     react: { useSuspense: false },
-    returnEmptyString: false,
+    returnEmptyString: true,
     cleanCode: true,
     // SSR optimizations
     initImmediate: false,

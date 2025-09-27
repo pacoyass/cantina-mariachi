@@ -134,17 +134,18 @@ export default function App()
 export function ErrorBoundary( { error } )
 {
   const { t } = useTranslation();
-  let message = t('errors.title', { ns: 'ui' });
-  let details = t('errors.notFound', { ns: 'ui' });
+  // Ensure translations return strings, not objects
+  let message = String(t('errors.title', { ns: 'ui' }) || 'Error');
+  let details = String(t('errors.notFound', { ns: 'ui' }) || 'Something went wrong');
   let stack;
   if ( isRouteErrorResponse( error ) ) {
-    message = error.status === 404 ? `${error.status}-${error.statusText}` : t('errors.title', { ns: 'ui' });
+    message = error.status === 404 ? `${error.status}-${error.statusText}` : String(t('errors.title', { ns: 'ui' }) || 'Error');
     details =
       error.status === 404
-        ? t('errors.notFound', { ns: 'ui' })
+        ? String(t('errors.notFound', { ns: 'ui' }) || 'Page not found')
         : error.statusText || details;
   } else if ( import.meta.env.DEV && error && error instanceof Error ) {
-    details = error.message;
+    details = String(error.message || 'Unknown error');
     stack = error.stack;
   }
   const data = useLoaderData();
@@ -162,11 +163,11 @@ export function ErrorBoundary( { error } )
                 </SheetTrigger>
                 <SheetContent>
                   <div className="flex flex-col gap-3">
-                    <NavLink to="/">{t('navigation.home', { ns: 'ui' })}</NavLink>
-                    <NavLink to="/menu">{t('navigation.menu', { ns: 'ui' })}</NavLink>
-                    <NavLink to="/orders">{t('navigation.orders', { ns: 'ui' })}</NavLink>
-                    <NavLink to="/reservations">{t('navigation.reservations', { ns: 'ui' })}</NavLink>
-                    <NavLink to="/account">{t('navigation.account', { ns: 'ui' })}</NavLink>
+                    <NavLink to="/">{String(t('navigation.home', { ns: 'ui' }) || 'Home')}</NavLink>
+                    <NavLink to="/menu">{String(t('navigation.menu', { ns: 'ui' }) || 'Menu')}</NavLink>
+                    <NavLink to="/orders">{String(t('navigation.orders', { ns: 'ui' }) || 'Orders')}</NavLink>
+                    <NavLink to="/reservations">{String(t('navigation.reservations', { ns: 'ui' }) || 'Reservations')}</NavLink>
+                    <NavLink to="/account">{String(t('navigation.account', { ns: 'ui' }) || 'Account')}</NavLink>
                     <div className="border-t pt-2">
                       <div className="text-sm font-medium text-muted-foreground mb-2">Language</div>
                       {supportedLngs.map(code => (
@@ -204,8 +205,8 @@ export function ErrorBoundary( { error } )
               </Sheet>
             </div>
             <div className="hidden md:flex items-center gap-4 text-sm">
-              <NavLink to="/menu">{t('navigation.menu', { ns: 'ui' })}</NavLink>
-              <NavLink to="/orders">{t('navigation.orders', { ns: 'ui' })}</NavLink>
+              <NavLink to="/menu">{String(t('navigation.menu', { ns: 'ui' }) || 'Menu')}</NavLink>
+              <NavLink to="/orders">{String(t('navigation.orders', { ns: 'ui' }) || 'Orders')}</NavLink>
             </div>
           </div>
 
@@ -215,8 +216,8 @@ export function ErrorBoundary( { error } )
 
           <div className="flex items-center justify-end gap-2">
             <div className="hidden md:flex items-center gap-4 text-sm mr-2">
-              <NavLink to="/reservations">{t('navigation.reservations', { ns: 'ui' })}</NavLink>
-              <NavLink to="/account">{t('navigation.account', { ns: 'ui' })}</NavLink>
+              <NavLink to="/reservations">{String(t('navigation.reservations', { ns: 'ui' }) || 'Reservations')}</NavLink>
+              <NavLink to="/account">{String(t('navigation.account', { ns: 'ui' }) || 'Account')}</NavLink>
             </div>
             <ModeToggle />
             <DropdownMenu>
@@ -266,7 +267,7 @@ export function ErrorBoundary( { error } )
                 <DropdownMenuItem asChild><NavLink to="/register">Register</NavLink></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button className="hidden md:inline-flex">{t('buttons.orderNow', { ns: 'ui' })}</Button>
+            <Button className="hidden md:inline-flex">{String(t('buttons.orderNow', { ns: 'ui' }) || 'Order Now')}</Button>
           </div>
         </nav>
       <div className="flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl rounded-4xl  p-4 sm:p-6 lg:p-8 xl:p-24">

@@ -90,6 +90,16 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  // Helper function to safely get translations as strings
+  const getText = (key, fallback = '') => {
+    try {
+      const result = t(key);
+      return typeof result === 'string' ? result : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
   // Client-side form submission to bypass Single Fetch issues
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -152,7 +162,7 @@ export default function LoginPage() {
                 <h1 className="text-3xl font-bold text-primary">Cantina Mariachi</h1>
               </Link>
               <p className="mt-2 text-sm text-muted-foreground">
-                {t('auth:login.welcome')}
+                {getText('auth:login.welcome', 'Welcome back to Cantina Mariachi')}
               </p>
             </div>
 
@@ -160,10 +170,10 @@ export default function LoginPage() {
             <Card className="border-0 shadow-lg">
               <CardHeader className="space-y-1 pb-4">
                 <CardTitle className="text-2xl font-semibold text-center">
-                  {t('auth:login.title')}
+                  {getText('auth:login.title', 'Sign In')}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground text-center">
-                  {t('auth:login.subtitle')}
+                  {getText('auth:login.subtitle', 'Sign in to your account')}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -180,7 +190,7 @@ export default function LoginPage() {
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
-                      {t('auth:fields.email')}
+                      {getTexgetText('auth:fields.email', 'Email')}
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -188,7 +198,7 @@ export default function LoginPage() {
                         id="email"
                         name="email"
                         type="email"
-                        placeholder={t('auth:placeholders.email')}
+                        placeholder={getTexgetText('auth:placeholders.email', 'Enter your email')}
                         defaultValue={actionData?.fields?.email || ""}
                         className="pl-10"
                         required
@@ -201,7 +211,7 @@ export default function LoginPage() {
                   {/* Password Field */}
                   <div className="space-y-2">
                     <Label htmlFor="password" className="text-sm font-medium">
-                      {t('auth:fields.password')}
+                      {getTexgetText('auth:fields.password', 'Password')}
                     </Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -209,7 +219,7 @@ export default function LoginPage() {
                         id="password"
                         name="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder={t('auth:placeholders.password')}
+                        placeholder={String(getText('auth:placeholders.password', 'Enter your password') || 'Enter your password')}
                         defaultValue={actionData?.fields?.password || ""}
                         className="pl-10 pr-10"
                         required
@@ -240,14 +250,14 @@ export default function LoginPage() {
                         className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                       />
                       <Label htmlFor="remember" className="text-sm">
-                        {t('auth:login.rememberMe')}
+                        {String(getText('auth:login.rememberMe', 'Remember me') || 'Remember me')}
                       </Label>
                     </div>
                     <Link
                       to="/forgot-password"
                       className="text-sm text-primary hover:underline"
                     >
-                      {t('auth:login.forgotPassword')}
+                      {getText('auth:login.forgotPassword', 'Forgot password?')}
                     </Link>
                   </div>
 
@@ -260,11 +270,11 @@ export default function LoginPage() {
                     {isSubmitting ? (
                       <div className="flex items-center space-x-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        <span>{t('auth:login.signingIn')}</span>
+                        <span>{getText('auth:login.signingIn', 'Signing in...')}</span>
                       </div>
                     ) : (
                       <div className="flex items-center space-x-2">
-                        <span>{t('auth:login.signIn')}</span>
+                        <span>{getText('auth:login.signIn', 'Sign In')}</span>
                         <ArrowRight className="h-4 w-4" />
                       </div>
                     )}
@@ -278,7 +288,7 @@ export default function LoginPage() {
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
                     <span className="bg-background px-2 text-muted-foreground">
-                      {t('auth:login.or')}
+                      {getText('auth:login.or', 'or')}
                     </span>
                   </div>
                 </div>
@@ -286,19 +296,19 @@ export default function LoginPage() {
                 {/* Guest Order Lookup */}
                 <Button variant="outline" className="w-full" asChild>
                   <Link to="/orders/track">
-                    {t('auth:login.guestOrder')}
+                    {getText('auth:login.guestOrder', 'Track Guest Order')}
                   </Link>
                 </Button>
 
                 {/* Sign Up Link */}
                 <div className="text-center">
                   <p className="text-sm text-muted-foreground">
-                    {t('auth:login.noAccount')}{" "}
+                    {getText('auth:login.noAccount', "Don't have an account?")}{" "}
                     <Link
                       to="/register"
                       className="font-medium text-primary hover:underline"
                     >
-                      {t('auth:login.signUp')}
+                      {getText('auth:login.signUp', 'Sign up')}
                     </Link>
                   </p>
                 </div>
@@ -308,26 +318,26 @@ export default function LoginPage() {
             {/* Features */}
             <div className="text-center space-y-3">
               <p className="text-sm text-muted-foreground">
-                {t('auth:login.benefits')}
+                {getText('auth:login.benefits', 'Sign in to enjoy these benefits')}
               </p>
               <div className="grid grid-cols-3 gap-4 text-xs">
                 <div className="space-y-1">
                   <div className="w-8 h-8 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
                     🎯
                   </div>
-                  <p className="text-muted-foreground">{t('auth:benefits.fastOrder')}</p>
+                  <p className="text-muted-foreground">{getText('auth:benefits.fastOrder', 'Fast Order')}</p>
                 </div>
                 <div className="space-y-1">
                   <div className="w-8 h-8 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
                     🏆
                   </div>
-                  <p className="text-muted-foreground">{t('auth:benefits.rewards')}</p>
+                  <p className="text-muted-foreground">{getText('auth:benefits.rewards', 'Rewards')}</p>
                 </div>
                 <div className="space-y-1">
                   <div className="w-8 h-8 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
                     📱
                   </div>
-                  <p className="text-muted-foreground">{t('auth:benefits.tracking')}</p>
+                  <p className="text-muted-foreground">{getText('auth:benefits.tracking', 'Order Tracking')}</p>
                 </div>
               </div>
             </div>
