@@ -64,13 +64,35 @@ export default function LoginPage( { actionData } ) {
 
 // Server Action - runs on the server and is removed from client bundles
 export async function action({ request, context }) {
+    console.log('🚀 ACTION CALLED! Server action is working');
+    
     // Debug the request
     console.log('🔍 Request debug:');
     console.log('- request.method:', request.method);
     console.log('- request.url:', request.url);
     console.log('- content-type:', request.headers.get('content-type'));
     
-    const formData = await request.formData();
+    // Try reading the request body directly first
+    let rawBody;
+    let formData;
+    try {
+        // Clone the request to read body multiple times
+        const clonedRequest = request.clone();
+        rawBody = await clonedRequest.text();
+        console.log('📄 Raw request body:', rawBody);
+        
+        // Now get the formData from the original request
+        formData = await request.formData();
+    } catch (error) {
+        console.log('❌ Error reading request:', error.message);
+        // Fallback: try to get formData directly
+        try {
+            formData = await request.formData();
+        } catch (formError) {
+            console.log('❌ Error getting formData:', formError.message);
+            formData = new FormData(); // Empty formData as fallback
+        }
+    }
     
     // Debug logging - let's see what we're getting
     console.log('🔍 FormData debug:');
@@ -85,6 +107,18 @@ export async function action({ request, context }) {
     // Alternative approach if standard method fails
     const formDataObject = Object.fromEntries(formData.entries());
     console.log('🔄 Alternative formData object:', formDataObject);
+    
+    // Try parsing as URLSearchParams if formData is empty
+    let urlParams = {};
+    if (rawBody && rawBody.trim()) {
+        try {
+            const params = new URLSearchParams(rawBody);
+            urlParams = Object.fromEntries(params.entries());
+            console.log('🔗 URLSearchParams object:', urlParams);
+        } catch (error) {
+            console.log('❌ Error parsing URLSearchParams:', error.message);
+        }
+    }
     const { csrfToken } = context || {};
     
     console.log('📧 Extracted values:');
@@ -94,10 +128,10 @@ export async function action({ request, context }) {
     console.log('- context:', context);
     console.log('- csrfToken:', csrfToken ? '[EXISTS]' : 'null/empty');
     
-    // Fallback: try to get values from alternative object if primary method fails
-    const finalEmail = email || formDataObject.email;
-    const finalPassword = password || formDataObject.password;
-    const finalRemember = remember || formDataObject.remember;
+    // Fallback: try to get values from alternative methods if primary method fails
+    const finalEmail = email || formDataObject.email || urlParams.email;
+    const finalPassword = password || formDataObject.password || urlParams.password;
+    const finalRemember = remember || formDataObject.remember || urlParams.remember;
     
     console.log('🔄 Final values after fallback:');
     console.log('- finalEmail:', finalEmail);
