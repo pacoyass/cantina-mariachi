@@ -21,14 +21,19 @@ export function ModeToggle() {
   const [open, setOpen] = React.useState(false)
 
   function applyThemeFallback(next) {
-    try {
-      const root = document.documentElement
-      if (!root) return
-      // ensure only one of the classes is present
-      root.classList.remove(next === 'dark' ? 'light' : 'dark')
-      root.classList.add(next)
-      try { localStorage.setItem('theme', next) } catch {}
-    } catch {}
+    // Use requestAnimationFrame to avoid DOM conflicts with React
+    requestAnimationFrame(() => {
+      try {
+        const root = document.documentElement
+        if (!root) return
+        // ensure only one of the classes is present
+        root.classList.remove(next === 'dark' ? 'light' : 'dark')
+        root.classList.add(next)
+        try { localStorage.setItem('theme', next) } catch {}
+      } catch (error) {
+        console.warn('Failed to apply theme fallback:', error);
+      }
+    });
   }
 
   function handleQuickToggle() {

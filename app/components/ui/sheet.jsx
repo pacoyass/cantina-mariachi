@@ -31,7 +31,7 @@ function SheetPortal({
   container,
   ...props
 }) {
-  return <SheetPrimitive.Portal data-slot="sheet-portal" container={container || (typeof document !== 'undefined' ? document.body : undefined)} {...props} />;
+  return <SheetPrimitive.Portal data-slot="sheet-portal" container={container} {...props} />;
 }
 
 function SheetOverlay({

@@ -71,47 +71,8 @@ export function Layout( { children } )
   const lang = initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
 
-  // Client-side language sync (after hydration)
-  useEffect(() => {
-    // Only run after hydration is complete
-    if (typeof window === 'undefined') return;
-    
-    try {
-      // Only update language after initial hydration
-      const urlLang = new URLSearchParams(window.location.search).get('lng');
-      const storedLang = localStorage.getItem('lng');
-      
-      // Language priority: URL > localStorage > Server context
-      const clientLang = urlLang || storedLang || initialLang;
-      
-      if (clientLang !== initialLang) {
-        // Update document attributes
-        document.documentElement.lang = clientLang;
-        document.documentElement.dir = rtlLngs.includes(clientLang) ? 'rtl' : 'ltr';
-        
-        // Update localStorage if needed
-        if (storedLang !== clientLang) {
-          try {
-            localStorage.setItem('lng', clientLang);
-          } catch {}
-        }
-      }
-      
-      // Update meta tags for better SEO
-      const metaLang = document.querySelector('meta[name="language"]');
-      if (metaLang) {
-        metaLang.setAttribute('content', clientLang);
-      } else {
-        const newMeta = document.createElement('meta');
-        newMeta.name = 'language';
-        newMeta.content = clientLang;
-        document.head.appendChild(newMeta);
-      }
-      
-    } catch (error) {
-      console.warn('Failed to sync language:', error);
-    }
-  }, [initialLang]);
+  // Client-side language sync (after hydration) - Removed DOM manipulation to fix React removeChild errors
+  // Language updates are handled in entry.client.jsx to avoid React DOM conflicts
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>

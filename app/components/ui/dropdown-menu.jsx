@@ -41,7 +41,7 @@ function DropdownMenuContent({
   ...props
 }) {
   return (
-    (<DropdownMenuPrimitive.Portal container={container || (typeof document !== 'undefined' ? document.body : undefined)}>
+    (<DropdownMenuPrimitive.Portal container={container}>
       <DropdownMenuPrimitive.Content
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
