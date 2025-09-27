@@ -64,41 +64,90 @@ export default function LoginPage( { actionData } ) {
 
 // Server Action - runs on the server and is removed from client bundles
 export async function action({ request, context }) {
+    // Debug the request
+    console.log('🔍 Request debug:');
+    console.log('- request.method:', request.method);
+    console.log('- request.url:', request.url);
+    console.log('- content-type:', request.headers.get('content-type'));
+    
     const formData = await request.formData();
+    
+    // Debug logging - let's see what we're getting
+    console.log('🔍 FormData debug:');
+    console.log('- formData entries:', [...formData.entries()]);
+    console.log('- formData size:', formData.entries().length);
+    
+    // Try multiple ways to get form data
     const email = formData.get('email');
     const password = formData.get('password');
     const remember = formData.get('remember');
-    const { csrfToken } = context;
+    
+    // Alternative approach if standard method fails
+    const formDataObject = Object.fromEntries(formData.entries());
+    console.log('🔄 Alternative formData object:', formDataObject);
+    const { csrfToken } = context || {};
+    
+    console.log('📧 Extracted values:');
+    console.log('- email:', email);
+    console.log('- password:', password ? '[REDACTED]' : 'null/empty');
+    console.log('- remember:', remember);
+    console.log('- context:', context);
+    console.log('- csrfToken:', csrfToken ? '[EXISTS]' : 'null/empty');
+    
+    // Fallback: try to get values from alternative object if primary method fails
+    const finalEmail = email || formDataObject.email;
+    const finalPassword = password || formDataObject.password;
+    const finalRemember = remember || formDataObject.remember;
+    
+    console.log('🔄 Final values after fallback:');
+    console.log('- finalEmail:', finalEmail);
+    console.log('- finalPassword:', finalPassword ? '[REDACTED]' : 'null/empty');
+    console.log('- finalRemember:', finalRemember);
     
     // Basic validation
-    if (!email || !password) {
+    if (!finalEmail || !finalPassword) {
+        console.log('❌ Validation failed: missing email or password');
         return { error: true, message: 'Please fill in all fields' };
     }
 
-    if (!email.includes('@')) {
+    if (!finalEmail.includes('@')) {
+        console.log('❌ Validation failed: invalid email format');
         return { error: true, message: 'Please enter a valid email address' };
     }
     
     try {
         const apiUrl = process.env.VITE_API_URL || 'http://localhost:3334';
+        console.log('🌐 Making API request to:', `${apiUrl}/api/auth/login`);
+        
+        const requestHeaders = {
+            'Content-Type': 'application/json',
+            'cookie': request.headers.get('cookie') || '',
+        };
+        
+        // Only add CSRF token if it exists
+        if (csrfToken) {
+            requestHeaders['x-csrf-token'] = csrfToken;
+        }
+        
+        console.log('📤 Request headers:', requestHeaders);
+        
         const response = await fetch(`${apiUrl}/api/auth/login`, {
             method: 'POST',
             signal: request.signal,
-            headers: {
-                'Content-Type': 'application/json',
-                'x-csrf-token': csrfToken,
-                'cookie': request.headers.get('cookie') || '',
-            },
+            headers: requestHeaders,
             credentials: 'include',
-            body: JSON.stringify({ email, password, remember: !!remember }),
+            body: JSON.stringify({ email: finalEmail, password: finalPassword, remember: !!finalRemember }),
         });
         
         const result = await response.json();
+        console.log('📡 API response status:', response.status);
         
         if (!response.ok) {
+            console.log('❌ API error:', result);
             return { error: true, message: result.message || 'Login failed' };
         }
 
+        console.log('✅ Login successful');
         // Return success data with cookies
         return data(result, {
             headers: {
@@ -106,6 +155,7 @@ export async function action({ request, context }) {
             }
         });
     } catch (error) {
+        console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
     }
 }
