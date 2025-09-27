@@ -4,7 +4,10 @@ export default [
   layout("routes/shell.jsx", [
     index("routes/home.jsx"),
     route("menu", "routes/menu.jsx"),
-    route("login", "routes/login.jsx"),
+    layout("routes/auth/layout.jsx",[
+       route("login", "routes/auth/login.jsx"),
+    ]),
+   
     route("register", "routes/register.jsx"),
     route("logout", "routes/logout.jsx"),
     route("orders", "routes/orders/index.jsx"),
