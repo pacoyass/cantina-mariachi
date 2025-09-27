@@ -6,10 +6,9 @@ export default [
     route("menu", "routes/menu.jsx"),
     layout("routes/auth/layout.jsx",[
        route("login", "routes/auth/login.jsx"),
+       route("register", "routes/auth/register.jsx"),
+       route("logout", "routes/auth/logout.jsx"),
     ]),
-   
-    route("register", "routes/register.jsx"),
-    route("logout", "routes/logout.jsx"),
     route("orders", "routes/orders/index.jsx"),
     route("orders/:orderNumber", "routes/orders/$orderNumber.jsx"),
     route("orders/track", "routes/orders/track.jsx"),
