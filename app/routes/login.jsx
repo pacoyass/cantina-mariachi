@@ -190,7 +190,7 @@ export default function LoginPage() {
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
-                      {getTexgetText('auth:fields.email', 'Email')}
+                      {getText('auth:fields.email', 'Email')}
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -198,7 +198,7 @@ export default function LoginPage() {
                         id="email"
                         name="email"
                         type="email"
-                        placeholder={getTexgetText('auth:placeholders.email', 'Enter your email')}
+                        placeholder={getText('auth:placeholders.email', 'Enter your email')}
                         defaultValue={actionData?.fields?.email || ""}
                         className="pl-10"
                         required
@@ -211,7 +211,7 @@ export default function LoginPage() {
                   {/* Password Field */}
                   <div className="space-y-2">
                     <Label htmlFor="password" className="text-sm font-medium">
-                      {getTexgetText('auth:fields.password', 'Password')}
+                      {getText('auth:fields.password', 'Password')}
                     </Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
