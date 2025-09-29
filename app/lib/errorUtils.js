@@ -47,8 +47,14 @@ export function normalizeApiError(apiError, translate) {
   const titleKey = mapped || 'auth:loginFailed';
   // Prefer showing both detail (e.g., "User not found") and suggestion if available
   const descriptionParts = [];
-  if (detailMessage) descriptionParts.push(detailMessage);
-  if (suggestion) descriptionParts.push(suggestion);
+  if (detailMessage) {
+    const translatedDetail = translateDetail(detailMessage, translate);
+    descriptionParts.push(translatedDetail);
+  }
+  if (suggestion) {
+    const translatedSuggestion = translateSuggestion(suggestion, translate);
+    descriptionParts.push(translatedSuggestion);
+  }
   if (descriptionParts.length === 0 && rawMessage) descriptionParts.push(rawMessage);
   const description = descriptionParts.length ? descriptionParts.join(' — ') : undefined;
 
@@ -97,6 +103,32 @@ function mapAuthKey({ typeKey, code, rawMessage, detailMessage }) {
 function deriveVariant(code, typeKey) {
   if (code === 401 || code === 403 || /unauth|denied|invalid/i.test(typeKey)) return 'destructive';
   return 'warning';
+}
+
+function translateDetail(detail, t) {
+  const d = (detail || '').toLowerCase();
+  if (/user\s+not\s+found/.test(d)) {
+    return safeTranslate(t, 'auth:userNotFound', 'User not found');
+  }
+  if (/account\s+locked/.test(d)) {
+    return safeTranslate(t, 'auth:accountLocked', 'Account is locked');
+  }
+  if (/not\s+verified/.test(d)) {
+    return safeTranslate(t, 'auth:accountNotVerified', 'Account is not verified');
+  }
+  return detail;
+}
+
+function translateSuggestion(suggestion, t) {
+  const s = (suggestion || '').toLowerCase();
+  if (/check\s+your\s+credentials/.test(s) && /register/.test(s)) {
+    // Compose using existing keys when available
+    const partA = safeTranslate(t, 'auth:invalidCredentials', 'Invalid credentials');
+    const partB = safeTranslate(t, 'auth:registerSuccess', 'Register');
+    // Fallback to the original suggestion if composition isn't ideal
+    return suggestion || `${partA}. ${partB}`;
+  }
+  return suggestion;
 }
 
 function toStringSafe(value) {
