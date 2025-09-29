@@ -45,7 +45,12 @@ export function normalizeApiError(apiError, translate) {
   const mapped = mapAuthKey({ typeKey, code, rawMessage, detailMessage });
 
   const titleKey = mapped || 'auth:loginFailed';
-  const description = suggestion || detailMessage || rawMessage || undefined;
+  // Prefer showing both detail (e.g., "User not found") and suggestion if available
+  const descriptionParts = [];
+  if (detailMessage) descriptionParts.push(detailMessage);
+  if (suggestion) descriptionParts.push(suggestion);
+  if (descriptionParts.length === 0 && rawMessage) descriptionParts.push(rawMessage);
+  const description = descriptionParts.length ? descriptionParts.join(' — ') : undefined;
 
   return {
     title: safeTranslate(translate, titleKey, 'Login failed'),
