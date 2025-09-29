@@ -40,6 +40,7 @@ export function normalizeApiError(apiError, translate) {
   const rawMessage = toStringSafe(errObj.message || maybe.message);
   const detailMessage = toStringSafe(errObj.details?.message);
   const suggestion = toStringSafe(errObj.details?.suggestion);
+  const retryAfterSec = toNumberSafe(errObj.details?.retryAfter);
 
   // Map common auth conditions to translation keys
   const mapped = mapAuthKey({ typeKey, code, rawMessage, detailMessage });
@@ -54,6 +55,9 @@ export function normalizeApiError(apiError, translate) {
   if (suggestion) {
     const translatedSuggestion = translateSuggestion(suggestion, translate);
     descriptionParts.push(translatedSuggestion);
+  }
+  if (Number.isFinite(retryAfterSec) && retryAfterSec > 0) {
+    descriptionParts.push(formatRetryAfter(translate, retryAfterSec));
   }
   if (descriptionParts.length === 0 && rawMessage) descriptionParts.push(rawMessage);
   const description = descriptionParts.length ? descriptionParts.join(' — ') : undefined;
@@ -74,7 +78,12 @@ function mapAuthKey({ typeKey, code, rawMessage, detailMessage }) {
   }
 
   // Rate limit
-  if (code === 429 || /rate[_\s-]?limit/i.test(typeKey) || /too many/i.test(message)) {
+  if (
+    code === 429 ||
+    /rate[_\s-]?limit/i.test(typeKey) ||
+    /rate[_\s-]?limited/i.test(typeKey) ||
+    /too many (requests|attempts)/i.test(message)
+  ) {
     return 'auth:tooManyAttempts';
   }
 
@@ -141,6 +150,27 @@ function translateSuggestion(suggestion, t) {
     return safeTranslate(t, 'auth:tryAgainLater', 'Try again later');
   }
   return suggestion;
+}
+
+function formatRetryAfter(t, seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (mins >= 1 && secs === 0) {
+    return safeTranslate(t, 'auth:retryAfterMinutes', `Try again in ${mins} minute${mins === 1 ? '' : 's'}`);
+  }
+  if (mins >= 1 && secs > 0) {
+    return safeTranslate(
+      t,
+      'auth:retryAfterMinutesSeconds',
+      `Try again in ${mins}m ${secs}s`
+    );
+  }
+  return safeTranslate(t, 'auth:retryAfterSeconds', `Try again in ${secs}s`);
+}
+
+function toNumberSafe(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : NaN;
 }
 
 function toStringSafe(value) {
