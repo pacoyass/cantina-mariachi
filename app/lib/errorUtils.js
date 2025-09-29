@@ -73,6 +73,11 @@ function mapAuthKey({ typeKey, code, rawMessage, detailMessage }) {
     return 'auth:invalidCredentials';
   }
 
+  // Rate limit
+  if (code === 429 || /rate[_\s-]?limit/i.test(typeKey) || /too many/i.test(message)) {
+    return 'auth:tooManyAttempts';
+  }
+
   if (/account[_\s-]?locked/i.test(typeKey) || /locked/i.test(message)) {
     return 'auth:accountLocked';
   }
@@ -102,6 +107,7 @@ function mapAuthKey({ typeKey, code, rawMessage, detailMessage }) {
 
 function deriveVariant(code, typeKey) {
   if (code === 401 || code === 403 || /unauth|denied|invalid/i.test(typeKey)) return 'destructive';
+  if (code === 429 || /rate[_\s-]?limit/i.test(typeKey)) return 'warning';
   return 'warning';
 }
 
@@ -116,6 +122,9 @@ function translateDetail(detail, t) {
   if (/not\s+verified/.test(d)) {
     return safeTranslate(t, 'auth:accountNotVerified', 'Account is not verified');
   }
+  if (/too\s+many\s+login\s+attempts/.test(d)) {
+    return safeTranslate(t, 'auth:tooManyAttempts', 'Too many login attempts');
+  }
   return detail;
 }
 
@@ -127,6 +136,9 @@ function translateSuggestion(suggestion, t) {
     const partB = safeTranslate(t, 'auth:registerSuccess', 'Register');
     // Fallback to the original suggestion if composition isn't ideal
     return suggestion || `${partA}. ${partB}`;
+  }
+  if (/try\s+again\s+in\s+a?\s*minute/.test(s) || /try\s+again\s+later/.test(s)) {
+    return safeTranslate(t, 'auth:tryAgainLater', 'Try again later');
   }
   return suggestion;
 }
