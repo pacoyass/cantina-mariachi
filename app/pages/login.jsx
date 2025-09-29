@@ -8,7 +8,8 @@ import { Alert, AlertDescription } from "../components/ui/alert";
 import { Separator } from "../components/ui/separator";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "../lib/lucide-shim.js";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { normalizeApiError } from "../lib/errorUtils";
 
 
 export default function Login( { error } )
@@ -54,18 +55,23 @@ const [showPassword, setShowPassword] = useState(false)
                     </p>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {/* Error Alert */}
-                    {error && (
-                      <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                          {typeof error === 'object' 
-                            ? JSON.stringify(error)
-                            : String(error)
-                          }
-                        </AlertDescription>
-                      </Alert>
-                    )}
+                {/* Error Alert */}
+                    {error && (() => {
+                      const mapped = normalizeApiError(error, (key) => t(key));
+                      return (
+                        <Alert variant={mapped.variant}>
+                          <div className="flex items-start gap-2">
+                            <AlertCircle className="h-4 w-4 mt-0.5" />
+                            <div>
+                              <div className="font-medium">{mapped.title}</div>
+                              {mapped.description ? (
+                                <AlertDescription>{mapped.description}</AlertDescription>
+                              ) : null}
+                            </div>
+                          </div>
+                        </Alert>
+                      );
+                    })()}
     
                     {/* Login Form */}
                     <Form method="post" className="space-y-4">
