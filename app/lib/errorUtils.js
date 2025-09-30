@@ -59,6 +59,13 @@ export function normalizeApiError(apiError, translate) {
   if (Number.isFinite(retryAfterSec) && retryAfterSec > 0) {
     descriptionParts.push(formatRetryAfter(translate, retryAfterSec));
   }
+  // Also include raw message (translated) when available and not redundant
+  if (rawMessage) {
+    const translatedRaw = translateRaw(rawMessage, translate);
+    if (!descriptionParts.some(p => equalsIgnoreCase(p, translatedRaw))) {
+      descriptionParts.unshift(translatedRaw);
+    }
+  }
   if (descriptionParts.length === 0 && rawMessage) descriptionParts.push(rawMessage);
   const description = descriptionParts.length ? descriptionParts.join(' — ') : undefined;
 
@@ -150,6 +157,28 @@ function translateSuggestion(suggestion, t) {
     return safeTranslate(t, 'auth:tryAgainLater', 'Try again later');
   }
   return suggestion;
+}
+
+function translateRaw(message, t) {
+  const m = (message || '').toLowerCase();
+  if (/invalid\s+password/.test(m)) {
+    return safeTranslate(t, 'auth:invalidPassword', 'Invalid password');
+  }
+  if (/invalid\s+email\s+or\s+password/.test(m)) {
+    return safeTranslate(t, 'auth:invalidCredentials', 'Invalid credentials');
+  }
+  if (/invalid\s+email/.test(m)) {
+    return safeTranslate(t, 'auth:invalidCredentials', 'Invalid credentials');
+  }
+  if (/too\s+many\s+login\s+attempts|too\s+many\s+requests/.test(m)) {
+    return safeTranslate(t, 'auth:tooManyAttempts', 'Too many attempts');
+  }
+  return message;
+}
+
+function equalsIgnoreCase(a, b) {
+  if (!a || !b) return false;
+  return String(a).toLowerCase() === String(b).toLowerCase();
 }
 
 function formatRetryAfter(t, seconds) {
