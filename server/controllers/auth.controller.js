@@ -237,12 +237,12 @@ const ip = req.ip || null;
     const firstName = name ? name.split(' ')[0].charAt(0).toUpperCase() + name.split(' ')[0].slice(1).toLowerCase() : 'User';
     const timeOfDayKey = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
     const candidates = [
-      `greeting:${timeOfDayKey}`,
-      'greeting:welcomeBackName',
-      'greeting:helloName',
-      'greeting:accessGranted',
-      'greeting:authSuccess',
-      'greeting:ready'
+      `greeting.${timeOfDayKey}`,
+      'greeting.welcomeBackName',
+      'greeting.helloName',
+      'greeting.accessGranted',
+      'greeting.authSuccess',
+      'greeting.ready'
     ];
     let lastIndex = -1;
     return () => {
@@ -255,7 +255,7 @@ const ip = req.ip || null;
       try {
         if (req && typeof req.t === 'function') {
           const translated = req.t(key, { ns: 'auth', name: firstName });
-          if (translated && typeof translated === 'string') return translated;
+          if (translated && typeof translated === 'string' && translated !== key) return translated;
         }
       } catch {}
       // Fallback to English format if translation not available
