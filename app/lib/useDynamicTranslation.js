@@ -162,6 +162,11 @@ export function useLanguageSwitcher() {
         console.warn('Failed to load translations from API on language change:', e);
       }
 
+      // Set client-visible cookie immediately so next requests use new lang without refresh
+      try {
+        document.cookie = `i18next=${encodeURIComponent(code)}; path=/; max-age=${365 * 24 * 60 * 60}`;
+      } catch {}
+
       // Change i18n language
       await i18n.changeLanguage(code);
       // Hint server to persist cookie for SSR refreshes
