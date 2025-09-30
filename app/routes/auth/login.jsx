@@ -1,6 +1,6 @@
 import Login from "../../pages/login";
 import { useEffect } from "react";
-import { useRouteError, isRouteErrorResponse, data, useNavigate } from "react-router";
+import { useRouteError, isRouteErrorResponse, data, useNavigate, redirect } from "react-router";
 
 
 export const meta = () => [
@@ -193,12 +193,17 @@ export async function action({ request, context }) {
         }
 
         console.log('✅ Login successful');
-        // Return success data with cookies
-        return data(result, {
-            headers: {
-                'Set-Cookie': response.headers.get('set-cookie') || '',
-            }
-        });
+        // Build redirect target from query (?redirect=...) and preserve lng if present
+        const setCookie = response.headers.get('set-cookie') || '';
+        const targetFromParam = url.searchParams.get('redirect') || '/';
+        const preserveLng = url.searchParams.get('lng');
+        const targetUrl = new URL(targetFromParam, url.origin);
+        if (preserveLng && !targetUrl.searchParams.get('lng')) {
+          targetUrl.searchParams.set('lng', preserveLng);
+        }
+        const headers = new Headers();
+        if (setCookie) headers.append('Set-Cookie', setCookie);
+        return redirect(targetUrl.pathname + targetUrl.search + targetUrl.hash, { headers });
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
