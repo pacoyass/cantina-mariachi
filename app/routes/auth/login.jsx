@@ -121,7 +121,10 @@ export async function action({ request, context }) {
     }
     const { csrfToken } = context || {};
     const url = new URL(request.url);
-    const currentLng = url.searchParams.get('lng') || (context && context.lng) || 'en';
+    const rawCookie = request.headers.get('cookie') || '';
+    const cookieLngMatch = rawCookie.match(/(?:^|; )i18next=([^;]+)/);
+    const cookieLng = cookieLngMatch ? decodeURIComponent(cookieLngMatch[1]) : null;
+    const currentLng = cookieLng || url.searchParams.get('lng') || (context && context.lng) || 'en';
     
     console.log('📧 Extracted values:');
     console.log('- email:', email);
@@ -155,7 +158,7 @@ export async function action({ request, context }) {
         const apiUrl = process.env.VITE_API_URL || 'http://localhost:3334';
         console.log('🌐 Making API request to:', `${apiUrl}/api/auth/login`);
         
-        const existingCookie = request.headers.get('cookie') || '';
+        const existingCookie = rawCookie;
         const ensureLngCookie = existingCookie && existingCookie.includes('i18next=')
           ? existingCookie
           : (existingCookie ? `${existingCookie}; i18next=${currentLng}` : `i18next=${currentLng}`);
