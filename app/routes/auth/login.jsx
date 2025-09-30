@@ -193,17 +193,12 @@ export async function action({ request, context }) {
         }
 
         console.log('✅ Login successful');
-        // Build redirect target from query (?redirect=...) and preserve lng if present
-        const setCookie = response.headers.get('set-cookie') || '';
-        const targetFromParam = url.searchParams.get('redirect') || '/';
-        const preserveLng = url.searchParams.get('lng');
-        const targetUrl = new URL(targetFromParam, url.origin);
-        if (preserveLng && !targetUrl.searchParams.get('lng')) {
-          targetUrl.searchParams.set('lng', preserveLng);
-        }
-        const headers = new Headers();
-        if (setCookie) headers.append('Set-Cookie', setCookie);
-        return redirect(targetUrl.pathname + targetUrl.search + targetUrl.hash, { headers });
+        // Return success data with cookies; let caller handle redirect
+        return data(result, {
+            headers: {
+                'Set-Cookie': response.headers.get('set-cookie') || '',
+            }
+        });
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
