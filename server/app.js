@@ -27,7 +27,10 @@ function generateNonce() {
 	return crypto.randomBytes(24).toString('base64');
 }
 
-// Language detection middleware - must come before other middleware
+// Parse cookies BEFORE language detection so detector can read i18next cookie
+app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
+
+// Language detection middleware - must come after cookie parser
 app.use((req, res, next) => {
 	// Language detection priority: URL > Cookie > Accept-Language > Default
 	const urlLang = req.query.lng;
@@ -143,7 +146,6 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Initialize i18n and add middleware
 let i18nInstance = null;
