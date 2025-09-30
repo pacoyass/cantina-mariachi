@@ -120,6 +120,8 @@ export async function action({ request, context }) {
         }
     }
     const { csrfToken } = context || {};
+    const url = new URL(request.url);
+    const currentLng = url.searchParams.get('lng') || (context && context.lng) || 'en';
     
     console.log('📧 Extracted values:');
     console.log('- email:', email);
@@ -153,9 +155,15 @@ export async function action({ request, context }) {
         const apiUrl = process.env.VITE_API_URL || 'http://localhost:3334';
         console.log('🌐 Making API request to:', `${apiUrl}/api/auth/login`);
         
+        const existingCookie = request.headers.get('cookie') || '';
+        const ensureLngCookie = existingCookie && existingCookie.includes('i18next=')
+          ? existingCookie
+          : (existingCookie ? `${existingCookie}; i18next=${currentLng}` : `i18next=${currentLng}`);
+
         const requestHeaders = {
             'Content-Type': 'application/json',
-            'cookie': request.headers.get('cookie') || '',
+            'Accept-Language': currentLng,
+            'cookie': ensureLngCookie,
         };
         
         // Only add CSRF token if it exists
