@@ -62,7 +62,13 @@ export function normalizeApiError(apiError, translate) {
   // Also include raw message (translated) when available and not redundant
   if (rawMessage) {
     const translatedRaw = translateRaw(rawMessage, translate);
-    if (!descriptionParts.some(p => equalsIgnoreCase(p, translatedRaw))) {
+    const translatedTitle = safeTranslate(translate, titleKey, '');
+    const hasDetail = Boolean(detailMessage);
+    const isDuplicateOfTitle = equalsIgnoreCase(translatedRaw, translatedTitle);
+    const isGenericInvalidCreds = equalsIgnoreCase(translatedRaw, safeTranslate(translate, 'auth:invalidCredentials', 'Invalid credentials'));
+    // Suppress generic raw line when we already have a more specific detail (e.g., User not found)
+    const shouldSuppress = isDuplicateOfTitle || (isGenericInvalidCreds && hasDetail);
+    if (!shouldSuppress && !descriptionParts.some(p => equalsIgnoreCase(p, translatedRaw))) {
       descriptionParts.unshift(translatedRaw);
     }
   }
