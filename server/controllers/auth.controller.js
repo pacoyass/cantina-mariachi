@@ -267,6 +267,7 @@ const ip = req.ip || null;
   await sendWebhook('USER_LOGIN', { userId: user.id, email, role: user.role, phone: user.phone, loginTime: new Date().toISOString() });
 
   return createResponse(res, 200, 'loginSuccess', {
+    greeting: generateLoginMessage(),
     user: {
       id: user.id,
       email: user.email,
