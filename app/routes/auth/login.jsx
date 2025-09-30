@@ -158,10 +158,13 @@ export async function action({ request, context }) {
         const apiUrl = process.env.VITE_API_URL || 'http://localhost:3334';
         console.log('🌐 Making API request to:', `${apiUrl}/api/auth/login`);
         
-        const existingCookie = rawCookie;
-        const ensureLngCookie = existingCookie && existingCookie.includes('i18next=')
-          ? existingCookie
-          : (existingCookie ? `${existingCookie}; i18next=${currentLng}` : `i18next=${currentLng}`);
+        // Force i18next cookie to current language (replace if exists)
+        let cookieParts = [];
+        if (rawCookie) {
+          cookieParts = rawCookie.split(/;\s*/).filter(Boolean).filter(p => !p.startsWith('i18next='));
+        }
+        cookieParts.push(`i18next=${currentLng}`);
+        const ensureLngCookie = cookieParts.join('; ');
 
         const requestHeaders = {
             'Content-Type': 'application/json',
@@ -176,7 +179,9 @@ export async function action({ request, context }) {
         
         console.log('📤 Request headers:', requestHeaders);
         
-        const response = await fetch(`${apiUrl}/api/auth/login`, {
+        // Add ?lng= so server detector prioritizes it over header/cookie
+        const apiEndpoint = `${apiUrl}/api/auth/login?lng=${encodeURIComponent(currentLng)}`;
+        const response = await fetch(apiEndpoint, {
             method: 'POST',
             signal: request.signal,
             headers: requestHeaders,
