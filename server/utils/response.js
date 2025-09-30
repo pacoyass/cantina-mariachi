@@ -13,13 +13,13 @@ import TranslationService from './translation.js';
  * @returns {Object} Express response
  */
 export const createError = (res, status, message, type, details = {}, req = null, interpolation = {}, namespace = 'common') => {
-  // Normalize to key form; defer i18n to client/UI but keep a human-readable string if no i18n
+  // Normalize to key form; when i18next req.t exists, pass ns in options
   const translatedMessage = req && typeof req.t === 'function'
-    ? req.t(message, interpolation, namespace)
+    ? req.t(message, { ns: namespace, ...interpolation })
     : (namespace ? `${namespace}:${message}` : message);
   
   // Status: translate when possible, else keep constant
-  const statusText = req && typeof req.t === 'function' ? req.t('statusError', {}, 'common') : 'error';
+  const statusText = req && typeof req.t === 'function' ? req.t('statusError', { ns: 'common' }) : 'error';
 
   const response = {
     status: statusText,
@@ -48,11 +48,11 @@ export const createError = (res, status, message, type, details = {}, req = null
  */
 export const createResponse = (res, status, message, data = {}, req = null, interpolation = {}, namespace = 'common') => {
   const translatedMessage = req && typeof req.t === 'function'
-    ? req.t(message, interpolation, namespace)
+    ? req.t(message, { ns: namespace, ...interpolation })
     : (namespace ? `${namespace}:${message}` : message);
   
   // Status: translate when possible, else keep constant
-  const statusText = req && typeof req.t === 'function' ? req.t('statusSuccess', {}, 'common') : 'success';
+  const statusText = req && typeof req.t === 'function' ? req.t('statusSuccess', { ns: 'common' }) : 'success';
 
   return res.status(status).json({
     status: statusText,
