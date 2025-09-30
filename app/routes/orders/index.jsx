@@ -27,7 +27,7 @@ export default function OrdersIndexPage() {
   const { t } = useTranslation('orders');
 	const { orders, cms } = useLoaderData();
 	return (
-		<Card>
+		<Card className="min-h-screen">
 			<CardContent className="p-0">
 				<Table>
 					<TableHeader>

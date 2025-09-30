@@ -15,6 +15,8 @@ export default [
     route("reservations", "routes/reservations.jsx"),
     route("account", "routes/account.jsx"),
     route("admin", "routes/admin.jsx"),
+
+    
   ]),
 
   route("*", "routes/not-found.jsx"),

@@ -1,6 +1,6 @@
 {
-    "ignore": [
-    "logs",
-    "*.log"
-  ]
+  "ignore": [
+  "logs",
+  "*.log"
+]
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Link, useNavigation, redirect, useNavigate } from "react-router";
+import { Form, Link, useNavigation, redirect, useNavigate, useSearchParams, } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
@@ -9,6 +9,7 @@ import { Separator } from "../components/ui/separator";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "../lib/lucide-shim.js";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { normalizeApiError } from '@/lib/errorUtils';
 
 
 export default function Login( { error } )
@@ -18,7 +19,6 @@ export default function Login( { error } )
     const pending = navigation.state === "submitting";
     const isNavigating = Boolean( navigation.location );
 const [showPassword, setShowPassword] = useState(false)
-  
     // Helper function to safely get translations as strings
     const getText = (key, fallback = '') => {
       try {
@@ -29,33 +29,51 @@ const [showPassword, setShowPassword] = useState(false)
       }
     };
     return (
-        <main className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <main className="rounded-4xl border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 ">
           <div className="container mx-auto px-4 py-8">
             <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
               <div className="w-full max-w-md space-y-6">
                 {/* Header */}
                 <div className="text-center">
                   <Link to="/" className="inline-block">
-                    <h1 className="text-3xl font-bold text-primary">Cantina Mariachi</h1>
+                    <h1 className="text-3xl font-bold text-primary">  {getText('auth:login.title', 'Sign In')}</h1>
                   </Link>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {getText('auth:login.welcome', 'Welcome back to Cantina Mariachi')}
                   </p>
                 </div>
-    
+      {/* Error Alert */}
+      {error && (() => {
+                      const mapped = normalizeApiError(error, (key) => t(key));
+                      return (
+                        <Alert variant={mapped.variant} className=" bg-gray-50/70 text-red-500 dark:supports-[backdrop-filter]:bg-background/60">
+                          <div className="flex items-center justify-center gap-2 ">
+                            <AlertCircle className="h-4 w-4 mt-0.5 self-start" />
+                            <div className="font-medium">{mapped.title}</div>
+                         
+                          </div>
+                          <div className='flex flex-col items-center justify-center text-pretty text-center'>
+                              {mapped.description ? (
+                                <AlertDescription>{mapped.description}</AlertDescription>
+                              ) : null}
+                            </div>
+                        </Alert>
+                      );
+                    })()}
                 {/* Login Card */}
-                <Card className="border-0 shadow-lg">
+                <Card className="border-0 shadow-lg bg-gray-50/70  dark:supports-[backdrop-filter]:bg-background/60 ">
                   <CardHeader className="space-y-1 pb-4">
-                    <CardTitle className="text-2xl font-semibold text-center">
+                    {/* <CardTitle className="text-2xl font-semibold text-center">
                       {getText('auth:login.title', 'Sign In')}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground text-center">
+                    </CardTitle> */}
+                    <p className="text-lg text-muted-foreground text-center">
                       {getText('auth:login.subtitle', 'Sign in to your account')}
                     </p>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Error Alert */}
-                    {error && (
+                     
+                    {/* {error && (
                       <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
                         <AlertDescription>
@@ -65,10 +83,10 @@ const [showPassword, setShowPassword] = useState(false)
                           }
                         </AlertDescription>
                       </Alert>
-                    )}
+                    )} */}
     
                     {/* Login Form */}
-                    <Form method="post" className="space-y-4">
+                    <Form method="post" encType="multipart/form-data" className="space-y-4">
                       {/* Email Field */}
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-sm font-medium">

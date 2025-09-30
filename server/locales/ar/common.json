@@ -16,6 +16,7 @@
   "operationFailed": "فشلت العملية",
   "invalidRequest": "طلب غير صحيح",
   "resourceNotFound": "المورد غير موجود",
+  "backtohome":"الصفحة الرئيسية",
   "serverError": "حدث خطأ في الخادم",
   "maintenance": "الخادم قيد الصيانة",
   "rateLimited": "طلبات كثيرة جداً. حاول مرة أخرى لاحقاً.",

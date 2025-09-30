@@ -7,7 +7,7 @@
     "dev": "cross-env NODE_ENV=development nodemon server.js",
     "start": "node server.js",
     "router-dev": "react-router dev",
-    "seed": "node prisma/seed.js",
+    "seed": "node server/config/seed.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "jest --watchAll --coverage --notify",
     "ggshield": "ggshield secret scan repo .",

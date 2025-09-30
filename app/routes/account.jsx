@@ -206,7 +206,7 @@ export default function AccountPage() {
   };
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl">
+    <main className="container mx-auto px-4 py-8 max-w-6xl min-h-screen">
       {/* Welcome Message */}
       {isWelcome && (
         <Alert className="mb-8 border-green-200 bg-green-50">
