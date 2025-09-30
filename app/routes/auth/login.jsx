@@ -45,10 +45,14 @@ export default function LoginPage( { actionData } ) {
     const errorMessage = actionData?.error === true ? actionData.message : "";
     useEffect( () =>
     {
-
+        if (!actionData) return;
+        // Prefer server-provided redirectUrl when present
+        if (actionData.redirectUrl) {
+            navigate(actionData.redirectUrl);
+            return;
+        }
         if ( actionData?.error === false && actionData?.code === "LOGIN_SUCCESS" ) {
-
-            navigate( `/?login-message=${encodeURIComponent( actionData.message )}` );
+            navigate( `/?login-message=${encodeURIComponent( actionData.message || '' )}` );
         }
     }, [actionData, navigate] );
 
