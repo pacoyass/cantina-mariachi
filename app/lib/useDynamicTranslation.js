@@ -23,27 +23,29 @@ export function useDynamicTranslation() {
 
   // Persist language changes to localStorage and cookies
   useEffect(() => {
-    if (i18n.language && i18n.language !== 'en') {
-      try {
-        localStorage.setItem('lng', i18n.language);
-        // Note: Server handles cookie updates via httpOnly cookies
-        
-        // Update URL if not already set
-        const url = new URL(window.location.href);
-        if (url.searchParams.get('lng') !== i18n.language) {
-          url.searchParams.set('lng', i18n.language);
-          window.history.replaceState({}, '', url.toString());
-        }
-        
-        // Update document attributes
-        document.documentElement.lang = i18n.language;
-        const selectedLang = languages.find(l => l.code === i18n.language);
-        if (selectedLang) {
-          document.documentElement.dir = selectedLang.rtl ? 'rtl' : 'ltr';
-        }
-      } catch (error) {
-        console.warn('Failed to persist language preference:', error);
+    if (!i18n.language) return;
+    try {
+      // Persist selection for all languages (including 'en')
+      localStorage.setItem('lng', i18n.language);
+
+      // Actively set client-visible cookie to avoid stale values on next requests
+      document.cookie = `i18next=${encodeURIComponent(i18n.language)}; path=/; max-age=${365 * 24 * 60 * 60}`;
+
+      // Update URL if not already set
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('lng') !== i18n.language) {
+        url.searchParams.set('lng', i18n.language);
+        window.history.replaceState({}, '', url.toString());
       }
+
+      // Update document attributes
+      document.documentElement.lang = i18n.language;
+      const selectedLang = languages.find(l => l.code === i18n.language);
+      if (selectedLang) {
+        document.documentElement.dir = selectedLang.rtl ? 'rtl' : 'ltr';
+      }
+    } catch (error) {
+      console.warn('Failed to persist language preference:', error);
     }
   }, [i18n.language, languages]);
 
