@@ -203,18 +203,7 @@ export async function initI18n({ lng = 'en', resources }) {
     // SSR optimizations
     initImmediate: false,
     compatibilityJSON: 'v4',
-    // Language detection
-    detection: {
-      order: ['querystring', 'cookie', 'header', 'session'],
-      caches: ['cookie'],
-      cookieOptions: {
-        path: '/',
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: false,
-        maxAge: 365 * 24 * 60 * 60 * 1000 // 1 year
-      }
-    }
+    // Note: client-side auto-detection is disabled to avoid overriding the explicitly selected language
   });
 
   return i18n;
