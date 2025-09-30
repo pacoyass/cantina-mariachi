@@ -68,9 +68,9 @@ async function initializeI18n() {
       // Clean code options
       cleanCode: true,
       
-      // Performance options
-      updateMissing: process.env.NODE_ENV === 'development',
-      saveMissing: process.env.NODE_ENV === 'development',
+      // Performance options (prevent filesystem writes that can trigger restarts)
+      updateMissing: false,
+      saveMissing: false,
       
       // Return details about translation
       returnDetails: false,
