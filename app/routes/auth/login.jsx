@@ -203,6 +203,9 @@
 
 
 
+
+
+
 import Login from "../../pages/login";
 import { useEffect } from "react";
 import { useRouteError, isRouteErrorResponse, data, useNavigate, redirect } from "react-router";
@@ -262,7 +265,7 @@ export default function LoginPage( { actionData } ) {
     }, [actionData, navigate] );
 
     return (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-md bg-opacity-50 flex justify-center items-center">
+      <div className="py-8 flex justify-center items-center">
           <Login error={errorMessage} />
       </div>
   );
