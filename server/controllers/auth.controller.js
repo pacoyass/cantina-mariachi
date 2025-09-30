@@ -231,29 +231,42 @@ const ip = req.ip || null;
   // Sanitize name for response
   const sanitizedName = user.name ? user.name.replace(/[<>]/g, '') : null;
 
-  // Generate dynamic welcome message
+  // Generate dynamic welcome message (translated)
   const getGreetingMessage = (name) => {
     const hour = new Date().getHours();
-    const timeGreeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
     const firstName = name ? name.split(' ')[0].charAt(0).toUpperCase() + name.split(' ')[0].slice(1).toLowerCase() : 'User';
-    const funMessages = [
-      'Great to see you again! 💫',
-      'Access granted! 🎉',
-      "You're in! Let's go! 🚀",
-      'Authentication successful! 🥳',
-      'Ready to roll! 🌟',
-      `Welcome back, ${firstName}! 🌟`,
-      `Hello, ${firstName}! Let's go! 🚀`,
-      `${timeGreeting}, ${firstName}! 🌟`,
+    const timeOfDayKey = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+    const candidates = [
+      `greeting:${timeOfDayKey}`,
+      'greeting:welcomeBackName',
+      'greeting:helloName',
+      'greeting:accessGranted',
+      'greeting:authSuccess',
+      'greeting:ready'
     ];
-    let lastMessageIndex = -1;
+    let lastIndex = -1;
     return () => {
-      let randomIndex;
+      let idx;
       do {
-        randomIndex = Math.floor(Math.random() * funMessages.length);
-      } while (randomIndex === lastMessageIndex);
-      lastMessageIndex = randomIndex;
-      return funMessages[randomIndex];
+        idx = Math.floor(Math.random() * candidates.length);
+      } while (idx === lastIndex);
+      lastIndex = idx;
+      const key = candidates[idx];
+      try {
+        if (req && typeof req.t === 'function') {
+          const translated = req.t(key, { ns: 'auth', name: firstName });
+          if (translated && typeof translated === 'string') return translated;
+        }
+      } catch {}
+      // Fallback to English format if translation not available
+      if (key.includes('morning')) return `Good morning, ${firstName}! 🌟`;
+      if (key.includes('afternoon')) return `Good afternoon, ${firstName}! 🌟`;
+      if (key.includes('evening')) return `Good evening, ${firstName}! 🌟`;
+      if (key.includes('welcomeBackName')) return `Welcome back, ${firstName}! 🌟`;
+      if (key.includes('helloName')) return `Hello, ${firstName}! Let's go! 🚀`;
+      if (key.includes('accessGranted')) return 'Access granted! 🎉';
+      if (key.includes('authSuccess')) return 'Authentication successful! 🥳';
+      return 'Ready to roll! 🌟';
     };
   };
 
