@@ -742,6 +742,18 @@ const ip = req.ip || null;
     path: '/',
   });
 
+  // Ensure i18n cookie persists currently detected language across login redirect/SSR
+  try {
+    const currentLng = (req.query?.lng || req.language || req.lng || req.cookies?.i18next || 'en');
+    res.cookie('i18next', currentLng, {
+      httpOnly: false,
+      secure: isProduction,
+      sameSite: 'lax',
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      path: '/',
+    });
+  } catch {}
+
   // Sanitize name for response
   const sanitizedName = user.name ? user.name.replace(/[<>]/g, '') : null;
 
@@ -886,6 +898,18 @@ const ip = req.ip || null;
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });
+
+    // Preserve current language on refresh as well
+    try {
+      const currentLng = (req.query?.lng || req.language || req.lng || req.cookies?.i18next || 'en');
+      res.cookie('i18next', currentLng, {
+        httpOnly: false,
+        secure: isProduction,
+        sameSite: 'lax',
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+        path: '/',
+      });
+    } catch {}
 
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
