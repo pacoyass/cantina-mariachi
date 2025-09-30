@@ -180,22 +180,32 @@ export class TranslationService {
  * Middleware to add translation helpers to request object
  */
 export const addTranslationHelpers = (req, res, next) => {
-  // Add translation method to request (async)
-  req.t = async (key, interpolation = {}, namespace = null) => {
-    return await TranslationService.tReq(req, key, interpolation, namespace);
+  // If i18next middleware already attached a synchronous req.t, keep it.
+  const hasI18nextT = typeof req.t === 'function';
+
+  // Provide a safe, synchronous req.t fallback only if not present.
+  if (!hasI18nextT) {
+    req.t = (key, interpolation = {}, namespace = null) => {
+      // Fallback: return the key (optionally prefixed with namespace) to avoid async in response builders
+      const k = namespace ? `${namespace}:${key}` : key;
+      return k;
+    };
+  }
+
+  // Add specific helper methods; prefer existing synchronous req.t when available
+  req.tAuth = (key, interpolation = {}) => {
+    if (typeof req.t === 'function') return req.t(`auth:${key}`, interpolation);
+    return `auth:${key}`;
   };
 
-  // Add specific helper methods (async)
-  req.tAuth = async (key, interpolation = {}) => {
-    return await TranslationService.tAuth(key, TranslationService.getCurrentLanguage(req), interpolation);
+  req.tValidation = (key, interpolation = {}) => {
+    if (typeof req.t === 'function') return req.t(`validation:${key}`, interpolation);
+    return `validation:${key}`;
   };
 
-  req.tValidation = async (key, interpolation = {}) => {
-    return await TranslationService.tValidation(key, TranslationService.getCurrentLanguage(req), interpolation);
-  };
-
-  req.tResponse = async (key, interpolation = {}) => {
-    return await TranslationService.tResponse(key, TranslationService.getCurrentLanguage(req), interpolation);
+  req.tResponse = (key, interpolation = {}) => {
+    if (typeof req.t === 'function') return req.t(`common:${key}`, interpolation);
+    return `common:${key}`;
   };
 
   next();

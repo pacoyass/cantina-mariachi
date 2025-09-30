@@ -13,23 +13,13 @@ import TranslationService from './translation.js';
  * @returns {Object} Express response
  */
 export const createError = (res, status, message, type, details = {}, req = null, interpolation = {}, namespace = 'common') => {
-  let translatedMessage = message;
-  
-  // If request object is available, try to translate the message
-  if (req && req.t) {
-    translatedMessage = req.t(message, interpolation, namespace);
-  } else if (req) {
-    // Fallback to TranslationService if req.t is not available
-    const language = TranslationService.getCurrentLanguage(req);
-    const key = namespace ? `${namespace}:${message}` : message;
-    translatedMessage = TranslationService.t(key, {
-      lng: language,
-      interpolation
-    });
-  }
+  // Normalize to key form; defer i18n to client/UI but keep a human-readable string if no i18n
+  const translatedMessage = req && typeof req.t === 'function'
+    ? req.t(message, interpolation, namespace)
+    : (namespace ? `${namespace}:${message}` : message);
   
   // Status: translate when possible, else keep constant
-  const statusText = req && req.t ? req.t('statusError', {}, 'common') : 'error';
+  const statusText = req && typeof req.t === 'function' ? req.t('statusError', {}, 'common') : 'error';
 
   const response = {
     status: statusText,
@@ -57,23 +47,12 @@ export const createError = (res, status, message, type, details = {}, req = null
  * @returns {Object} Express response
  */
 export const createResponse = (res, status, message, data = {}, req = null, interpolation = {}, namespace = 'common') => {
-  let translatedMessage = message;
-  
-  // If request object is available, try to translate the message
-  if (req && req.t) {
-    translatedMessage = req.t(message, interpolation, namespace);
-  } else if (req) {
-    // Fallback to TranslationService if req.t is not available
-    const language = TranslationService.getCurrentLanguage(req);
-    const key = namespace ? `${namespace}:${message}` : message;
-    translatedMessage = TranslationService.t(key, {
-      lng: language,
-      interpolation
-    });
-  }
+  const translatedMessage = req && typeof req.t === 'function'
+    ? req.t(message, interpolation, namespace)
+    : (namespace ? `${namespace}:${message}` : message);
   
   // Status: translate when possible, else keep constant
-  const statusText = req && req.t ? req.t('statusSuccess', {}, 'common') : 'success';
+  const statusText = req && typeof req.t === 'function' ? req.t('statusSuccess', {}, 'common') : 'success';
 
   return res.status(status).json({
     status: statusText,
