@@ -16,6 +16,7 @@
   "operationFailed": "Vorgang fehlgeschlagen",
   "invalidRequest": "Ungültige Anfrage",
   "resourceNotFound": "Ressource nicht gefunden",
+  "backtohome":"Startseite",
   "serverError": "Serverfehler aufgetreten",
   "maintenance": "Server ist in Wartung",
   "rateLimited": "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",

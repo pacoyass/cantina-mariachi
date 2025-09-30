@@ -1,0 +1,12 @@
+{
+  "() => {\r\n      let randomIndex;\r\n      do {\r\n        randomIndex = Math": {
+    "floor(Math": {
+      "random() * funMessages": {
+        "length);\r\n      } while (randomIndex === lastMessageIndex);\r\n      lastMessageIndex = randomIndex;\r\n      return funMessages[randomIndex];\r\n    }": "() => {\r\n      let randomIndex;\r\n      do {\r\n        randomIndex = Math.floor(Math.random() * funMessages.length);\r\n      } while (randomIndex === lastMessageIndex);\r\n      lastMessageIndex = randomIndex;\r\n      return funMessages[randomIndex];\r\n    }"
+      }
+    }
+  },
+  "Access granted! 🎉": "Access granted! 🎉",
+  "Welcome back, Owner! 🌟": "Welcome back, Owner! 🌟",
+  "Good morning, Owner! 🌟": "Good morning, Owner! 🌟"
+}

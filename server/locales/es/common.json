@@ -16,6 +16,7 @@
   "operationFailed": "Operación fallida",
   "invalidRequest": "Solicitud inválida",
   "resourceNotFound": "Recurso no encontrado",
+  "backtohome":"pagina de inicio",
   "serverError": "Error del servidor",
   "maintenance": "El servidor está en mantenimiento",
   "rateLimited": "Demasiadas solicitudes. Intente de nuevo más tarde.",
