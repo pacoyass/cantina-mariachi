@@ -50,3 +50,6 @@ export { default as Gift } from 'lucide-react/dist/esm/icons/gift.js'
 export { default as Globe } from 'lucide-react/dist/esm/icons/globe.js'
 export { default as Sun } from 'lucide-react/dist/esm/icons/sun.js'
 export { default as Moon } from 'lucide-react/dist/esm/icons/moon.js'
+
+export { default as Home } from 'lucide-react/dist/esm/icons/home.js'
+export { default as ShoppingBag } from 'lucide-react/dist/esm/icons/shopping-bag.js'
