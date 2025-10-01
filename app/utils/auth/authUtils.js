@@ -25,14 +25,40 @@ export async function checkAuthToken( request, csrfToken )
                 "x-refresh-token": refreshToken,
             },
         } );
-        const datas=await response.json();
-        console.log( "📌 CheckAuth Token Response:", datas);
+        const data = await response.json();
+        console.log( "📌 CheckAuth Token Response:", data);
         if ( !response.ok ) {
+            // Attempt a single silent refresh if access token expired
+            const errorType = data?.error?.type || data?.type || data?.code;
+            if ( response.status === 401 && errorType === 'TOKEN_EXPIRED' ) {
+                const refreshResult = await refreshAccessToken( cookies, csrfToken );
+                if ( refreshResult && refreshResult.user && !refreshResult.refreshExpired ) {
+                    // Retry token check once after successful refresh
+                    const retry = await fetch( `${API_URL}/api/auth/token`, {
+                        method: "GET",
+                        signal: request.signal,
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            // Cookies are sent via credentials: 'include'
+                        },
+                    } );
+                    const retryData = await retry.json();
+                    if ( retry.ok && retryData?.user?.exp ) {
+                        const refreshFollowUp = await scheduleTokenRefresh( retryData.user.exp, retryData.refreshExpire, cookies, csrfToken );
+                        return {
+                            user: refreshFollowUp?.user || retryData.user,
+                            refreshExpire: refreshFollowUp?.refreshExpire || retryData.refreshExpire,
+                            headers: refreshFollowUp?.headers || {},
+                            checkHeaders: retry.headers || {},
+                        };
+                    }
+                }
+            }
             console.warn( "❌ No valid token. Logging out user." );
             return { user: null, refreshExpired: true };
         }
         const getHeaders = response?.headers;
-        const data = await response.json();
         // console.log( "📌 Checkauth Token Data:", data );
 
         if ( !data?.user?.exp ) {
@@ -158,7 +184,7 @@ export async function refreshAccessToken( cookies, csrfToken, attempt = 1 )
     // console.log("🔄 Attempting token refresh (Attempt", attempt, ")...");
 
     try {
-        const response = await fetch( `${API_URL}/api/auth/refresh`, {
+        const response = await fetch( `${API_URL}/api/auth/refresh-token`, {
             method: "POST",
             credentials: "include",
             headers: {
