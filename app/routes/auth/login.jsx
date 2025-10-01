@@ -482,20 +482,16 @@ export default function LoginPage( { actionData } ) {
   const navigate = useNavigate();
     const errorMessage = actionData?.error === true ? actionData.message : "";
     useEffect( () =>
-    {
-        if (!actionData) return;
-        // Prefer server-provided redirectUrl when present
-        if (actionData.redirectUrl) {
-            navigate(actionData.redirectUrl);
-            return;
-        }
-        if ( actionData?.error === false && actionData?.code === "LOGIN_SUCCESS" ) {
-            navigate( `/?login-message=${encodeURIComponent( actionData.message || '' )}` );
-        }
-    }, [actionData, navigate] );
+        {
+    
+            if ( actionData?.error === false && actionData?.code === "LOGIN_SUCCESS" ) {
+    
+                navigate( `/?login-message=${encodeURIComponent( actionData.message )}` );
+            }
+        }, [actionData, navigate] );
 
     return (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-md bg-opacity-50 flex justify-center items-center">
+      <div className="flex justify-center items-center">
           <Login error={errorMessage} />
       </div>
   );
