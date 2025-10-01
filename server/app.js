@@ -1,6 +1,5 @@
 
 import "react-router";
-import { RouterContextProvider } from "react-router";
 import { createRequestHandler } from "@react-router/express";
 import express from "express";
 import session from "express-session";
@@ -262,18 +261,16 @@ app.use(
 				let resources = {};
 				try {
 					const i18n = i18nInstance;
+					// Safely read preloaded resources for current language
 					resources = i18n?.services?.resourceStore?.data?.[currentLng] || {};
 				} catch {}
-				const context = new RouterContextProvider();
-				// Migration strategy: keep legacy fields directly on context for existing loaders
-				Object.assign(context, {
+				return {
 					VALUE_FROM_EXPRESS: "Hello from Express",
 					nonce: res.locals.nonce,
 					csrfToken: res.locals.csrfToken,
 					lng: currentLng,
-					resources,
-				});
-				return context;
+					resources
+				};
 			},
 	}),
 );

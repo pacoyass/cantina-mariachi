@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, useLoaderData, useActionData, useNavigation, redirect } from 'react-router';
-import { userContext } from "../context";
+// middleware-based auth temporarily disabled due to RouterContextProvider incompatibility
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -22,24 +22,19 @@ export const meta = () => [
   { name: 'description', content: 'Manage your profile, view order history, and track your rewards.' },
 ];
 
-export const middleware = [
-  async ({ request, context }) => {
-    const url = new URL(request.url);
-    const cookie = request.headers.get('cookie') || '';
-    const authRes = await fetch(`${url.origin}/api/auth/me`, { headers: { cookie } });
-    if (!authRes.ok) {
-      throw redirect('/login?redirect=' + encodeURIComponent('/account'));
-    }
-    const authData = await authRes.json().catch(() => null);
-    const user = authData?.data?.user || null;
-    context.set(userContext, user);
-  }
-];
-
-export async function loader({ request, context }) {
+export async function loader({ request }) {
   const url = new URL(request.url);
   const cookie = request.headers.get('cookie') || '';
-  const user = context.get(userContext);
+  
+  // SSR auth check
+  const authRes = await fetch(`${url.origin}/api/auth/me`, { 
+    headers: { cookie } 
+  });
+  if (!authRes.ok) {
+    return redirect('/login?redirect=' + encodeURIComponent('/account'));
+  }
+  const authData = await authRes.json();
+  const user = authData.data?.user;
   
   try {
     // Get user's orders

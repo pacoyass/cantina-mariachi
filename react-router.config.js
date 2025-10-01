@@ -2,8 +2,8 @@ export default {
   // Server-side render by default, to enable SPA mode set this to `false`
   ssr: true,
   future: {
-    // Enable middleware API
-    v8_middleware: true,
+    // Disable middleware API due to current version limitations
+    v8_middleware: false,
     // Keep existing flags as-is
     v3_singleFetch: false,
     unstable_singleFetch: false,
