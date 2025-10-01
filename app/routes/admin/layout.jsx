@@ -30,7 +30,7 @@ export async function loader({ request }) {
   
   try {
     // Check if user is authenticated and has admin privileges
-    const authRes = await fetch(`${url.origin}/api/auth/me`, {
+    const authRes = await fetch(`${url.origin}/api/users/me`, {
       headers: { cookie }
     });
     

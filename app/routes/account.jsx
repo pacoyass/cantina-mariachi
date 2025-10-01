@@ -27,7 +27,7 @@ export async function loader({ request }) {
   const cookie = request.headers.get('cookie') || '';
   
   // SSR auth check
-  const authRes = await fetch(`${url.origin}/api/auth/me`, { 
+  const authRes = await fetch(`${url.origin}/api/users/me`, { 
     headers: { cookie } 
   });
   if (!authRes.ok) {
