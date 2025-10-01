@@ -28,9 +28,9 @@ export async function checkAuthToken( request, csrfToken )
         const data = await response.json();
         console.log( "📌 CheckAuth Token Response:", data);
         if ( !response.ok ) {
-            // Attempt a single silent refresh if access token expired
+            // Attempt a single silent refresh if access token expired or unauthorized
             const errorType = data?.error?.type || data?.type || data?.code;
-            if ( response.status === 401 && errorType === 'TOKEN_EXPIRED' ) {
+            if ( response.status === 401 && (errorType === 'TOKEN_EXPIRED' || errorType === 'UNAUTHORIZED') ) {
                 const refreshResult = await refreshAccessToken( cookies, csrfToken );
                 if ( refreshResult && refreshResult.user && !refreshResult.refreshExpired ) {
                     // Retry token check once after successful refresh
