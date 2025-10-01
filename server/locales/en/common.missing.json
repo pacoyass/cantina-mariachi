@@ -1,4 +1,7 @@
 {
   "loginSuccess": "loginSuccess",
-  "checkApiDocsAction": "checkApiDocsAction"
+  "checkApiDocsAction": "checkApiDocsAction",
+  "offers": {
+    "badge": "offers.badge"
+  }
 }

@@ -423,6 +423,19 @@
 // // }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 import Login from "../../pages/login";
 import { useEffect } from "react";
 import { useRouteError, isRouteErrorResponse, data, useNavigate, redirect } from "react-router";
@@ -555,7 +568,7 @@ export async function action({ request, context }) {
     const cookieLng = cookieLngMatch ? decodeURIComponent(cookieLngMatch[1]) : null;
     const currentLng = cookieLng || url.searchParams.get('lng') || (context && context.lng) || 'en';
     
-    console.log('📧 Extracted values:');
+    console.log('📧 Extracted values:',currentLng);
     console.log('- email:', email);
     console.log('- password:', password ? '[REDACTED]' : 'null/empty');
     console.log('- remember:', remember);
@@ -626,13 +639,18 @@ export async function action({ request, context }) {
             return { error: true, message: result || 'Login failed' };
         }
 
-        console.log('✅ Login successful',result);
+        console.log('✅ Login successful',response.headers.get('set-cookie'));
         // Return success data with cookies; let caller handle redirect
-        return data(result, {
-            headers: {
+        return redirect('/',{
+                  headers: {
                 'Set-Cookie': response.headers.get('set-cookie') || '',
             }
-        });
+        })
+        // return data(result, {
+        //     headers: {
+        //         'Set-Cookie': response.headers.get('set-cookie') || '',
+        //     }
+        // });
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
