@@ -241,12 +241,29 @@ export function useDynamicTranslation() {
   const [namespaces] = useState(['ui', 'home', 'common', 'events', 'navbar', 'footer', 'faq', 'popular', 'auth', 'api', 'validation', 'email', 'business']);
   const [rtlLanguages] = useState(['ar']);
 
-  // Persist language changes to localStorage and cookies
+  // One-time initial sync: prefer cookie over localStorage to avoid stale revert after auth/navigation
+  const hasSyncedRef = useRef(false);
+  useEffect(() => {
+    if (hasSyncedRef.current) return;
+    try {
+      const cookieMatch = document.cookie.match(/(?:^|; )i18next=([^;]+)/);
+      const cookieLng = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+      if (cookieLng && cookieLng !== i18n.language) {
+        hasSyncedRef.current = true;
+        // Align with cookie without writing back immediately to prevent loop
+        i18n.changeLanguage(cookieLng).catch(() => {});
+        return;
+      }
+      hasSyncedRef.current = true;
+    } catch {}
+  }, [i18n]);
+
+  // Persist language changes to localStorage, cookie, URL, and DOM
   useEffect(() => {
     if (!i18n.language) return;
     try {
       // Persist selection for all languages (including 'en')
-      localStorage.setItem('lng', i18n.language);
+      try { localStorage.setItem('lng', i18n.language); } catch {}
 
       // Actively set client-visible cookie to avoid stale values on next requests
       document.cookie = `i18next=${encodeURIComponent(i18n.language)}; path=/; max-age=${365 * 24 * 60 * 60}`;

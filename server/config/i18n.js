@@ -199,11 +199,12 @@ async function initializeI18n() {
       
       // Language detection options
       detection: {
-        order: ['querystring', 'cookie', 'header', 'session'],
+        order: ['querystring', 'cookie', 'header'],
         caches: ['cookie'],
+        lookupCookie: 'i18next',
         cookieOptions: {
           path: '/',
-          sameSite: 'strict',
+          sameSite: 'lax',
           secure: process.env.NODE_ENV === 'production',
           httpOnly: false
         }
@@ -278,8 +279,10 @@ async function initializeI18n() {
         addPath: join(__dirname, '../locales/{{lng}}/{{ns}}.missing.json')
       },
       detection: {
-        order: ['querystring', 'cookie', 'header', 'session'],
-        caches: ['cookie']
+        order: ['querystring', 'cookie', 'header'],
+        caches: ['cookie'],
+        lookupCookie: 'i18next',
+        cookieOptions: { path: '/', sameSite: 'lax', httpOnly: false }
       },
       interpolation: { escapeValue: false },
       ns: ['common', 'ui', 'menu', 'home', 'orders', 'account', 'reservations'],
