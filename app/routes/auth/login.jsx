@@ -644,13 +644,19 @@ export async function action({ request, context }) {
         }
 
         console.log('✅ Login successful',result);
-        // Return success data with cookies; let caller handle redirect
- 
-        return data(result, {
-            headers: {
-                'Set-Cookie': response.headers.get('set-cookie') || '',
+        // Commit cookies to the browser before any follow-up auth checks
+        const headerList = new Headers();
+        headerList.set('Location', '/?login=1');
+        try {
+            const getSetCookie = response.headers.getSetCookie?.();
+            if (Array.isArray(getSetCookie) && getSetCookie.length > 0) {
+                for (const c of getSetCookie) headerList.append('Set-Cookie', c);
+            } else {
+                const single = response.headers.get('set-cookie');
+                if (single) headerList.append('Set-Cookie', single);
             }
-        });
+        } catch {}
+        return new Response(null, { status: 303, headers: headerList });
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
