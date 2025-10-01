@@ -1,9 +1,10 @@
 export default {
-  // Config options...
   // Server-side render by default, to enable SPA mode set this to `false`
   ssr: true,
-  // Explicitly disable all future flags to prevent turbo-stream issues
   future: {
+    // Enable middleware API
+    v8_middleware: true,
+    // Keep existing flags as-is
     v3_singleFetch: false,
     unstable_singleFetch: false,
     v3_fetcherPersist: false,
