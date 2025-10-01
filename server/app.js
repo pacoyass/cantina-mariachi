@@ -256,14 +256,22 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(
 	createRequestHandler({
 		build: () => import("virtual:react-router/server-build"),
-		getLoadContext(req, res) {
-			return {
-				VALUE_FROM_EXPRESS: "Hello from Express",
-				nonce: res.locals.nonce,
-				csrfToken: res.locals.csrfToken,
-				lng: req.language || req.lng || 'en' // Pass detected language to React
-			};
-		},
+			getLoadContext(req, res) {
+				const currentLng = req.language || req.lng || 'en';
+				let resources = {};
+				try {
+					const i18n = i18nInstance;
+					// Safely read preloaded resources for current language
+					resources = i18n?.services?.resourceStore?.data?.[currentLng] || {};
+				} catch {}
+				return {
+					VALUE_FROM_EXPRESS: "Hello from Express",
+					nonce: res.locals.nonce,
+					csrfToken: res.locals.csrfToken,
+					lng: currentLng,
+					resources
+				};
+			},
 	}),
 );
 

@@ -21,6 +21,7 @@ export async function loader( { request, context } )
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
   const lng = context?.lng || 'en';
+  const resources = context?.resources || {};
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
   try {
@@ -34,10 +35,10 @@ export async function loader( { request, context } )
   } catch {}
   
   if ( nonce ) {
-    return { nonce: nonce, csrfToken: csrfToken, lng, status };
+    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status };
   }
   
-  return { nonce: "", lng, status }; 
+  return { nonce: "", lng, resources, status }; 
 }
 
 export const links = () => [
@@ -59,6 +60,7 @@ export function Layout( { children } )
   const loaderData = useLoaderData() || {}; 
   const nonce = loaderData.nonce || ""; 
   const initialLang = loaderData.lng || 'en';
+  const initialResources = loaderData.resources || {};
   const initialStatus = loaderData.status || { isOpen: true, etaMins: 25 };
   
   // Use server-provided language to prevent hydration mismatch
@@ -114,6 +116,15 @@ export function Layout( { children } )
         </ThemeProvider>
         
         <ScrollRestoration nonce={nonce} />
+        {/* Embed server-loaded i18n resources for hydration to avoid flicker/mismatch */}
+        {initialResources && Object.keys(initialResources).length > 0 && (
+          <script
+            nonce={nonce}
+            dangerouslySetInnerHTML={{
+              __html: `window.__I18N__=${JSON.stringify({ lng: initialLang, resources: { [initialLang]: initialResources } }).replace(/</g, '\\u003c')}`
+            }}
+          />
+        )}
         <Scripts nonce={nonce} />
       </body>
     </html>

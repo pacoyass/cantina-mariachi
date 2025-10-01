@@ -10,17 +10,21 @@ startTransition(async () => {
   try {
     // Use server-rendered language for initial hydration to prevent mismatch
     const serverLang = document.documentElement.lang || 'en';
-    // Hydrate with the full resources from the server API to avoid mismatch
-    let initialResources = uiResources[serverLang] || uiResources.en;
-    try {
-      const res = await fetch(`/api/translations/${serverLang}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data?.success && data?.data?.translations) {
-          initialResources = data.data.translations;
+    // Prefer embedded resources from SSR to avoid network dependency and flicker
+    const embedded = (window).__I18N__;
+    let initialResources = embedded?.resources?.[serverLang] || uiResources[serverLang] || uiResources.en;
+    // If no embedded, try API once as enhancement
+    if (!embedded) {
+      try {
+        const res = await fetch(`/api/translations/${serverLang}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.success && data?.data?.translations) {
+            initialResources = data.data.translations;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
     const i18n = await initI18n({ lng: serverLang, resources: initialResources });
     try { if (i18n?.options?.react) { i18n.options.react.useSuspense = true } } catch {}
     
@@ -33,16 +37,18 @@ startTransition(async () => {
         const storedLang = localStorage.getItem('lng');
         const clientLang = urlLang || storedLang || serverLang;
         
-        // Merge server translations after hydration to enrich resources if needed
-        try {
-          const apiTranslations = await loadTranslationsFromAPI(clientLang);
-          if (apiTranslations && typeof apiTranslations === 'object') {
-            for (const [ns, nsRes] of Object.entries(apiTranslations)) {
-              i18n.addResourceBundle(clientLang, ns, nsRes, true, true);
+        // Merge server translations (embedded or fetched) post-hydration to enrich resources if needed
+        if (!embedded || clientLang !== serverLang) {
+          try {
+            const apiTranslations = await loadTranslationsFromAPI(clientLang);
+            if (apiTranslations && typeof apiTranslations === 'object') {
+              for (const [ns, nsRes] of Object.entries(apiTranslations)) {
+                i18n.addResourceBundle(clientLang, ns, nsRes, true, true);
+              }
             }
+          } catch (e) {
+            console.warn('Failed to load/merge API translations post-hydration:', e);
           }
-        } catch (e) {
-          console.warn('Failed to load/merge API translations post-hydration:', e);
         }
 
         if (clientLang !== serverLang && i18n?.changeLanguage) {

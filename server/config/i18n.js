@@ -230,8 +230,8 @@ async function initializeI18n() {
       cleanCode: true,
       
       // Performance options
-      updateMissing: process.env.NODE_ENV === 'development',
-      saveMissing: process.env.NODE_ENV === 'development',
+      updateMissing: false,
+      saveMissing: false,
       
       // Return details about translation
       returnDetails: false,
