@@ -646,7 +646,7 @@ export async function action({ request, context }) {
         console.log('✅ Login successful',result);
         // Commit cookies to the browser before any follow-up auth checks
         const headerList = new Headers();
-        headerList.set('Location', '/?login=1');
+        headerList.set('Location', `/?lng=${encodeURIComponent(currentLng)}&login=1`);
         try {
             const getSetCookie = response.headers.getSetCookie?.();
             if (Array.isArray(getSetCookie) && getSetCookie.length > 0) {
