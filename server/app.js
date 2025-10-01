@@ -258,12 +258,23 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(
 	createRequestHandler({
 		build: () => import("virtual:react-router/server-build"),
-		getLoadContext(req, res) {
+			getLoadContext(req, res) {
+				const currentLng = req.language || req.lng || 'en';
+				let resources = {};
+				try {
+					// Prefer req.i18n resources provided by i18next middleware
+					const store = req.i18n?.services?.resourceStore?.data;
+					if (store && store[currentLng]) {
+						resources = store[currentLng];
+					}
+				} catch {}
 			return {
 				VALUE_FROM_EXPRESS: "Hello from Express",
 				nonce: res.locals.nonce,
 				csrfToken: res.locals.csrfToken,
-				lng: req.language || req.lng || 'en' // Pass detected language to React
+					lng: currentLng, // Pass detected language to React
+					// Pass preloaded i18n resources for current language to hydrate client
+					resources
 			};
 		},
 	}),

@@ -26,6 +26,7 @@ export async function loader( { request, context } )
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
   const lng = context?.lng || 'en';
+  const resources = context?.resources || {};
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
   try {
@@ -39,10 +40,10 @@ export async function loader( { request, context } )
   } catch {}
   
   if ( nonce ) {
-    return { nonce: nonce, csrfToken: csrfToken, lng, status };
+    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status };
   }
   
-  return { nonce: "", lng, status }; 
+  return { nonce: "", lng, resources, status }; 
 }
 
 export const links = () => [
@@ -64,12 +65,38 @@ export function Layout( { children } )
   const loaderData = useLoaderData() || {}; 
   const nonce = loaderData.nonce || ""; 
   const initialLang = loaderData.lng || 'en';
+  const initialResources = loaderData.resources || {};
   const initialStatus = loaderData.status || { isOpen: true, etaMins: 25 };
   
   // Use server-provided language to prevent hydration mismatch
   // Don't try to detect URL language on client during initial render
   const lang = initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
+
+  // Hydrate i18n on the client immediately with server-provided resources to prevent flicker
+  const { i18n } = useTranslation();
+  useEffect(() => {
+    try {
+      if (!i18n.isInitialized) {
+        i18n.init({
+          lng: lang,
+          resources: { [lang]: initialResources },
+          interpolation: { escapeValue: false },
+          initImmediate: false,
+        }).catch(() => {});
+      } else {
+        // Ensure resources exist before switching
+        if (initialResources && Object.keys(initialResources).length > 0) {
+          for (const [ns, bundle] of Object.entries(initialResources)) {
+            i18n.addResourceBundle(lang, ns, bundle, true, true);
+          }
+        }
+        if (i18n.language !== lang) {
+          i18n.changeLanguage(lang).catch(() => {});
+        }
+      }
+    } catch {}
+  }, [i18n, lang, initialResources]);
 
   // Client-side language sync (after hydration) - Removed DOM manipulation to fix React removeChild errors
   // Language updates are handled in entry.client.jsx to avoid React DOM conflicts
