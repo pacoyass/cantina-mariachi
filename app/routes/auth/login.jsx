@@ -626,7 +626,11 @@ export async function action({ request, context }) {
         const response = await fetch(apiEndpoint, {
             method: 'POST',
             signal: request.signal,
-            headers: requestHeaders,
+            headers: {
+                "Content-Type": "application/json",
+                'X-CSRF-Token': csrfToken, // Include the CSRF token in the headers
+                cookie: request.headers.get( 'cookie' ),
+            },
             credentials: 'include',
             body: JSON.stringify({ email: finalEmail, password: finalPassword, remember: !!finalRemember }),
         });
@@ -639,20 +643,17 @@ export async function action({ request, context }) {
             return { error: true, message: result || 'Login failed' };
         }
 
-        console.log('✅ Login successful',response.headers.get('set-cookie'));
+        console.log('✅ Login successful',result);
         // Return success data with cookies; let caller handle redirect
-        return redirect('/',{
-                  headers: {
+ 
+        return data(result, {
+            headers: {
                 'Set-Cookie': response.headers.get('set-cookie') || '',
             }
-        })
-        // return data(result, {
-        //     headers: {
-        //         'Set-Cookie': response.headers.get('set-cookie') || '',
-        //     }
-        // });
+        });
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
     }
 }
+

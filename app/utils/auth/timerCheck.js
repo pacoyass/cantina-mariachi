@@ -1,29 +1,37 @@
+
 import { useCallback, useEffect } from "react";
 import { useRevalidator, useSubmit } from "react-router";
 import { getTokenDuration } from "./authUtils";
 
-export function useTokenTimer(refreshExpire, userExp) {
-  const submit = useSubmit();
-  const { revalidate } = useRevalidator();
+export function useTokenTimer( refreshExpire, userExp )
+{
+    const submit = useSubmit();
+    const { revalidate } = useRevalidator();
 
-  const handleRevalidate = useCallback(() => revalidate(), [revalidate]);
-  const handleLogout = useCallback(() => submit(null, { action: "/logout", method: "post" }), [submit]);
+    // Memoize functions to avoid recreating them
+    const handleRevalidate = useCallback( () => revalidate(), [revalidate] );
+    const handleLogout = useCallback( () => submit( null, { action: "/logout", method: "post" } ), [submit] );
 
-  useEffect(() => {
-    if (!refreshExpire || !userExp) return;
 
-    const refreshDuration = getTokenDuration(refreshExpire);
-    const userDuration = getTokenDuration(userExp);
+    // console.log("📌 Refresh Expire From timer:", refreshExpire, userExp);
 
-    const revalAt = userDuration > 5000 ? userDuration - 5000 : 0;
+    useEffect( () =>
+    {
+        if ( !refreshExpire || !userExp ) return;
 
-    const userTimer = setTimeout(handleRevalidate, revalAt);
-    const logoutTimer = setTimeout(handleLogout, refreshDuration);
+        const refreshDuration = getTokenDuration( refreshExpire );
+        const userDuration = getTokenDuration( userExp );
 
-    return () => {
-      clearTimeout(userTimer);
-      clearTimeout(logoutTimer);
-    };
-  }, [refreshExpire, userExp, handleRevalidate, handleLogout]);
+
+        // console.log("📌 Refresh Token Duration:", refreshDuration);
+
+        const userTimer = setTimeout( handleRevalidate, userDuration - 5000 );
+        const logoutTimer = setTimeout( handleLogout, refreshDuration );
+
+        return () =>
+        {
+            clearTimeout( userTimer );
+            clearTimeout( logoutTimer );
+        };
+    }, [refreshExpire, userExp, handleRevalidate, handleLogout] ); // ✅ Use memoized functions
 }
-
