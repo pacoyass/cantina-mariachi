@@ -34,18 +34,20 @@ export async function checkAuthToken( request, csrfToken )
                 const refreshResult = await refreshAccessToken( cookies, csrfToken );
                 if ( refreshResult && refreshResult.user && !refreshResult.refreshExpired ) {
                     // Retry token check once after successful refresh
+                    const mergedCookieHeader = mergeCookiesWithSetCookie(cookies, refreshResult?.setCookieRaw);
                     const retry = await fetch( `${API_URL}/api/auth/token`, {
                         method: "GET",
                         signal: request.signal,
                         credentials: "include",
                         headers: {
                             "Content-Type": "application/json",
-                            // Cookies are sent via credentials: 'include'
+                            // Supply updated cookies explicitly for server-to-server fetch
+                            cookie: mergedCookieHeader || cookies,
                         },
                     } );
                     const retryData = await retry.json();
                     if ( retry.ok && retryData?.user?.exp ) {
-                        const refreshFollowUp = await scheduleTokenRefresh( retryData.user.exp, retryData.refreshExpire, cookies, csrfToken );
+                        const refreshFollowUp = await scheduleTokenRefresh( retryData.user.exp, retryData.refreshExpire, mergedCookieHeader || cookies, csrfToken );
                         return {
                             user: refreshFollowUp?.user || retryData.user,
                             refreshExpire: refreshFollowUp?.refreshExpire || retryData.refreshExpire,
@@ -209,7 +211,7 @@ export async function refreshAccessToken( cookies, csrfToken, attempt = 1 )
             console.warn( "⚠️ Missing refresh expiration info. Logging out..." );
             return { user: null, refreshExpired: true };
         }
-        const setCookieHeader = getHeaders.get( "Set-Cookie" );
+        const setCookieHeader = getHeaders.get( "set-cookie" ) || getHeaders.get("Set-Cookie");
         if ( !setCookieHeader ) {
             console.warn( "⚠️ No Set-Cookie header found in the response." );
             return { user: null, refreshExpired: true };
@@ -217,12 +219,14 @@ export async function refreshAccessToken( cookies, csrfToken, attempt = 1 )
         // console.log("📌 refreed data user exp:", refreshedData.user.exp,refreshExpire);
 
         // Schedule the next refresh
-        scheduleTokenRefresh( refreshedData.user.exp, refreshExpire, cookies );
+        const mergedCookieHeader = mergeCookiesWithSetCookie(cookies, setCookieHeader);
+        scheduleTokenRefresh( refreshedData.user.exp, refreshExpire, mergedCookieHeader );
 
         return {
             user: refreshedData.user,
             refreshExpire: refreshExpire,
             headers: getHeaders,
+            setCookieRaw: setCookieHeader,
         };
     } catch ( error ) {
         console.error( "🚨 Error refreshing token. Retrying...", error );
@@ -239,3 +243,35 @@ const getCookieValue = ( cookieString, key ) =>
         .find( row => row.startsWith( `${key}=` ) )
         ?.split( "=" )[1] || "";
 };
+
+// Merge incoming Set-Cookie header(s) into an existing Cookie header string
+function mergeCookiesWithSetCookie(existingCookieHeader = '', setCookieRaw) {
+    try {
+        if (!setCookieRaw) return existingCookieHeader;
+        const existingMap = new Map(
+            existingCookieHeader
+                .split(/;\s*/)
+                .filter(Boolean)
+                .map(pair => {
+                    const [k, ...rest] = pair.split('=');
+                    return [k, rest.join('=')];
+                })
+        );
+
+        const setCookieArray = Array.isArray(setCookieRaw) ? setCookieRaw : [setCookieRaw];
+        for (const sc of setCookieArray) {
+            // Each Set-Cookie: name=value; Path=/; HttpOnly; ...
+            const firstPart = sc.split(';')[0];
+            const [name, ...rest] = firstPart.split('=');
+            if (!name) continue;
+            const value = rest.join('=');
+            existingMap.set(name.trim(), value);
+        }
+
+        return Array.from(existingMap.entries())
+            .map(([k, v]) => `${k}=${v}`)
+            .join('; ');
+    } catch {
+        return existingCookieHeader;
+    }
+}
