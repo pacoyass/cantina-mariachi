@@ -186,13 +186,16 @@ export async function refreshAccessToken( cookies, csrfToken, attempt = 1 )
     // console.log("🔄 Attempting token refresh (Attempt", attempt, ")...");
 
     try {
+        const refreshFromCookie = getCookieValue(cookies || '', 'refreshToken');
         const response = await fetch( `${API_URL}/api/auth/refresh-token`, {
             method: "POST",
             credentials: "include",
             headers: {
+                "Content-Type": "application/json",
                 "x-csrf-token": csrfToken,
-                cookie: cookies
+                cookie: cookies,
             },
+            body: JSON.stringify({ refreshToken: refreshFromCookie || undefined }),
         } );
 
 
