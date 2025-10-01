@@ -641,16 +641,12 @@ export async function action({ request, context }) {
 
         console.log('✅ Login successful',response.headers.get('set-cookie'));
         // Return success data with cookies; let caller handle redirect
-        return redirect('/',{
-                  headers: {
+    
+        return data(result, {
+            headers: {
                 'Set-Cookie': response.headers.get('set-cookie') || '',
             }
-        })
-        // return data(result, {
-        //     headers: {
-        //         'Set-Cookie': response.headers.get('set-cookie') || '',
-        //     }
-        // });
+        });
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };
