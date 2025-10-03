@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, useLoaderData, useActionData, useNavigation, redirect } from 'react-router';
+import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext } from 'react-router';
 // middleware-based auth temporarily disabled due to RouterContextProvider incompatibility
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -26,16 +26,6 @@ export async function loader({ request }) {
   const url = new URL(request.url);
   const cookie = request.headers.get('cookie') || '';
   
-  // SSR auth check
-  const authRes = await fetch(`${url.origin}/api/users/me`, { 
-    headers: { cookie } 
-  });
-  if (!authRes.ok) {
-    return redirect('/login?redirect=' + encodeURIComponent('/account'));
-  }
-  const authData = await authRes.json();
-  const user = authData.data?.user;
-  
   try {
     // Get user's orders
     const ordersRes = await fetch(`${url.origin}/api/orders/mine/list`, { 
@@ -45,14 +35,13 @@ export async function loader({ request }) {
     const ordersData = ordersRes.ok ? await ordersRes.json() : { data: { orders: [] } };
     
     // Get user's reservations
-    const reservationsRes = await fetch(`${url.origin}/api/reservations?userId=${user.id}`, { 
+    const reservationsRes = await fetch(`${url.origin}/api/reservations`, { 
       headers: { cookie } 
     });
     
     const reservationsData = reservationsRes.ok ? await reservationsRes.json() : { data: { reservations: [] } };
 
     return {
-      user,
       orders: ordersData.data?.orders || [],
       reservations: reservationsData.data?.reservations || [],
       isWelcome: url.searchParams.get('welcome') === 'true'
@@ -62,115 +51,149 @@ export async function loader({ request }) {
   }
 }
 
-export async function action({ request }) {
-  const formData = await request.formData();
-  const actionType = formData.get('_action');
+// export async function action({ request }) {
+//   const formData = await request.formData();
+//   const actionType = formData.get('_action');
   
-  if (actionType === 'updateProfile') {
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const phone = formData.get('phone');
-    const address = formData.get('address');
+//   if (actionType === 'updateProfile') {
+//     const name = formData.get('name');
+//     const email = formData.get('email');
+//     const phone = formData.get('phone');
+//     const address = formData.get('address');
 
-    // Validation
-    const errors = {};
+//     // Validation
+//     const errors = {};
     
-    if (!name || name.trim().length < 2) {
-      errors.name = 'Name is required';
-    }
+//     if (!name || name.trim().length < 2) {
+//       errors.name = 'Name is required';
+//     }
 
-    if (!email || !email.includes('@')) {
-      errors.email = 'Valid email is required';
-    }
+//     if (!email || !email.includes('@')) {
+//       errors.email = 'Valid email is required';
+//     }
 
-    if (Object.keys(errors).length > 0) {
-      return { errors, fields: { name, email, phone, address } };
-    }
+//     if (Object.keys(errors).length > 0) {
+//       return { errors, fields: { name, email, phone, address } };
+//     }
 
-    try {
-      const response = await fetch(`${new URL(request.url).origin}/api/users/me`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': request.headers.get('cookie') || ''
-        },
-        body: JSON.stringify({ 
-          name: name.trim(), 
-          email: email.toLowerCase().trim(), 
-          phone: phone?.trim(),
-          address: address?.trim()
-        }),
-      });
+//     try {
+//       const response = await fetch(`${new URL(request.url).origin}/api/users/me`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Cookie': request.headers.get('cookie') || ''
+//         },
+//         body: JSON.stringify({ 
+//           name: name.trim(), 
+//           email: email.toLowerCase().trim(), 
+//           phone: phone?.trim(),
+//           address: address?.trim()
+//         }),
+//       });
 
-      if (!response.ok) {
-        const data = await response.json();
-      return { error: data.error?.message || 'Failed to update profile' };
-      }
+//       if (!response.ok) {
+//         const data = await response.json();
+//       return { error: data.error?.message || 'Failed to update profile' };
+//       }
 
-      return { success: 'Profile updated successfully' };
-    } catch (error) {
-      return { error: 'Network error. Please try again.' };
-    }
-  }
+//       return { success: 'Profile updated successfully' };
+//     } catch (error) {
+//       return { error: 'Network error. Please try again.' };
+//     }
+//   }
 
-  if (actionType === 'changePassword') {
-    const currentPassword = formData.get('currentPassword');
-    const newPassword = formData.get('newPassword');
-    const confirmPassword = formData.get('confirmPassword');
+//   if (actionType === 'changePassword') {
+//     const currentPassword = formData.get('currentPassword');
+//     const newPassword = formData.get('newPassword');
+//     const confirmPassword = formData.get('confirmPassword');
 
-    // Validation
-    const errors = {};
+//     // Validation
+//     const errors = {};
     
-    if (!currentPassword) {
-      errors.currentPassword = 'Current password is required';
-    }
+//     if (!currentPassword) {
+//       errors.currentPassword = 'Current password is required';
+//     }
 
-    if (!newPassword || newPassword.length < 8) {
-      errors.newPassword = 'New password must be at least 8 characters';
-    }
+//     if (!newPassword || newPassword.length < 8) {
+//       errors.newPassword = 'New password must be at least 8 characters';
+//     }
 
-    if (newPassword !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
+//     if (newPassword !== confirmPassword) {
+//       errors.confirmPassword = 'Passwords do not match';
+//     }
 
-    if (Object.keys(errors).length > 0) {
-      return { passwordErrors: errors };
-    }
+//     if (Object.keys(errors).length > 0) {
+//       return { passwordErrors: errors };
+//     }
 
-    try {
-      const response = await fetch(`${new URL(request.url).origin}/api/users/me/password`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': request.headers.get('cookie') || ''
-        },
-        body: JSON.stringify({ 
-          currentPassword, 
-          newPassword 
-        }),
+//     try {
+//       const response = await fetch(`${new URL(request.url).origin}/api/users/me/password`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Cookie': request.headers.get('cookie') || ''
+//         },
+//         body: JSON.stringify({ 
+//           currentPassword, 
+//           newPassword 
+//         }),
+//       });
+
+//       if (!response.ok) {
+//         const data = await response.json();
+//       return { passwordError: data.error?.message || 'Failed to change password' };
+//       }
+
+//       return { passwordSuccess: 'Password changed successfully' };
+//     } catch (error) {
+//       return { passwordError: 'Network error. Please try again.' };
+//     }
+//   }
+
+//   return null;
+// }
+// AccountPage.action.js
+export async function action({ request }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
+  const formData = await request.formData();
+  const intent = formData.get("intent");
+
+  try {
+    if (intent === "cancel-order") {
+      const orderNumber = formData.get("orderNumber");
+      const res = await fetch(`${url.origin}/api/orders/${orderNumber}`, {
+        method: "DELETE", // you'll need to implement this backend route
+        headers: { cookie },
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-      return { passwordError: data.error?.message || 'Failed to change password' };
-      }
-
-      return { passwordSuccess: 'Password changed successfully' };
-    } catch (error) {
-      return { passwordError: 'Network error. Please try again.' };
+      return res.json();
     }
-  }
 
-  return null;
+    if (intent === "cancel-reservation") {
+      const reservationId = formData.get("reservationId");
+      const res = await fetch(`${url.origin}/api/reservations/${reservationId}`, {
+        method: "DELETE",
+        headers: { cookie },
+      });
+      return res.json();
+    }
+
+    return { status: "error", message: "Unknown action" };
+  } catch (error) {
+    console.error("AccountPage.action error:", error);
+    return { status: "error", message: "Action failed" };
+  }
 }
 
-export default function AccountPage() {
+export default function AccountPage({loaderData,actionData}) {
   const { t } = useTranslation(['account', 'common']);
-  const { user, orders, reservations, isWelcome } = useLoaderData();
-  const actionData = useActionData();
+  const {user}= useOutletContext() || {};
+  const {  orders, reservations, isWelcome } = loaderData;
+  const actionDatas = actionData;
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
   const isSubmitting = navigation.state === 'submitting';
+console.log("from account",user);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -286,19 +309,19 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Success/Error Messages */}
-                {actionData?.success && (
+                {actionDatas?.success && (
                   <Alert className="border-green-200 bg-green-50">
                     <CheckCircle className="h-4 w-4 text-green-600" />
                     <AlertDescription className="text-green-800">
-                      {actionData.success}
+                      {actionDatas.success}
                     </AlertDescription>
                   </Alert>
                 )}
                 
-                {actionData?.error && (
+                {actionDatas?.error && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{actionData.error}</AlertDescription>
+                    <AlertDescription>{actionDatas.error}</AlertDescription>
                   </Alert>
                 )}
 
@@ -310,12 +333,12 @@ export default function AccountPage() {
                     <Input
                       id="name"
                       name="name"
-                      defaultValue={actionData?.fields?.name || user?.name || ''}
+                      defaultValue={actionDatas?.fields?.name || user?.name || ''}
                       placeholder="Your full name"
                       required
                     />
-                    {actionData?.errors?.name && (
-                      <p className="text-sm text-destructive">{actionData.errors.name}</p>
+                    {actionDatas?.errors?.name && (
+                      <p className="text-sm text-destructive">{actionDatas.errors.name}</p>
                     )}
                   </div>
 
@@ -325,12 +348,12 @@ export default function AccountPage() {
                       id="email"
                       name="email"
                       type="email"
-                      defaultValue={actionData?.fields?.email || user?.email || ''}
+                      defaultValue={actionDatas?.fields?.email || user?.email || ''}
                       placeholder="your.email@example.com"
                       required
                     />
-                    {actionData?.errors?.email && (
-                      <p className="text-sm text-destructive">{actionData.errors.email}</p>
+                    {actionDatas?.errors?.email && (
+                      <p className="text-sm text-destructive">{actionDatas.errors.email}</p>
                     )}
                   </div>
 
@@ -340,7 +363,7 @@ export default function AccountPage() {
                       id="phone"
                       name="phone"
                       type="tel"
-                      defaultValue={actionData?.fields?.phone || user?.phone || ''}
+                      defaultValue={actionDatas?.fields?.phone || user?.phone || ''}
                       placeholder="Your phone number"
                     />
                   </div>
@@ -350,7 +373,7 @@ export default function AccountPage() {
                     <Input
                       id="address"
                       name="address"
-                      defaultValue={actionData?.fields?.address || user?.address || ''}
+                      defaultValue={actionDatas?.fields?.address || user?.address || ''}
                       placeholder="Your delivery address"
                     />
                   </div>
@@ -372,19 +395,19 @@ export default function AccountPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Password Success/Error Messages */}
-                {actionData?.passwordSuccess && (
+                {actionDatas?.passwordSuccess && (
                   <Alert className="border-green-200 bg-green-50">
                     <CheckCircle className="h-4 w-4 text-green-600" />
                     <AlertDescription className="text-green-800">
-                      {actionData.passwordSuccess}
+                      {actionDatas.passwordSuccess}
                     </AlertDescription>
                   </Alert>
                 )}
                 
-                {actionData?.passwordError && (
+                {actionDatas?.passwordError && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{actionData.passwordError}</AlertDescription>
+                    <AlertDescription>{actionDatas.passwordError}</AlertDescription>
                   </Alert>
                 )}
 
@@ -400,8 +423,8 @@ export default function AccountPage() {
                       placeholder="Enter current password"
                       required
                     />
-                    {actionData?.passwordErrors?.currentPassword && (
-                      <p className="text-sm text-destructive">{actionData.passwordErrors.currentPassword}</p>
+                    {actionDatas?.passwordErrors?.currentPassword && (
+                      <p className="text-sm text-destructive">{actionDatas.passwordErrors.currentPassword}</p>
                     )}
                   </div>
 
@@ -414,8 +437,8 @@ export default function AccountPage() {
                       placeholder="Enter new password"
                       required
                     />
-                    {actionData?.passwordErrors?.newPassword && (
-                      <p className="text-sm text-destructive">{actionData.passwordErrors.newPassword}</p>
+                    {actionDatas?.passwordErrors?.newPassword && (
+                      <p className="text-sm text-destructive">{actionDatas.passwordErrors.newPassword}</p>
                     )}
                   </div>
 
@@ -428,8 +451,8 @@ export default function AccountPage() {
                       placeholder="Confirm new password"
                       required
                     />
-                    {actionData?.passwordErrors?.confirmPassword && (
-                      <p className="text-sm text-destructive">{actionData.passwordErrors.confirmPassword}</p>
+                    {actionDatas?.passwordErrors?.confirmPassword && (
+                      <p className="text-sm text-destructive">{actionDatas.passwordErrors.confirmPassword}</p>
                     )}
                   </div>
 
@@ -495,7 +518,13 @@ export default function AccountPage() {
                   <p className="text-muted-foreground mb-4">
                     Start exploring our delicious menu!
                   </p>
-                  <Button>Browse Menu</Button>
+                  <Link to="/menu">
+                    <Button variant="outline"  className="cursor-pointer ">
+                       Browse Menu 
+                    </Button>
+                
+                  </Link>
+                
                 </div>
               )}
             </CardContent>

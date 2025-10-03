@@ -134,7 +134,23 @@ export const databaseService = {
 
     return webhooks;
   },
-
+  async findLatestRefreshForUser(userId, tx) {
+    const db = withTx(tx);
+    const token = await db.refreshToken.findFirst({
+      where: { userId },
+      orderBy: { expiresAt: 'desc' },
+      select: {
+        id: true,
+        token: true,
+        expiresAt: true,
+        userAgent: true,
+        ip: true,
+      },
+    });
+    if (!token) return null;
+    return token;
+  },
+  
   async deleteExpiredWebhooks(daysOld = 30, tx) {
     const db = withTx(tx);
     const cutoff = new Date();

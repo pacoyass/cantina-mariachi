@@ -477,25 +477,30 @@ export function headers( {
   return actionHeaders ? actionHeaders : loaderHeaders;
 }
 
-export default function LoginPage( { actionData } ) {
+export default function LoginPage({ actionData } ) {
+    
 
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
+//   const urlObj = actionData?.urlPathname;
+//     const redirectTarget = urlObj?.searchParams?.get("redirect");
+// console.log("actionData",actionData);
     const errorMessage = actionData?.error === true ? actionData.message : "";
-    useEffect( () =>
-    {
-        if (!actionData) return;
-        // Prefer server-provided redirectUrl when present
-        if (actionData.redirectUrl) {
-            navigate(actionData.redirectUrl);
-            return;
-        }
-        if ( actionData?.error === false && actionData?.code === "LOGIN_SUCCESS" ) {
-            navigate( `/?login-message=${encodeURIComponent( actionData.message || '' )}` );
-        }
-    }, [actionData, navigate] );
+//     useEffect( () =>
+//     {
+//         if (!actionData) return;
+//         // Prefer server-provided redirectUrl when present
+//         if (redirectTarget) {
+//             navigate(redirectTarget);
+//             return;
+//           }
+        
+//         if ( actionData?.error === false && actionData ) {
+//             navigate( `/?login-message=${encodeURIComponent( actionData.message || '' )}` );
+//         }
+//     }, [actionData, navigate] );
 
     return (
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-md bg-opacity-50 flex justify-center items-center">
+      <div className="py-8 flex justify-center items-center">
           <Login error={errorMessage} />
       </div>
   );
@@ -636,6 +641,9 @@ export async function action({ request, context }) {
         });
         
         const result = await response.json();
+        
+  const urlPathname = new URL(request?.url);
+
         console.log('📡 API response status:', response.status);
         
         if (!response.ok) {
@@ -644,19 +652,11 @@ export async function action({ request, context }) {
         }
 
         console.log('✅ Login successful',result);
-        // Commit cookies to the browser before any follow-up auth checks
-        const headerList = new Headers();
-        headerList.set('Location', `/?lng=${encodeURIComponent(currentLng)}&login=1`);
-        try {
-            const getSetCookie = response.headers.getSetCookie?.();
-            if (Array.isArray(getSetCookie) && getSetCookie.length > 0) {
-                for (const c of getSetCookie) headerList.append('Set-Cookie', c);
-            } else {
-                const single = response.headers.get('set-cookie');
-                if (single) headerList.append('Set-Cookie', single);
+        return data( {result,urlPathname}, {
+            headers: {
+                'Set-Cookie': response.headers.get( "set-cookie" ),
             }
-        } catch {}
-        return new Response(null, { status: 303, headers: headerList });
+        } );
     } catch (error) {
         console.log('💥 Network error:', error.message);
         return { error: true, message: 'Network error. Please try again.' };

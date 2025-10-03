@@ -2,7 +2,6 @@
 import "react-router";
 import { createRequestHandler } from "@react-router/express";
 import express from "express";
-import session from "express-session";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import helmet from 'helmet';
@@ -116,33 +115,33 @@ app.use(helmet.hsts({
 	preload: true
 }));
 
-// app.use(cors({
-// 	origin: (origin, cb) => {
-// 		// Allow requests with no origin (like mobile apps or curl requests)
-// 		if (!origin) return cb(null, true);
+app.use(cors({
+	origin: (origin, cb) => {
+		// Allow requests with no origin (like mobile apps or curl requests)
+		if (!origin) return cb(null, true);
 		
-// 		// Allow localhost and your domain
-// 		const allowedOrigins = [
-// 			'http://localhost:3334',
-// 			'http://localhost:3333',
-// 			'http://localhost:5173',
-// 			'http://localhost:4173',
-// 			'http://127.0.0.1:3333',
-// 			'http://127.0.0.1:5173',
-// 			'http://127.0.0.1:4173'
-// 		];
+		// Allow localhost and your domain
+		const allowedOrigins = [
+			'http://localhost:3334',
+			'http://localhost:3333',
+			'http://localhost:5173',
+			'http://localhost:4173',
+			'http://127.0.0.1:3333',
+			'http://127.0.0.1:5173',
+			'http://127.0.0.1:4173'
+		];
 		
-// 		if (allowedOrigins.includes(origin)) {
-// 			return cb(null, true);
-// 		}
+		if (allowedOrigins.includes(origin)) {
+			return cb(null, true);
+		}
 		
-// 		cb(new Error('Not allowed by CORS'));
-// 	},
-// 	credentials: true
-// }));
+		cb(new Error('Not allowed by CORS'));
+	},
+	credentials: true
+}));
 
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Initialize i18n and add middleware

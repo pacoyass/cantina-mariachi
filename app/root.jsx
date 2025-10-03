@@ -8,22 +8,51 @@ import
   ScrollRestoration,
   useLoaderData,
   NavLink,
+  useOutletContext,
+  redirect,
+  useSubmit,
+  data,
 } from "react-router";
 import stylesheet from "./app.css?url";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { supportedLngs, rtlLngs } from '../i18n.config.js';
 import { useTranslation } from 'react-i18next';
-import { Navbar } from "./components/Navbar";
+import { Navbar } from "./pages/Navbar";
 import { Footer } from "./components/Footer";
-
+import { checkAuthToken } from "./utils/auth/authUtils";
+import { useCallback } from "react";
+import { useTokenTimer } from "./utils/auth/timerCheck";
+async function timingMiddleware({ context }, next) {
+  const start = performance.now();
+  await next();
+  const duration = performance.now() - start;
+  console.log(`Navigation took ${duration}ms`);
+}
 export async function loader( { request, context } )
 {
   const nonce = context?.nonce || "";
   const csrfToken = context?.csrfToken || "";
+  const result = await checkAuthToken(request, csrfToken);
   const lng = context?.lng || 'en';
+      const urlPathname = new URL(request.url).pathname;
+
+    // use redirect query param if it exists, else fallback to previous page (referer), else home
+    const redirectTo =
+      new URL(request.url).searchParams.get("redirect") ||
+      "/";
   const resources = context?.resources || {};
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
+  const user=result?.user ?? null;
+  console.log("testing paco",lng);
+  if (user && (urlPathname === "/login" || urlPathname === "/register")) {
+   
+    return redirect(`${redirectTo}?lng=${lng}`, { replace: true });
+  }
+  
+    if (!user && (urlPathname === "/menu" || urlPathname === "/account")) {
+      return redirect(`/login?redirect=${encodeURIComponent( urlPathname )}`,{replace:true});
+    }
   try {
     const url = new URL(request.url);
     const cookie = request.headers.get("cookie") || "";
@@ -33,12 +62,16 @@ export async function loader( { request, context } )
       if (json?.data?.status) status = json.data.status;
     }
   } catch {}
-  
+  const headers = result?.headers instanceof Headers ? result.headers : new Headers();
+  const checkHeaders = result?.checkHeaders instanceof Headers ? result.checkHeaders : new Headers();
   if ( nonce ) {
-    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status };
+    return data({ nonce: nonce, csrfToken: csrfToken, lng, resources, status,result },{
+      headers: headers ? headers : checkHeaders,
+    }) ;
   }
-  
-  return { nonce: "", lng, resources, status }; 
+  return data({ nonce: "", lng, resources, status },{
+    headers: headers ? headers : checkHeaders,
+  }) ;
 }
 
 export const links = () => [
@@ -62,15 +95,17 @@ export function Layout( { children } )
   const initialLang = loaderData.lng || 'en';
   const initialResources = loaderData.resources || {};
   const initialStatus = loaderData.status || { isOpen: true, etaMins: 25 };
-  
+  const submit = useSubmit();
   // Use server-provided language to prevent hydration mismatch
   // Don't try to detect URL language on client during initial render
   const lang = initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
-
+  const handleLogout = useCallback( () => submit( null, { action: "/logout", method: "post" } ), [submit] );
   // Client-side language sync (after hydration) - Removed DOM manipulation to fix React removeChild errors
   // Language updates are handled in entry.client.jsx to avoid React DOM conflicts
+console.log("root loader",loaderData.result);
 
+  useTokenTimer( loaderData?.result?.refreshExpire, loaderData?.result?.user?.exp );
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
@@ -109,7 +144,7 @@ export function Layout( { children } )
           suppressHydrationWarning
         >
           <div className="bg-mexican-pattern min-h-screen">
-            <Navbar initialStatus={initialStatus} />
+            <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} handleLogout={handleLogout} />
             {children}
             <Footer />
           </div>
@@ -133,7 +168,10 @@ export function Layout( { children } )
 
 export default function App()
 {
-  return <Outlet />;
+  const {result,lng}=useLoaderData() || {}; 
+ console.log("portugal paco",{result,lng:lng});
+ 
+  return <Outlet context={{ user:result?.user,lng }} />;
 }
 
 

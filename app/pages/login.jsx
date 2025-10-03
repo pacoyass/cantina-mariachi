@@ -18,7 +18,12 @@ export default function Login( { error } )
     const navigation = useNavigation();
     const pending = navigation.state === "submitting";
     const isNavigating = Boolean( navigation.location );
+    const isLoading=navigation.state === "loading";
 const [showPassword, setShowPassword] = useState(false)
+console.log("navigation state",navigation.state);
+console.log("navigation location",isNavigating);
+
+
     // Helper function to safely get translations as strings
     const getText = (key, fallback = '') => {
       try {
@@ -71,19 +76,6 @@ const [showPassword, setShowPassword] = useState(false)
                     </p>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {/* Error Alert */}
-                     
-                    {/* {error && (
-                      <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                          {typeof error === 'object' 
-                            ? JSON.stringify(error)
-                            : String(error)
-                          }
-                        </AlertDescription>
-                      </Alert>
-                    )} */}
     
                     {/* Login Form */}
                     <Form method="post" encType="multipart/form-data" className="space-y-4">
@@ -171,8 +163,16 @@ const [showPassword, setShowPassword] = useState(false)
                           </div>
                         ) : (
                           <div className="flex items-center space-x-2">
-                            <span>{getText('auth:login.signIn', 'Sign In')}</span>
+                            {isLoading?
+                           <p>loading...</p>
+                            :
+                            <>
+                             <span>{getText('auth:login.signIn', 'Signed In')}</span>
                             <ArrowRight className="h-4 w-4" />
+                            </>
+                             
+                            }
+                          
                           </div>
                         )}
                       </Button>
