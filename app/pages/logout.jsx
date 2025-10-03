@@ -2,11 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Link } from "react-router";
+import { Form, Link, useSubmit } from "react-router";
 import { LogOut, Home, ShoppingBag } from "../lib/lucide-shim.js";
 
 export default function Logout({ isLoggingOut = false, success = false }) {
   const { t } = useTranslation(['auth', 'common']);
+  const submit = useSubmit();
 
   // Helper function to safely get translations as strings
   const getText = (key, fallback = '') => {
@@ -20,9 +21,10 @@ export default function Logout({ isLoggingOut = false, success = false }) {
 
   if (success) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="container mx-auto px-4 py-8">
+      <main className="rounded-4xl border-4 bg-gray-100 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/70 ">
+          <div className="container mx-auto px-4 py-8">
           <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+
             <div className="w-full max-w-md space-y-6">
               {/* Header */}
               <div className="text-center">
@@ -89,9 +91,9 @@ export default function Logout({ isLoggingOut = false, success = false }) {
 
   // Loading state
   return (
-    <main className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+    <main className="rounded-4xl border-4  bg-gray-100 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/70 ">
+          <div className="container mx-auto px-8 py-8">
+        <div className="flex min-w-md min-h-[calc(60vh-3rem)] items-center justify-center">
           <div className="w-full max-w-md space-y-6">
             {/* Header */}
             <div className="text-center">
@@ -99,21 +101,26 @@ export default function Logout({ isLoggingOut = false, success = false }) {
                 <h1 className="text-3xl font-bold text-primary">Cantina Mariachi</h1>
               </Link>
             </div>
-
-            {/* Logout Loading Card */}
+<Form method="post">
+      {/* Logout Loading Card */}
             <Card className="border-0 shadow-lg">
               <CardHeader className="space-y-1 pb-4 text-center">
                 <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                 </div>
                 <CardTitle className="text-2xl font-semibold text-center">
+                  {/* {getText('auth:logout.loggingOut', 'Logging Out...')} */}
+                  <Button  type='submit'>
                   {getText('auth:logout.loggingOut', 'Logging Out...')}
+                  </Button>
                 </CardTitle>
                 <p className="text-sm text-muted-foreground text-center">
                   {getText('auth:logout.pleaseWait', 'Please wait while we log you out safely')}
                 </p>
               </CardHeader>
             </Card>
+</Form>
+        
           </div>
         </div>
       </div>

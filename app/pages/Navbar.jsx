@@ -1,15 +1,19 @@
-import { NavLink } from "react-router"
-import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
-import { ModeToggle } from "./ThemeToggle"
-import { Avatar, AvatarFallback } from "./ui/avatar"
+import { NavLink, useLoaderData, useOutletContext } from "react-router"
+import { Button } from "../components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet"
+import { ModeToggle } from "../components/ThemeToggle"
+import { Avatar, AvatarFallback } from "../components/ui/avatar"
 import { useEffect, useState, useRef } from "react"
 import { useTranslation } from 'react-i18next'
-import { LangToggle } from './LangToggle'
+import { LangToggle } from '../components/LangToggle'
 import { track } from '../lib/utils'
+import { checkAuthToken } from "@/utils/auth/authUtils"
 
-export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
+export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
+
+  console.log("from nav",user);
+  
   const { t } = useTranslation('ui')
   // Start with SSR-provided status to avoid flicker (e.g., Open→Closed)
   const [status, setStatus] = useState(initialStatus)
@@ -70,6 +74,8 @@ export function Navbar({ initialStatus = { isOpen: true, etaMins: 25 } }) {
               <DropdownMenuItem asChild><NavLink to="/account">{t('navigation.account')}</NavLink></DropdownMenuItem>
               <DropdownMenuItem asChild><NavLink to="/login">{t('buttons.login')}</NavLink></DropdownMenuItem>
               <DropdownMenuItem asChild><NavLink to="/register">{t('buttons.signup')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to={"/logout"}>{t('buttons.logout')}</NavLink></DropdownMenuItem>
+
             </DropdownMenuContent>
           </DropdownMenu>
           <Button className="hidden md:inline-flex" onClick={() => track('click_order_now_nav')}>{t('buttons.orderNow')}</Button>

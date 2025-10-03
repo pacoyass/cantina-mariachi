@@ -9,10 +9,10 @@ import { createOrderSchema, updateOrderStatusSchema, trackOrderQuery } from '../
 const router = express.Router();
 const rlStrict = rateLimit({ windowMs: 60_000, max: 20 });
 
-router.post('/', rlStrict, validate(createOrderSchema), createOrder);
-router.get('/:orderNumber', authMiddleware, rlStrict, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), getOrderByNumber);
-router.get('/track/by', rlStrict, validateQuery(trackOrderQuery), trackOrder);
+router.post('/',authMiddleware, rlStrict,requireRole('CUSTOMER','WAITER','CASHIER'), validate(createOrderSchema), createOrder);
 router.get('/mine/list', authMiddleware, rlStrict, listMyOrders);
+router.get('/track/by', rlStrict, validateQuery(trackOrderQuery), trackOrder);
+router.get('/:orderNumber', authMiddleware, rlStrict, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), getOrderByNumber);
 router.patch('/:orderNumber/status', authMiddleware, requireRole('ADMIN','OWNER','COOK','WAITER','CASHIER','DRIVER'), validate(updateOrderStatusSchema), updateOrderStatus);
 
 export default router;
