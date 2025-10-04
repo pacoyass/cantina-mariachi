@@ -11,7 +11,10 @@ import
   useOutletContext,
   redirect,
   useSubmit,
+<<<<<<< HEAD
   data,
+=======
+>>>>>>> 275d267d604db95eb9a8705462e0869c166c1457
 } from "react-router";
 import stylesheet from "./app.css?url";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -65,9 +68,13 @@ export async function loader( { request, context } )
   const headers = result?.headers instanceof Headers ? result.headers : new Headers();
   const checkHeaders = result?.checkHeaders instanceof Headers ? result.checkHeaders : new Headers();
   if ( nonce ) {
+<<<<<<< HEAD
     return data({ nonce: nonce, csrfToken: csrfToken, lng, resources, status,result },{
       headers: headers ? headers : checkHeaders,
     }) ;
+=======
+    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status,user };
+>>>>>>> 275d267d604db95eb9a8705462e0869c166c1457
   }
   return data({ nonce: "", lng, resources, status },{
     headers: headers ? headers : checkHeaders,
@@ -105,7 +112,11 @@ export function Layout( { children } )
   // Language updates are handled in entry.client.jsx to avoid React DOM conflicts
 console.log("root loader",loaderData.result);
 
+<<<<<<< HEAD
   useTokenTimer( loaderData?.result?.refreshExpire, loaderData?.result?.user?.exp );
+=======
+  useTokenTimer( loaderData?.refreshExpire, loaderData?.user?.exp );
+>>>>>>> 275d267d604db95eb9a8705462e0869c166c1457
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
@@ -144,7 +155,11 @@ console.log("root loader",loaderData.result);
           suppressHydrationWarning
         >
           <div className="bg-mexican-pattern min-h-screen">
+<<<<<<< HEAD
             <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} handleLogout={handleLogout} />
+=======
+            <Navbar initialStatus={initialStatus} user={loaderData?.user} handleLogout={handleLogout} />
+>>>>>>> 275d267d604db95eb9a8705462e0869c166c1457
             {children}
             <Footer />
           </div>
@@ -168,10 +183,17 @@ console.log("root loader",loaderData.result);
 
 export default function App()
 {
+<<<<<<< HEAD
   const {result,lng}=useLoaderData() || {}; 
  console.log("portugal paco",{result,lng:lng});
  
   return <Outlet context={{ user:result?.user,lng }} />;
+=======
+  const {user,lng}=useLoaderData() || {}; 
+ console.log("portugal paco",{user,lng:lng});
+ 
+  return <Outlet context={{ user:user,lng }} />;
+>>>>>>> 275d267d604db95eb9a8705462e0869c166c1457
 }
 
 
