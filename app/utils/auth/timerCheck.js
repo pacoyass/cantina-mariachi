@@ -32,12 +32,6 @@ export function useTokenTimer( refreshExpire, userExp )
             userExp
         });
 
-<<<<<<< HEAD
-        // console.log("📌 Refresh Token Duration:", refreshDuration);
-
-        const userTimer = setTimeout( handleRevalidate, userDuration -10000);
-        const logoutTimer = setTimeout( handleLogout, refreshDuration );
-=======
         const userTimer = setTimeout( () => {
             console.log("🔄 Access token about to expire, revalidating...");
             handleRevalidate();
@@ -47,7 +41,6 @@ export function useTokenTimer( refreshExpire, userExp )
             console.log("🚪 Refresh token expired, logging out...");
             handleLogout();
         }, refreshDuration );
->>>>>>> 666cf69f3d4252708c7da235a5e3eae20d8f1fb4
 
         return () =>
         {
