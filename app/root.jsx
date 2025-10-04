@@ -43,6 +43,7 @@ export async function loader( { request, context } )
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
   const user=result?.user ?? null;
+  const refreshExpire = result?.refreshExpire ?? null;
   console.log("testing paco",lng);
   if (user && (urlPathname === "/login" || urlPathname === "/register")) {
    
@@ -63,7 +64,7 @@ export async function loader( { request, context } )
   } catch {}
   
   if ( nonce ) {
-    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status,user };
+    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status, user, refreshExpire };
   }
   
   return { nonce: "", lng, resources, status }; 
