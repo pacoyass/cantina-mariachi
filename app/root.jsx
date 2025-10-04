@@ -44,6 +44,7 @@ export async function loader( { request, context } )
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
   const user=result?.user ?? null;
+  const refreshExpire = result?.refreshExpire ?? null;
   console.log("testing paco",lng);
   if (user && (urlPathname === "/login" || urlPathname === "/register")) {
    
@@ -65,9 +66,13 @@ export async function loader( { request, context } )
   const headers = result?.headers instanceof Headers ? result.headers : new Headers();
   const checkHeaders = result?.checkHeaders instanceof Headers ? result.checkHeaders : new Headers();
   if ( nonce ) {
+<<<<<<< HEAD
     return data({ nonce: nonce, csrfToken: csrfToken, lng, resources, status,result },{
       headers: headers ? headers : checkHeaders,
     }) ;
+=======
+    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status, user, refreshExpire };
+>>>>>>> 666cf69f3d4252708c7da235a5e3eae20d8f1fb4
   }
   return data({ nonce: "", lng, resources, status },{
     headers: headers ? headers : checkHeaders,
