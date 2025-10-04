@@ -11,6 +11,7 @@ import
   useOutletContext,
   redirect,
   useSubmit,
+  data,
 } from "react-router";
 import stylesheet from "./app.css?url";
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -44,6 +45,8 @@ export async function loader( { request, context } )
   let status = { isOpen: true, etaMins: 25 };
   const user=result?.user ?? null;
   const refreshExpire = result?.refreshExpire ?? null;
+  const headers = result?.headers;
+  const checkHeaders = result?.checkHeaders;
   console.log("testing paco",lng);
   if (user && (urlPathname === "/login" || urlPathname === "/register")) {
    
@@ -64,7 +67,9 @@ export async function loader( { request, context } )
   } catch {}
   
   if ( nonce ) {
-    return { nonce: nonce, csrfToken: csrfToken, lng, resources, status, user, refreshExpire };
+    return data({ nonce: nonce, csrfToken: csrfToken, lng, resources, status, result, refreshExpire },{
+      headers: headers ? headers : checkHeaders,
+    }) ;
   }
   
   return { nonce: "", lng, resources, status }; 
@@ -100,7 +105,7 @@ export function Layout( { children } )
   // Client-side language sync (after hydration) - Removed DOM manipulation to fix React removeChild errors
   // Language updates are handled in entry.client.jsx to avoid React DOM conflicts
 
-  useTokenTimer( loaderData?.refreshExpire, loaderData?.user?.exp );
+  useTokenTimer( loaderData?.refreshExpire, loaderData?.result?.user?.exp );
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
@@ -139,7 +144,7 @@ export function Layout( { children } )
           suppressHydrationWarning
         >
           <div className="bg-mexican-pattern min-h-screen">
-            <Navbar initialStatus={initialStatus} user={loaderData?.user} handleLogout={handleLogout} />
+            <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} handleLogout={handleLogout} />
             {children}
             <Footer />
           </div>
@@ -163,7 +168,8 @@ export function Layout( { children } )
 
 export default function App()
 {
-  const {user,lng}=useLoaderData() || {}; 
+  const {result,lng}=useLoaderData() || {}; 
+  const user = result?.user;
  console.log("portugal paco",{user,lng:lng});
  
   return <Outlet context={{ user:user,lng }} />;
