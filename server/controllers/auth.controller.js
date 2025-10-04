@@ -334,7 +334,7 @@ const ip = req.ip || null;
       phone: user.phone,
     };
     ({ token: accessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || '1m'));
-    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || '2m'));
+    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || '10m'));
     const hashedRefreshToken = await hashToken(refreshToken);
     await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp), undefined, { userAgent, ip });
   } catch (authErr) {
@@ -427,12 +427,12 @@ export const refreshToken = async (req, res) => {
   try {
 console.log("starting backend refresh ...");
 
-    const userAgent = req.get('User-Agent') || null;
-const ip = req.ip || null;
     const rotate = (process.env.REFRESH_ROTATION || 'true').toLowerCase() === 'true';
-    const providedRefreshToken = req.body.refreshToken || req.cookies.refreshToken;
+    const providedRefreshToken =  req.cookies.refreshToken;
 console.log("provided token and payload ...",providedRefreshToken,rotate);
 
+    const userAgent = req.get('User-Agent') || null;
+const ip = req.ip || null;
     if (!providedRefreshToken) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: 'No refresh token provided' });
       return createError(res, 401, 'Session expired. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
@@ -451,7 +451,7 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
         active: payload.active,
         phone: payload.phone,
       };
-      const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '15m');
+      const { token: accessToken  ,exp: accessExp} = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '1m');
       const isProduction = process.env.NODE_ENV === 'production';
       res.cookie('accessToken', accessToken, {
         httpOnly: true,
@@ -488,13 +488,11 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
       active: user.isActive,
       phone: user.phone,
     };
-    const { token: accessToken } = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '15m');
-    const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || '7d');
+    const { token: accessToken ,exp: accessExp} = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '1m');
+    // const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || '7d');
+    const refreshExp = stored.expiresAt;
 
-    // Store new refresh token hash (replaces previous)
-    const newHashedRefresh = await hashToken(newRefreshToken);
-    await databaseService.refreshUserTokens(user.id, newHashedRefresh, newRefreshExp, undefined, { userAgent, ip });
-
+   
     const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
@@ -503,7 +501,7 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
       maxAge: 15 * 60 * 1000,
       path: '/',
     });
-    res.cookie('refreshToken', newRefreshToken, {
+    res.cookie('refreshToken', providedRefreshToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
@@ -514,7 +512,21 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
     await LoggerService.logAudit(user.id, 'TOKEN_REFRESH_SUCCESS', user.id, { email: user.email, phone: user.phone });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
-    return createResponse(res, 200, 'loginSuccess', { accessToken }, req, {}, 'auth');
+    return createResponse(res, 200, 'loginSuccess', { 
+      accessToken ,
+      refreshExpire:refreshExp,
+      user:{
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+        active: user.isActive,
+        phone: user.phone,
+        exp: accessExp.toISOString(),
+        iat: new Date().toISOString()
+      }
+
+    }, req, {}, 'auth');
   } catch (error) {
     await LoggerService.logError('Token refresh failed', error.stack, { userId: req.user?.id });
     await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: error.message });

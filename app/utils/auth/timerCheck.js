@@ -13,7 +13,7 @@ export function useTokenTimer( refreshExpire, userExp )
     const handleLogout = useCallback( () => submit( null, { action: "/logout", method: "post" } ), [submit] );
 
 
-    // console.log("📌 Refresh Expire From timer:", refreshExpire, userExp);
+    console.log("📌 Refresh Expire From timer:", refreshExpire, userExp);
 
     useEffect( () =>
     {
@@ -25,7 +25,7 @@ export function useTokenTimer( refreshExpire, userExp )
 
         // console.log("📌 Refresh Token Duration:", refreshDuration);
 
-        const userTimer = setTimeout( handleRevalidate, userDuration - 5000 );
+        const userTimer = setTimeout( handleRevalidate, userDuration -10000);
         const logoutTimer = setTimeout( handleLogout, refreshDuration );
 
         return () =>

@@ -1029,13 +1029,12 @@
 
 
 
+let isRefreshing = false;
 let refreshTimeout = null;
+let refreshPromise = null;
 const API_URL = "http://localhost:3333";
 const MAX_REFRESH_ATTEMPTS = 3;
 
-// Per-user maps
-const refreshStates = new Map();     // userKey -> { promise, timestamp, timeout }
-const pendingRequests = new Map();   // requestKey -> promise
 
 export async function checkAuthToken( request, csrfToken )
 {
@@ -1206,13 +1205,13 @@ export async function refreshAccessToken( cookies, csrfToken, attempt = 1 )
         
         if ( !response.ok ) {
             console.warn( "❌ Refresh token expired. User must log in again.", refreshedData );
-            return { user: null, refreshExpired: true, message: refreshedData.message };
+            return { user: null, refreshExpired: true, message: refreshedData.error.message };
         }
 
         console.log( "📌 Refreshed Token Data:", refreshedData );
 
         // Ensure refreshExpire is updated
-        const refreshExpire = refreshedData.refreshExpire || null;
+        const refreshExpire = refreshedData.data.refreshExpire || null;
         if ( !refreshExpire ) {
             console.warn( "⚠️ Missing refresh expiration info. Logging out..." );
             return { user: null, refreshExpired: true };
@@ -1225,7 +1224,7 @@ export async function refreshAccessToken( cookies, csrfToken, attempt = 1 )
         // console.log("📌 refreed data user exp:", refreshedData.user.exp,refreshExpire);
 
         // Schedule the next refresh
-        scheduleTokenRefresh( refreshedData.user.exp, refreshExpire, cookies );
+        scheduleTokenRefresh( refreshedData.data.user.exp, refreshExpire, cookies );
 
         return {
             user: refreshedData.user,
