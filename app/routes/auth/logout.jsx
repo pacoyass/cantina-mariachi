@@ -13,6 +13,7 @@ const getCookieValue = ( cookieString, key ) =>
             .find( row => row.startsWith( `${key}=` ) ) // Find the cookie with the key
             ?.split( "=" )[1]; // Get the value (after "=")
     };
+
 // Server Action - runs on the server and is removed from client bundles
 export async function action({ request, context }) {
     const { csrfToken } = context;

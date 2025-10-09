@@ -42,8 +42,8 @@ import { useTokenTimer } from "../utils/auth/timerCheck";
 
 export default function ShellLayout() {
   // const [searchParams, setSearchParams] = useSearchParams();
-  const {user,lng}=useOutletContext() || {}; 
-console.log("from shell",user,lng);
+  const {user}=useOutletContext() || {}; 
+console.log("from shell",user);
 
   // useTokenTimer(loaderData?.refreshExpire, loaderData?.user?.exp);
 

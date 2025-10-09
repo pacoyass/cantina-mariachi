@@ -1,4 +1,4 @@
-import { NavLink, useLoaderData, useOutletContext } from "react-router"
+import { NavLink, useLoaderData, useOutletContext, useSubmit } from "react-router"
 import { Button } from "../components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet"
@@ -13,7 +13,11 @@ import { checkAuthToken } from "@/utils/auth/authUtils"
 export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
 
   console.log("from nav",user);
-  
+  const submit = useSubmit();
+
+  const handleLogout = () => {
+    submit(null, { action: "/logout", method: "post" });
+  };
   const { t } = useTranslation('ui')
   // Start with SSR-provided status to avoid flicker (e.g., Open→Closed)
   const [status, setStatus] = useState(initialStatus)
@@ -74,7 +78,10 @@ export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
               <DropdownMenuItem asChild><NavLink to="/account">{t('navigation.account')}</NavLink></DropdownMenuItem>
               <DropdownMenuItem asChild><NavLink to="/login">{t('buttons.login')}</NavLink></DropdownMenuItem>
               <DropdownMenuItem asChild><NavLink to="/register">{t('buttons.signup')}</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to={"/logout"}>{t('buttons.logout')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Button variant="ghost" onClick={handleLogout}>
+                  {t('buttons.logout')}
+                </Button></DropdownMenuItem>
 
             </DropdownMenuContent>
           </DropdownMenu>

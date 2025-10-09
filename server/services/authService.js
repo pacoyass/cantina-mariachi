@@ -2,14 +2,14 @@ import { V4 } from 'paseto';
 const { sign, verify } = V4;
 import bcrypt from 'bcrypt';
 import { databaseService } from './databaseService.js';
-import { createHash } from 'node:crypto';
 
 const privateKey = process.env.PASETO_PRIVATE_KEY;
 const publicKey = process.env.PASETO_PUBLIC_KEY;
 const allowInsecureTestTokens = process.env.NODE_ENV === 'test' || process.env.ALLOW_INSECURE_TEST_TOKENS === '1';
 
-if (!privateKey || !publicKey) {
-  // Note: Using console.warn here instead of LoggerService to avoid circular dependency during initialization
+if ( !privateKey || !publicKey ) {
+  console.error( "❌ Private/Public keys are missing! Set them in .env." );
+  process.exit( 1 );
 }
 
 // Convert "15m", "7d" → seconds
@@ -40,45 +40,33 @@ export const generateToken = async (user, expiresIn) => {
     iat: new Date().toISOString(),
   };
 
-  if (!privateKey && allowInsecureTestTokens) {
-    // Insecure test token: base64-encoded JSON
-    const token = Buffer.from(JSON.stringify(payload)).toString('base64url');
-    return { token, exp: expDate };
-  }
-
-  if (!privateKey) throw new Error('PASETO private key missing');
   const token = await sign(payload, privateKey);
   return { token, exp: expDate };
 };
 
 // Verify and decode a PASETO token
-export const verifyToken = async (token) => {
-  try {
-    if (!publicKey && allowInsecureTestTokens) {
-      const json = Buffer.from(token, 'base64url').toString('utf8');
-      const payload = JSON.parse(json);
-      payload.exp = new Date(payload.exp);
-      if (payload.exp < new Date()) throw new Error('expired');
-      return payload;
-    }
-    if (!publicKey) throw new Error('PASETO public key missing');
-    const payload = await verify(token, publicKey);
-    payload.exp = new Date(payload.exp);
-    return payload;
-  } catch (error) {
-    // Token verification failed - using console.log to avoid circular dependency
-    if (error.message.includes("expired")) {
-      throw new Error("Token has expired and needs to be refreshed");
-    }
-    throw new Error("Invalid token");
-  }
-};
+export const verifyToken = async ( token ) =>
+  {
+      try {
+          const payload = await verify( token, publicKey );
+          payload.exp = new Date( payload.exp ); // ✅ Convert `exp` to Date object
+          return payload;
+      } catch ( error ) {
+          if ( error.message.includes( "expired" ) ) {
+              throw new Error( "Token has expired" );
+          }
+          throw new Error( "Invalid token" );
+      }
+  };
 
 // Hash a token using SHA-256
-export async function hashToken(token) {
-  return createHash('sha256').update(token).digest('hex');
-}
-
+// export async function hashToken(token) {
+//   return createHash('sha256').update(token).digest('hex');
+// }
+export const hashToken = async ( token ) =>
+  {
+      return await bcrypt.hash( token, 10 );
+  };
 // Compare refresh token with stored hash
 export const compareHashedToken = async (token, hashedToken) => {
   return await bcrypt.compare(token, hashedToken);
@@ -114,61 +102,61 @@ export const createUser = async ({ email, password, role, name, phone }) => {
   return user;
 };
 
-// Login a user
-export const login = async (email, password) => {
-  const user = await databaseService.getUserByEmail(email, { isActive: true });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new Error('Invalid email or password');
-  }
+// // Login a user
+// export const login = async (email, password) => {
+//   const user = await databaseService.getUserByEmail(email, { isActive: true });
+//   if (!user || !(await bcrypt.compare(password, user.password))) {
+//     throw new Error('Invalid email or password');
+//   }
 
-  const accessToken = await generateToken(user, '15m');
-  const refreshToken = await generateToken(user, '7d');
-  const hashedRefreshToken = await hashToken(refreshToken.token);
+//   const accessToken = await generateToken(user, '15m');
+//   const refreshToken = await generateToken(user, '7d');
+//   const hashedRefreshToken = await hashToken(refreshToken.token);
 
-  await databaseService.refreshUserTokens(user.id, hashedRefreshToken, refreshToken.exp);
+//   await databaseService.refreshUserTokens(user.id, hashedRefreshToken, refreshToken.exp);
 
-  return { accessToken: accessToken.token, refreshToken: refreshToken.token };
-};
+//   return { accessToken: accessToken.token, refreshToken: refreshToken.token };
+// };
 
-// Refresh tokens
-export const refreshToken = async (refreshToken) => {
-  // Hash provided refresh token with SHA-256
-  const providedTokenHash = await hashToken(refreshToken);
+// // Refresh tokens
+// export const refreshToken = async (refreshToken) => {
+//   // Hash provided refresh token with SHA-256
+//   const providedTokenHash = await hashToken(refreshToken);
 
-  // Validate stored refresh token exists and is not expired
-  const storedToken = await databaseService.getRefreshToken(providedTokenHash);
-  if (!storedToken || storedToken.expiresAt < new Date()) {
-    throw new Error('Invalid or expired refresh token');
-  }
+//   // Validate stored refresh token exists and is not expired
+//   const storedToken = await databaseService.getRefreshToken(providedTokenHash);
+//   if (!storedToken || storedToken.expiresAt < new Date()) {
+//     throw new Error('Invalid or expired refresh token');
+//   }
 
-  // Verify provided PASETO refresh token
-  const payload = await verifyToken(refreshToken);
+//   // Verify provided PASETO refresh token
+//   const payload = await verifyToken(refreshToken);
 
-  // Fetch user and ensure active
-  const user = await databaseService.getUserById(payload.userId);
-  if (!user || user.isActive === false) throw new Error('User not found');
+//   // Fetch user and ensure active
+//   const user = await databaseService.getUserById(payload.userId);
+//   if (!user || user.isActive === false) throw new Error('User not found');
 
-  // Issue new tokens
-  const newAccessToken = await generateToken(user, '15m');
-  const newRefreshToken = await generateToken(user, '7d');
+//   // Issue new tokens
+//   const newAccessToken = await generateToken(user, '15m');
+//   const newRefreshToken = await generateToken(user, '7d');
 
-  // Store new refresh token hash for the user (rotate)
-  const newHashedRefreshToken = await hashToken(newRefreshToken.token);
-  await databaseService.refreshUserTokens(user.id, newHashedRefreshToken, newRefreshToken.exp);
+//   // Store new refresh token hash for the user (rotate)
+//   const newHashedRefreshToken = await hashToken(newRefreshToken.token);
+//   await databaseService.refreshUserTokens(user.id, newHashedRefreshToken, newRefreshToken.exp);
 
-  return { accessToken: newAccessToken.token, newRefreshToken: newRefreshToken.token, userId: user.id };
-};
+//   return { accessToken: newAccessToken.token, newRefreshToken: newRefreshToken.token, userId: user.id };
+// };
 
-// Logout a user
-export const logout = async (accessToken) => {
-  const payload = await verifyToken(accessToken);
-  const expiresAt = new Date(payload.exp);
-  await blacklistToken(accessToken, expiresAt);
-};
+// // Logout a user
+// export const logout = async (accessToken) => {
+//   const payload = await verifyToken(accessToken);
+//   const expiresAt = new Date(payload.exp);
+//   await blacklistToken(accessToken, expiresAt);
+// };
 
 // Get user by ID
-export const getUserById = async (userId) => {
-  const user = await databaseService.getUserById(userId, { isActive: true });
-  if (!user) throw new Error('User not found');
-  return user;
-};
+// export const getUserById = async (userId) => {
+//   const user = await databaseService.getUserById(userId, { isActive: true });
+//   if (!user) throw new Error('User not found');
+//   return user;
+// };

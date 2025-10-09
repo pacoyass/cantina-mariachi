@@ -75,9 +75,9 @@ export const databaseService = {
     return token;
   },
 
-  async getRefreshToken(tokenHash, tx) {
+  async getRefreshToken(userId, tx) {
     const db = withTx(tx);
-    return await db.refreshToken.findUnique({ where: { token: tokenHash } });
+    return await db.refreshToken.findFirst({ where: { userId: userId } });
   },
 
   async cleanupExpiredTokens(tx) {

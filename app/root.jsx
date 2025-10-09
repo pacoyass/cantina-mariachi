@@ -10,7 +10,6 @@ import
   NavLink,
   useOutletContext,
   redirect,
-  useSubmit,
   data,
 } from "react-router";
 import stylesheet from "./app.css?url";
@@ -28,6 +27,14 @@ async function timingMiddleware({ context }, next) {
   const duration = performance.now() - start;
   console.log(`Navigation took ${duration}ms`);
 }
+
+export function headers( {
+  actionHeaders,
+  loaderHeaders,
+} )
+{
+  return actionHeaders ? actionHeaders : loaderHeaders;
+}
 export async function loader( { request, context } )
 {
   const nonce = context?.nonce || "";
@@ -44,8 +51,7 @@ export async function loader( { request, context } )
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
   const user=result?.user ?? null;
-  const refreshExpire = result?.refreshExpire ?? null;
-  console.log("testing paco",lng);
+  console.log("testing paco",result);
   if (user && (urlPathname === "/login" || urlPathname === "/register")) {
    
     return redirect(`${redirectTo}?lng=${lng}`, { replace: true });
@@ -64,15 +70,15 @@ export async function loader( { request, context } )
     }
   } catch {}
   const headers = result?.headers instanceof Headers ? result.headers : new Headers();
-  const checkHeaders = result?.checkHeaders instanceof Headers ? result.checkHeaders : new Headers();
-  if ( nonce ) {
-    return data({ nonce: nonce, csrfToken: csrfToken, lng, resources, status,result },{
-      headers: headers ? headers : checkHeaders,
+  // const checkHeaders = result?.checkHeaders instanceof Headers ? result.checkHeaders : new Headers();
+
+  
+     return data({ nonce: nonce, csrfToken: csrfToken, lng, resources, status,result },{
+      headers: headers ,
     }) ;
-  }
-  return data({ nonce: "", lng, resources, status },{
-    headers: headers ? headers : checkHeaders,
-  }) ;
+  
+   
+
 }
 
 export const links = () => [
@@ -96,15 +102,14 @@ export function Layout( { children } )
   const initialLang = loaderData.lng || 'en';
   const initialResources = loaderData.resources || {};
   const initialStatus = loaderData.status || { isOpen: true, etaMins: 25 };
-  const submit = useSubmit();
+
   // Use server-provided language to prevent hydration mismatch
   // Don't try to detect URL language on client during initial render
   const lang = initialLang;
   const dir = rtlLngs.includes(lang) ? 'rtl' : 'ltr';
-  const handleLogout = useCallback( () => submit( null, { action: "/logout", method: "post" } ), [submit] );
   // Client-side language sync (after hydration) - Removed DOM manipulation to fix React removeChild errors
   // Language updates are handled in entry.client.jsx to avoid React DOM conflicts
-console.log("root loader",loaderData.result);
+console.log("root loader",loaderData?.result);
 
   useTokenTimer( loaderData?.result?.refreshExpire, loaderData?.result?.user?.exp );
   return (
@@ -145,7 +150,7 @@ console.log("root loader",loaderData.result);
           suppressHydrationWarning
         >
           <div className="bg-mexican-pattern min-h-screen">
-            <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} handleLogout={handleLogout} />
+            <Navbar initialStatus={initialStatus} user={loaderData?.result?.user}  />
             {children}
             <Footer />
           </div>

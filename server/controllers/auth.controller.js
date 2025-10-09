@@ -1,4 +1,4 @@
-import { generateToken, hashToken, verifyToken } from '../services/authService.js';
+import { compareHashedToken, generateToken, hashToken, verifyToken } from '../services/authService.js';
 import { acquireLock, releaseLock } from '../utils/lock.js';
 import {createError,createResponse}  from '../utils/response.js';
 import { toZonedTime } from 'date-fns-tz';
@@ -348,14 +348,14 @@ const ip = req.ip || null;
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
-    maxAge: 15 * 60 * 1000,
+    maxAge: 10 * 60 * 1000,
     path: '/',
   });
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 10 * 60 * 1000,
     path: '/',
   });
 
@@ -424,24 +424,28 @@ const ip = req.ip || null;
 
 // POST /api/auth/refresh - Refresh access token
 export const refreshToken = async (req, res) => {
+  const userAgent = req.get('User-Agent') || null;
+  const ip = req.ip || null;
   try {
-console.log("starting backend refresh ...");
+console.log("starting backend refresh ...",req.cookies);
 
     const rotate = (process.env.REFRESH_ROTATION || 'true').toLowerCase() === 'true';
     const providedRefreshToken =  req.cookies.refreshToken;
-console.log("provided token and payload ...",providedRefreshToken,rotate);
+// console.log("provided token and payload ...",providedRefreshToken,rotate);
 
-    const userAgent = req.get('User-Agent') || null;
-const ip = req.ip || null;
+   
     if (!providedRefreshToken) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: 'No refresh token provided' });
-      return createError(res, 401, 'Session expired. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
+      return createError(res, 401, 'Session expired. Please log in again no refresh', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
     // Verify provided refresh token
     const payload = await verifyToken(providedRefreshToken);
 console.log("provided token and payload ...",providedRefreshToken,payload);
-
+if (!payload) {
+  await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', null, { reason: 'No payload provided' });
+  return createError(res, 401, 'Session expired. Please log in again no payload', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
+}
     if (!rotate) {
       const accessPayload = {
         userId: payload.userId,
@@ -462,21 +466,32 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
       });
       return createResponse(res, 200, 'loginSuccess', { accessToken }, req, {}, 'auth');
     }
-    // Ensure stored hash exists (rotate only if valid current token)
-    const providedTokenHash = await hashToken(providedRefreshToken);
-    const stored = await databaseService.getRefreshToken(providedTokenHash);
-    console.log("providedtokenhash and stored...",providedTokenHash,stored);
-    
-    if (!stored || stored.expiresAt < new Date()) {
-      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'Refresh token not recognized or expired' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', {}, req, {}, 'auth');
-    }
 
+    console.log("payload refresh...",payload);
+    
+    // Ensure stored hash exists (rotate only if valid current token)
+ 
+    const stored = await databaseService.getRefreshToken(payload?.userId);
+    console.log("providedtokenhash and stored...",stored,stored.token);
+    
+    if (!stored || stored.expiresAt.toISOString() < new Date() ) {
+      await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'Refresh token not recognized or expired' });
+      return createError(res, 401, 'Session invalid. Please log in again no stored', 'UNAUTHORIZED', {}, req, {}, 'auth');
+    }
+   
+    
+ // Validate stored refresh token
+ const isValid = await compareHashedToken( providedRefreshToken, stored.token );
+ console.log("isvalid log...",isValid);
+ 
+ if ( !isValid ) {
+  return createError(res, 403, 'Invalid refresh token at isvalid', 'UNAUTHORIZED', {}, req, {}, 'auth');
+ }
     // Fetch user
     const user = await databaseService.getUserById(payload.userId, { id: true, email: true, role: true, name: true, phone: true, isActive: true });
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_REFRESH_FAILED', payload.userId, { reason: 'User not found' });
-      return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', {}, req, {}, 'auth');
+      return createError(res, 401, 'Session invalid. Please log in again at user ', 'UNAUTHORIZED', {}, req, {}, 'auth');
     }
 
     // Issue new tokens (rotate refresh)
@@ -488,24 +503,29 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
       active: user.isActive,
       phone: user.phone,
     };
-    const { token: accessToken ,exp: accessExp} = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '1m');
-    // const { token: newRefreshToken, exp: newRefreshExp } = await generateToken(accessPayload, process.env.REFRESH_TOKEN_EXPIRATION || '7d');
+    const { token: newaccessToken ,exp: accessExp} = await generateToken(accessPayload, process.env.TOKEN_EXPIRATION || '1m');
     const refreshExp = stored.expiresAt;
-
    
     const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('accessToken', accessToken, {
+    const accessTokenMaxAge = Math.floor( ( accessExp.getTime() - Date.now() ) / 1000 ); // Convert to seconds
+    const refreshTokenMaxAge = Math.floor( ( refreshExp.getTime() - Date.now() ) / 1000); // Convert to seconds
+    console.log( "🔹 Access Token maxAge:", accessTokenMaxAge );
+    console.log( "🔹 Refresh Token maxAge:", refreshTokenMaxAge );
+    if ( accessTokenMaxAge <= 0 || refreshTokenMaxAge <= 0 ) {
+      throw new Error( "Token expiration time is in the past" );
+    }
+    res.cookie('accessToken', newaccessToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 15 * 60 * 1000,
+      maxAge: accessTokenMaxAge * 1000,
       path: '/',
     });
     res.cookie('refreshToken', providedRefreshToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: refreshTokenMaxAge * 1000,
       path: '/',
     });
 
@@ -513,8 +533,8 @@ console.log("provided token and payload ...",providedRefreshToken,payload);
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_refreshed', `Token refreshed for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_REFRESHED', { userId: user.id, email: user.email, phone: user.phone });
     return createResponse(res, 200, 'loginSuccess', { 
-      accessToken ,
-      refreshExpire:refreshExp,
+      accessToken:newaccessToken ,
+      refreshExpire:refreshExp.toISOString(),
       user:{
         userId: user.id,
         email: user.email,
@@ -560,89 +580,116 @@ export const logout = async (req, res) => {
   }
 };
 
-// GET /api/auth/token - Validate token
+
+
+// GET /api/auth/token - Validate access token and return user (access-token-only)
 // export const getToken = async (req, res) => {
 //   try {
-//     const accessToken = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
-//     const refreshToken = req.cookies.refreshToken;
+//     // Accept token from Authorization header or cookie (accessToken)
+//     const incoming = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
+//     const incomingRefresh = req.headers['x-refresh-token'] || req.headers['X-Refresh-Token'] || req.cookies.refreshToken;
+// console.log("incoming refresh",incomingRefresh,incoming);
 
-//     if (!accessToken || !refreshToken) {
-//       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: 'Missing session tokens' });
+//     if (!incoming) {
+//       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: 'Missing access token' });
 //       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
 //     }
 
-//     const user = await databaseService.getUserById(req.user.userId);
+//     // verifyToken should throw or return decoded payload if valid
+//     let payload;
+//     let refreshPayload;
+//     try {
+//       payload = await verifyToken(incoming); // implement verifyToken for PASETO/jwt
+//       refreshPayload = await verifyToken(incomingRefresh); // implement verifyToken for PASETO/jwt
+//     } catch (err) {
+//       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: 'Access token invalid', details: err.message });
+//       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
+//     }
+
+//     // fetch user from DB to ensure still active and return freshest user object
+//     const user = await databaseService.getUserById(payload.userId);
 //     if (!user) {
-//       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', req.user.id, { reason: 'User not found' });
+//       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', payload.userId, { reason: 'User not found' });
 //       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
 //     }
 
-//     const tokenHash = await hashToken(accessToken);
-//     const blacklisted = await databaseService.findBlacklistedToken(tokenHash, { expiresAt: { gte: new Date() } });
-
-//     if (blacklisted) {
-//       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', user.id, { reason: 'Token is revoked' });
-//       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
+//     // Attempt to fetch stored refresh token record to include refreshExpire if available
+//     let refreshRecord = null;
+//     try {
+//       refreshRecord = await databaseService.findLatestRefreshForUser(user.id);
+//     } catch (e) {
+//       // non-fatal: proceed without refreshExpire if DB lookup fails
+//       LoggerService && LoggerService.logError && LoggerService.logError('findLatestRefreshForUser failed', e.stack, { userId: user.id });
 //     }
+// console.log("fetch stored refresh token record",refreshPayload);
 
-//     await LoggerService.logAudit(user.id, 'TOKEN_VALIDATE_SUCCESS', user.id, { email: user.email, phone: user.phone });
+//     const refreshExpire = refreshRecord?.expiresAt ? refreshRecord.expiresAt.toISOString() : undefined;
+
+//     await LoggerService.logAudit(user.id, 'TOKEN_VALIDATE_SUCCESS', user.id, { email: user.email });
 //     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_validated', `Token validated for ${user.email}`, 'SENT');
 //     await sendWebhook('TOKEN_VALIDATED', { userId: user.id, email: user.email, phone: user.phone });
-//     return createResponse(res, 200, 'loginSuccess', { user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone } }, req, {}, 'auth');
+
+//     // Return user and refreshExpire (if available)
+//     return createResponse(res, 200, 'loginSuccess', {
+//       user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone, exp: payload.exp || undefined },
+//       refreshExpire:refreshPayload.exp ? refreshPayload.exp : null,
+//       accessToken:incoming
+//     }, req, {}, 'auth');
+
 //   } catch (error) {
 //     await LoggerService.logError('Token validation failed', error.stack, { userId: req.user?.id });
 //     await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: error.message });
 //     return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
 //   }
 // };
-
-// GET /api/auth/token - Validate access token and return user (access-token-only)
 export const getToken = async (req, res) => {
   try {
     // Accept token from Authorization header or cookie (accessToken)
     const incoming = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
-    if (!incoming) {
+    const incomingRefresh = req.headers['x-refresh-token'] || req.headers['X-Refresh-Token'] || req.cookies.refreshToken;
+
+    if (!incoming || !incomingRefresh) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: 'Missing access token' });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    // verifyToken should throw or return decoded payload if valid
-    let payload;
+    // Verify tokens
+    let payload, refreshPayload;
     try {
-      payload = await verifyToken(incoming); // implement verifyToken for PASETO/jwt
+      payload = await verifyToken(incoming);
+      refreshPayload = await verifyToken(incomingRefresh);
     } catch (err) {
-      await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: 'Access token invalid', details: err.message });
+      await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', null, { reason: 'Token invalid', details: err.message });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
 
-    // fetch user from DB to ensure still active and return freshest user object
+    // Fetch user from DB to ensure still active
     const user = await databaseService.getUserById(payload.userId);
     if (!user) {
       await LoggerService.logAudit(null, 'TOKEN_VALIDATE_FAILED', payload.userId, { reason: 'User not found' });
       return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
     }
+console.log("from gettoken user...",user);
 
-    // Attempt to fetch stored refresh token record to include refreshExpire if available
-    let refreshRecord = null;
-    try {
-      refreshRecord = await databaseService.findLatestRefreshForUser(user.id);
-    } catch (e) {
-      // non-fatal: proceed without refreshExpire if DB lookup fails
-      LoggerService && LoggerService.logError && LoggerService.logError('findLatestRefreshForUser failed', e.stack, { userId: user.id });
-    }
-console.log("fetch stored refresh token record",refreshRecord);
-
-    const refreshExpire = refreshRecord?.expiresAt ? refreshRecord.expiresAt.toISOString() : undefined;
-
+    // Log success
     await LoggerService.logAudit(user.id, 'TOKEN_VALIDATE_SUCCESS', user.id, { email: user.email });
     await LoggerService.logNotification(user.id, 'WEBHOOK', 'token_validated', `Token validated for ${user.email}`, 'SENT');
     await sendWebhook('TOKEN_VALIDATED', { userId: user.id, email: user.email, phone: user.phone });
 
-    // Return user and refreshExpire (if available)
+    // Return user and refreshExpire
     return createResponse(res, 200, 'loginSuccess', {
-      user: { id: user.id, email: user.email, role: user.role, name: user.name, phone: user.phone, exp: payload.exp || undefined },
-      refreshExpire:refreshExpire||"paco",
-      accessToken:incoming
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role, 
+        name: user.name, 
+        phone: user.phone, 
+        exp: payload.exp.toISOString() ,
+        iat: new Date().toISOString()
+
+      },
+      refreshExpire: refreshPayload.exp ? refreshPayload.exp : null,
+      accessToken: incoming
     }, req, {}, 'auth');
 
   } catch (error) {
@@ -651,7 +698,6 @@ console.log("fetch stored refresh token record",refreshRecord);
     return createError(res, 401, 'Session invalid. Please log in again', 'UNAUTHORIZED', { suggestion: 'Navigate to the login page' });
   }
 };
-
 // List current user's refresh tokens (sessions)
 export const listSessions = async (req, res) => {
   try {

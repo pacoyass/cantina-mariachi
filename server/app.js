@@ -217,7 +217,7 @@ try {
 const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
 	getSecret: () => process.env.CSRF_SECRET || 'your-fallback-secret',
 	getSessionIdentifier: (req) => req.session?.id || req.signedCookies?.csrfSession || req.headers['x-session-id'] || req.ip,
-	cookieName: "__Host-csrf-token",
+	cookieName: "_Host-csrf-token",
 	cookieOptions: {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
