@@ -36,7 +36,7 @@ export async function action({ request, context }) {
         });
         
         const result = await response.json();
-        console.log("logout paco",response.ok);
+        console.log("logout paco",result);
         
         if (!response.ok) {
             return { error: true, message: result || 'Logout failed' };

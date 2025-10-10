@@ -80,9 +80,11 @@ export const databaseService = {
     return await db.refreshToken.findFirst({ where: { userId: userId } });
   },
 
-  async cleanupExpiredTokens(tx) {
+  async cleanupExpiredTokens(userId,tx) {
     const db = withTx(tx);
-    const deleted = await db.refreshToken.deleteMany({ where: { expiresAt: { lte: new Date() } } });
+    const deleted =    await db.refreshToken.deleteMany({
+      where: { userId: userId },
+    });
     await LoggerService.logSystemEvent('DatabaseService', 'CLEANUP_EXPIRED_TOKENS', { count: deleted.count });
     return deleted.count;
   },
@@ -104,21 +106,43 @@ export const databaseService = {
   },
 
   // Logout current access token by blacklisting it
-  async logout(accessToken, tx) {
-    const db = withTx(tx);
-    let expiresAt;
-    const { verifyToken, hashToken } = await import('./authService.js');
-    try {
-      const payload = await verifyToken(accessToken);
-      expiresAt = new Date(payload.exp);
-    } catch (error) {
-      // If verification fails, fallback to a short-lived blacklist window
-      expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    }
-    const tokenHash = await hashToken(accessToken);
-    await db.blacklistedToken.deleteMany({ where: { tokenHash, expiresAt: { lt: new Date() } } });
-    return await db.blacklistedToken.create({ data: { tokenHash, expiresAt } });
-  },
+async logout(accessToken, tx) {
+  const db = withTx(tx);
+  const { verifyToken, hashToken } = await import('./authService.js');
+
+  let payload = null;
+  let expiresAt;
+  let verificationFailed = false;
+
+  try {
+    // Try verifying the access token
+    payload = await verifyToken(accessToken);
+    expiresAt = new Date(payload.exp);
+  } catch (error) {
+    // Token verification failed — expired, malformed, or invalid signature
+    verificationFailed = true;
+    expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback 15 min window
+  }
+
+  const tokenHash = await hashToken(accessToken);
+
+  // ✅ Only remove refresh tokens if we know which user it belongs to
+  let refreshRecord = null;
+  if (payload?.userId) {
+    refreshRecord =await this.cleanupExpiredTokens(payload.userId)
+  
+  }
+
+  // ✅ Always blacklist the access token (even if invalid)
+  const record = await this.createBlacklistedToken({tokenHash,expiresAt});
+
+  return {
+    blacklisted: record,
+    refreshDeleted: refreshRecord || 0,
+    verified: !verificationFailed,
+    userId: payload?.userId || null,
+  };
+},
 
   // Webhooks helpers
   async getActiveWebhooks(tx) {

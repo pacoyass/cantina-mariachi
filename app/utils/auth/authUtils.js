@@ -24,17 +24,19 @@ export async function checkAuthToken( request, csrfToken )
                 "Content-Type": "application/json",
                 "Authorization": accessToken ? `Bearer ${accessToken}` : undefined,
                 "x-refresh-token": refreshToken,
+                 cookie: cookies,
+                
             },
         } );
-        // console.log( "📌 CheckAuth Token Response:", response );
-        if ( !response.ok ) {
-            console.warn( "❌ No valid token. Logging out user." );
-            return { user: null, refreshExpired: true };
-        }
-        const getHeaders = response?.headers;
+    
+        const getHeaders = response.headers;
         const data = await response.json();
         console.log( "📌 Checkauth Token Data:",data.data);
-
+    // console.log( "📌 CheckAuth Token Response:", response );
+    if ( !response.ok ) {
+        console.warn( "❌ No valid token. Logging out user.",data.error );
+        return { user: null, refreshExpired: true };
+    }
         if ( !data?.data?.user?.exp ) {
             console.warn( "⚠️ Missing expiration info. Logging out..." );
             return { user: null, refreshExpired: true };
@@ -44,6 +46,7 @@ export async function checkAuthToken( request, csrfToken )
        const refreshResult = await scheduleTokenRefresh( data.data.user.exp, data.data.refreshExpire, cookies, csrfToken );
         console.log( "📌 Refresh Result:checkauthtoken tacos pacos", refreshResult );
        const checkHeaders=refreshResult?.headers
+       console.log( "📌 Refresh Result:getheaders tacos pacos",getHeaders );
      
 
         return {

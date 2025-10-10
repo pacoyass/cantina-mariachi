@@ -28,7 +28,9 @@ const authMiddleware = async (req, res, next) => {
         ip: req.ip,
         userAgent: req.get('User-Agent'),
       });
-      return createError(res, 401, 'Unauthorized: No token provided', 'AUTH_TOKEN_MISSING');
+      return createError(res, 401, 'Unauthorized: No token provided ', 'AUTH_TOKEN_MISSING',  {
+        userMessage: 'Your session has expired or you are not logged in. Please sign in to continue.',
+      });
     }
 
     const blacklisted = await isTokenBlacklisted(token);
@@ -74,7 +76,9 @@ const authMiddleware = async (req, res, next) => {
         ip: req.ip,
         userAgent: req.get('User-Agent'),
       });
-      return createError(res, 401, 'Unauthorized: User not found', 'USER_NOT_FOUND');
+      return createError(res, 401, 'Unauthorized: User not found', 'USER_NOT_FOUND',  {
+    userMessage: 'We could not verify your account. Please log in again to continue.',
+  });
     }
 
     req.user = {
