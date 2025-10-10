@@ -140,9 +140,10 @@ export default function AccountPage({loaderData,actionData}) {
   const {  orders, reservations, sessions, isWelcome } = loaderData;
   const actionDatas = actionData;
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState('profile');
+  // Tabs are now uncontrolled using defaultValue
   const isSubmitting = navigation.state === 'submitting';
-console.log("from account",user);
+  
+  console.log("from account", user);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -230,9 +231,10 @@ console.log("from account",user);
         </div>
       </div>
 
+
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Profile
