@@ -14,7 +14,8 @@ import { Separator } from '../components/ui/separator';
 import { 
   User, Mail, Phone, MapPin, CreditCard, History, 
   Calendar, Star, Package, AlertCircle, CheckCircle,
-  Settings, Bell, Shield, LogOut, Edit, Eye, Gift
+  Settings, Bell, Shield, LogOut, Edit, Eye, Gift,
+  Monitor, Smartphone, Tablet, Globe, Trash2, Power
 } from '../lib/lucide-shim.js';
 
 export const meta = () => [
@@ -41,9 +42,17 @@ export async function loader({ request }) {
     
     const reservationsData = reservationsRes.ok ? await reservationsRes.json() : { data: { reservations: [] } };
 
+    // Get user's active sessions
+    const sessionsRes = await fetch(`${url.origin}/api/auth/sessions`, { 
+      headers: { cookie } 
+    });
+    
+    const sessionsData = sessionsRes.ok ? await sessionsRes.json() : { data: { sessions: [] } };
+
     return {
       orders: ordersData.data?.orders || [],
       reservations: reservationsData.data?.reservations || [],
+      sessions: sessionsData.data?.sessions || [],
       isWelcome: url.searchParams.get('welcome') === 'true'
     };
   } catch (error) {
@@ -77,6 +86,7 @@ export async function action({ request }) {
       return res.json();
     }
 
+
     return { status: "error", message: "Unknown action" };
   } catch (error) {
     console.error("AccountPage.action error:", error);
@@ -92,13 +102,24 @@ export default function AccountPage({loaderData,actionData}) {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
   const isSubmitting = navigation.state === 'submitting';
-console.log("from account",user);
+  
+  console.log("from account", user);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    return new Date(dateString).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -170,9 +191,10 @@ console.log("from account",user);
         </div>
       </div>
 
+
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Profile
@@ -184,6 +206,10 @@ console.log("from account",user);
           <TabsTrigger value="reservations" className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Reservations
+          </TabsTrigger>
+          <TabsTrigger value="sessions" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Sessions
           </TabsTrigger>
           <TabsTrigger value="rewards" className="flex items-center gap-2">
             <Gift className="h-4 w-4" />
@@ -485,6 +511,27 @@ console.log("from account",user);
                   <Button>Make Reservation</Button>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Sessions Tab */}
+        <TabsContent value="sessions" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                Session Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="font-semibold mb-2">Sessions Feature</h3>
+                <p className="text-muted-foreground">
+                  Session management functionality will be available here.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
