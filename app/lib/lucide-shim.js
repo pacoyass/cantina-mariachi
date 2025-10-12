@@ -52,4 +52,8 @@ export { default as Sun } from 'lucide-react/dist/esm/icons/sun.js'
 export { default as Moon } from 'lucide-react/dist/esm/icons/moon.js'
 export { default as Home } from 'lucide-react/dist/esm/icons/home.js'
 export { default as ShoppingBag } from 'lucide-react/dist/esm/icons/shopping-bag.js'
+export { default as Monitor } from 'lucide-react/dist/esm/icons/monitor.js'
+export { default as Power } from 'lucide-react/dist/esm/icons/power.js'
+export { default as Tablet } from 'lucide-react/dist/esm/icons/tablet.js'
+export { default as Trash2 } from 'lucide-react/dist/esm/icons/trash-2.js'
 

@@ -26,7 +26,7 @@ export function useTokenTimer( refreshExpire, userExp )
         console.log("📌 Refresh Token Duration:", refreshDuration);
 
         const userTimer = setTimeout( handleRevalidate, userDuration - 5000 );
-        const logoutTimer = setTimeout( handleLogout, refreshDuration );
+        const logoutTimer = setTimeout( handleLogout, refreshDuration - 5000);
 
         return () =>
         {

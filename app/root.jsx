@@ -52,12 +52,13 @@ export async function loader( { request, context } )
   let status = { isOpen: true, etaMins: 25 };
   const user=result?.user ?? null;
   console.log("testing paco",result);
-  if (user && (urlPathname === "/login" || urlPathname === "/register")) {
+  if (user && (urlPathname === "/login" || urlPathname === "/register" )) {
    
     return redirect(`${redirectTo}?lng=${lng}`, { replace: true });
   }
   
-    if (!user && (urlPathname === "/menu" || urlPathname === "/account")) {
+    if (!user && (urlPathname === "/menu" || urlPathname === "/account" )) {
+    
       return redirect(`/login?redirect=${encodeURIComponent( urlPathname )}`,{replace:true});
     }
   try {

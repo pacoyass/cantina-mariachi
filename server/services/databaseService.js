@@ -77,15 +77,23 @@ export const databaseService = {
 
   async getRefreshToken(userId, tx) {
     const db = withTx(tx);
-    return await db.refreshToken.findFirst({ where: { userId: userId } });
+    return await db.refreshToken.findMany({  where: { userId: userId },
+      select: { id: true, token: true,expiresAt:true ,lastUsedAt:true},});
   },
-
-  async cleanupExpiredTokens(userId,tx) {
+  async updateRefreshToken(userId, tx) {
     const db = withTx(tx);
-    const deleted =    await db.refreshToken.deleteMany({
-      where: { userId: userId },
+    return await db.refreshToken.findMany({  where: { userId: userId },
+      select: { id: true, token: true,expiresAt:true },});
+  },
+  async cleanupExpiredTokens(userId, refreshHash, tx) {
+    const db = withTx(tx);
+    const deleted = await db.refreshToken.deleteMany({
+      where: { userId, token: refreshHash },
     });
-    await LoggerService.logSystemEvent('DatabaseService', 'CLEANUP_EXPIRED_TOKENS', { count: deleted.count });
+    await LoggerService.logSystemEvent('DatabaseService', 'DELETE_REFRESH_TOKEN', {
+      userId,
+      count: deleted.count,
+    });
     return deleted.count;
   },
 
@@ -106,39 +114,97 @@ export const databaseService = {
   },
 
   // Logout current access token by blacklisting it
-async logout(accessToken, tx) {
+
+// async logout(accessToken, refreshToken, tx) {
+//   const db = withTx(tx);
+//   const { verifyToken, hashToken,compareHashedToken } = await import('./authService.js');
+
+//   let payload = null;
+//   let expiresAt;
+//   let verificationFailed = false;
+
+//   try {
+//     payload = await verifyToken(accessToken);
+//     expiresAt = new Date(payload.exp);
+//   } catch (error) {
+//     verificationFailed = true;
+//     expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback
+//   }
+
+//   const accessHash = await hashToken(accessToken);
+//   let refreshDeleted = 0;
+// if(payload?.userId){
+//   const userRefresh=await this.getRefreshToken(payload.userId);
+
+//   for (const rt of userRefresh) {
+//     const compare= await compareHashedToken(refreshToken,rt.token)
+//   console.log("refreshHash db....",compare);
+//   if ( compare === true) {
+//     refreshDeleted = await this.cleanupExpiredTokens(payload.userId, rt.token);
+//   }
+  
+//   }
+// };
+
+//   // ✅ Always blacklist the access token
+//   const record = await this.createBlacklistedToken({
+//     tokenHash: accessHash,
+//     expiresAt,
+//   });
+
+//   return {
+//     blacklisted: record,
+//     refreshDeleted,
+//     verified: !verificationFailed,
+//     userId: payload?.userId || null,
+//   };
+// },
+async logout(accessToken, refreshToken, tx) {
   const db = withTx(tx);
-  const { verifyToken, hashToken } = await import('./authService.js');
+  const { verifyToken, hashToken, compareHashedToken } = await import('./authService.js');
 
   let payload = null;
   let expiresAt;
   let verificationFailed = false;
 
   try {
-    // Try verifying the access token
     payload = await verifyToken(accessToken);
     expiresAt = new Date(payload.exp);
   } catch (error) {
-    // Token verification failed — expired, malformed, or invalid signature
     verificationFailed = true;
-    expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback 15 min window
+    expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback
   }
 
-  const tokenHash = await hashToken(accessToken);
+  const accessHash = await hashToken(accessToken);
+  let refreshDeleted = 0;
 
-  // ✅ Only remove refresh tokens if we know which user it belongs to
-  let refreshRecord = null;
   if (payload?.userId) {
-    refreshRecord =await this.cleanupExpiredTokens(payload.userId)
-  
+    // get all refresh tokens for this user
+    const userRefreshTokens = await this.getRefreshToken(payload.userId);
+
+    for (const rt of userRefreshTokens) {
+      const match = await compareHashedToken(refreshToken, rt.token);
+
+      if (match) {
+         // ✅ delete the specific refresh token only
+         const deletedCount = await this.cleanupExpiredTokens(payload.userId, rt.token);
+
+         // ensure refreshDeleted reflects real deletion count
+         refreshDeleted += deletedCount;
+        break; // stop after deleting the matched one
+      }
+    }
   }
 
-  // ✅ Always blacklist the access token (even if invalid)
-  const record = await this.createBlacklistedToken({tokenHash,expiresAt});
+  // ✅ Always blacklist the access token
+  const record = await this.createBlacklistedToken({
+    tokenHash: accessHash,
+    expiresAt,
+  });
 
   return {
     blacklisted: record,
-    refreshDeleted: refreshRecord || 0,
+    refreshDeleted,
     verified: !verificationFailed,
     userId: payload?.userId || null,
   };
@@ -471,7 +537,7 @@ async logout(accessToken, tx) {
     const skip = (page - 1) * pageSize;
     return await db.refreshToken.findMany({
       where: { userId },
-      select: { id: true, expiresAt: true, userAgent: true, ip: true },
+      select: { id: true, expiresAt: true, userAgent: true, ip: true,createdAt:true,lastUsedAt:true},
       orderBy: { expiresAt: 'desc' },
       skip,
       take: pageSize,

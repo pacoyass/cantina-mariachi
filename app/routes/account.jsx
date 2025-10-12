@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext } from 'react-router';
+import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext, useSubmit } from 'react-router';
 // middleware-based auth temporarily disabled due to RouterContextProvider incompatibility
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
@@ -17,6 +17,7 @@ import {
   Settings, Bell, Shield, LogOut, Edit, Eye, Gift,
   Monitor, Smartphone, Tablet, Globe, Trash2, Power
 } from '../lib/lucide-shim.js';
+import { AlertCircleIcon, Circle, Clock } from 'lucide-react';
 
 export const meta = () => [
   { title: 'My Account - Cantina Mariachi' },
@@ -48,6 +49,7 @@ export async function loader({ request }) {
     });
     
     const sessionsData = sessionsRes.ok ? await sessionsRes.json() : { data: { sessions: [] } };
+console.log("sessionData ....",sessionsData);
 
     return {
       orders: ordersData.data?.orders || [],
@@ -97,7 +99,7 @@ export async function action({ request }) {
 export default function AccountPage({loaderData,actionData}) {
   const { t } = useTranslation(['account', 'common']);
   const {user}= useOutletContext() || {};
-  const {  orders, reservations, isWelcome } = loaderData;
+  const {  orders, reservations, isWelcome ,sessions} = loaderData;
   const actionDatas = actionData;
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
@@ -190,6 +192,7 @@ export default function AccountPage({loaderData,actionData}) {
           </div>
         </div>
       </div>
+   
 
 
       {/* Main Content */}
@@ -515,26 +518,13 @@ export default function AccountPage({loaderData,actionData}) {
           </Card>
         </TabsContent>
 
-        {/* Sessions Tab */}
-        <TabsContent value="sessions" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Session Management
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-semibold mb-2">Sessions Feature</h3>
-                <p className="text-muted-foreground">
-                  Session management functionality will be available here.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+{/* Sessions Tab */}
+<SessionsTab
+  value="sessions"
+  sessions={sessions}
+/>
+
+
 
         {/* Rewards Tab */}
         <TabsContent value="rewards" className="space-y-6">
@@ -659,7 +649,7 @@ export default function AccountPage({loaderData,actionData}) {
               </Button>
               
               <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700">
-                <AlertCircle className="h-4 w-4 mr-2" />
+                <AlertCircleIcon className="h-4 w-4 mr-2" />
                 Delete Account
               </Button>
             </CardContent>
@@ -669,3 +659,211 @@ export default function AccountPage({loaderData,actionData}) {
     </main>
   );
 }
+
+
+// --- Helpers ---
+function parseUserAgent(ua) {
+  if (!ua) return { device: "Unknown", browser: "Unknown" };
+
+  const isWindows = ua.includes("Windows");
+  const isMac = ua.includes("Macintosh");
+  const isLinux = ua.includes("Linux");
+  const isMobile = /iPhone|Android/i.test(ua);
+
+  const device = isMobile
+    ? "Mobile"
+    : isWindows
+    ? "Windows"
+    : isMac
+    ? "Mac"
+    : isLinux
+    ? "Linux"
+    : "Unknown";
+
+  const match = ua.match(/(Chrome|Firefox|Safari|Edge)\/([\d.]+)/);
+  const browser = match ? `${match[1]} ${match[2].split(".")[0]}` : "Unknown";
+
+  return { device, browser };
+}
+
+function formatRelativeTime(date, future = false) {
+  const d = new Date(date);
+  const diff = (d - new Date()) / 1000;
+  const abs = Math.abs(diff);
+  const mins = Math.floor(abs / 60);
+  const hrs = Math.floor(mins / 60);
+  const days = Math.floor(hrs / 24);
+
+  const label = future ? "in" : "";
+  if (days > 0) return `${label} ${days} day${days > 1 ? "s" : ""}`;
+  if (hrs > 0) return `${label} ${hrs} hour${hrs > 1 ? "s" : ""}`;
+  if (mins > 0) return `${label} ${mins} minute${mins > 1 ? "s" : ""}`;
+  return "just now";
+}
+
+// --- Components ---
+const SessionCard = ({ session, isCurrent, onLogout }) => {
+  const { device, browser } = parseUserAgent(session.userAgent);
+  const submit = useSubmit();
+  return (
+    <div
+      className={`border rounded-lg p-4 space-y-3 transition ${
+        isCurrent ? "border-green-200 bg-green-50" : "hover:bg-muted/40"
+      }`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center gap-2">
+            {device === "Mobile" ? (
+              <Smartphone className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Monitor className="h-4 w-4 text-muted-foreground" />
+            )}
+            <h4 className="font-semibold">
+              {device} • {browser}
+            </h4>
+            {isCurrent && (
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Circle className="h-2 w-2 fill-current mr-1" />
+                Current Session
+              </Badge>
+            )}
+              <div className="flex items-center gap-1 mx-auto">
+              <MapPin className="h-3 w-3" />
+              <span>IP ADRESS: {session.ip || "N/A"}</span>
+              {session.ip === "::1" && (
+                <Badge variant="outline" className="text-xs">Local</Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
+          
+            <div className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              <span>Signed in: {formatRelativeTime(session.createdAt)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span>last active: {formatRelativeTime(session.lastUsedAt)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span>Expires in: {formatRelativeTime(session.expiresAt)}</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Badge variant="outline" className="text-xs">{browser}</Badge>
+            <Badge variant="outline" className="text-xs">{device}</Badge>
+          </div>
+        </div>
+
+        {!isCurrent && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => submit( null, { action: "/logout", method: "post" } )}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Power className="h-4 w-4 mr-1" />
+            Revoke
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const EmptySessionsState = () => (
+  <div className="text-center py-8">
+    <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+    <h3 className="font-semibold mb-2">No Active Sessions</h3>
+    <p className="text-muted-foreground">
+      You’re currently logged out on all devices.
+    </p>
+  </div>
+);
+
+// --- Main Sessions Tab ---
+const SessionsTab = ({ sessions }) => {
+   // Handle current session detection inside the component
+   const enhancedSessions = sessions.map((s) => {
+    const isBrowser = typeof navigator !== "undefined";
+    const isCurrent = isBrowser && s.userAgent === navigator.userAgent;
+    const isLocal = ["::1", "127.0.0.1", "localhost"].includes(s.ip);
+
+    return { ...s, current: isCurrent || isLocal };
+  });
+  return (
+    <TabsContent value="sessions" className="space-y-6 bg-transparent">
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="h-5 w-5" />
+          Active Sessions
+        </CardTitle>
+        <CardDescription>
+          Manage your logged-in devices and sessions. Log out from any suspicious or unused sessions.
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        {sessions && sessions.length > 0 ? (
+          <div className="space-y-4">
+            {/* Current Session */}
+            {sessions.filter((s) => s.current).map((session) => (
+              <SessionCard key={session.id} session={session} isCurrent />
+            ))}
+
+            {/* Other Sessions */}
+            {sessions.filter((s) => !s.current).map((session) => (
+              <SessionCard
+                key={session.id}
+                session={session}
+                isCurrent={false}
+              />
+            ))}
+
+            {/* Session Stats */}
+            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg text-sm">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>
+                    {sessions.length} active session
+                    {sessions.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span>
+                    {enhancedSessions.filter((s) => s.current).length} current device
+                  </span>
+                </div>
+              </div>
+
+              {sessions.filter((s) => !s.current).length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Power className="h-4 w-4 mr-1" />
+                  Logout All Other Devices
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <EmptySessionsState />
+        )}
+      </CardContent>
+    </Card>
+  </TabsContent>
+  )
+   
+}
+
+
+
