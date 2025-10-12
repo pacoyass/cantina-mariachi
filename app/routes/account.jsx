@@ -49,13 +49,19 @@ export async function loader({ request }) {
     });
     
     const sessionsData = sessionsRes.ok ? await sessionsRes.json() : { data: { sessions: [] } };
-    console.log("sessionData ....",sessionsData);
+    console.log("🔍 Sessions API Response:", {
+      status: sessionsRes.status,
+      ok: sessionsRes.ok,
+      data: sessionsData
+    });
 
     // Add current session identification
     const userAgent = request.headers.get('user-agent') || '';
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
               request.headers.get('x-real-ip') || 'unknown';
     
+    console.log("🔍 Current Request Info:", { userAgent: userAgent.substring(0, 100), ip });
+
     const enhancedSessions = (sessionsData.data?.sessions || []).map(session => {
       // Multiple ways to detect current session
       const isCurrentUserAgent = session.userAgent === userAgent;
@@ -64,11 +70,22 @@ export async function loader({ request }) {
       const isLocalAndRecent = (session.ip === '::1' || session.ip === '127.0.0.1') &&
         (new Date() - new Date(session.lastUsedAt)) < 60000; // 1 minute for local
       
+      console.log("🔍 Session analysis:", {
+        sessionId: session.id,
+        sessionIP: session.ip,
+        sessionUA: session.userAgent?.substring(0, 50),
+        isCurrentUserAgent,
+        isRecentAndSameIP,
+        isLocalAndRecent
+      });
+      
       return {
         ...session,
         current: isCurrentUserAgent || isRecentAndSameIP || isLocalAndRecent
       };
     });
+
+    console.log("🔍 Final enhanced sessions:", enhancedSessions.length);
 
     return {
       orders: ordersData.data?.orders || [],
@@ -868,34 +885,77 @@ const SessionsTab = ({ sessions, actionData }) => {
 
       <CardContent>
         {/* Debug Section - Remove this after testing */}
-        {process.env.NODE_ENV === 'development' && sessions && (
+        {(process.env.NODE_ENV === 'development' || true) && (
           <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-            <h4 className="font-semibold text-sm">Debug Info:</h4>
-            <p className="text-xs">Total sessions: {sessions.length}</p>
-            <p className="text-xs">Current sessions: {sessions.filter(s => s.current).length}</p>
-            <p className="text-xs">Other sessions: {sessions.filter(s => !s.current).length}</p>
+            <h4 className="font-semibold text-sm">🔍 Debug Info:</h4>
+            <p className="text-xs">Total sessions: {sessions ? sessions.length : 'undefined'}</p>
+            <p className="text-xs">Current sessions: {sessions ? sessions.filter(s => s.current).length : 'N/A'}</p>
+            <p className="text-xs">Other sessions: {sessions ? sessions.filter(s => !s.current).length : 'N/A'}</p>
+            
+            {(!sessions || sessions.length === 0) && (
+              <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
+                <p className="text-xs font-semibold text-blue-700">ℹ️ No active sessions</p>
+                <p className="text-xs text-blue-600">This is normal if:</p>
+                <ul className="text-xs text-blue-600 ml-4">
+                  <li>• You recently logged out all devices</li>
+                  <li>• This is your first login</li>
+                  <li>• All refresh tokens have been revoked</li>
+                </ul>
+                <p className="text-xs text-blue-600 mt-1">
+                  <strong>Current status:</strong> You're logged in with a valid access token, 
+                  but no refresh tokens exist (sessions were cleared).
+                </p>
+                <p className="text-xs text-blue-600">
+                  <strong>To test sessions:</strong> Login from another browser or incognito window.
+                </p>
+              </div>
+            )}
+            
             <div className="mt-2">
-              {sessions.map((s, i) => (
+              {sessions && sessions.map((s, i) => (
                 <div key={s.id} className="text-xs">
                   Session {i + 1}: {s.current ? 'CURRENT' : 'OTHER'} | IP: {s.ip} | UA: {s.userAgent?.substring(0, 50)}...
                 </div>
               ))}
             </div>
             
-            {/* Test: Force some sessions to be non-current for testing */}
-            <div className="mt-2">
+            {/* Manual Session Fetch Test */}
+            <div className="mt-2 space-y-2">
               <Button 
                 size="sm" 
                 variant="outline"
-                onClick={() => {
-                  // This is just for UI testing - modify sessions in memory
-                  if (sessions.length > 0) {
-                    sessions[0].current = false; // Force first session to be non-current
-                    window.location.reload(); // Simple refresh to see changes
+                onClick={async () => {
+                  try {
+                    console.log("🔍 Manual fetch test starting...");
+                    const response = await fetch('/api/auth/sessions', {
+                      credentials: 'include'
+                    });
+                    
+                    console.log("🔍 Manual fetch response:", {
+                      status: response.status,
+                      ok: response.ok,
+                      headers: Object.fromEntries(response.headers.entries())
+                    });
+                    
+                    const data = await response.json();
+                    console.log("🔍 Manual fetch data:", data);
+                    
+                    alert(`Manual fetch result: ${response.status} - ${JSON.stringify(data, null, 2)}`);
+                  } catch (error) {
+                    console.error("🔍 Manual fetch error:", error);
+                    alert(`Manual fetch error: ${error.message}`);
                   }
                 }}
               >
-                Test: Make first session non-current
+                🔍 Test Manual Sessions Fetch
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => window.location.reload()}
+              >
+                🔄 Reload Page
               </Button>
             </div>
           </div>
