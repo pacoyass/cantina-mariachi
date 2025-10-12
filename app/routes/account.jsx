@@ -337,6 +337,8 @@ export default function AccountPage({loaderData,actionData}) {
   const [showUserManagement, setShowUserManagement] = useState(false);
   const [allUsersData, setAllUsersData] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [selectedSessions, setSelectedSessions] = useState(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
   const isSubmitting = navigation.state === 'submitting';
   
   // Handle redirect after logout-all-sessions
@@ -929,26 +931,15 @@ export default function AccountPage({loaderData,actionData}) {
         </TabsContent>
       </Tabs>
       
-      {/* Admin User Management Modal */}
-      {showUserManagement && (user?.role === 'ADMIN' || user?.role === 'OWNER') && (
-        <UserManagementModal 
-          isOpen={showUserManagement}
-          onClose={() => setShowUserManagement(false)}
-          usersData={allUsersData}
-          loading={loadingUsers}
-          currentUser={user}
-        />
-      )}
+      {/* Note: UserManagementModal is now integrated into the Dialog above */}
     </main>
   );
 }
 
 
-// --- Admin User Management Modal ---
-const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser }) => {
+// --- User Management Content Component ---
+const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSelectedSessions, searchTerm, setSearchTerm }) => {
   const submit = useSubmit();
-  const [selectedSessions, setSelectedSessions] = useState(new Set());
-  const [searchTerm, setSearchTerm] = useState('');
   
   const filteredUsers = usersData.filter(user => 
     user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -983,156 +974,138 @@ const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden">
-        <DialogHeader>
-          <DialogTitle>User Session Management</DialogTitle>
-          <DialogDescription>
-            Manage active sessions for all users. Revoke suspicious or unused sessions.
-          </DialogDescription>
-        </DialogHeader>
+    <div className="overflow-y-auto max-h-[70vh]">
+      {/* Search and Controls */}
+      <div className="flex items-center justify-between mb-6 px-1">
+        <div className="flex items-center gap-4">
+          <Input
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-64"
+          />
+          <Badge variant="outline">
+            {filteredUsers.length} users
+          </Badge>
+        </div>
+        
+        {selectedSessions.size > 0 && (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleRevokeSelected}
+          >
+            Revoke {selectedSessions.size} Selected Sessions
+          </Button>
+        )}
+      </div>
 
-        {loading ? (
-          <div className="p-8 text-center">
-            <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Loading users and sessions...</p>
-          </div>
-        ) : (
-          <div className="overflow-y-auto max-h-[70vh]">
-            {/* Search and Controls */}
-            <div className="flex items-center justify-between mb-6 px-1">
-              <div className="flex items-center gap-4">
-                <Input
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-64"
-                />
-                <Badge variant="outline">
-                  {filteredUsers.length} users
-                </Badge>
-              </div>
-              
-              {selectedSessions.size > 0 && (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handleRevokeSelected}
-                >
-                  Revoke {selectedSessions.size} Selected Sessions
-                </Button>
-              )}
-            </div>
-
-            {/* Users List */}
-            <div className="space-y-4 px-1">
-              {filteredUsers.map(user => (
-                <Card key={user.id}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>
-                            {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h3 className="font-semibold">{user.name || 'Unknown User'}</h3>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
-                        </div>
-                        <Badge variant={user.id === currentUser?.userId ? 'default' : 'secondary'}>
-                          {user.role}
-                        </Badge>
-                        {user.id === currentUser?.userId && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700">
-                            You
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {user.sessions?.length || 0} active sessions
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  {user.sessions && user.sessions.length > 0 && (
-                    <CardContent className="pt-0">
-                      <div className="space-y-2">
-                        {user.sessions.map(session => {
-                          const { device, browser } = parseUserAgent(session.userAgent);
-                          const sessionKey = `${user.id}-${session.id}`;
-                          const isSelected = selectedSessions.has(sessionKey);
-                          
-                          return (
-                            <div 
-                              key={session.id}
-                              className={`flex items-center justify-between p-3 rounded border ${
-                                isSelected ? 'border-red-200 bg-red-50' : 'border-gray-200'
-                              }`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() => handleSessionSelect(user.id, session.id)}
-                                  className="h-4 w-4"
-                                />
-                                
-                                <div className="flex items-center gap-2">
-                                  {device === "Mobile" ? (
-                                    <Smartphone className="h-4 w-4 text-muted-foreground" />
-                                  ) : (
-                                    <Monitor className="h-4 w-4 text-muted-foreground" />
-                                  )}
-                                  <span className="font-medium">{device} • {browser}</span>
-                                </div>
-                                
-                                <Badge variant="outline" className="text-xs">
-                                  IP: {session.ip}
-                                </Badge>
-                              </div>
-                              
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <span>Active: {formatRelativeTime(session.lastUsedAt)}</span>
-                                <span>Expires: {formatRelativeTime(session.expiresAt, true)}</span>
-                                
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => {
-                                    if (confirm(`Revoke this session for ${user.name}?`)) {
-                                      const formData = new FormData();
-                                      formData.append("intent", "revoke-user-session");
-                                      formData.append("userId", user.id);
-                                      formData.append("sessionId", session.id);
-                                      submit(formData, { method: "post" });
-                                    }
-                                  }}
-                                  className="text-red-600 hover:text-red-700"
-                                >
-                                  <Power className="h-4 w-4 mr-1" />
-                                  Revoke
-                                </Button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
+      {/* Users List */}
+      <div className="space-y-4 px-1">
+        {filteredUsers.map(user => (
+          <Card key={user.id}>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarFallback>
+                      {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="font-semibold">{user.name || 'Unknown User'}</h3>
+                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                  </div>
+                  <Badge variant={user.id === currentUser?.userId ? 'default' : 'secondary'}>
+                    {user.role}
+                  </Badge>
+                  {user.id === currentUser?.userId && (
+                    <Badge variant="outline" className="bg-green-50 text-green-700">
+                      You
+                    </Badge>
                   )}
-                </Card>
-              ))}
-              
-              {filteredUsers.length === 0 && (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No users found matching your search.</p>
                 </div>
-              )}
-            </div>
+                <div className="text-sm text-muted-foreground">
+                  {user.sessions?.length || 0} active sessions
+                </div>
+              </div>
+            </CardHeader>
+            
+            {user.sessions && user.sessions.length > 0 && (
+              <CardContent className="pt-0">
+                <div className="space-y-2">
+                  {user.sessions.map(session => {
+                    const { device, browser } = parseUserAgent(session.userAgent);
+                    const sessionKey = `${user.id}-${session.id}`;
+                    const isSelected = selectedSessions.has(sessionKey);
+                    
+                    return (
+                      <div 
+                        key={session.id}
+                        className={`flex items-center justify-between p-3 rounded border ${
+                          isSelected ? 'border-red-200 bg-red-50' : 'border-gray-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleSessionSelect(user.id, session.id)}
+                            className="h-4 w-4"
+                          />
+                          
+                          <div className="flex items-center gap-2">
+                            {device === "Mobile" ? (
+                              <Smartphone className="h-4 w-4 text-muted-foreground" />
+                            ) : (
+                              <Monitor className="h-4 w-4 text-muted-foreground" />
+                            )}
+                            <span className="font-medium">{device} • {browser}</span>
+                          </div>
+                          
+                          <Badge variant="outline" className="text-xs">
+                            IP: {session.ip}
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span>Active: {formatRelativeTime(session.lastUsedAt)}</span>
+                          <span>Expires: {formatRelativeTime(session.expiresAt, true)}</span>
+                          
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              if (confirm(`Revoke this session for ${user.name}?`)) {
+                                const formData = new FormData();
+                                formData.append("intent", "revoke-user-session");
+                                formData.append("userId", user.id);
+                                formData.append("sessionId", session.id);
+                                submit(formData, { method: "post" });
+                              }
+                            }}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Power className="h-4 w-4 mr-1" />
+                            Revoke
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            )}
+          </Card>
+        ))}
+        
+        {filteredUsers.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No users found matching your search.</p>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 
@@ -1575,71 +1548,99 @@ const SessionsTab = ({ sessions, actionData, user }) => {
               <div className="flex gap-2">
                 {/* Manage All Users Sessions - Only for Admin/Owner */}
                 {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      console.log("Opening user management modal");
-                      // Instead of form submission, directly open modal with mock data
-                      const mockUsersData = [
-                        {
-                          id: user?.userId || "current-user",
-                          name: user?.name || "Current User",
-                          email: user?.email || "owner@example.com",
-                          role: user?.role || "OWNER",
-                          sessions: sessions || []
-                        },
-                        {
-                          id: "mock-user-1",
-                          name: "John Doe",
-                          email: "john@example.com",
-                          role: "CUSTOMER",
-                          sessions: [
+                  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          console.log("Opening user management modal");
+                          // Load mock data when opening
+                          const mockUsersData = [
                             {
-                              id: "mock-session-1",
-                              ip: "192.168.1.100",
-                              userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
-                              createdAt: new Date(Date.now() - 3600000).toISOString(),
-                              lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
-                              expiresAt: new Date(Date.now() + 1800000).toISOString()
-                            }
-                          ]
-                        },
-                        {
-                          id: "mock-user-2", 
-                          name: "Jane Smith",
-                          email: "jane@example.com",
-                          role: "ADMIN",
-                          sessions: [
-                            {
-                              id: "mock-session-2",
-                              ip: "10.0.0.50",
-                              userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                              createdAt: new Date(Date.now() - 7200000).toISOString(),
-                              lastUsedAt: new Date(Date.now() - 900000).toISOString(), 
-                              expiresAt: new Date(Date.now() + 3600000).toISOString()
+                              id: user?.userId || "current-user",
+                              name: user?.name || "Current User",
+                              email: user?.email || "owner@example.com",
+                              role: user?.role || "OWNER",
+                              sessions: sessions || []
                             },
                             {
-                              id: "mock-session-3",
-                              ip: "10.0.0.51",
-                              userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-                              createdAt: new Date(Date.now() - 5400000).toISOString(),
-                              lastUsedAt: new Date(Date.now() - 600000).toISOString(),
-                              expiresAt: new Date(Date.now() + 2400000).toISOString()
+                              id: "mock-user-1",
+                              name: "John Doe",
+                              email: "john@example.com",
+                              role: "CUSTOMER",
+                              sessions: [
+                                {
+                                  id: "mock-session-1",
+                                  ip: "192.168.1.100",
+                                  userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
+                                  createdAt: new Date(Date.now() - 3600000).toISOString(),
+                                  lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
+                                  expiresAt: new Date(Date.now() + 1800000).toISOString()
+                                }
+                              ]
+                            },
+                            {
+                              id: "mock-user-2", 
+                              name: "Jane Smith",
+                              email: "jane@example.com",
+                              role: "ADMIN",
+                              sessions: [
+                                {
+                                  id: "mock-session-2",
+                                  ip: "10.0.0.50",
+                                  userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                                  createdAt: new Date(Date.now() - 7200000).toISOString(),
+                                  lastUsedAt: new Date(Date.now() - 900000).toISOString(), 
+                                  expiresAt: new Date(Date.now() + 3600000).toISOString()
+                                },
+                                {
+                                  id: "mock-session-3",
+                                  ip: "10.0.0.51",
+                                  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                                  createdAt: new Date(Date.now() - 5400000).toISOString(),
+                                  lastUsedAt: new Date(Date.now() - 600000).toISOString(),
+                                  expiresAt: new Date(Date.now() + 2400000).toISOString()
+                                }
+                              ]
                             }
-                          ]
-                        }
-                      ];
-                      
-                      setAllUsersData(mockUsersData);
-                      setShowUserManagement(true);
-                    }}
-                    className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
-                  >
-                    <Shield className="h-4 w-4 mr-1" />
-                    Manage All Users
-                    <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
-                  </Button>
+                          ];
+                          
+                          setAllUsersData(mockUsersData);
+                        }}
+                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
+                      >
+                        <Shield className="h-4 w-4 mr-1" />
+                        Manage All Users
+                        <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
+                      </Button>
+                    </DialogTrigger>
+                    
+                    <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                      <DialogHeader>
+                        <DialogTitle>User Session Management</DialogTitle>
+                        <DialogDescription>
+                          Manage active sessions for all users. Revoke suspicious or unused sessions.
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      {loadingUsers ? (
+                        <div className="p-8 text-center">
+                          <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                          <p>Loading users and sessions...</p>
+                        </div>
+                      ) : (
+                        <UserManagementContent 
+                          usersData={allUsersData}
+                          currentUser={user}
+                          selectedSessions={selectedSessions}
+                          setSelectedSessions={setSelectedSessions}
+                          searchTerm={searchTerm}
+                          setSearchTerm={setSearchTerm}
+                        />
+                      )}
+                    </DialogContent>
+                  </Dialog>
                 )}
                 
                 {/* Alternative: Logout Other Devices for all users but with different behavior */}
