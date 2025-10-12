@@ -148,7 +148,19 @@ export async function action({ request }) {
           "Content-Type": "application/json"
         },
       });
-      const result = await res.json();
+      
+      let result;
+      try {
+        result = await res.json();
+      } catch (parseError) {
+        console.error("Failed to parse logout-all response:", parseError);
+        return { 
+          status: "error", 
+          message: `Server returned invalid response (${res.status}): ${res.statusText}` 
+        };
+      }
+      
+      console.log("Logout-all response:", { status: res.status, ok: res.ok, result });
       
       if (res.ok) {
         return { 
@@ -157,7 +169,10 @@ export async function action({ request }) {
           redirect: "/login"
         };
       } else {
-        return { status: "error", message: result.error?.message || "Failed to logout all sessions" };
+        return { 
+          status: "error", 
+          message: `Logout failed: ${result.error?.message || result.message || 'Unknown error'} (Status: ${res.status})` 
+        };
       }
     }
 
@@ -1010,6 +1025,30 @@ const SessionsTab = ({ sessions, actionData, user }) => {
                     size="sm" 
                     variant="outline"
                     onClick={() => {
+                      // Create a fake session to test revoke button
+                      const fakeSession = {
+                        id: 'fake-session-' + Date.now(),
+                        ip: '192.168.1.100',
+                        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)',
+                        createdAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+                        lastUsedAt: new Date(Date.now() - 1800000).toISOString(), // 30 min ago
+                        expiresAt: new Date(Date.now() + 1800000).toISOString(), // 30 min from now
+                        current: false
+                      };
+                      
+                      // Add fake session to the sessions array (client-side only for testing)
+                      sessions.push(fakeSession);
+                      window.location.reload();
+                    }}
+                    className="text-blue-600"
+                  >
+                    🧪 Add Fake Session
+                  </Button>
+                  
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
                       const formData = new FormData();
                       formData.append("intent", "logout-all-others");
                       const submit = window.submit || (() => {
@@ -1025,27 +1064,39 @@ const SessionsTab = ({ sessions, actionData, user }) => {
                   >
                     🧪 Test Logout Others
                   </Button>
-                  
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => {
-                      if (confirm("Test logout ALL? This will log you out!")) {
-                        const formData = new FormData();
-                        formData.append("intent", "logout-all-sessions");
-                        fetch('/account', {
-                          method: 'POST',
-                          body: formData,
-                          credentials: 'include'
-                        }).then(() => window.location.href = '/login');
-                      }
-                    }}
-                    className="text-red-600"
-                  >
-                    🧪 Test Logout All
-                  </Button>
                 </div>
               )}
+              
+              <div className="mt-2">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => {
+                    if (confirm("Test logout ALL? This will log you out!")) {
+                      const formData = new FormData();
+                      formData.append("intent", "logout-all-sessions");
+                      fetch('/account', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                      }).then(response => {
+                        console.log("Logout all response:", response);
+                        if (response.ok) {
+                          window.location.href = '/login';
+                        } else {
+                          alert('Logout failed: ' + response.status);
+                        }
+                      }).catch(error => {
+                        console.error("Logout error:", error);
+                        alert('Logout error: ' + error.message);
+                      });
+                    }
+                  }}
+                  className="text-red-600"
+                >
+                  🧪 Test Logout All (Direct)
+                </Button>
+              </div>
             </div>
           </div>
         )}
