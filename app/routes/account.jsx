@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext, useSubmit } from 'react-router';
 // middleware-based auth temporarily disabled due to RouterContextProvider incompatibility
 import { useTranslation } from 'react-i18next';
@@ -139,6 +140,27 @@ export async function action({ request }) {
       }
     }
 
+    if (intent === "logout-all-sessions") {
+      const res = await fetch(`${url.origin}/api/auth/logout-all`, {
+        method: "POST",
+        headers: { 
+          cookie,
+          "Content-Type": "application/json"
+        },
+      });
+      const result = await res.json();
+      
+      if (res.ok) {
+        return { 
+          status: "success", 
+          message: `All sessions logged out successfully. ${result.data?.deletedTokens || 0} sessions were removed.`,
+          redirect: "/login"
+        };
+      } else {
+        return { status: "error", message: result.error?.message || "Failed to logout all sessions" };
+      }
+    }
+
     if (intent === "logout-all-others") {
       const res = await fetch(`${url.origin}/api/auth/logout-others`, {
         method: "POST",
@@ -150,7 +172,7 @@ export async function action({ request }) {
       const result = await res.json();
       
       if (res.ok) {
-        return { status: "success", message: `${result.data?.deletedTokens || 0} sessions revoked successfully` };
+        return { status: "success", message: `${result.data?.deletedTokens || 0} other sessions logged out successfully` };
       } else {
         return { status: "error", message: result.error?.message || "Failed to logout other sessions" };
       }
@@ -171,6 +193,13 @@ export default function AccountPage({loaderData,actionData}) {
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
   const isSubmitting = navigation.state === 'submitting';
+  
+  // Handle redirect after logout-all-sessions
+  React.useEffect(() => {
+    if (actionDatas?.redirect === '/login') {
+      window.location.href = '/login?message=All sessions logged out successfully';
+    }
+  }, [actionDatas]);
   
   console.log("from account", user);
 
@@ -921,42 +950,87 @@ const SessionsTab = ({ sessions, actionData }) => {
             
             {/* Manual Session Fetch Test */}
             <div className="mt-2 space-y-2">
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={async () => {
-                  try {
-                    console.log("🔍 Manual fetch test starting...");
-                    const response = await fetch('/api/auth/sessions', {
-                      credentials: 'include'
-                    });
-                    
-                    console.log("🔍 Manual fetch response:", {
-                      status: response.status,
-                      ok: response.ok,
-                      headers: Object.fromEntries(response.headers.entries())
-                    });
-                    
-                    const data = await response.json();
-                    console.log("🔍 Manual fetch data:", data);
-                    
-                    alert(`Manual fetch result: ${response.status} - ${JSON.stringify(data, null, 2)}`);
-                  } catch (error) {
-                    console.error("🔍 Manual fetch error:", error);
-                    alert(`Manual fetch error: ${error.message}`);
-                  }
-                }}
-              >
-                🔍 Test Manual Sessions Fetch
-              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      console.log("🔍 Manual fetch test starting...");
+                      const response = await fetch('/api/auth/sessions', {
+                        credentials: 'include'
+                      });
+                      
+                      console.log("🔍 Manual fetch response:", {
+                        status: response.status,
+                        ok: response.ok,
+                        headers: Object.fromEntries(response.headers.entries())
+                      });
+                      
+                      const data = await response.json();
+                      console.log("🔍 Manual fetch data:", data);
+                      
+                      alert(`Manual fetch result: ${response.status} - ${JSON.stringify(data, null, 2)}`);
+                    } catch (error) {
+                      console.error("🔍 Manual fetch error:", error);
+                      alert(`Manual fetch error: ${error.message}`);
+                    }
+                  }}
+                >
+                  🔍 Test Sessions API
+                </Button>
+                
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => window.location.reload()}
+                >
+                  🔄 Reload Page
+                </Button>
+              </div>
               
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => window.location.reload()}
-              >
-                🔄 Reload Page
-              </Button>
+              {sessions && sessions.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      const formData = new FormData();
+                      formData.append("intent", "logout-all-others");
+                      const submit = window.submit || (() => {
+                        fetch('/account', {
+                          method: 'POST',
+                          body: formData,
+                          credentials: 'include'
+                        }).then(() => window.location.reload());
+                      });
+                      submit(formData, { method: "post" });
+                    }}
+                    className="text-orange-600"
+                  >
+                    🧪 Test Logout Others
+                  </Button>
+                  
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      if (confirm("Test logout ALL? This will log you out!")) {
+                        const formData = new FormData();
+                        formData.append("intent", "logout-all-sessions");
+                        fetch('/account', {
+                          method: 'POST',
+                          body: formData,
+                          credentials: 'include'
+                        }).then(() => window.location.href = '/login');
+                      }
+                    }}
+                    className="text-red-600"
+                  >
+                    🧪 Test Logout All
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -994,7 +1068,7 @@ const SessionsTab = ({ sessions, actionData }) => {
               />
             ))}
 
-            {/* Session Stats and Logout All Button */}
+            {/* Session Stats and Management Buttons */}
             <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg text-sm">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
@@ -1020,20 +1094,40 @@ const SessionsTab = ({ sessions, actionData }) => {
               </div>
 
               <div className="flex gap-2">
-                {/* Always show this button for testing */}
+                {/* Logout Other Devices - Only show if there are other sessions */}
+                {sessions.filter((s) => !s.current).length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      console.log("Logging out other sessions only");
+                      const formData = new FormData();
+                      formData.append("intent", "logout-all-others");
+                      submit(formData, { method: "post" });
+                    }}
+                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
+                  >
+                    <Power className="h-4 w-4 mr-1" />
+                    Logout Other Devices
+                  </Button>
+                )}
+                
+                {/* Logout ALL Sessions - Always available */}
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    console.log("Logging out all other sessions");
-                    const formData = new FormData();
-                    formData.append("intent", "logout-all-others");
-                    submit(formData, { method: "post" });
+                    if (confirm("This will log you out of ALL devices including this one. Continue?")) {
+                      console.log("Logging out ALL sessions");
+                      const formData = new FormData();
+                      formData.append("intent", "logout-all-sessions");
+                      submit(formData, { method: "post" });
+                    }
                   }}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                 >
                   <Power className="h-4 w-4 mr-1" />
-                  Logout All Other Devices
+                  Logout All Devices
                 </Button>
               </div>
             </div>
