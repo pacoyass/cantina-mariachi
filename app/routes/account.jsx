@@ -757,14 +757,10 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
   const { device, browser } = parseUserAgent(session.userAgent);
   const submit = useSubmit();
   return (
-    <div
-      className={`border rounded-lg p-4 space-y-3 transition ${
-        isCurrent ? "border-green-200 bg-green-50" : "hover:bg-muted/40"
-      }`}
-    >
+    <div className="border rounded-lg p-4 space-y-3 transition hover:bg-muted/40">
       <div className="flex items-start justify-between">
         <div className="flex-1 space-y-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {device === "Mobile" ? (
               <Smartphone className="h-4 w-4 text-muted-foreground" />
             ) : (
@@ -779,13 +775,14 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
                 Current Session
               </Badge>
             )}
-              <div className="flex items-center gap-1 mx-auto">
-              <MapPin className="h-3 w-3" />
-              <span>IP ADDRESS: {session.ip || "N/A"}</span>
-              {session.ip === "::1" && (
-                <Badge variant="outline" className="text-xs">Local</Badge>
-              )}
-            </div>
+          </div>
+          
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            <MapPin className="h-3 w-3" />
+            <span>IP ADDRESS: {session.ip || "N/A"}</span>
+            {session.ip === "::1" && (
+              <Badge variant="outline" className="text-xs">Local</Badge>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
@@ -810,21 +807,32 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
           </div>
         </div>
 
+        {/* Revoke button - Debug: isCurrent = {isCurrent ? 'true' : 'false'} */}
         {!isCurrent && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const formData = new FormData();
-              formData.append("intent", "revoke-session");
-              formData.append("sessionId", session.id);
-              submit(formData, { method: "post" });
-            }}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-          >
-            <Power className="h-4 w-4 mr-1" />
-            Revoke
-          </Button>
+          <div className="ml-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                console.log("Revoking session:", session.id);
+                const formData = new FormData();
+                formData.append("intent", "revoke-session");
+                formData.append("sessionId", session.id);
+                submit(formData, { method: "post" });
+              }}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+            >
+              <Power className="h-4 w-4 mr-1" />
+              Revoke
+            </Button>
+          </div>
+        )}
+        
+        {/* Debug info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="ml-4 text-xs text-gray-500">
+            Current: {isCurrent ? 'YES' : 'NO'}
+          </div>
         )}
       </div>
     </div>
@@ -859,6 +867,40 @@ const SessionsTab = ({ sessions, actionData }) => {
       </CardHeader>
 
       <CardContent>
+        {/* Debug Section - Remove this after testing */}
+        {process.env.NODE_ENV === 'development' && sessions && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+            <h4 className="font-semibold text-sm">Debug Info:</h4>
+            <p className="text-xs">Total sessions: {sessions.length}</p>
+            <p className="text-xs">Current sessions: {sessions.filter(s => s.current).length}</p>
+            <p className="text-xs">Other sessions: {sessions.filter(s => !s.current).length}</p>
+            <div className="mt-2">
+              {sessions.map((s, i) => (
+                <div key={s.id} className="text-xs">
+                  Session {i + 1}: {s.current ? 'CURRENT' : 'OTHER'} | IP: {s.ip} | UA: {s.userAgent?.substring(0, 50)}...
+                </div>
+              ))}
+            </div>
+            
+            {/* Test: Force some sessions to be non-current for testing */}
+            <div className="mt-2">
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => {
+                  // This is just for UI testing - modify sessions in memory
+                  if (sessions.length > 0) {
+                    sessions[0].current = false; // Force first session to be non-current
+                    window.location.reload(); // Simple refresh to see changes
+                  }
+                }}
+              >
+                Test: Make first session non-current
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Display action results */}
         {actionData?.status === "success" && (
           <Alert className="mb-4 border-green-200 bg-green-50">
@@ -892,7 +934,7 @@ const SessionsTab = ({ sessions, actionData }) => {
               />
             ))}
 
-            {/* Session Stats */}
+            {/* Session Stats and Logout All Button */}
             <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg text-sm">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
@@ -908,23 +950,32 @@ const SessionsTab = ({ sessions, actionData }) => {
                     {sessions.filter((s) => s.current).length} current device
                   </span>
                 </div>
+                
+                {/* Debug info */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div className="text-xs text-gray-500">
+                    Others: {sessions.filter((s) => !s.current).length}
+                  </div>
+                )}
               </div>
 
-              {sessions.filter((s) => !s.current).length > 0 && (
+              <div className="flex gap-2">
+                {/* Always show this button for testing */}
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => {
+                    console.log("Logging out all other sessions");
                     const formData = new FormData();
                     formData.append("intent", "logout-all-others");
                     submit(formData, { method: "post" });
                   }}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                 >
                   <Power className="h-4 w-4 mr-1" />
                   Logout All Other Devices
                 </Button>
-              )}
+              </div>
             </div>
           </div>
         ) : (
