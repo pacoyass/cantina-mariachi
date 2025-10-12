@@ -632,6 +632,7 @@ export default function AccountPage({loaderData,actionData}) {
   value="sessions"
   sessions={sessions}
   actionData={actionDatas}
+  user={user}
 />
 
 
@@ -909,7 +910,7 @@ const EmptySessionsState = () => (
 );
 
 // --- Main Sessions Tab ---
-const SessionsTab = ({ sessions, actionData }) => {
+const SessionsTab = ({ sessions, actionData, user }) => {
   const submit = useSubmit();
   
   return (
