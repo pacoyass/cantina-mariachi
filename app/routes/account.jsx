@@ -12,6 +12,14 @@ import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Separator } from '../components/ui/separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../components/ui/dialog';
 import { 
   User, Mail, Phone, MapPin, CreditCard, History, 
   Calendar, Star, Package, AlertCircle, CheckCircle,
@@ -942,8 +950,6 @@ const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser 
   const [selectedSessions, setSelectedSessions] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   
-  if (!isOpen) return null;
-
   const filteredUsers = usersData.filter(user => 
     user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -977,17 +983,14 @@ const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser 
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b">
-          <div>
-            <h2 className="text-xl font-semibold">User Session Management</h2>
-            <p className="text-sm text-muted-foreground">Manage active sessions for all users</p>
-          </div>
-          <Button variant="outline" onClick={onClose}>
-            ✕ Close
-          </Button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        <DialogHeader>
+          <DialogTitle>User Session Management</DialogTitle>
+          <DialogDescription>
+            Manage active sessions for all users. Revoke suspicious or unused sessions.
+          </DialogDescription>
+        </DialogHeader>
 
         {loading ? (
           <div className="p-8 text-center">
@@ -995,9 +998,9 @@ const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser 
             <p>Loading users and sessions...</p>
           </div>
         ) : (
-          <div className="p-6 overflow-y-auto max-h-[70vh]">
+          <div className="overflow-y-auto max-h-[70vh]">
             {/* Search and Controls */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 px-1">
               <div className="flex items-center gap-4">
                 <Input
                   placeholder="Search users..."
@@ -1022,7 +1025,7 @@ const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser 
             </div>
 
             {/* Users List */}
-            <div className="space-y-4">
+            <div className="space-y-4 px-1">
               {filteredUsers.map(user => (
                 <Card key={user.id}>
                   <CardHeader className="pb-3">
@@ -1128,8 +1131,8 @@ const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser 
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -1577,9 +1580,59 @@ const SessionsTab = ({ sessions, actionData, user }) => {
                     size="sm"
                     onClick={() => {
                       console.log("Opening user management modal");
-                      const formData = new FormData();
-                      formData.append("intent", "logout-all-others");
-                      submit(formData, { method: "post" });
+                      // Instead of form submission, directly open modal with mock data
+                      const mockUsersData = [
+                        {
+                          id: user?.userId || "current-user",
+                          name: user?.name || "Current User",
+                          email: user?.email || "owner@example.com",
+                          role: user?.role || "OWNER",
+                          sessions: sessions || []
+                        },
+                        {
+                          id: "mock-user-1",
+                          name: "John Doe",
+                          email: "john@example.com",
+                          role: "CUSTOMER",
+                          sessions: [
+                            {
+                              id: "mock-session-1",
+                              ip: "192.168.1.100",
+                              userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
+                              createdAt: new Date(Date.now() - 3600000).toISOString(),
+                              lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
+                              expiresAt: new Date(Date.now() + 1800000).toISOString()
+                            }
+                          ]
+                        },
+                        {
+                          id: "mock-user-2", 
+                          name: "Jane Smith",
+                          email: "jane@example.com",
+                          role: "ADMIN",
+                          sessions: [
+                            {
+                              id: "mock-session-2",
+                              ip: "10.0.0.50",
+                              userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                              createdAt: new Date(Date.now() - 7200000).toISOString(),
+                              lastUsedAt: new Date(Date.now() - 900000).toISOString(), 
+                              expiresAt: new Date(Date.now() + 3600000).toISOString()
+                            },
+                            {
+                              id: "mock-session-3",
+                              ip: "10.0.0.51",
+                              userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                              createdAt: new Date(Date.now() - 5400000).toISOString(),
+                              lastUsedAt: new Date(Date.now() - 600000).toISOString(),
+                              expiresAt: new Date(Date.now() + 2400000).toISOString()
+                            }
+                          ]
+                        }
+                      ];
+                      
+                      setAllUsersData(mockUsersData);
+                      setShowUserManagement(true);
                     }}
                     className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
                   >
