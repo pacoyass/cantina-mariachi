@@ -49,12 +49,31 @@ export async function loader({ request }) {
     });
     
     const sessionsData = sessionsRes.ok ? await sessionsRes.json() : { data: { sessions: [] } };
-console.log("sessionData ....",sessionsData);
+    console.log("sessionData ....",sessionsData);
+
+    // Add current session identification
+    const userAgent = request.headers.get('user-agent') || '';
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+              request.headers.get('x-real-ip') || 'unknown';
+    
+    const enhancedSessions = (sessionsData.data?.sessions || []).map(session => {
+      // Multiple ways to detect current session
+      const isCurrentUserAgent = session.userAgent === userAgent;
+      const isRecentAndSameIP = session.ip === ip && 
+        (new Date() - new Date(session.lastUsedAt)) < 300000; // 5 minutes
+      const isLocalAndRecent = (session.ip === '::1' || session.ip === '127.0.0.1') &&
+        (new Date() - new Date(session.lastUsedAt)) < 60000; // 1 minute for local
+      
+      return {
+        ...session,
+        current: isCurrentUserAgent || isRecentAndSameIP || isLocalAndRecent
+      };
+    });
 
     return {
       orders: ordersData.data?.orders || [],
       reservations: reservationsData.data?.reservations || [],
-      sessions: sessionsData.data?.sessions || [],
+      sessions: enhancedSessions,
       isWelcome: url.searchParams.get('welcome') === 'true'
     };
   } catch (error) {
@@ -88,6 +107,37 @@ export async function action({ request }) {
       return res.json();
     }
 
+    if (intent === "revoke-session") {
+      const sessionId = formData.get("sessionId");
+      const res = await fetch(`${url.origin}/api/auth/sessions/${sessionId}`, {
+        method: "DELETE",
+        headers: { cookie },
+      });
+      const result = await res.json();
+      
+      if (res.ok) {
+        return { status: "success", message: "Session revoked successfully" };
+      } else {
+        return { status: "error", message: result.error?.message || "Failed to revoke session" };
+      }
+    }
+
+    if (intent === "logout-all-others") {
+      const res = await fetch(`${url.origin}/api/auth/logout-others`, {
+        method: "POST",
+        headers: { 
+          cookie,
+          "Content-Type": "application/json"
+        },
+      });
+      const result = await res.json();
+      
+      if (res.ok) {
+        return { status: "success", message: `${result.data?.deletedTokens || 0} sessions revoked successfully` };
+      } else {
+        return { status: "error", message: result.error?.message || "Failed to logout other sessions" };
+      }
+    }
 
     return { status: "error", message: "Unknown action" };
   } catch (error) {
@@ -522,6 +572,7 @@ export default function AccountPage({loaderData,actionData}) {
 <SessionsTab
   value="sessions"
   sessions={sessions}
+  actionData={actionDatas}
 />
 
 
@@ -730,7 +781,7 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
             )}
               <div className="flex items-center gap-1 mx-auto">
               <MapPin className="h-3 w-3" />
-              <span>IP ADRESS: {session.ip || "N/A"}</span>
+              <span>IP ADDRESS: {session.ip || "N/A"}</span>
               {session.ip === "::1" && (
                 <Badge variant="outline" className="text-xs">Local</Badge>
               )}
@@ -763,7 +814,12 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => submit( null, { action: "/logout", method: "post" } )}
+            onClick={() => {
+              const formData = new FormData();
+              formData.append("intent", "revoke-session");
+              formData.append("sessionId", session.id);
+              submit(formData, { method: "post" });
+            }}
             className="text-red-600 hover:text-red-700 hover:bg-red-50"
           >
             <Power className="h-4 w-4 mr-1" />
@@ -786,15 +842,9 @@ const EmptySessionsState = () => (
 );
 
 // --- Main Sessions Tab ---
-const SessionsTab = ({ sessions }) => {
-   // Handle current session detection inside the component
-   const enhancedSessions = sessions.map((s) => {
-    const isBrowser = typeof navigator !== "undefined";
-    const isCurrent = isBrowser && s.userAgent === navigator.userAgent;
-    const isLocal = ["::1", "127.0.0.1", "localhost"].includes(s.ip);
-
-    return { ...s, current: isCurrent || isLocal };
-  });
+const SessionsTab = ({ sessions, actionData }) => {
+  const submit = useSubmit();
+  
   return (
     <TabsContent value="sessions" className="space-y-6 bg-transparent">
     <Card>
@@ -809,6 +859,23 @@ const SessionsTab = ({ sessions }) => {
       </CardHeader>
 
       <CardContent>
+        {/* Display action results */}
+        {actionData?.status === "success" && (
+          <Alert className="mb-4 border-green-200 bg-green-50">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800">
+              {actionData.message}
+            </AlertDescription>
+          </Alert>
+        )}
+        
+        {actionData?.status === "error" && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{actionData.message}</AlertDescription>
+          </Alert>
+        )}
+
         {sessions && sessions.length > 0 ? (
           <div className="space-y-4">
             {/* Current Session */}
@@ -838,7 +905,7 @@ const SessionsTab = ({ sessions }) => {
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <span>
-                    {enhancedSessions.filter((s) => s.current).length} current device
+                    {sessions.filter((s) => s.current).length} current device
                   </span>
                 </div>
               </div>
@@ -847,6 +914,11 @@ const SessionsTab = ({ sessions }) => {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => {
+                    const formData = new FormData();
+                    formData.append("intent", "logout-all-others");
+                    submit(formData, { method: "post" });
+                  }}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <Power className="h-4 w-4 mr-1" />
