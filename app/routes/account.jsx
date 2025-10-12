@@ -177,32 +177,79 @@ export async function action({ request }) {
     }
 
     if (intent === "logout-all-others") {
-      // Get the current refresh token to preserve it
-      const currentRefresh = request.headers.get('cookie')?.match(/refreshToken=([^;]+)/)?.[1];
-      
-      if (!currentRefresh) {
-        return { status: "error", message: "Current refresh token not found. Cannot preserve current session." };
-      }
+      // For regular users: logout their own other sessions
+      if (user?.role !== 'ADMIN' && user?.role !== 'OWNER') {
+        const currentRefresh = request.headers.get('cookie')?.match(/refreshToken=([^;]+)/)?.[1];
+        
+        if (!currentRefresh) {
+          return { status: "error", message: "Current refresh token not found. Cannot preserve current session." };
+        }
 
-      const res = await fetch(`${url.origin}/api/auth/logout-others`, {
-        method: "POST",
-        headers: { 
-          cookie,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          refreshToken: currentRefresh
-        })
+        const res = await fetch(`${url.origin}/api/auth/logout-others`, {
+          method: "POST",
+          headers: { 
+            cookie,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            refreshToken: currentRefresh
+          })
+        });
+        const result = await res.json();
+        
+        if (res.ok) {
+          return { 
+            status: "success", 
+            message: `${result.data?.deletedTokens || 0} other sessions logged out successfully. Your current session remains active.` 
+          };
+        } else {
+          return { status: "error", message: result.error?.message || "Failed to logout other sessions" };
+        }
+      }
+      
+      // For Admin/Owner: This should show user management modal instead
+      return { 
+        status: "info", 
+        message: "Opening user management interface...",
+        action: "show-user-management"
+      };
+    }
+
+    if (intent === "revoke-user-session") {
+      // Admin-only: Revoke specific user's session
+      const userId = formData.get("userId");
+      const sessionId = formData.get("sessionId");
+      
+      const res = await fetch(`${url.origin}/api/admin/users/${userId}/sessions/${sessionId}`, {
+        method: "DELETE",
+        headers: { cookie },
       });
-      const result = await res.json();
       
       if (res.ok) {
+        return { status: "success", message: "User session revoked successfully" };
+      } else {
+        const result = await res.json();
+        return { status: "error", message: result.error?.message || "Failed to revoke user session" };
+      }
+    }
+
+    if (intent === "get-all-users-sessions") {
+      // Admin-only: Get all users and their sessions
+      const res = await fetch(`${url.origin}/api/admin/users/sessions`, {
+        method: "GET",
+        headers: { cookie },
+      });
+      
+      if (res.ok) {
+        const result = await res.json();
         return { 
           status: "success", 
-          message: `${result.data?.deletedTokens || 0} other sessions logged out successfully. Your current session remains active.` 
+          data: result.data,
+          action: "display-users-sessions"
         };
       } else {
-        return { status: "error", message: result.error?.message || "Failed to logout other sessions" };
+        const result = await res.json();
+        return { status: "error", message: result.error?.message || "Failed to fetch users sessions" };
       }
     }
 
@@ -220,6 +267,9 @@ export default function AccountPage({loaderData,actionData}) {
   const actionDatas = actionData;
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
+  const [showUserManagement, setShowUserManagement] = useState(false);
+  const [allUsersData, setAllUsersData] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   const isSubmitting = navigation.state === 'submitting';
   
   // Handle redirect after logout-all-sessions
@@ -227,7 +277,36 @@ export default function AccountPage({loaderData,actionData}) {
     if (actionDatas?.redirect === '/login') {
       window.location.href = '/login?message=All sessions logged out successfully';
     }
+    
+    // Handle admin user management modal
+    if (actionDatas?.action === 'show-user-management') {
+      setShowUserManagement(true);
+      fetchAllUsersData();
+    }
+    
+    // Handle displaying users sessions data
+    if (actionDatas?.action === 'display-users-sessions' && actionDatas?.data) {
+      setAllUsersData(actionDatas.data);
+      setShowUserManagement(true);
+    }
   }, [actionDatas]);
+  
+  const fetchAllUsersData = async () => {
+    setLoadingUsers(true);
+    try {
+      const response = await fetch('/api/admin/users/sessions', {
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const result = await response.json();
+        setAllUsersData(result.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch users data:', error);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
   
   console.log("from account", user);
 
@@ -782,9 +861,218 @@ export default function AccountPage({loaderData,actionData}) {
           </Card>
         </TabsContent>
       </Tabs>
+      
+      {/* Admin User Management Modal */}
+      {showUserManagement && (user?.role === 'ADMIN' || user?.role === 'OWNER') && (
+        <UserManagementModal 
+          isOpen={showUserManagement}
+          onClose={() => setShowUserManagement(false)}
+          usersData={allUsersData}
+          loading={loadingUsers}
+          currentUser={user}
+        />
+      )}
     </main>
   );
 }
+
+
+// --- Admin User Management Modal ---
+const UserManagementModal = ({ isOpen, onClose, usersData, loading, currentUser }) => {
+  const submit = useSubmit();
+  const [selectedSessions, setSelectedSessions] = useState(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  if (!isOpen) return null;
+
+  const filteredUsers = usersData.filter(user => 
+    user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSessionSelect = (userId, sessionId) => {
+    const key = `${userId}-${sessionId}`;
+    const newSelected = new Set(selectedSessions);
+    if (newSelected.has(key)) {
+      newSelected.delete(key);
+    } else {
+      newSelected.add(key);
+    }
+    setSelectedSessions(newSelected);
+  };
+
+  const handleRevokeSelected = () => {
+    if (selectedSessions.size === 0) return;
+    
+    if (confirm(`Revoke ${selectedSessions.size} selected sessions?`)) {
+      selectedSessions.forEach(key => {
+        const [userId, sessionId] = key.split('-');
+        const formData = new FormData();
+        formData.append("intent", "revoke-user-session");
+        formData.append("userId", userId);
+        formData.append("sessionId", sessionId);
+        submit(formData, { method: "post" });
+      });
+      setSelectedSessions(new Set());
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b">
+          <div>
+            <h2 className="text-xl font-semibold">User Session Management</h2>
+            <p className="text-sm text-muted-foreground">Manage active sessions for all users</p>
+          </div>
+          <Button variant="outline" onClick={onClose}>
+            ✕ Close
+          </Button>
+        </div>
+
+        {loading ? (
+          <div className="p-8 text-center">
+            <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p>Loading users and sessions...</p>
+          </div>
+        ) : (
+          <div className="p-6 overflow-y-auto max-h-[70vh]">
+            {/* Search and Controls */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <Input
+                  placeholder="Search users..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-64"
+                />
+                <Badge variant="outline">
+                  {filteredUsers.length} users
+                </Badge>
+              </div>
+              
+              {selectedSessions.size > 0 && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleRevokeSelected}
+                >
+                  Revoke {selectedSessions.size} Selected Sessions
+                </Button>
+              )}
+            </div>
+
+            {/* Users List */}
+            <div className="space-y-4">
+              {filteredUsers.map(user => (
+                <Card key={user.id}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarFallback>
+                            {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <h3 className="font-semibold">{user.name || 'Unknown User'}</h3>
+                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                        </div>
+                        <Badge variant={user.id === currentUser?.userId ? 'default' : 'secondary'}>
+                          {user.role}
+                        </Badge>
+                        {user.id === currentUser?.userId && (
+                          <Badge variant="outline" className="bg-green-50 text-green-700">
+                            You
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {user.sessions?.length || 0} active sessions
+                      </div>
+                    </div>
+                  </CardHeader>
+                  
+                  {user.sessions && user.sessions.length > 0 && (
+                    <CardContent className="pt-0">
+                      <div className="space-y-2">
+                        {user.sessions.map(session => {
+                          const { device, browser } = parseUserAgent(session.userAgent);
+                          const sessionKey = `${user.id}-${session.id}`;
+                          const isSelected = selectedSessions.has(sessionKey);
+                          
+                          return (
+                            <div 
+                              key={session.id}
+                              className={`flex items-center justify-between p-3 rounded border ${
+                                isSelected ? 'border-red-200 bg-red-50' : 'border-gray-200'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={() => handleSessionSelect(user.id, session.id)}
+                                  className="h-4 w-4"
+                                />
+                                
+                                <div className="flex items-center gap-2">
+                                  {device === "Mobile" ? (
+                                    <Smartphone className="h-4 w-4 text-muted-foreground" />
+                                  ) : (
+                                    <Monitor className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                  <span className="font-medium">{device} • {browser}</span>
+                                </div>
+                                
+                                <Badge variant="outline" className="text-xs">
+                                  IP: {session.ip}
+                                </Badge>
+                              </div>
+                              
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <span>Active: {formatRelativeTime(session.lastUsedAt)}</span>
+                                <span>Expires: {formatRelativeTime(session.expiresAt, true)}</span>
+                                
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    if (confirm(`Revoke this session for ${user.name}?`)) {
+                                      const formData = new FormData();
+                                      formData.append("intent", "revoke-user-session");
+                                      formData.append("userId", user.id);
+                                      formData.append("sessionId", session.id);
+                                      submit(formData, { method: "post" });
+                                    }
+                                  }}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <Power className="h-4 w-4 mr-1" />
+                                  Revoke
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </CardContent>
+                  )}
+                </Card>
+              ))}
+              
+              {filteredUsers.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No users found matching your search.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 
 // --- Helpers ---
@@ -1160,22 +1448,21 @@ const SessionsTab = ({ sessions, actionData, user }) => {
               </div>
 
               <div className="flex gap-2">
-                {/* Logout Other Devices - Only for Admin/Owner and only if other sessions exist */}
-                {sessions.filter((s) => !s.current).length > 0 && 
-                 (user?.role === 'ADMIN' || user?.role === 'OWNER') && (
+                {/* Manage All Users Sessions - Only for Admin/Owner */}
+                {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      console.log("Logging out other sessions only");
+                      console.log("Opening user management modal");
                       const formData = new FormData();
                       formData.append("intent", "logout-all-others");
                       submit(formData, { method: "post" });
                     }}
-                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
+                    className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
                   >
-                    <Power className="h-4 w-4 mr-1" />
-                    Logout Other Devices
+                    <Shield className="h-4 w-4 mr-1" />
+                    Manage All Users
                     <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
                   </Button>
                 )}
