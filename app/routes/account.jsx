@@ -162,17 +162,30 @@ export async function action({ request }) {
     }
 
     if (intent === "logout-all-others") {
+      // Get the current refresh token to preserve it
+      const currentRefresh = request.headers.get('cookie')?.match(/refreshToken=([^;]+)/)?.[1];
+      
+      if (!currentRefresh) {
+        return { status: "error", message: "Current refresh token not found. Cannot preserve current session." };
+      }
+
       const res = await fetch(`${url.origin}/api/auth/logout-others`, {
         method: "POST",
         headers: { 
           cookie,
           "Content-Type": "application/json"
         },
+        body: JSON.stringify({
+          refreshToken: currentRefresh
+        })
       });
       const result = await res.json();
       
       if (res.ok) {
-        return { status: "success", message: `${result.data?.deletedTokens || 0} other sessions logged out successfully` };
+        return { 
+          status: "success", 
+          message: `${result.data?.deletedTokens || 0} other sessions logged out successfully. Your current session remains active.` 
+        };
       } else {
         return { status: "error", message: result.error?.message || "Failed to logout other sessions" };
       }
@@ -920,6 +933,7 @@ const SessionsTab = ({ sessions, actionData }) => {
             <p className="text-xs">Total sessions: {sessions ? sessions.length : 'undefined'}</p>
             <p className="text-xs">Current sessions: {sessions ? sessions.filter(s => s.current).length : 'N/A'}</p>
             <p className="text-xs">Other sessions: {sessions ? sessions.filter(s => !s.current).length : 'N/A'}</p>
+            <p className="text-xs">User role: {user?.role || 'Unknown'}</p>
             
             {(!sessions || sessions.length === 0) && (
               <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
@@ -1094,8 +1108,9 @@ const SessionsTab = ({ sessions, actionData }) => {
               </div>
 
               <div className="flex gap-2">
-                {/* Logout Other Devices - Only show if there are other sessions */}
-                {sessions.filter((s) => !s.current).length > 0 && (
+                {/* Logout Other Devices - Only for Admin/Owner and only if other sessions exist */}
+                {sessions.filter((s) => !s.current).length > 0 && 
+                 (user?.role === 'ADMIN' || user?.role === 'OWNER') && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -1109,6 +1124,28 @@ const SessionsTab = ({ sessions, actionData }) => {
                   >
                     <Power className="h-4 w-4 mr-1" />
                     Logout Other Devices
+                    <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
+                  </Button>
+                )}
+                
+                {/* Alternative: Logout Other Devices for all users but with different behavior */}
+                {sessions.filter((s) => !s.current).length > 0 && 
+                 user?.role !== 'ADMIN' && user?.role !== 'OWNER' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (confirm("This will log out all your other devices but keep this session active. Continue?")) {
+                        console.log("Logging out other sessions only (user)");
+                        const formData = new FormData();
+                        formData.append("intent", "logout-all-others");
+                        submit(formData, { method: "post" });
+                      }
+                    }}
+                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
+                  >
+                    <Power className="h-4 w-4 mr-1" />
+                    Keep This Session Only
                   </Button>
                 )}
                 
