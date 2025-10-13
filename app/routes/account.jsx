@@ -1061,11 +1061,12 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                     return (
                       <div 
                         key={session.id}
-                        className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 rounded-lg border ${
+                        className={`flex flex-col gap-3 p-3 rounded-lg border ${
                           isSelected ? 'border-red-200 bg-red-50' : 'border-border'
                         }`}
                       >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* First Row: Checkbox, Device, IP */}
+                        <div className="flex items-center gap-3 flex-wrap">
                           <input
                             type="checkbox"
                             checked={isSelected}
@@ -1087,9 +1088,12 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                           </Badge>
                         </div>
                         
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
-                          <span className="whitespace-nowrap">Active: {formatRelativeTime(session.lastUsedAt)}</span>
-                          <span className="whitespace-nowrap">Expires: {formatRelativeTime(session.expiresAt, true)}</span>
+                        {/* Second Row: Time Info and Revoke Button */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                            <span className="whitespace-nowrap">Active: {formatRelativeTime(session.lastUsedAt)}</span>
+                            <span className="whitespace-nowrap">Expires: {formatRelativeTime(session.expiresAt, true)}</span>
+                          </div>
                           
                           <Button
                             variant="outline"
@@ -1103,7 +1107,7 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                                 submit(formData, { method: "post" });
                               }
                             }}
-                            className="text-red-600 hover:text-red-700 text-xs w-full sm:w-auto"
+                            className="text-red-600 hover:text-red-700 text-xs w-full sm:w-auto flex-shrink-0"
                           >
                             <Power className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             Revoke
