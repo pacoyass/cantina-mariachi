@@ -714,4 +714,53 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
     return await db.reservation.update({ where: { id }, data: { status } });
   },
 
+  // Get all users (for admin)
+  async getAllUsers(tx) {
+    const db = withTx(tx);
+    return await db.user.findMany({
+      where: { deletedAt: null },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        phone: true,
+        isActive: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  },
+
+  // Get refresh token by ID
+  async getRefreshTokenById(tokenId, tx) {
+    const db = withTx(tx);
+    const token = await db.refreshToken.findUnique({
+      where: { id: tokenId },
+      select: {
+        id: true,
+        userId: true,
+        token: true,
+        expiresAt: true,
+        lastUsedAt: true,
+        userAgent: true,
+        ip: true,
+        createdAt: true,
+      },
+    });
+    return token;
+  },
+
+  // Delete a specific refresh token
+  async deleteRefreshToken(tokenId, tx) {
+    const db = withTx(tx);
+    const deleted = await db.refreshToken.delete({
+      where: { id: tokenId },
+    });
+    await LoggerService.logSystemEvent('DatabaseService', 'DELETE_REFRESH_TOKEN', {
+      tokenId,
+    });
+    return deleted;
+  },
+
 };

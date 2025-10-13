@@ -11,7 +11,9 @@ import {
   updateOrderStatus,
   getUsers,
   updateUserStatus,
-  updateUserRole
+  updateUserRole,
+  getAllUsersWithSessions,
+  revokeUserSession
 } from '../controllers/admin.controller.js';
 
 const router = express.Router();
@@ -50,6 +52,10 @@ router.put('/orders/:orderId/status', rlStrict, updateOrderStatus);
 router.get('/users', rlModerate, getUsers);
 router.put('/users/:userId', rlStrict, updateUserStatus);
 router.put('/users/:userId/role', rlStrict, updateUserRole);
+
+// Session Management Routes
+router.get('/users/sessions', rlModerate, getAllUsersWithSessions);
+router.delete('/users/:userId/sessions/:sessionId', rlStrict, revokeUserSession);
 
 // Menu Management Routes (extend existing menu routes for admin)
 // These could be added here or extend the existing menu.routes.js
