@@ -422,45 +422,45 @@ export default function AccountPage({loaderData,actionData}) {
   };
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl min-h-screen">
+    <main className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 max-w-6xl min-h-screen">
       {/* Welcome Message */}
       {isWelcome && (
-        <Alert className="mb-8 border-green-200 bg-green-50">
+        <Alert className="mb-6 sm:mb-8 border-green-200 bg-green-50">
           <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-800">
+          <AlertDescription className="text-green-800 text-sm sm:text-base">
             Welcome to Cantina Mariachi! Your account has been created successfully.
           </AlertDescription>
         </Alert>
       )}
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        <div className="flex items-center space-x-4">
-          <Avatar className="h-16 w-16">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 sm:mb-8">
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <Avatar className="h-12 w-12 sm:h-16 sm:w-16">
             <AvatarImage src={user?.avatar} alt={user?.name} />
-            <AvatarFallback className="text-lg">
+            <AvatarFallback className="text-base sm:text-lg">
               {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">Welcome back, {user?.name || 'User'}!</h1>
-            <p className="text-muted-foreground">Manage your account and view your activity</p>
+            <h1 className="text-xl sm:text-2xl font-bold">Welcome back, {user?.name || 'User'}!</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Manage your account and view your activity</p>
           </div>
         </div>
         
         {/* Quick Stats */}
-        <div className="flex gap-4">
+        <div className="flex gap-3 sm:gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary">{orders?.length || 0}</div>
-            <div className="text-sm text-muted-foreground">Orders</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{orders?.length || 0}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Orders</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary">{reservations?.length || 0}</div>
-            <div className="text-sm text-muted-foreground">Reservations</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{reservations?.length || 0}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Reservations</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary">1,250</div>
-            <div className="text-sm text-muted-foreground">Points</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">1,250</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Points</div>
           </div>
         </div>
       </div>
@@ -468,42 +468,53 @@ export default function AccountPage({loaderData,actionData}) {
 
 
       {/* Main Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
-          <TabsTrigger value="profile" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Profile
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4  sm:space-y-6">
+        <TabsList className="grid w-full h-full  grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-1">
+          <TabsTrigger value="profile" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <User className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Profile</span>
+            <span className="xs:hidden">Profile</span>
+
           </TabsTrigger>
-          <TabsTrigger value="orders" className="flex items-center gap-2">
-            <Package className="h-4 w-4" />
-            Orders
+          <TabsTrigger value="orders" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <Package className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Orders</span>
+            <span className="xs:hidden">Orders</span>
+
           </TabsTrigger>
-          <TabsTrigger value="reservations" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Reservations
+          <TabsTrigger value="reservations" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Reservations</span>
+            <span className="xs:hidden">Reservations</span>
           </TabsTrigger>
-          <TabsTrigger value="sessions" className="flex items-center gap-2">
-            <Shield className="h-4 w-4" />
-            Sessions
+          <TabsTrigger value="sessions" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Sessions</span>
+            <span className="xs:hidden">Sessions</span>
+
           </TabsTrigger>
-          <TabsTrigger value="rewards" className="flex items-center gap-2">
-            <Gift className="h-4 w-4" />
-            Rewards
+          <TabsTrigger value="rewards" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <Gift className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="xs:hidden">Rewards</span>
+            <span className="hidden xs:inline">Rewards</span>
+
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
+          <TabsTrigger value="settings" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3">
+            <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">Settings</span>
+            <span className="xs:hidden">Settings</span>
+
           </TabsTrigger>
         </TabsList>
 
         {/* Profile Tab */}
-        <TabsContent value="profile" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <TabsContent value="profile" className="space-y-4 sm:space-y-6">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
             {/* Profile Information */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
                   Profile Information
                 </CardTitle>
               </CardHeader>
@@ -512,7 +523,7 @@ export default function AccountPage({loaderData,actionData}) {
                 {actionDatas?.success && (
                   <Alert className="border-green-200 bg-green-50">
                     <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
+                    <AlertDescription className="text-green-800 text-sm">
                       {actionDatas.success}
                     </AlertDescription>
                   </Alert>
@@ -521,7 +532,7 @@ export default function AccountPage({loaderData,actionData}) {
                 {actionDatas?.error && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{actionDatas.error}</AlertDescription>
+                    <AlertDescription className="text-sm">{actionDatas.error}</AlertDescription>
                   </Alert>
                 )}
 
@@ -529,21 +540,22 @@ export default function AccountPage({loaderData,actionData}) {
                   <input type="hidden" name="_action" value="updateProfile" />
                   
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name *</Label>
+                    <Label htmlFor="name" className="text-sm sm:text-base">Full Name *</Label>
                     <Input
                       id="name"
                       name="name"
                       defaultValue={actionDatas?.fields?.name || user?.name || ''}
                       placeholder="Your full name"
                       required
+                      className="text-sm sm:text-base"
                     />
                     {actionDatas?.errors?.name && (
-                      <p className="text-sm text-destructive">{actionDatas.errors.name}</p>
+                      <p className="text-xs sm:text-sm text-destructive">{actionDatas.errors.name}</p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address *</Label>
+                    <Label htmlFor="email" className="text-sm sm:text-base">Email Address *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -551,34 +563,37 @@ export default function AccountPage({loaderData,actionData}) {
                       defaultValue={actionDatas?.fields?.email || user?.email || ''}
                       placeholder="your.email@example.com"
                       required
+                      className="text-sm sm:text-base"
                     />
                     {actionDatas?.errors?.email && (
-                      <p className="text-sm text-destructive">{actionDatas.errors.email}</p>
+                      <p className="text-xs sm:text-sm text-destructive">{actionDatas.errors.email}</p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-sm sm:text-base">Phone Number</Label>
                     <Input
                       id="phone"
                       name="phone"
                       type="tel"
                       defaultValue={actionDatas?.fields?.phone || user?.phone || ''}
                       placeholder="Your phone number"
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="address">Default Address</Label>
+                    <Label htmlFor="address" className="text-sm sm:text-base">Default Address</Label>
                     <Input
                       id="address"
                       name="address"
                       defaultValue={actionDatas?.fields?.address || user?.address || ''}
                       placeholder="Your delivery address"
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting} className="text-xs sm:text-sm w-full sm:w-auto">
                     {isSubmitting ? 'Updating...' : 'Update Profile'}
                   </Button>
                 </Form>
@@ -588,8 +603,8 @@ export default function AccountPage({loaderData,actionData}) {
             {/* Security Settings */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
                   Security Settings
                 </CardTitle>
               </CardHeader>
@@ -598,7 +613,7 @@ export default function AccountPage({loaderData,actionData}) {
                 {actionDatas?.passwordSuccess && (
                   <Alert className="border-green-200 bg-green-50">
                     <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
+                    <AlertDescription className="text-green-800 text-sm">
                       {actionDatas.passwordSuccess}
                     </AlertDescription>
                   </Alert>
@@ -607,7 +622,7 @@ export default function AccountPage({loaderData,actionData}) {
                 {actionDatas?.passwordError && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{actionDatas.passwordError}</AlertDescription>
+                    <AlertDescription className="text-sm">{actionDatas.passwordError}</AlertDescription>
                   </Alert>
                 )}
 
@@ -615,48 +630,51 @@ export default function AccountPage({loaderData,actionData}) {
                   <input type="hidden" name="_action" value="changePassword" />
                   
                   <div className="space-y-2">
-                    <Label htmlFor="currentPassword">Current Password *</Label>
+                    <Label htmlFor="currentPassword" className="text-sm sm:text-base">Current Password *</Label>
                     <Input
                       id="currentPassword"
                       name="currentPassword"
                       type="password"
                       placeholder="Enter current password"
                       required
+                      className="text-sm sm:text-base"
                     />
                     {actionDatas?.passwordErrors?.currentPassword && (
-                      <p className="text-sm text-destructive">{actionDatas.passwordErrors.currentPassword}</p>
+                      <p className="text-xs sm:text-sm text-destructive">{actionDatas.passwordErrors.currentPassword}</p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="newPassword">New Password *</Label>
+                    <Label htmlFor="newPassword" className="text-sm sm:text-base">New Password *</Label>
                     <Input
                       id="newPassword"
                       name="newPassword"
                       type="password"
                       placeholder="Enter new password"
                       required
+                      className="text-sm sm:text-base"
                     />
                     {actionDatas?.passwordErrors?.newPassword && (
-                      <p className="text-sm text-destructive">{actionDatas.passwordErrors.newPassword}</p>
+                      <p className="text-xs sm:text-sm text-destructive">{actionDatas.passwordErrors.newPassword}</p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm New Password *</Label>
+                    <Label htmlFor="confirmPassword" className="text-sm sm:text-base">Confirm New Password *</Label>
                     <Input
                       id="confirmPassword"
                       name="confirmPassword"
                       type="password"
                       placeholder="Confirm new password"
                       required
+                      className="text-sm sm:text-base"
                     />
                     {actionDatas?.passwordErrors?.confirmPassword && (
-                      <p className="text-sm text-destructive">{actionDatas.passwordErrors.confirmPassword}</p>
+                      <p className="text-xs sm:text-sm text-destructive">{actionDatas.passwordErrors.confirmPassword}</p>
                     )}
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting} className="text-xs sm:text-sm w-full sm:w-auto">
                     {isSubmitting ? 'Changing...' : 'Change Password'}
                   </Button>
                 </Form>
@@ -666,11 +684,11 @@ export default function AccountPage({loaderData,actionData}) {
         </TabsContent>
 
         {/* Orders Tab */}
-        <TabsContent value="orders" className="space-y-6">
+        <TabsContent value="orders" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
                 Order History
               </CardTitle>
             </CardHeader>
@@ -678,32 +696,33 @@ export default function AccountPage({loaderData,actionData}) {
               {orders && orders.length > 0 ? (
                 <div className="space-y-4">
                   {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                    <div key={order.id} className="border rounded-lg p-3 sm:p-4 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <div>
-                          <h4 className="font-semibold">Order #{order.orderNumber}</h4>
-                          <p className="text-sm text-muted-foreground">
+                          <h4 className="font-semibold text-sm sm:text-base">Order #{order.orderNumber}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             {formatDate(order.createdAt)}
                           </p>
                         </div>
-                        <div className="text-right">
-                          <div className="font-semibold">{formatCurrency(order.total)}</div>
+                        <div className="flex items-center justify-between sm:text-right sm:block">
+                          <div className="font-semibold text-sm sm:text-base">{formatCurrency(order.total)}</div>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status}
                           </Badge>
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm text-muted-foreground">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div className="text-xs sm:text-sm text-muted-foreground">
                           {order.orderItems?.length || 0} items • {order.type}
                         </div>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            <Eye className="h-4 w-4 mr-1" />
-                            View Details
+                          <Button variant="outline" size="sm" className="text-xs sm:text-sm flex-1 sm:flex-none">
+                            <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                            <span className="hidden sm:inline">View Details</span>
+                            <span className="sm:hidden">View</span>
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="text-xs sm:text-sm flex-1 sm:flex-none">
                             Reorder
                           </Button>
                         </div>
@@ -713,13 +732,13 @@ export default function AccountPage({loaderData,actionData}) {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold mb-2">No orders yet</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Package className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-semibold mb-2 text-sm sm:text-base">No orders yet</h3>
+                  <p className="text-muted-foreground mb-4 text-xs sm:text-sm">
                     Start exploring our delicious menu!
                   </p>
                   <Link to="/menu">
-                    <Button variant="outline"  className="cursor-pointer ">
+                    <Button variant="outline" className="cursor-pointer text-xs sm:text-sm">
                        Browse Menu 
                     </Button>
                 
@@ -732,11 +751,11 @@ export default function AccountPage({loaderData,actionData}) {
         </TabsContent>
 
         {/* Reservations Tab */}
-        <TabsContent value="reservations" className="space-y-6">
+        <TabsContent value="reservations" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
                 My Reservations
               </CardTitle>
             </CardHeader>
@@ -744,13 +763,13 @@ export default function AccountPage({loaderData,actionData}) {
               {reservations && reservations.length > 0 ? (
                 <div className="space-y-4">
                   {reservations.map((reservation) => (
-                    <div key={reservation.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                    <div key={reservation.id} className="border rounded-lg p-3 sm:p-4 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                         <div>
-                          <h4 className="font-semibold">
+                          <h4 className="font-semibold text-sm sm:text-base">
                             {formatDate(reservation.date)} at {reservation.time}
                           </h4>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Party of {reservation.partySize}
                           </p>
                         </div>
@@ -760,16 +779,16 @@ export default function AccountPage({loaderData,actionData}) {
                       </div>
                       
                       {reservation.notes && (
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           Note: {reservation.notes}
                         </p>
                       )}
                       
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs sm:text-sm">
                           Modify
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs sm:text-sm">
                           Cancel
                         </Button>
                       </div>
@@ -778,12 +797,12 @@ export default function AccountPage({loaderData,actionData}) {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold mb-2">No reservations</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Calendar className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-semibold mb-2 text-sm sm:text-base">No reservations</h3>
+                  <p className="text-muted-foreground mb-4 text-xs sm:text-sm px-4">
                     Book a table to enjoy our authentic Mexican atmosphere!
                   </p>
-                  <Button>Make Reservation</Button>
+                  <Button className="text-xs sm:text-sm">Make Reservation</Button>
                 </div>
               )}
             </CardContent>
@@ -810,23 +829,23 @@ export default function AccountPage({loaderData,actionData}) {
 
 
         {/* Rewards Tab */}
-        <TabsContent value="rewards" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <TabsContent value="rewards" className="space-y-4 sm:space-y-6">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Gift className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   Reward Points
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-primary">1,250</div>
-                  <p className="text-muted-foreground">Available Points</p>
+                  <div className="text-3xl sm:text-4xl font-bold text-primary">1,250</div>
+                  <p className="text-muted-foreground text-sm sm:text-base">Available Points</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span>Progress to next reward</span>
                     <span>250 points to go</span>
                   </div>
@@ -835,37 +854,37 @@ export default function AccountPage({loaderData,actionData}) {
                   </div>
                 </div>
                 
-                <Button className="w-full">View Available Rewards</Button>
+                <Button className="w-full text-xs sm:text-sm">View Available Rewards</Button>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Order #1234</p>
-                    <p className="text-sm text-muted-foreground">Dec 15, 2024</p>
+                    <p className="font-medium text-sm sm:text-base">Order #1234</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Dec 15, 2024</p>
                   </div>
-                  <div className="text-green-600 font-medium">+50 pts</div>
+                  <div className="text-green-600 font-medium text-sm sm:text-base">+50 pts</div>
                 </div>
                 
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Birthday Bonus</p>
-                    <p className="text-sm text-muted-foreground">Dec 10, 2024</p>
+                    <p className="font-medium text-sm sm:text-base">Birthday Bonus</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Dec 10, 2024</p>
                   </div>
-                  <div className="text-green-600 font-medium">+100 pts</div>
+                  <div className="text-green-600 font-medium text-sm sm:text-base">+100 pts</div>
                 </div>
                 
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Order #1233</p>
-                    <p className="text-sm text-muted-foreground">Dec 8, 2024</p>
+                    <p className="font-medium text-sm sm:text-base">Order #1233</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Dec 8, 2024</p>
                   </div>
-                  <div className="text-green-600 font-medium">+35 pts</div>
+                  <div className="text-green-600 font-medium text-sm sm:text-base">+35 pts</div>
                 </div>
               </CardContent>
             </Card>
@@ -873,66 +892,66 @@ export default function AccountPage({loaderData,actionData}) {
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent value="settings" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                 Notification Preferences
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Order Updates</h4>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm sm:text-base">Order Updates</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Get notified about your order status
                   </p>
                 </div>
-                <input type="checkbox" defaultChecked className="h-4 w-4" />
+                <input type="checkbox" defaultChecked className="h-4 w-4 flex-shrink-0" />
               </div>
               
               <Separator />
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Promotional Offers</h4>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm sm:text-base">Promotional Offers</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Receive exclusive deals and promotions
                   </p>
                 </div>
-                <input type="checkbox" defaultChecked className="h-4 w-4" />
+                <input type="checkbox" defaultChecked className="h-4 w-4 flex-shrink-0" />
               </div>
               
               <Separator />
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Reservation Reminders</h4>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm sm:text-base">Reservation Reminders</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Get reminded about upcoming reservations
                   </p>
                 </div>
-                <input type="checkbox" defaultChecked className="h-4 w-4" />
+                <input type="checkbox" defaultChecked className="h-4 w-4 flex-shrink-0" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-600">
-                <LogOut className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-red-600 text-base sm:text-lg">
+                <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
                 Account Actions
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full justify-start">
-                <LogOut className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="w-full justify-start text-xs sm:text-sm">
+                <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Sign Out
               </Button>
               
-              <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700">
-                <AlertCircleIcon className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 text-xs sm:text-sm">
+                <AlertCircleIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Delete Account
               </Button>
             </CardContent>
@@ -981,19 +1000,19 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
       setSelectedSessions(new Set());
     }
   };
-
+ 
   return (
-    <div className="w-full h-full   overflow-y-auto space-y-6">
+    <div className="w-full h-full overflow-y-auto space-y-6">
       {/* Search and Controls */}
-      <div className="flex items-center justify-between mb-6 px-1 ">
-        <div className="flex  items-center gap-4">
+      <div className="flex flex-wrap items-start sm:items-center justify-between mb-6 px-1 gap-3">
+        <div className="flex items-center gap-4 w-full sm:w-auto">
           <Input
             placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-64"
+            className="w-full sm:w-64 text-sm"
           />
-          <Badge variant="outline">
+          <Badge variant="outline" className="text-xs sm:text-sm">
             {filteredUsers.length} users
           </Badge>
         </div>
@@ -1003,6 +1022,7 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
             variant="destructive"
             size="sm"
             onClick={handleRevokeSelected}
+            className="text-xs sm:text-sm w-full sm:w-auto"
           >
             Revoke {selectedSessions.size} Selected Sessions
           </Button>
@@ -1010,31 +1030,31 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
       </div>
 
       {/* Users List */}
-      <div className="space-y-4 px-1 ">
+      <div className="space-y-4 px-1">
         {filteredUsers.map(user => (
           <Card key={user.id}>
             <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarFallback>
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+                    <AvatarFallback className="text-xs sm:text-sm">
                       {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold">{user.name || 'Unknown User'}</h3>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <h3 className="font-semibold text-sm sm:text-base">{user.name || 'Unknown User'}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{user.email}</p>
                   </div>
-                  <Badge variant={user.id === currentUser?.userId ? 'default' : 'secondary'}>
+                  <Badge variant={user.id === currentUser?.userId ? 'default' : 'secondary'} className="text-xs">
                     {user.role}
                   </Badge>
                   {user.id === currentUser?.userId && (
-                    <Badge variant="outline" className="bg-green-50 text-green-700">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 text-xs">
                       You
                     </Badge>
                   )}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   {user.sessions?.length || 0} active sessions
                 </div>
               </div>
@@ -1050,38 +1070,38 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                     
                     return (
                       <div 
-                        key={session.id}
-                        className={`flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border ${
-                          isSelected ? 'border-red-200 bg-red-50' : 'border-border'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
+                      key={session.id}
+                      className={`flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border ${
+                        isSelected ? 'border-red-200 bg-red-50' : 'border-border'
+                      }`}
+                    >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleSessionSelect(user.id, session.id)}
-                            className="h-4 w-4"
+                            className="h-4 w-4 flex-shrink-0"
                           />
                           
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
                             {device === "Mobile" ? (
-                              <Smartphone className="h-4 w-4 text-muted-foreground" />
+                              <Smartphone className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
                             ) : (
-                              <Monitor className="h-4 w-4 text-muted-foreground" />
+                              <Monitor className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
                             )}
-                            <span className="font-medium">{device} • {browser}</span>
+                            <span className="font-medium text-xs sm:text-sm truncate">{device} • {browser}</span>
                           </div>
                           
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs flex-shrink-0">
                             IP: {session.ip}
                           </Badge>
                         </div>
                         
-                        <div className="flex  items-center gap-4 text-sm text-muted-foreground">
-                          <span>Active: {formatRelativeTime(session.lastUsedAt)}</span>
-                          <span>Expires: {formatRelativeTime(session.expiresAt, true)}</span>
+                        <div className="flex flex-wrap  items-start sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                          <span className="whitespace-nowrap">Active: {formatRelativeTime(session.lastUsedAt)}</span>
+                          <span className="whitespace-nowrap">Expires: {formatRelativeTime(session.expiresAt, true)}</span>
                           
-                           <Button
+                          <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
@@ -1093,9 +1113,9 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                                 submit(formData, { method: "post" });
                               }
                             }}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 text-xs w-full sm:w-auto"
                           >
-                            <Power className="h-4 w-4 mr-1" />
+                            <Power className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             Revoke
                           </Button>
                         </div>
@@ -1111,7 +1131,7 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
         
         {filteredUsers.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-muted-foreground">No users found matching your search.</p>
+            <p className="text-muted-foreground text-sm">No users found matching your search.</p>
           </div>
         )}
       </div>
@@ -1165,47 +1185,47 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
   const { device, browser } = parseUserAgent(session.userAgent);
   const submit = useSubmit();
   return (
-    <div className="border rounded-lg p-4 space-y-3 transition hover:bg-muted/40">
-      <div className="flex items-start justify-between">
-        <div className="flex-1 space-y-2">
+    <div className="border rounded-lg p-3 sm:p-4 space-y-3 transition hover:bg-muted/40">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 space-y-2 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             {device === "Mobile" ? (
-              <Smartphone className="h-4 w-4 text-muted-foreground" />
+              <Smartphone className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             ) : (
-              <Monitor className="h-4 w-4 text-muted-foreground" />
+              <Monitor className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             )}
-            <h4 className="font-semibold">
+            <h4 className="font-semibold text-sm sm:text-base">
               {device} • {browser}
             </h4>
             {isCurrent && (
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
                 <Circle className="h-2 w-2 fill-current mr-1" />
                 Current Session
               </Badge>
             )}
           </div>
           
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <MapPin className="h-3 w-3" />
-            <span>IP ADDRESS: {session.ip || "N/A"}</span>
+          <div className="flex items-center gap-1 text-xs sm:text-sm text-muted-foreground">
+            <MapPin className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">IP ADDRESS: {session.ip || "N/A"}</span>
             {session.ip === "::1" && (
               <Badge variant="outline" className="text-xs">Local</Badge>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs sm:text-sm text-muted-foreground">
           
             <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              <span>Signed in: {formatRelativeTime(session.createdAt)}</span>
+              <Calendar className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate">Signed in: {formatRelativeTime(session.createdAt)}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              <span>last active: {formatRelativeTime(session.lastUsedAt)}</span>
+              <Clock className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate">last active: {formatRelativeTime(session.lastUsedAt)}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              <span>Expires in: {formatRelativeTime(session.expiresAt)}</span>
+              <Clock className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate">Expires in: {formatRelativeTime(session.expiresAt)}</span>
             </div>
           </div>
 
@@ -1217,7 +1237,7 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
 
         {/* Revoke button - Debug: isCurrent = {isCurrent ? 'true' : 'false'} */}
         {!isCurrent && (
-          <div className="ml-4">
+          <div className="ml-2 sm:ml-4 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"
@@ -1228,17 +1248,17 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
                 formData.append("sessionId", session.id);
                 submit(formData, { method: "post" });
               }}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 text-xs sm:text-sm"
             >
-              <Power className="h-4 w-4 mr-1" />
-              Revoke
+              <Power className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+              <span className="hidden sm:inline">Revoke</span>
             </Button>
           </div>
         )}
         
         {/* Debug info */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="ml-4 text-xs text-gray-500">
+          <div className="ml-2 sm:ml-4 text-xs text-gray-500">
             Current: {isCurrent ? 'YES' : 'NO'}
           </div>
         )}
@@ -1249,10 +1269,10 @@ const SessionCard = ({ session, isCurrent, onLogout }) => {
 
 const EmptySessionsState = () => (
   <div className="text-center py-8">
-    <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-    <h3 className="font-semibold mb-2">No Active Sessions</h3>
-    <p className="text-muted-foreground">
-      You’re currently logged out on all devices.
+    <Shield className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-4" />
+    <h3 className="font-semibold mb-2 text-sm sm:text-base">No Active Sessions</h3>
+    <p className="text-muted-foreground text-xs sm:text-sm">
+      You're currently logged out on all devices.
     </p>
   </div>
 );
@@ -1264,246 +1284,26 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
   const submit = useSubmit();
   
   return (
-    <TabsContent value="sessions" className="space-y-6 bg-transparent">
+    <TabsContent value="sessions" className="space-y-4 sm:space-y-6 bg-transparent">
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
           Active Sessions
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-xs sm:text-sm">
           Manage your logged-in devices and sessions. Log out from any suspicious or unused sessions.
         </CardDescription>
       </CardHeader>
 
       <CardContent>
-        {/* Debug Section - Remove this after testing */}
-        {(process.env.NODE_ENV === 'development' || true) && (
-          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-            <h4 className="font-semibold text-sm">🔍 Debug Info:</h4>
-            <p className="text-xs">Total sessions: {sessions ? sessions.length : 'undefined'}</p>
-            <p className="text-xs">Current sessions: {sessions ? sessions.filter(s => s.current).length : 'N/A'}</p>
-            <p className="text-xs">Other sessions: {sessions ? sessions.filter(s => !s.current).length : 'N/A'}</p>
-            <p className="text-xs">User role: {user?.role || 'Unknown'}</p>
-            
-            {(!sessions || sessions.length === 0) && (
-              <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded">
-                <p className="text-xs font-semibold text-blue-700">ℹ️ No active sessions</p>
-                <p className="text-xs text-blue-600">This is normal if:</p>
-                <ul className="text-xs text-blue-600 ml-4">
-                  <li>• You recently logged out all devices</li>
-                  <li>• This is your first login</li>
-                  <li>• All refresh tokens have been revoked</li>
-                </ul>
-                <p className="text-xs text-blue-600 mt-1">
-                  <strong>Current status:</strong> You're logged in with a valid access token, 
-                  but no refresh tokens exist (sessions were cleared).
-                </p>
-                <p className="text-xs text-blue-600">
-                  <strong>To test sessions:</strong> Login from another browser or incognito window.
-                </p>
-              </div>
-            )}
-            
-            <div className="mt-2">
-              {sessions && sessions.map((s, i) => (
-                <div key={s.id} className="text-xs">
-                  Session {i + 1}: {s.current ? 'CURRENT' : 'OTHER'} | IP: {s.ip} | UA: {s.userAgent?.substring(0, 50)}...
-                </div>
-              ))}
-            </div>
-            
-            {/* Manual Session Fetch Test */}
-            <div className="mt-2 space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={async () => {
-                    try {
-                      console.log("🔍 Manual fetch test starting...");
-                      const response = await fetch('/api/auth/sessions', {
-                        credentials: 'include'
-                      });
-                      
-                      console.log("🔍 Manual fetch response:", {
-                        status: response.status,
-                        ok: response.ok,
-                        headers: Object.fromEntries(response.headers.entries())
-                      });
-                      
-                      const data = await response.json();
-                      console.log("🔍 Manual fetch data:", data);
-                      
-                      alert(`Manual fetch result: ${response.status} - ${JSON.stringify(data, null, 2)}`);
-                    } catch (error) {
-                      console.error("🔍 Manual fetch error:", error);
-                      alert(`Manual fetch error: ${error.message}`);
-                    }
-                  }}
-                >
-                  🔍 Test Sessions API
-                </Button>
-                
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => window.location.reload()}
-                >
-                  🔄 Reload Page
-                </Button>
-              </div>
-              
-              {sessions && sessions.length > 0 && (
-                <div className="grid grid-cols-2 gap-2">
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => {
-                      // Create a fake session to test revoke button
-                      const fakeSession = {
-                        id: 'fake-session-' + Date.now(),
-                        ip: '192.168.1.100',
-                        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)',
-                        createdAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-                        lastUsedAt: new Date(Date.now() - 1800000).toISOString(), // 30 min ago
-                        expiresAt: new Date(Date.now() + 1800000).toISOString(), // 30 min from now
-                        current: false
-                      };
-                      
-                      // Add fake session to the sessions array (client-side only for testing)
-                      sessions.push(fakeSession);
-                      window.location.reload();
-                    }}
-                    className="text-blue-600"
-                  >
-                    🧪 Add Fake Session
-                  </Button>
-                  
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => {
-                      const formData = new FormData();
-                      formData.append("intent", "logout-all-others");
-                      const submit = window.submit || (() => {
-                        fetch('/account', {
-                          method: 'POST',
-                          body: formData,
-                          credentials: 'include'
-                        }).then(() => window.location.reload());
-                      });
-                      submit(formData, { method: "post" });
-                    }}
-                    className="text-orange-600"
-                  >
-                    🧪 Test Logout Others
-                  </Button>
-                </div>
-              )}
-              
-              <div className="mt-2">
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => {
-                    // Test the user management modal with mock data
-                    const mockUsersData = [
-                      {
-                        id: "current-user",
-                        name: user?.name || "Current User",
-                        email: user?.email || "owner@example.com",
-                        role: user?.role || "OWNER",
-                        sessions: sessions || []
-                      },
-                      {
-                        id: "mock-user-1",
-                        name: "John Doe",
-                        email: "john@example.com",
-                        role: "CUSTOMER",
-                        sessions: [
-                          {
-                            id: "mock-session-1",
-                            ip: "192.168.1.100",
-                            userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
-                            createdAt: new Date(Date.now() - 3600000).toISOString(),
-                            lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
-                            expiresAt: new Date(Date.now() + 1800000).toISOString()
-                          }
-                        ]
-                      },
-                      {
-                        id: "mock-user-2", 
-                        name: "Jane Smith",
-                        email: "jane@example.com",
-                        role: "ADMIN",
-                        sessions: [
-                          {
-                            id: "mock-session-2",
-                            ip: "10.0.0.50",
-                            userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                            createdAt: new Date(Date.now() - 7200000).toISOString(),
-                            lastUsedAt: new Date(Date.now() - 900000).toISOString(), 
-                            expiresAt: new Date(Date.now() + 3600000).toISOString()
-                          },
-                          {
-                            id: "mock-session-3",
-                            ip: "10.0.0.51",
-                            userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-                            createdAt: new Date(Date.now() - 5400000).toISOString(),
-                            lastUsedAt: new Date(Date.now() - 600000).toISOString(),
-                            expiresAt: new Date(Date.now() + 2400000).toISOString()
-                          }
-                        ]
-                      }
-                    ];
-                    
-                    setAllUsersData(mockUsersData);
-                    setShowUserManagement(true);
-                  }}
-                  className="text-purple-600"
-                >
-                  🧪 Test User Management Modal
-                </Button>
-                
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => {
-                    if (confirm("Test logout ALL? This will log you out!")) {
-                      const formData = new FormData();
-                      formData.append("intent", "logout-all-sessions");
-                      fetch('/account', {
-                        method: 'POST',
-                        body: formData,
-                        credentials: 'include'
-                      }).then(response => {
-                        console.log("Logout all response:", response);
-                        if (response.ok) {
-                          window.location.href = '/login';
-                        } else {
-                          alert('Logout failed: ' + response.status);
-                        }
-                      }).catch(error => {
-                        console.error("Logout error:", error);
-                        alert('Logout error: ' + error.message);
-                      });
-                    }
-                  }}
-                  className="text-red-600 ml-2"
-                >
-                  🧪 Test Logout All (Direct)
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+     
 
         {/* Display action results */}
         {actionData?.status === "success" && (
           <Alert className="mb-4 border-green-200 bg-green-50">
             <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800">
+            <AlertDescription className="text-green-800 text-sm">
               {actionData.message}
             </AlertDescription>
           </Alert>
@@ -1512,7 +1312,7 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
         {actionData?.status === "error" && (
           <Alert variant="destructive" className="mb-4">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{actionData.message}</AlertDescription>
+            <AlertDescription className="text-sm">{actionData.message}</AlertDescription>
           </Alert>
         )}
 
@@ -1533,8 +1333,8 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
             ))}
 
             {/* Session Stats and Management Buttons */}
-            <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg text-sm">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-muted/50 rounded-lg text-xs sm:text-sm gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span>
@@ -1557,108 +1357,9 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
                 )}
               </div>
 
-              <div className="flex gap-2 ">
-                {/* Manage All Users Sessions - Only for Admin/Owner */}
-                {/* {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
-                  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement} className="w-full " >
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          console.log("Opening user management modal");
-                          // Load mock data when opening
-                          const mockUsersData = [
-                            {
-                              id: user?.userId || "current-user",
-                              name: user?.name || "Current User",
-                              email: user?.email || "owner@example.com",
-                              role: user?.role || "OWNER",
-                              sessions: sessions || []
-                            },
-                            {
-                              id: "mock-user-1",
-                              name: "John Doe",
-                              email: "john@example.com",
-                              role: "CUSTOMER",
-                              sessions: [
-                                {
-                                  id: "mock-session-1",
-                                  ip: "192.168.1.100",
-                                  userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
-                                  createdAt: new Date(Date.now() - 3600000).toISOString(),
-                                  lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
-                                  expiresAt: new Date(Date.now() + 1800000).toISOString()
-                                }
-                              ]
-                            },
-                            {
-                              id: "mock-user-2", 
-                              name: "Jane Smith",
-                              email: "jane@example.com",
-                              role: "ADMIN",
-                              sessions: [
-                                {
-                                  id: "mock-session-2",
-                                  ip: "10.0.0.50",
-                                  userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                                  createdAt: new Date(Date.now() - 7200000).toISOString(),
-                                  lastUsedAt: new Date(Date.now() - 900000).toISOString(), 
-                                  expiresAt: new Date(Date.now() + 3600000).toISOString()
-                                },
-                                {
-                                  id: "mock-session-3",
-                                  ip: "10.0.0.51",
-                                  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-                                  createdAt: new Date(Date.now() - 5400000).toISOString(),
-                                  lastUsedAt: new Date(Date.now() - 600000).toISOString(),
-                                  expiresAt: new Date(Date.now() + 2400000).toISOString()
-                                }
-                              ]
-                            }
-                          ];
-                          
-                          setAllUsersData(mockUsersData);
-                        }}
-                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
-                      >
-                        <Shield className="h-4 w-4 mr-1" />
-                        Manage All Users
-                        <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
-                      </Button>
-                    </DialogTrigger>
-                    
-                    <DialogContent className=" w-full  max-h-[90vh] overflow-hidden">
-                      <DialogHeader>
-                        <DialogTitle>User Session Management</DialogTitle>
-                        <DialogDescription>
-                          Manage active sessions for all users. Revoke suspicious or unused sessions.
-                        </DialogDescription>
-                      </DialogHeader>
-
-                      {loadingUsers ? (
-                        <div className="p-8 text-center">
-                          <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                          <p>Loading users and sessions...</p>
-                        </div>
-                      ) : (
-                        <UserManagementContent 
-                          usersData={allUsersData}
-                          currentUser={user}
-                          selectedSessions={selectedSessions}
-                          setSelectedSessions={setSelectedSessions}
-                          searchTerm={searchTerm}
-                          setSearchTerm={setSearchTerm}
-                        />
-                      )}
-                    </DialogContent>
-                  </Dialog>
-                )} */}
-  
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
   {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
-  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement} className="xl:w-[70vw] 2xl:w-[600px]
- 
-">
+  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement}>
     <DialogTrigger asChild>
       <Button
         variant="outline"
@@ -1669,7 +1370,7 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
             {
               id: user?.userId || "current-user",
               name: user?.name || "Current User",
-              email: user?.email || "owner@example.com",
+              email: user?.email || "owner@example1.com",
               role: user?.role || "OWNER",
               sessions: sessions || [],
             },
@@ -1718,22 +1419,23 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
             },
           ];
           setAllUsersData(mockUsersData);
+          setShowUserManagement(true);
         }}
-        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
+        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200 text-xs w-full sm:w-auto"
       >
-        <Shield className="h-4 w-4 mr-1" />
-        Manage All Users
+        <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+        <span className="hidden sm:inline">Manage All Users</span>
+        <span className="sm:hidden">Manage Users</span>
         <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
       </Button>
     </DialogTrigger>
 
-    {/* ✅ Only adjusted the DialogContent for responsive width and centered positioning */}
     <DialogContent
   className="
     w-[98vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw] 
     max-h-[90vh]
     mx-auto
-    p-6
+    p-4 sm:p-6
     overflow-hidden
     flex flex-col
     bg-background
@@ -1741,10 +1443,24 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
   "
 >
   <DialogHeader className="mb-4">
-    <DialogTitle>User Session Management</DialogTitle>
-    <DialogDescription>
+    <DialogTitle className="text-base sm:text-lg">User Session Management</DialogTitle>
+    <DialogDescription className="text-xs sm:text-sm">
       Manage active sessions for all users. Revoke suspicious or unused sessions.
     </DialogDescription>
+    {actionData?.status === "success" && (
+          <Alert variant="success" className="h-8 flex items-center justify-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800 text-sm">
+              {actionData.message}
+            </AlertDescription>
+          </Alert>
+        )}
+    {actionData?.status === "error" && (
+          <Alert variant="destructive" className="h-8 flex items-center justify-center gap-2">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-sm">{actionData.message}</AlertDescription>
+          </Alert>
+        )}
   </DialogHeader>
 
   <div
@@ -1755,13 +1471,13 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
       border-border
       rounded-xl
       bg-card
-      p-4
+      p-3 sm:p-4
     "
   >
     {loadingUsers ? (
       <div className="p-8 text-center">
         <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p>Loading users and sessions...</p>
+        <p className="text-sm">Loading users and sessions...</p>
       </div>
     ) : (
       <UserManagementContent
@@ -1771,6 +1487,7 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
         setSelectedSessions={setSelectedSessions}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        
       />
     )}
   </div>
@@ -1794,10 +1511,11 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
                         submit(formData, { method: "post" });
                       }
                     }}
-                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
+                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200 text-xs w-full sm:w-auto"
                   >
-                    <Power className="h-4 w-4 mr-1" />
-                    Keep This Session Only
+                    <Power className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    <span className="hidden sm:inline">Keep This Session Only</span>
+                    <span className="sm:hidden">Keep This Only</span>
                   </Button>
                 )}
                 
@@ -1813,10 +1531,11 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
                       submit(formData, { method: "post" });
                     }
                   }}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 text-xs w-full sm:w-auto"
                 >
-                  <Power className="h-4 w-4 mr-1" />
-                  Logout All Devices
+                  <Power className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  <span className="hidden sm:inline">Logout All Devices</span>
+                  <span className="sm:hidden">Logout All</span>
                 </Button>
               </div>
             </div>
@@ -1830,5 +1549,3 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
   )
    
 }
-
-
