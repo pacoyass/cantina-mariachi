@@ -283,39 +283,17 @@ export async function action({ request }) {
             action: "display-users-sessions"
           };
         } else {
-          // If admin routes don't exist yet, return mock data
-          console.log("Admin routes not implemented, using mock data");
+          const result = await res.json();
           return { 
-            status: "success", 
-            data: [
-              {
-                id: "current-user",
-                name: currentUser?.name || "Current User",
-                email: currentUser?.email || "admin@example.com", 
-                role: currentUser?.role || "OWNER",
-                sessions: currentSessions || []
-              }
-            ],
-            action: "display-users-sessions",
-            message: "Admin routes not implemented yet. Showing current user only."
+            status: "error", 
+            message: result.error?.message || "Failed to fetch users sessions. Admin API may not be available."
           };
         }
       } catch (error) {
         console.error("Failed to fetch users sessions:", error);
-        // Fallback to showing current user only
         return { 
-          status: "success", 
-          data: [
-            {
-              id: "current-user",
-              name: currentUser?.name || "Current User", 
-              email: currentUser?.email || "admin@example.com",
-              role: currentUser?.role || "OWNER",
-              sessions: currentSessions || []
-            }
-          ],
-          action: "display-users-sessions",
-          message: "Backend not ready. Showing your sessions only."
+          status: "error", 
+          message: "Failed to connect to the server. Please try again later."
         };
       }
     }
@@ -1365,60 +1343,9 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
         variant="outline"
         size="sm"
         onClick={() => {
-          const mockUsersData = [
-            {
-              id: user?.userId || "current-user",
-              name: user?.name || "Current User",
-              email: user?.email || "owner@example1.com",
-              role: user?.role || "OWNER",
-              sessions: sessions || [],
-            },
-            {
-              id: "mock-user-1",
-              name: "John Doe",
-              email: "john@example.com",
-              role: "CUSTOMER",
-              sessions: [
-                {
-                  id: "mock-session-1",
-                  ip: "192.168.1.100",
-                  userAgent:
-                    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
-                  createdAt: new Date(Date.now() - 3600000).toISOString(),
-                  lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
-                  expiresAt: new Date(Date.now() + 1800000).toISOString(),
-                },
-              ],
-            },
-            {
-              id: "mock-user-2",
-              name: "Jane Smith",
-              email: "jane@example.com",
-              role: "ADMIN",
-              sessions: [
-                {
-                  id: "mock-session-2",
-                  ip: "10.0.0.50",
-                  userAgent:
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                  createdAt: new Date(Date.now() - 7200000).toISOString(),
-                  lastUsedAt: new Date(Date.now() - 900000).toISOString(),
-                  expiresAt: new Date(Date.now() + 3600000).toISOString(),
-                },
-                {
-                  id: "mock-session-3",
-                  ip: "10.0.0.51",
-                  userAgent:
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-                  createdAt: new Date(Date.now() - 5400000).toISOString(),
-                  lastUsedAt: new Date(Date.now() - 600000).toISOString(),
-                  expiresAt: new Date(Date.now() + 2400000).toISOString(),
-                },
-              ],
-            },
-          ];
-          setAllUsersData(mockUsersData);
-          setShowUserManagement(true);
+          const formData = new FormData();
+          formData.append("intent", "get-all-users-sessions");
+          submit(formData, { method: "post" });
         }}
         className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200 text-xs w-full sm:w-auto"
       >
