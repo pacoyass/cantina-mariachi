@@ -289,7 +289,7 @@ console.log("from account",user);
   };
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl min-h-screen">
+    <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-6xl min-h-screen">
       {/* Welcome Message */}
       {isWelcome && (
         <Alert className="mb-8 border-green-200 bg-green-50">
@@ -316,16 +316,16 @@ console.log("from account",user);
         </div>
         
         {/* Quick Stats */}
-        <div className="flex gap-4">
-          <div className="text-center">
+        <div className="flex flex-wrap gap-4 sm:justify-end">
+          <div className="text-center min-w-[90px]">
             <div className="text-2xl font-bold text-primary">{orders?.length || 0}</div>
             <div className="text-sm text-muted-foreground">Orders</div>
           </div>
-          <div className="text-center">
+          <div className="text-center min-w-[90px]">
             <div className="text-2xl font-bold text-primary">{reservations?.length || 0}</div>
             <div className="text-sm text-muted-foreground">Reservations</div>
           </div>
-          <div className="text-center">
+          <div className="text-center min-w-[90px]">
             <div className="text-2xl font-bold text-primary">1,250</div>
             <div className="text-sm text-muted-foreground">Points</div>
           </div>
@@ -634,14 +634,14 @@ console.log("from account",user);
                 <div className="space-y-4">
                   {orders.map((order) => (
                     <div key={order.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                           <h4 className="font-semibold">Order #{order.orderNumber}</h4>
                           <p className="text-sm text-muted-foreground">
                             {formatDate(order.createdAt)}
                           </p>
                         </div>
-                        <div className="text-right">
+                        <div className="text-left sm:text-right">
                           <div className="font-semibold">{formatCurrency(order.total)}</div>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status}
@@ -649,7 +649,7 @@ console.log("from account",user);
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div className="text-sm text-muted-foreground">
                           {order.orderItems?.length || 0} items • {order.type}
                         </div>
@@ -700,7 +700,7 @@ console.log("from account",user);
                 <div className="space-y-4">
                   {reservations.map((reservation) => (
                     <div key={reservation.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                           <h4 className="font-semibold">
                             {formatDate(reservation.date)} at {reservation.time}
@@ -720,7 +720,7 @@ console.log("from account",user);
                         </p>
                       )}
                       
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <Button variant="outline" size="sm">
                           Modify
                         </Button>
@@ -818,7 +818,7 @@ console.log("from account",user);
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h4 className="font-medium">Order Updates</h4>
                   <p className="text-sm text-muted-foreground">
@@ -830,7 +830,7 @@ console.log("from account",user);
               
               <Separator />
               
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h4 className="font-medium">Promotional Offers</h4>
                   <p className="text-sm text-muted-foreground">
@@ -842,7 +842,7 @@ console.log("from account",user);
               
               <Separator />
               
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h4 className="font-medium">Reservation Reminders</h4>
                   <p className="text-sm text-muted-foreground">
