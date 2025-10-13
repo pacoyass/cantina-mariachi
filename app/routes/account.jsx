@@ -270,13 +270,19 @@ export async function action({ request }) {
     if (intent === "get-all-users-sessions") {
       // Admin-only: Get all users and their sessions
       try {
+        console.log('🔄 Fetching users sessions from:', `${url.origin}/api/admin/users/sessions`);
         const res = await fetch(`${url.origin}/api/admin/users/sessions`, {
           method: "GET",
           headers: { cookie },
         });
         
+        console.log('📡 API Response status:', res.status, res.statusText);
+        
         if (res.ok) {
           const result = await res.json();
+          console.log('✅ API Success:', result);
+          console.log('📊 Users data:', result.data);
+          console.log('📊 Number of users:', Array.isArray(result.data) ? result.data.length : 'NOT AN ARRAY');
           return { 
             status: "success", 
             data: result.data,
@@ -284,13 +290,14 @@ export async function action({ request }) {
           };
         } else {
           const result = await res.json();
+          console.error('❌ API Error Response:', result);
           return { 
             status: "error", 
-            message: result.error?.message || "Failed to fetch users sessions. Admin API may not be available."
+            message: result.error?.message || result.message || "Failed to fetch users sessions. Admin API may not be available."
           };
         }
       } catch (error) {
-        console.error("Failed to fetch users sessions:", error);
+        console.error("❌ Failed to fetch users sessions:", error);
         return { 
           status: "error", 
           message: "Failed to connect to the server. Please try again later."
@@ -332,9 +339,23 @@ export default function AccountPage({loaderData,actionData}) {
     }
     
     // Handle displaying users sessions data
-    if (actionDatas?.action === 'display-users-sessions' && actionDatas?.data) {
-      setAllUsersData(actionDatas.data);
-      setShowUserManagement(true);
+    if (actionDatas?.action === 'display-users-sessions') {
+      console.log('📊 Action data received:', actionDatas);
+      console.log('📊 Users data:', actionDatas?.data);
+      if (actionDatas?.data && Array.isArray(actionDatas.data)) {
+        setAllUsersData(actionDatas.data);
+        setShowUserManagement(true);
+        console.log('✅ Set users data:', actionDatas.data.length, 'users');
+      } else {
+        console.error('❌ Invalid data format:', actionDatas?.data);
+        setAllUsersData([]);
+        setShowUserManagement(true);
+      }
+    }
+    
+    // Handle error responses
+    if (actionDatas?.status === 'error' && actionDatas?.message) {
+      console.error('❌ API Error:', actionDatas.message);
     }
   }, [actionDatas]);
   
