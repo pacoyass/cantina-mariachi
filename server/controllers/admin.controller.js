@@ -321,15 +321,19 @@ export const updateUserRole = async (req, res) => {
 // Session Management
 export const getAllUsersWithSessions = async (req, res) => {
   try {
+    console.log('🔵 getAllUsersWithSessions called by user:', req.user?.id, 'role:', req.user?.role);
+    
     const { databaseService } = await import('../services/databaseService.js');
     
     // Get all users
     const users = await databaseService.getAllUsers();
+    console.log('📊 Found users:', users.length);
     
     // Get sessions for each user
     const usersWithSessions = await Promise.all(
       users.map(async (user) => {
         const sessions = await databaseService.listRefreshTokensByUser(user.id, { page: 1, pageSize: 100 });
+        console.log(`  User ${user.email} has ${sessions.length} sessions`);
         return {
           id: user.id,
           name: user.name,
@@ -348,6 +352,8 @@ export const getAllUsersWithSessions = async (req, res) => {
       })
     );
     
+    console.log('✅ Returning', usersWithSessions.length, 'users with sessions');
+    
     LoggerService.logActivity(req.user?.id, 'ADMIN_VIEW', 'Viewed all users with sessions', {
       userId: req.user?.id,
       totalUsers: usersWithSessions.length
@@ -355,6 +361,7 @@ export const getAllUsersWithSessions = async (req, res) => {
     
     return createResponse(res, 200, 'Users with sessions retrieved successfully', usersWithSessions);
   } catch (error) {
+    console.error('❌ Error in getAllUsersWithSessions:', error);
     LoggerService.logError('Failed to get users with sessions', error.stack, {
       path: req.path,
       userId: req.user?.id

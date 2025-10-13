@@ -1,6 +1,7 @@
 import express from 'express';
 import rateLimit from '../middleware/rateLimit.middleware.js';
 import authMiddleware from '../middleware/auth.middleware.js';
+import { createError } from '../utils/response.js';
 import { 
   getOrderStats,
   getRevenueStats,
@@ -25,10 +26,16 @@ const rlStrict = rateLimit({ windowMs: 60_000, max: 30 });   // 30 requests per 
 // Middleware to check admin privileges
 const requireAdmin = (req, res, next) => {
   if (!req.user || !['ADMIN', 'OWNER'].includes(req.user.role)) {
-    return res.status(403).json({
-      success: false,
-      error: 'Insufficient privileges. Admin access required.'
-    });
+    return createError(
+      res,
+      403,
+      'Insufficient privileges. Admin access required.',
+      'FORBIDDEN',
+      { requiredRoles: ['ADMIN', 'OWNER'], userRole: req.user?.role },
+      req,
+      {},
+      'common'
+    );
   }
   next();
 };
