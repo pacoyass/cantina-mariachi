@@ -796,6 +796,15 @@ export default function AccountPage({loaderData,actionData}) {
   sessions={sessions}
   actionData={actionDatas}
   user={user}
+  showUserManagement ={showUserManagement }
+  setShowUserManagement={setShowUserManagement}
+  loadingUsers={loadingUsers}
+  allUsersData={allUsersData}
+  setAllUsersData={setAllUsersData}
+  selectedSessions={selectedSessions}
+  setSelectedSessions={setSelectedSessions}
+  searchTerm={searchTerm}
+  setSearchTerm={setSearchTerm}
 />
 
 
@@ -974,10 +983,10 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
   };
 
   return (
-    <div className="overflow-y-auto max-h-[70vh]">
+    <div className="w-full h-full   overflow-y-auto space-y-6">
       {/* Search and Controls */}
-      <div className="flex items-center justify-between mb-6 px-1">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between mb-6 px-1 ">
+        <div className="flex  items-center gap-4">
           <Input
             placeholder="Search users..."
             value={searchTerm}
@@ -1001,7 +1010,7 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
       </div>
 
       {/* Users List */}
-      <div className="space-y-4 px-1">
+      <div className="space-y-4 px-1 ">
         {filteredUsers.map(user => (
           <Card key={user.id}>
             <CardHeader className="pb-3">
@@ -1042,8 +1051,8 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                     return (
                       <div 
                         key={session.id}
-                        className={`flex items-center justify-between p-3 rounded border ${
-                          isSelected ? 'border-red-200 bg-red-50' : 'border-gray-200'
+                        className={`flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border ${
+                          isSelected ? 'border-red-200 bg-red-50' : 'border-border'
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -1068,11 +1077,11 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                           </Badge>
                         </div>
                         
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex  items-center gap-4 text-sm text-muted-foreground">
                           <span>Active: {formatRelativeTime(session.lastUsedAt)}</span>
                           <span>Expires: {formatRelativeTime(session.expiresAt, true)}</span>
                           
-                          <Button
+                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
@@ -1090,6 +1099,7 @@ const UserManagementContent = ({ usersData, currentUser, selectedSessions, setSe
                             Revoke
                           </Button>
                         </div>
+                     
                       </div>
                     );
                   })}
@@ -1248,7 +1258,9 @@ const EmptySessionsState = () => (
 );
 
 // --- Main Sessions Tab ---
-const SessionsTab = ({ sessions, actionData, user }) => {
+const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUserManagement,loadingUsers,allUsersData,setAllUsersData,selectedSessions,setSelectedSessions,
+  searchTerm,setSearchTerm
+}) => {
   const submit = useSubmit();
   
   return (
@@ -1545,10 +1557,10 @@ const SessionsTab = ({ sessions, actionData, user }) => {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 ">
                 {/* Manage All Users Sessions - Only for Admin/Owner */}
-                {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
-                  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement}>
+                {/* {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
+                  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement} className="w-full " >
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
@@ -1616,7 +1628,7 @@ const SessionsTab = ({ sessions, actionData, user }) => {
                       </Button>
                     </DialogTrigger>
                     
-                    <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden">
+                    <DialogContent className=" w-full  max-h-[90vh] overflow-hidden">
                       <DialogHeader>
                         <DialogTitle>User Session Management</DialogTitle>
                         <DialogDescription>
@@ -1641,8 +1653,133 @@ const SessionsTab = ({ sessions, actionData, user }) => {
                       )}
                     </DialogContent>
                   </Dialog>
-                )}
-                
+                )} */}
+  
+  {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
+  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement} className="xl:w-[70vw] 2xl:w-[600px]
+ 
+">
+    <DialogTrigger asChild>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          console.log("Opening user management modal");
+          const mockUsersData = [
+            {
+              id: user?.userId || "current-user",
+              name: user?.name || "Current User",
+              email: user?.email || "owner@example.com",
+              role: user?.role || "OWNER",
+              sessions: sessions || [],
+            },
+            {
+              id: "mock-user-1",
+              name: "John Doe",
+              email: "john@example.com",
+              role: "CUSTOMER",
+              sessions: [
+                {
+                  id: "mock-session-1",
+                  ip: "192.168.1.100",
+                  userAgent:
+                    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
+                  createdAt: new Date(Date.now() - 3600000).toISOString(),
+                  lastUsedAt: new Date(Date.now() - 1800000).toISOString(),
+                  expiresAt: new Date(Date.now() + 1800000).toISOString(),
+                },
+              ],
+            },
+            {
+              id: "mock-user-2",
+              name: "Jane Smith",
+              email: "jane@example.com",
+              role: "ADMIN",
+              sessions: [
+                {
+                  id: "mock-session-2",
+                  ip: "10.0.0.50",
+                  userAgent:
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                  createdAt: new Date(Date.now() - 7200000).toISOString(),
+                  lastUsedAt: new Date(Date.now() - 900000).toISOString(),
+                  expiresAt: new Date(Date.now() + 3600000).toISOString(),
+                },
+                {
+                  id: "mock-session-3",
+                  ip: "10.0.0.51",
+                  userAgent:
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                  createdAt: new Date(Date.now() - 5400000).toISOString(),
+                  lastUsedAt: new Date(Date.now() - 600000).toISOString(),
+                  expiresAt: new Date(Date.now() + 2400000).toISOString(),
+                },
+              ],
+            },
+          ];
+          setAllUsersData(mockUsersData);
+        }}
+        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200"
+      >
+        <Shield className="h-4 w-4 mr-1" />
+        Manage All Users
+        <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
+      </Button>
+    </DialogTrigger>
+
+    {/* ✅ Only adjusted the DialogContent for responsive width and centered positioning */}
+    <DialogContent
+  className="
+    w-[98vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw] 
+    max-h-[90vh]
+    mx-auto
+    p-6
+    overflow-hidden
+    flex flex-col
+    bg-background
+    rounded-2xl
+  "
+>
+  <DialogHeader className="mb-4">
+    <DialogTitle>User Session Management</DialogTitle>
+    <DialogDescription>
+      Manage active sessions for all users. Revoke suspicious or unused sessions.
+    </DialogDescription>
+  </DialogHeader>
+
+  <div
+    className="
+      flex-1
+      overflow-y-auto
+      border
+      border-border
+      rounded-xl
+      bg-card
+      p-4
+    "
+  >
+    {loadingUsers ? (
+      <div className="p-8 text-center">
+        <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+        <p>Loading users and sessions...</p>
+      </div>
+    ) : (
+      <UserManagementContent
+        usersData={allUsersData}
+        currentUser={user}
+        selectedSessions={selectedSessions}
+        setSelectedSessions={setSelectedSessions}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+    )}
+  </div>
+</DialogContent>
+
+  </Dialog>
+)}
+
+
                 {/* Alternative: Logout Other Devices for all users but with different behavior */}
                 {sessions.filter((s) => !s.current).length > 0 && 
                  user?.role !== 'ADMIN' && user?.role !== 'OWNER' && (
@@ -1693,6 +1830,5 @@ const SessionsTab = ({ sessions, actionData, user }) => {
   )
    
 }
-
 
 
