@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext } from 'react-router';
+import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext, useSubmit } from 'react-router';
 // middleware-based auth temporarily disabled due to RouterContextProvider incompatibility
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
@@ -11,11 +11,21 @@ import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Separator } from '../components/ui/separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../components/ui/dialog';
 import { 
   User, Mail, Phone, MapPin, CreditCard, History, 
   Calendar, Star, Package, AlertCircle, CheckCircle,
-  Settings, Bell, Shield, LogOut, Edit, Eye, Gift
+  Settings, Bell, Shield, LogOut, Edit, Eye, Gift,
+  Monitor, Smartphone, Tablet, Globe, Trash2, Power
 } from '../lib/lucide-shim.js';
+import { AlertCircleIcon, Circle, Clock } from 'lucide-react';
 
 export const meta = () => [
   { title: 'My Account - Cantina Mariachi' },
@@ -41,9 +51,33 @@ export async function loader({ request }) {
     
     const reservationsData = reservationsRes.ok ? await reservationsRes.json() : { data: { reservations: [] } };
 
+    // Get user's active sessions
+    const sessionsRes = await fetch(`${url.origin}/api/auth/sessions`, { 
+      headers: { cookie } 
+    });
+    const sessionsData = sessionsRes.ok ? await sessionsRes.json() : { data: { sessions: [] } };
+
+    // Identify current session heuristically
+    const userAgent = request.headers.get('user-agent') || '';
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+              request.headers.get('x-real-ip') || 'unknown';
+
+    const enhancedSessions = (sessionsData.data?.sessions || []).map(session => {
+      const isCurrentUserAgent = session.userAgent === userAgent;
+      const isRecentAndSameIP = session.ip === ip && 
+        (new Date() - new Date(session.lastUsedAt)) < 300000; // 5 minutes
+      const isLocalAndRecent = (session.ip === '::1' || session.ip === '127.0.0.1') &&
+        (new Date() - new Date(session.lastUsedAt)) < 60000; // 1 minute for local
+      return {
+        ...session,
+        current: isCurrentUserAgent || isRecentAndSameIP || isLocalAndRecent
+      };
+    });
+
     return {
       orders: ordersData.data?.orders || [],
       reservations: reservationsData.data?.reservations || [],
+      sessions: enhancedSessions,
       isWelcome: url.searchParams.get('welcome') === 'true'
     };
   } catch (error) {
@@ -59,6 +93,47 @@ export async function action({ request }) {
   const intent = formData.get("intent");
 
   try {
+    if (intent === "revoke-session") {
+      const sessionId = formData.get("sessionId");
+      const res = await fetch(`${url.origin}/api/auth/sessions/${sessionId}`, {
+        method: "DELETE",
+        headers: { cookie },
+      });
+      const result = await res.json();
+      if (res.ok) return { status: "success", message: "Session revoked successfully" };
+      return { status: "error", message: result.error?.message || "Failed to revoke session" };
+    }
+
+    if (intent === "logout-all-sessions") {
+      const res = await fetch(`${url.origin}/api/auth/logout-all`, {
+        method: "POST",
+        headers: { 
+          cookie,
+          "Content-Type": "application/json"
+        },
+      });
+      let result;
+      try { result = await res.json(); } catch { return { status: "error", message: `Server returned invalid response (${res.status})` }; }
+      if (res.ok) {
+        return { status: "success", message: `All sessions logged out successfully. ${result.data?.deletedTokens || 0} sessions were removed.`, redirect: "/login" };
+      }
+      return { status: "error", message: result.error?.message || "Logout failed" };
+    }
+
+    if (intent === "logout-all-others") {
+      const currentRefresh = request.headers.get('cookie')?.match(/refreshToken=([^;]+)/)?.[1];
+      if (!currentRefresh) {
+        return { status: "error", message: "Current refresh token not found. Cannot preserve current session." };
+      }
+      const res = await fetch(`${url.origin}/api/auth/logout-others`, {
+        method: "POST",
+        headers: { cookie, "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken: currentRefresh })
+      });
+      const result = await res.json();
+      if (res.ok) return { status: "success", message: `${result.data?.deletedTokens || 0} other sessions logged out successfully. Your current session remains active.` };
+      return { status: "error", message: result.error?.message || "Failed to logout other sessions" };
+    }
     if (intent === "cancel-order") {
       const orderNumber = formData.get("orderNumber");
       const res = await fetch(`${url.origin}/api/orders/${orderNumber}`, {
@@ -87,10 +162,15 @@ export async function action({ request }) {
 export default function AccountPage({loaderData,actionData}) {
   const { t } = useTranslation(['account', 'common']);
   const {user}= useOutletContext() || {};
-  const {  orders, reservations, isWelcome } = loaderData;
+  const {  orders, reservations, isWelcome , sessions } = loaderData;
   const actionDatas = actionData;
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
+  const [showUserManagement, setShowUserManagement] = useState(false);
+  const [allUsersData, setAllUsersData] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [selectedSessions, setSelectedSessions] = useState(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
   const isSubmitting = navigation.state === 'submitting';
 console.log("from account",user);
 
@@ -124,6 +204,96 @@ console.log("from account",user);
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  function parseUserAgent(ua) {
+    if (!ua) return { device: "Unknown", browser: "Unknown" };
+    const isWindows = ua.includes("Windows");
+    const isMac = ua.includes("Macintosh");
+    const isLinux = ua.includes("Linux");
+    const isMobile = /iPhone|Android/i.test(ua);
+    const device = isMobile ? "Mobile" : isWindows ? "Windows" : isMac ? "Mac" : isLinux ? "Linux" : "Unknown";
+    const match = ua.match(/(Chrome|Firefox|Safari|Edge)\/([\d.]+)/);
+    const browser = match ? `${match[1]} ${match[2].split(".")[0]}` : "Unknown";
+    return { device, browser };
+  }
+
+  const SessionCard = ({ session, isCurrent }) => {
+    const submit = useSubmit();
+    const { device, browser } = parseUserAgent(session.userAgent);
+    return (
+      <div className="border rounded-lg p-4 space-y-3 transition hover:bg-muted/40">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {device === "Mobile" ? (
+                <Smartphone className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <Monitor className="h-4 w-4 text-muted-foreground" />
+              )}
+              <h4 className="font-semibold">
+                {device} • {browser}
+              </h4>
+              {isCurrent && (
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  <Circle className="h-2 w-2 fill-current mr-1" />
+                  Current Session
+                </Badge>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <MapPin className="h-3 w-3" />
+              <span>IP ADDRESS: {session.ip || "N/A"}</span>
+              {session.ip === "::1" && (
+                <Badge variant="outline" className="text-xs">Local</Badge>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <span>Signed in: {new Date(session.createdAt).toLocaleString()}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>Last active: {new Date(session.lastUsedAt).toLocaleString()}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span>Expires: {new Date(session.expiresAt).toLocaleString()}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-2">
+              <Badge variant="outline" className="text-xs">{browser}</Badge>
+              <Badge variant="outline" className="text-xs">{device}</Badge>
+            </div>
+          </div>
+
+          {!isCurrent && (
+            <div className="sm:ml-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (confirm("Revoke this session?")) {
+                    const formData = new FormData();
+                    formData.append("intent", "revoke-session");
+                    formData.append("sessionId", session.id);
+                    submit(formData, { method: "post" });
+                  }
+                }}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              >
+                <Power className="h-4 w-4 mr-1" />
+                Revoke
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -172,7 +342,7 @@ console.log("from account",user);
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Profile
@@ -184,6 +354,10 @@ console.log("from account",user);
           <TabsTrigger value="reservations" className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             Reservations
+          </TabsTrigger>
+          <TabsTrigger value="sessions" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Sessions
           </TabsTrigger>
           <TabsTrigger value="rewards" className="flex items-center gap-2">
             <Gift className="h-4 w-4" />
@@ -362,6 +536,96 @@ console.log("from account",user);
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Sessions Tab */}
+        <TabsContent value="sessions" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                Active Sessions
+              </CardTitle>
+              <CardDescription>
+                Manage your logged-in devices and sessions. Log out from any suspicious or unused sessions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {(!sessions || sessions.length === 0) && (
+                <div className="text-center py-8">
+                  <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-semibold mb-2">No Active Sessions</h3>
+                  <p className="text-muted-foreground">You’re currently logged out on all devices.</p>
+                </div>
+              )}
+
+              {sessions && sessions.length > 0 && (
+                <div className="space-y-4">
+                  {sessions.filter(s => s.current).map(session => (
+                    <SessionCard key={session.id} session={session} isCurrent />
+                  ))}
+                  {sessions.filter(s => !s.current).map(session => (
+                    <SessionCard key={session.id} session={session} isCurrent={false} />
+                  ))}
+
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-muted/50 rounded-lg text-sm">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>
+                          {sessions.length} active session{sessions.length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span>
+                          {sessions.filter((s) => s.current).length} current device
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      {sessions.filter((s) => !s.current).length > 0 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (confirm("This will log out all your other devices but keep this session active. Continue?")) {
+                              const formData = new FormData();
+                              formData.append("intent", "logout-all-others");
+                              fetch('/account', { method: 'POST', body: formData, credentials: 'include' })
+                                .then(() => window.location.reload());
+                            }
+                          }}
+                          className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
+                        >
+                          <Power className="h-4 w-4 mr-1" />
+                          Keep This Session Only
+                        </Button>
+                      )}
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          if (confirm("This will log you out of ALL devices including this one. Continue?")) {
+                            const formData = new FormData();
+                            formData.append("intent", "logout-all-sessions");
+                            fetch('/account', { method: 'POST', body: formData, credentials: 'include' })
+                              .then(() => window.location.reload());
+                          }
+                        }}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                      >
+                        <Power className="h-4 w-4 mr-1" />
+                        Logout All Devices
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Orders Tab */}
