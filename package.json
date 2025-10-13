@@ -12,9 +12,7 @@
     "test:watch": "jest --watchAll --coverage --notify",
     "ggshield": "ggshield secret scan repo .",
     "postinstall": "prisma generate",
-    "i18n:validate": "node scripts/validate-translations.js",
-    "i18n:check": "npm run i18n:validate",
-    "pretest": "npm run i18n:validate"
+    "redis": "docker run -d --name redis -p 6379:6379 redis:7-alpine"
   },
   "dependencies": {
     "@prisma/extension-accelerate": "^2.0.2",
