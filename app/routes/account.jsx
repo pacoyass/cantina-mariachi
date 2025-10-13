@@ -127,7 +127,7 @@ console.log("from account",user);
   };
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-6xl min-h-screen">
+    <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-6xl min-h-screen">
       {/* Welcome Message */}
       {isWelcome && (
         <Alert className="mb-8 border-green-200 bg-green-50">
@@ -140,69 +140,74 @@ console.log("from account",user);
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        <div className="flex items-center space-x-4">
-          <Avatar className="h-16 w-16">
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <Avatar className="h-12 w-12 sm:h-16 sm:w-16">
             <AvatarImage src={user?.avatar} alt={user?.name} />
-            <AvatarFallback className="text-lg">
+            <AvatarFallback className="text-base sm:text-lg">
               {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">Welcome back, {user?.name || 'User'}!</h1>
-            <p className="text-muted-foreground">Manage your account and view your activity</p>
+            <h1 className="text-xl sm:text-2xl font-bold">Welcome back, {user?.name || 'User'}!</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Manage your account and view your activity</p>
           </div>
         </div>
         
         {/* Quick Stats */}
-        <div className="flex gap-4">
+        <div className="flex gap-4 sm:gap-6">
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary">{orders?.length || 0}</div>
-            <div className="text-sm text-muted-foreground">Orders</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{orders?.length || 0}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Orders</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary">{reservations?.length || 0}</div>
-            <div className="text-sm text-muted-foreground">Reservations</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{reservations?.length || 0}</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Reservations</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-primary">1,250</div>
-            <div className="text-sm text-muted-foreground">Points</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">1,250</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">Points</div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
-          <TabsTrigger value="profile" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Profile
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1">
+          <TabsTrigger value="profile" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <User className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Profile</span>
+            <span className="sm:hidden">Profile</span>
           </TabsTrigger>
-          <TabsTrigger value="orders" className="flex items-center gap-2">
-            <Package className="h-4 w-4" />
-            Orders
+          <TabsTrigger value="orders" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Package className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Orders</span>
+            <span className="sm:hidden">Orders</span>
           </TabsTrigger>
-          <TabsTrigger value="reservations" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Reservations
+          <TabsTrigger value="reservations" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Reservations</span>
+            <span className="sm:hidden">Reserve</span>
           </TabsTrigger>
-          <TabsTrigger value="rewards" className="flex items-center gap-2">
-            <Gift className="h-4 w-4" />
-            Rewards
+          <TabsTrigger value="rewards" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Gift className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Rewards</span>
+            <span className="sm:hidden">Rewards</span>
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
+          <TabsTrigger value="settings" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Settings</span>
+            <span className="sm:hidden">Settings</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Profile Tab */}
-        <TabsContent value="profile" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <TabsContent value="profile" className="space-y-4 sm:space-y-6">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
             {/* Profile Information */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
                   Profile Information
                 </CardTitle>
               </CardHeader>
@@ -277,7 +282,7 @@ console.log("from account",user);
                     />
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting} className="text-xs sm:text-sm">
                     {isSubmitting ? 'Updating...' : 'Update Profile'}
                   </Button>
                 </Form>
@@ -287,8 +292,8 @@ console.log("from account",user);
             {/* Security Settings */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
                   Security Settings
                 </CardTitle>
               </CardHeader>
@@ -355,7 +360,7 @@ console.log("from account",user);
                     )}
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting} className="text-xs sm:text-sm">
                     {isSubmitting ? 'Changing...' : 'Change Password'}
                   </Button>
                 </Form>
@@ -365,11 +370,11 @@ console.log("from account",user);
         </TabsContent>
 
         {/* Orders Tab */}
-        <TabsContent value="orders" className="space-y-6">
+        <TabsContent value="orders" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Package className="h-4 w-4 sm:h-5 sm:w-5" />
                 Order History
               </CardTitle>
             </CardHeader>
@@ -377,32 +382,33 @@ console.log("from account",user);
               {orders && orders.length > 0 ? (
                 <div className="space-y-4">
                   {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                    <div key={order.id} className="border rounded-lg p-3 sm:p-4 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
                         <div>
-                          <h4 className="font-semibold">Order #{order.orderNumber}</h4>
-                          <p className="text-sm text-muted-foreground">
+                          <h4 className="font-semibold text-sm sm:text-base">Order #{order.orderNumber}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             {formatDate(order.createdAt)}
                           </p>
                         </div>
-                        <div className="text-right">
-                          <div className="font-semibold">{formatCurrency(order.total)}</div>
+                        <div className="flex items-center justify-between sm:text-right sm:block">
+                          <div className="font-semibold text-sm sm:text-base">{formatCurrency(order.total)}</div>
                           <Badge className={getStatusColor(order.status)}>
                             {order.status}
                           </Badge>
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm text-muted-foreground">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">
                           {order.orderItems?.length || 0} items • {order.type}
                         </div>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            <Eye className="h-4 w-4 mr-1" />
-                            View Details
+                          <Button variant="outline" size="sm" className="text-xs sm:text-sm flex-1 sm:flex-none">
+                            <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                            <span className="hidden sm:inline">View Details</span>
+                            <span className="sm:hidden">View</span>
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" className="text-xs sm:text-sm flex-1 sm:flex-none">
                             Reorder
                           </Button>
                         </div>
@@ -412,13 +418,13 @@ console.log("from account",user);
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold mb-2">No orders yet</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Package className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-semibold mb-2 text-sm sm:text-base">No orders yet</h3>
+                  <p className="text-muted-foreground mb-4 text-xs sm:text-sm">
                     Start exploring our delicious menu!
                   </p>
                   <Link to="/menu">
-                    <Button variant="outline"  className="cursor-pointer ">
+                    <Button variant="outline" className="cursor-pointer text-xs sm:text-sm">
                        Browse Menu 
                     </Button>
                 
@@ -431,11 +437,11 @@ console.log("from account",user);
         </TabsContent>
 
         {/* Reservations Tab */}
-        <TabsContent value="reservations" className="space-y-6">
+        <TabsContent value="reservations" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
                 My Reservations
               </CardTitle>
             </CardHeader>
@@ -443,13 +449,13 @@ console.log("from account",user);
               {reservations && reservations.length > 0 ? (
                 <div className="space-y-4">
                   {reservations.map((reservation) => (
-                    <div key={reservation.id} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                    <div key={reservation.id} className="border rounded-lg p-3 sm:p-4 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
                         <div>
-                          <h4 className="font-semibold">
+                          <h4 className="font-semibold text-sm sm:text-base">
                             {formatDate(reservation.date)} at {reservation.time}
                           </h4>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Party of {reservation.partySize}
                           </p>
                         </div>
@@ -459,16 +465,16 @@ console.log("from account",user);
                       </div>
                       
                       {reservation.notes && (
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           Note: {reservation.notes}
                         </p>
                       )}
                       
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs sm:text-sm">
                           Modify
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs sm:text-sm">
                           Cancel
                         </Button>
                       </div>
@@ -477,12 +483,12 @@ console.log("from account",user);
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold mb-2">No reservations</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Calendar className="h-10 w-10 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="font-semibold mb-2 text-sm sm:text-base">No reservations</h3>
+                  <p className="text-muted-foreground mb-4 text-xs sm:text-sm px-4">
                     Book a table to enjoy our authentic Mexican atmosphere!
                   </p>
-                  <Button>Make Reservation</Button>
+                  <Button className="text-xs sm:text-sm">Make Reservation</Button>
                 </div>
               )}
             </CardContent>
@@ -491,22 +497,22 @@ console.log("from account",user);
 
         {/* Rewards Tab */}
         <TabsContent value="rewards" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Gift className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Gift className="h-4 w-4 sm:h-5 sm:w-5" />
                   Reward Points
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-primary">1,250</div>
-                  <p className="text-muted-foreground">Available Points</p>
+                  <div className="text-3xl sm:text-4xl font-bold text-primary">1,250</div>
+                  <p className="text-muted-foreground text-sm sm:text-base">Available Points</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span>Progress to next reward</span>
                     <span>250 points to go</span>
                   </div>
@@ -515,37 +521,37 @@ console.log("from account",user);
                   </div>
                 </div>
                 
-                <Button className="w-full">View Available Rewards</Button>
+                <Button className="w-full text-xs sm:text-sm">View Available Rewards</Button>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Order #1234</p>
-                    <p className="text-sm text-muted-foreground">Dec 15, 2024</p>
+                    <p className="font-medium text-sm sm:text-base">Order #1234</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Dec 15, 2024</p>
                   </div>
-                  <div className="text-green-600 font-medium">+50 pts</div>
+                  <div className="text-green-600 font-medium text-sm sm:text-base">+50 pts</div>
                 </div>
                 
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Birthday Bonus</p>
-                    <p className="text-sm text-muted-foreground">Dec 10, 2024</p>
+                    <p className="font-medium text-sm sm:text-base">Birthday Bonus</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Dec 10, 2024</p>
                   </div>
-                  <div className="text-green-600 font-medium">+100 pts</div>
+                  <div className="text-green-600 font-medium text-sm sm:text-base">+100 pts</div>
                 </div>
                 
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Order #1233</p>
-                    <p className="text-sm text-muted-foreground">Dec 8, 2024</p>
+                    <p className="font-medium text-sm sm:text-base">Order #1233</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Dec 8, 2024</p>
                   </div>
-                  <div className="text-green-600 font-medium">+35 pts</div>
+                  <div className="text-green-600 font-medium text-sm sm:text-base">+35 pts</div>
                 </div>
               </CardContent>
             </Card>
@@ -553,66 +559,66 @@ console.log("from account",user);
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
+        <TabsContent value="settings" className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                 Notification Preferences
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Order Updates</h4>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm sm:text-base">Order Updates</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Get notified about your order status
                   </p>
                 </div>
-                <input type="checkbox" defaultChecked className="h-4 w-4" />
+                <input type="checkbox" defaultChecked className="h-4 w-4 flex-shrink-0" />
               </div>
               
               <Separator />
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Promotional Offers</h4>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm sm:text-base">Promotional Offers</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Receive exclusive deals and promotions
                   </p>
                 </div>
-                <input type="checkbox" defaultChecked className="h-4 w-4" />
+                <input type="checkbox" defaultChecked className="h-4 w-4 flex-shrink-0" />
               </div>
               
               <Separator />
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Reservation Reminders</h4>
-                  <p className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm sm:text-base">Reservation Reminders</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Get reminded about upcoming reservations
                   </p>
                 </div>
-                <input type="checkbox" defaultChecked className="h-4 w-4" />
+                <input type="checkbox" defaultChecked className="h-4 w-4 flex-shrink-0" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-600">
-                <LogOut className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-red-600 text-base sm:text-lg">
+                <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
                 Account Actions
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full justify-start">
-                <LogOut className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="w-full justify-start text-xs sm:text-sm">
+                <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Sign Out
               </Button>
               
-              <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700">
-                <AlertCircle className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 text-xs sm:text-sm">
+                <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Delete Account
               </Button>
             </CardContent>
