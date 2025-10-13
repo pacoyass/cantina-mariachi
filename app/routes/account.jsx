@@ -3,6 +3,7 @@ import React from 'react';
 import { Form, useLoaderData, useActionData, useNavigation, redirect, Link, useOutletContext, useSubmit } from 'react-router';
 // middleware-based auth temporarily disabled due to RouterContextProvider incompatibility
 import { useTranslation } from 'react-i18next';
+import { parseUserAgent, formatRelativeTime } from '../lib/session-utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
@@ -319,11 +320,6 @@ export default function AccountPage({loaderData,actionData}) {
   const actionDatas = actionData;
   const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('profile');
-  const [showUserManagement, setShowUserManagement] = useState(false);
-  const [allUsersData, setAllUsersData] = useState([]);
-  const [loadingUsers, setLoadingUsers] = useState(false);
-  const [selectedSessions, setSelectedSessions] = useState(new Set());
-  const [searchTerm, setSearchTerm] = useState('');
   const isSubmitting = navigation.state === 'submitting';
   
   // Handle redirect after logout-all-sessions
@@ -331,50 +327,7 @@ export default function AccountPage({loaderData,actionData}) {
     if (actionDatas?.redirect === '/login') {
       window.location.href = '/login?message=All sessions logged out successfully';
     }
-    
-    // Handle admin user management modal
-    if (actionDatas?.action === 'show-user-management') {
-      setShowUserManagement(true);
-      fetchAllUsersData();
-    }
-    
-    // Handle displaying users sessions data
-    if (actionDatas?.action === 'display-users-sessions') {
-      console.log('📊 Action data received:', actionDatas);
-      console.log('📊 Users data:', actionDatas?.data);
-      if (actionDatas?.data && Array.isArray(actionDatas.data)) {
-        setAllUsersData(actionDatas.data);
-        setShowUserManagement(true);
-        console.log('✅ Set users data:', actionDatas.data.length, 'users');
-      } else {
-        console.error('❌ Invalid data format:', actionDatas?.data);
-        setAllUsersData([]);
-        setShowUserManagement(true);
-      }
-    }
-    
-    // Handle error responses
-    if (actionDatas?.status === 'error' && actionDatas?.message) {
-      console.error('❌ API Error:', actionDatas.message);
-    }
   }, [actionDatas]);
-  
-  const fetchAllUsersData = async () => {
-    setLoadingUsers(true);
-    try {
-      const response = await fetch('/api/admin/users/sessions', {
-        credentials: 'include'
-      });
-      if (response.ok) {
-        const result = await response.json();
-        setAllUsersData(result.data || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch users data:', error);
-    } finally {
-      setLoadingUsers(false);
-    }
-  };
   
   console.log("from account", user);
 
@@ -1357,91 +1310,7 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-  {(user?.role === 'ADMIN' || user?.role === 'OWNER') && (
-  <Dialog open={showUserManagement} onOpenChange={setShowUserManagement}>
-    <DialogTrigger asChild>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => {
-          const formData = new FormData();
-          formData.append("intent", "get-all-users-sessions");
-          submit(formData, { method: "post" });
-        }}
-        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-200 text-xs w-full sm:w-auto"
-      >
-        <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-        <span className="hidden sm:inline">Manage All Users</span>
-        <span className="sm:hidden">Manage Users</span>
-        <Badge variant="outline" className="ml-2 text-xs">Admin</Badge>
-      </Button>
-    </DialogTrigger>
-
-    <DialogContent
-  className="
-    w-[98vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw] 
-    max-h-[90vh]
-    mx-auto
-    p-4 sm:p-6
-    overflow-hidden
-    flex flex-col
-    bg-background
-    rounded-2xl
-  "
->
-  <DialogHeader className="mb-4">
-    <DialogTitle className="text-base sm:text-lg">User Session Management</DialogTitle>
-    <DialogDescription className="text-xs sm:text-sm">
-      Manage active sessions for all users. Revoke suspicious or unused sessions.
-    </DialogDescription>
-    {actionData?.status === "success" && (
-          <Alert variant="success" className="h-8 flex items-center justify-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800 text-sm">
-              {actionData.message}
-            </AlertDescription>
-          </Alert>
-        )}
-    {actionData?.status === "error" && (
-          <Alert variant="destructive" className="h-8 flex items-center justify-center gap-2">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="text-sm">{actionData.message}</AlertDescription>
-          </Alert>
-        )}
-  </DialogHeader>
-
-  <div
-    className="
-      flex-1
-      overflow-y-auto
-      border
-      border-border
-      rounded-xl
-      bg-card
-      p-3 sm:p-4
-    "
-  >
-    {loadingUsers ? (
-      <div className="p-8 text-center">
-        <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-sm">Loading users and sessions...</p>
-      </div>
-    ) : (
-      <UserManagementContent
-        usersData={allUsersData}
-        currentUser={user}
-        selectedSessions={selectedSessions}
-        setSelectedSessions={setSelectedSessions}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        
-      />
-    )}
-  </div>
-</DialogContent>
-
-  </Dialog>
-)}
+                {/* Admin users get redirected to dashboard, see loader */}
 
 
                 {/* Alternative: Logout Other Devices for all users but with different behavior */}
