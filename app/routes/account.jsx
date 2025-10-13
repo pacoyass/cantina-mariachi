@@ -1365,7 +1365,6 @@ const SessionsTab = ({ sessions, actionData, user ,showUserManagement ,setShowUs
         variant="outline"
         size="sm"
         onClick={() => {
-          console.log("Opening user management modal");
           const mockUsersData = [
             {
               id: user?.userId || "current-user",
