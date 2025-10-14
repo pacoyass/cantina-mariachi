@@ -16,11 +16,11 @@ export default [
     route("account", "routes/account.jsx"),
     
     // Admin routes with layout and sidebar
-    layout("routes/admin/layout.jsx", [
+    route("admin", "routes/admin/layout.jsx", [
       index("routes/admin/index.jsx"),
-      route("admin/orders", "routes/admin/orders.jsx"),
-      route("admin/menu", "routes/admin/menu.jsx"),
-      route("admin/users", "routes/admin/users.jsx"),
+      route("orders", "routes/admin/orders.jsx"),
+      route("menu", "routes/admin/menu.jsx"),
+      route("users", "routes/admin/users.jsx"),
     ]),
     
   ]),
