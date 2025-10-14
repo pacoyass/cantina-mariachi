@@ -14,8 +14,14 @@ export default [
     route("orders/track", "routes/orders/track.jsx"),
     route("reservations", "routes/reservations.jsx"),
     route("account", "routes/account.jsx"),
-    route("admin", "routes/admin.jsx"),
-
+    
+    // Admin routes with layout and sidebar
+    layout("routes/admin/layout.jsx", [
+      index("routes/admin/index.jsx"),
+      route("admin/orders", "routes/admin/orders.jsx"),
+      route("admin/menu", "routes/admin/menu.jsx"),
+      route("admin/users", "routes/admin/users.jsx"),
+    ]),
     
   ]),
 
