@@ -451,10 +451,22 @@ model Order {
   tax                  Float
   total                Float
   notes                String?
+  
+  // Delivery-specific fields
   deliveryAddress      String?
   deliveryInstructions String?
   deliveryTimeEstimate DateTime?
   driverId             String?
+  
+  // Dine-in specific fields (for waiters)
+  tableNumber          String?     // Table assignment for DINE_IN orders
+  guestCount           Int?        // Party size for dine-in
+  
+  // Staff assignments (for tracking and accountability)
+  cookId               String?     // Assigned cook
+  waiterId             String?     // Assigned waiter
+  cashierId            String?     // Who processed payment
+  
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
   trackingCode         String?
@@ -471,6 +483,9 @@ model Order {
   @@index([userId])
   @@index([createdAt])
   @@index([customerEmail])
+  @@index([tableNumber, status])  // For waiter queries
+  @@index([cookId, status])       // For cook queries
+  @@index([type, status])         // For filtering by order type
   @@map("public.orders")
 }
 
@@ -510,9 +525,8 @@ model Reservation {
 
 // ENUMS
 enum OrderType {
-  DINE_IN   // For waiter-served table orders
-  TAKEOUT   // Customer pickup
-  DELIVERY  // Driver delivery
+  TAKEOUT
+  DELIVERY
 }
 
 enum OrderStatus {

@@ -763,4 +763,207 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
     return deleted;
   },
 
+  // Get orders by type and status (for role-specific queries)
+  async getOrdersByTypeAndStatus(type, statuses, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        type,
+        status: { in: statuses }
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+  },
+
+  // Get orders by driver and status
+  async getOrdersByDriverAndStatus(driverId, statuses, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        driverId,
+        status: { in: statuses }
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+  },
+
+  // Get available deliveries (unassigned, READY)
+  async getAvailableDeliveries(tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        type: 'DELIVERY',
+        status: 'READY',
+        driverId: null
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+  },
+
+  // Get driver by user ID
+  async getDriverByUserId(userId, tx) {
+    const db = withTx(tx);
+    return await db.driver.findUnique({
+      where: { userId },
+      include: { user: true }
+    });
+  },
+
+  // Update driver
+  async updateDriver(driverId, data, tx) {
+    const db = withTx(tx);
+    return await db.driver.update({
+      where: { id: driverId },
+      data,
+    });
+  },
+
+  // Update order (flexible update)
+  async updateOrder(orderId, data, tx) {
+    const db = withTx(tx);
+    return await db.order.update({
+      where: { id: orderId },
+      data,
+    });
+  },
+
+  // Get orders by date range
+  async getOrdersByDateRange(startDate, endDate, statuses, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lt: endDate
+        },
+        ...(statuses ? { status: { in: statuses } } : {})
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  },
+
+  // Get cash transactions by date range
+  async getCashTransactionsByDateRange(startDate, endDate, tx) {
+    const db = withTx(tx);
+    return await db.cashTransaction.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lt: endDate
+        }
+      },
+      include: {
+        order: true,
+        driver: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  },
+
+  // Create cash transaction
+  async createCashTransaction(data, tx) {
+    const db = withTx(tx);
+    const transaction = await db.cashTransaction.create({
+      data
+    });
+    await LoggerService.logSystemEvent('DatabaseService', 'CREATE_CASH_TRANSACTION', {
+      transactionId: transaction.id,
+      orderId: data.orderId
+    });
+    return transaction;
+  },
+
+  // Get cash summary by date
+  async getCashSummaryByDate(date, tx) {
+    const db = withTx(tx);
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return await db.cashSummary.findFirst({
+      where: {
+        date: {
+          gte: startOfDay,
+          lte: endOfDay
+        }
+      }
+    });
+  },
+
+  // Get cash summary by driver and date
+  async getCashSummaryByDriverAndDate(driverId, date, tx) {
+    const db = withTx(tx);
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return await db.cashSummary.findFirst({
+      where: {
+        driverId,
+        date: {
+          gte: startOfDay,
+          lte: endOfDay
+        }
+      }
+    });
+  },
+
+  // Get menu item by ID
+  async getMenuItemById(id, tx) {
+    const db = withTx(tx);
+    return await db.menuItem.findUnique({
+      where: { id },
+      include: {
+        category: true
+      }
+    });
+  },
+
+  // Get reservations by date range
+  async getReservationsByDateRange(startDate, endDate, tx) {
+    const db = withTx(tx);
+    return await db.reservation.findMany({
+      where: {
+        date: {
+          gte: startDate,
+          lt: endDate
+        }
+      },
+      orderBy: [
+        { date: 'asc' },
+        { time: 'asc' }
+      ]
+    });
+  },
+
 };

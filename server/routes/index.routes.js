@@ -42,6 +42,10 @@ router.use('/cms', cmsRoutes);
 router.use('/translations', translationsRoutes);
 router.use('/cart', cartRoutes);
 router.use('/admin', adminRoutes);
+router.use('/kitchen', kitchenRoutes);
+router.use('/waiter', waiterRoutes);
+router.use('/cashier', cashierRoutes);
+router.use('/driver', driverRoutes);
 
 router.use((req, res, next) => {
   createError(
