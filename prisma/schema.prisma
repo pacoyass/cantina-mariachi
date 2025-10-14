@@ -510,8 +510,9 @@ model Reservation {
 
 // ENUMS
 enum OrderType {
-  TAKEOUT
-  DELIVERY
+  DINE_IN   // For waiter-served table orders
+  TAKEOUT   // Customer pickup
+  DELIVERY  // Driver delivery
 }
 
 enum OrderStatus {
