@@ -69,3 +69,7 @@ export { default as Search } from 'lucide-react/dist/esm/icons/search.js'
 export { default as ImageIcon } from 'lucide-react/dist/esm/icons/image.js'
 export { default as Plus } from 'lucide-react/dist/esm/icons/plus.js'
 
+// Role-specific dashboard icons
+export { default as Receipt } from 'lucide-react/dist/esm/icons/receipt.js'
+export { default as Navigation } from 'lucide-react/dist/esm/icons/navigation.js'
+
