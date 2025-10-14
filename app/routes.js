@@ -22,6 +22,8 @@ export default [
       route("menu", "routes/admin/menu.jsx"),
       route("users", "routes/admin/users.jsx"),
       route("reservations", "routes/admin/reservations.jsx"),
+      route("analytics", "routes/admin/analytics.jsx"),
+      route("settings", "routes/admin/settings.jsx"),
     ]),
     
   ]),
