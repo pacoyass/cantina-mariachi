@@ -15,7 +15,10 @@ export default [
     route("reservations", "routes/reservations.jsx"),
     route("account", "routes/account.jsx"),
     
-    // Admin routes with layout and sidebar
+    // Smart role-based redirect
+    route("dashboard", "routes/dashboard.jsx"),
+    
+    // Admin routes (OWNER, ADMIN)
     route("admin", "routes/admin/layout.jsx", [
       index("routes/admin/index.jsx"),
       route("orders", "routes/admin/orders.jsx"),
@@ -25,6 +28,12 @@ export default [
       route("analytics", "routes/admin/analytics.jsx"),
       route("settings", "routes/admin/settings.jsx"),
     ]),
+    
+    // Role-specific dashboards
+    route("kitchen", "routes/kitchen/index.jsx"),  // COOK
+    route("waiter", "routes/waiter/index.jsx"),    // WAITER
+    route("cashier", "routes/cashier/index.jsx"),  // CASHIER
+    route("driver", "routes/driver/index.jsx"),    // DRIVER
     
   ]),
 
