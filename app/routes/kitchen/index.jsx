@@ -39,7 +39,7 @@ export async function loader({ request }) {
       throw redirect("/");
     }
     
-    // Get kitchen orders
+    // Get kitchen orders from real API
     const ordersRes = await fetch(`${url.origin}/api/kitchen/orders`, {
       headers: { cookie }
     });
@@ -49,70 +49,64 @@ export async function loader({ request }) {
       return { 
         user,
         orders: data.data?.orders || [],
-        stats: data.data?.stats || {}
+        stats: data.data?.stats || { pending: 0, preparing: 0, ready: 0, avgTime: 0 }
       };
     }
+    
+    // Fallback if API fails
+    return {
+      user,
+      orders: [],
+      stats: { pending: 0, preparing: 0, ready: 0, avgTime: 0 }
+    };
   } catch (error) {
     if (error instanceof Response) throw error;
     console.error('Kitchen loader error:', error);
+    throw redirect("/login?redirect=/kitchen");
   }
-  
-  // Mock data
-  return {
-    user: { name: 'Chef', role: 'COOK' },
-    orders: [
-      {
-        id: '1',
-        orderNumber: 'ORD-101',
-        type: 'DINE_IN',
-        table: '5',
-        items: [
-          { name: 'Tacos al Pastor', quantity: 2, notes: 'Extra spicy' },
-          { name: 'Quesadilla', quantity: 1, notes: 'No onions' }
-        ],
-        status: 'CONFIRMED',
-        priority: 'high',
-        orderTime: new Date(Date.now() - 5 * 60000).toISOString()
-      },
-      {
-        id: '2',
-        orderNumber: 'ORD-102',
-        type: 'DELIVERY',
-        items: [
-          { name: 'Burrito Supreme', quantity: 3 },
-          { name: 'Nachos', quantity: 2 }
-        ],
-        status: 'PREPARING',
-        priority: 'normal',
-        orderTime: new Date(Date.now() - 10 * 60000).toISOString()
-      }
-    ],
-    stats: {
-      pending: 3,
-      preparing: 2,
-      ready: 1,
-      avgTime: 12
-    }
-  };
 }
 
+// REMOVED MOCK DATA - Now uses real API
+
 export async function action({ request }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
   const formData = await request.formData();
   const action = formData.get("action");
   const orderId = formData.get("orderId");
   
-  // Handle order status updates
-  if (action === "start-preparing") {
-    // Update order status to PREPARING
-    return { success: true, message: "Started preparing order" };
+  try {
+    if (action === "start-preparing") {
+      const res = await fetch(`${url.origin}/api/kitchen/orders/${orderId}/start-preparing`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+      
+      if (res.ok) {
+        return { success: true, message: "Started preparing order" };
+      }
+      const error = await res.json();
+      return { success: false, message: error.error?.message || "Failed to start preparing" };
+    }
+    
+    if (action === "mark-ready") {
+      const res = await fetch(`${url.origin}/api/kitchen/orders/${orderId}/mark-ready`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+      
+      if (res.ok) {
+        return { success: true, message: "Order marked as ready" };
+      }
+      const error = await res.json();
+      return { success: false, message: error.error?.message || "Failed to mark ready" };
+    }
+    
+    return { success: false, message: "Unknown action" };
+  } catch (error) {
+    console.error('Kitchen action error:', error);
+    return { success: false, message: "Action failed" };
   }
-  
-  if (action === "mark-ready") {
-    // Update order status to READY
-    return { success: true, message: "Order marked as ready" };
-  }
-  
-  return { success: false };
 }
 
 const getTimeSince = (timeString) => {
@@ -222,11 +216,13 @@ export default function KitchenDashboard() {
             <CardContent>
               {/* Items */}
               <div className="space-y-3 mb-4">
-                {order.items.map((item, idx) => (
+                {(order.orderItems || order.items || []).map((item, idx) => (
                   <div key={idx}>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="font-medium">{item.quantity}x {item.name}</div>
+                        <div className="font-medium">
+                          {item.quantity}x {item.menuItem?.name || item.name}
+                        </div>
                         {item.notes && (
                           <div className="text-sm text-orange-600 mt-1">
                             <AlertCircle className="size-3 inline mr-1" />
@@ -235,7 +231,7 @@ export default function KitchenDashboard() {
                         )}
                       </div>
                     </div>
-                    {idx < order.items.length - 1 && <Separator className="mt-2" />}
+                    {idx < (order.orderItems || order.items || []).length - 1 && <Separator className="mt-2" />}
                   </div>
                 ))}
               </div>
