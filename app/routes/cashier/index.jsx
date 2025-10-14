@@ -89,18 +89,57 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
   const formData = await request.formData();
   const action = formData.get("action");
   
-  if (action === "process-payment") {
-    return { success: true, message: "Payment processed" };
+  try {
+    if (action === "process-payment") {
+      const orderId = formData.get("orderId");
+      const paymentMethod = formData.get("paymentMethod");
+      const amount = formData.get("amount");
+      const notes = formData.get("notes");
+
+      const res = await fetch(`${url.origin}/api/cashier/payments`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          cookie 
+        },
+        body: JSON.stringify({
+          orderId,
+          paymentMethod,
+          amount: parseFloat(amount),
+          notes
+        })
+      });
+
+      if (res.ok) {
+        return { success: true, message: "Payment processed successfully" };
+      }
+      const error = await res.json();
+      return { success: false, message: error.error?.message || "Failed to process payment" };
+    }
+    
+    if (action === "end-shift") {
+      const res = await fetch(`${url.origin}/api/cashier/shift/end`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        return { success: true, message: "Shift ended successfully", report: data.data };
+      }
+      return { success: false, message: "Failed to end shift" };
+    }
+    
+    return { success: false, message: "Unknown action" };
+  } catch (error) {
+    console.error('Cashier action error:', error);
+    return { success: false, message: "Action failed" };
   }
-  
-  if (action === "end-shift") {
-    return { success: true, message: "Shift ended, cash report generated" };
-  }
-  
-  return { success: false };
 }
 
 const getPaymentIcon = (method) => {
