@@ -171,10 +171,4 @@ export const endShiftReport = async (req, res) => {
   }
 };
 
-export default {
-  getWaiterOrders,
-  createDineInOrder,
-  getTodayReservations,
-  getDailySummary,
-  endShiftReport
-};
+

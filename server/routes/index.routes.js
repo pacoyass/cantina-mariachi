@@ -19,7 +19,10 @@ import cmsRoutes from './cms.routes.js';
 import translationsRoutes from './translations.routes.js';
 import cartRoutes from './cart.routes.js';
 import adminRoutes from './admin.routes.js';
-
+import kitchenRoutes from './kitchen.routes.js'
+import waiterRoutes from './waiter.routes.js'
+import cashierRoutes from './cashier.routes.js'
+import driverRoutes from './driver.routes.js'
 const router = express.Router();
 
 // Group all API routes
