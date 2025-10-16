@@ -19,7 +19,7 @@ export function Sidebar({ user }) {
   ];
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] w-64 flex-col bg-white border-r border-gray-200 fixed left-0 z-0">
+    <div className="flex h-[calc(100vh-3.5rem)] w-64 flex-col bg-white border-r border-gray-200 fixed left-0 ">
       {/* Header */}
       <div className="flex h-16 items-center gap-2 border-b px-6 bg-white">
         <div className="bg-green-600 p-2 rounded-lg">
