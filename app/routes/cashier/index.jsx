@@ -368,18 +368,20 @@ export default function CashierDashboard() {
             </Card>
           )}
 
-          {/* STEP 2: CONFIRMED - Send to Kitchen */}
-          {confirmedOrders && confirmedOrders.length > 0 && (
-            <Card className="mb-6 border-l-4 border-l-indigo-500">
-              <CardHeader className="bg-indigo-50">
-                <CardTitle className="flex items-center gap-2 text-indigo-800">
-                  <Plus className="size-5" />
-                  STEP 2: Confirmed Orders ({confirmedOrders.length})
+          {/* STEP 2: CONFIRMED - Send to Kitchen (ALWAYS VISIBLE) */}
+          <Card className="mb-6 border-l-4 border-l-indigo-500">
+            <CardHeader className="bg-indigo-50">
+              <CardTitle className="flex items-center gap-2 text-indigo-800">
+                <Plus className="size-5" />
+                STEP 2: Confirmed Orders ({confirmedOrders?.length || 0})
+                {confirmedOrders && confirmedOrders.length > 0 && (
                   <Badge className="ml-2 bg-indigo-600">{confirmedOrders.length} TO KITCHEN</Badge>
-                </CardTitle>
-                <p className="text-sm text-indigo-700">Physically hand order to kitchen</p>
-              </CardHeader>
-              <CardContent className="pt-4">
+                )}
+              </CardTitle>
+              <p className="text-sm text-indigo-700">Physically hand order to kitchen</p>
+            </CardHeader>
+            <CardContent className="pt-4">
+              {confirmedOrders && confirmedOrders.length > 0 ? (
                 <div className="space-y-3">
                   {confirmedOrders.map((order) => (
                     <div key={order.id} className="p-4 rounded-lg border-2 border-indigo-300 bg-white">
@@ -414,9 +416,14 @@ export default function CashierDashboard() {
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              ) : (
+                <div className="text-center py-6 text-muted-foreground">
+                  ✅ No confirmed orders waiting for kitchen
+                  <div className="text-xs mt-2">Confirm pending orders first (Step 1 above)</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* STEP 3: Kitchen is Preparing */}
           <Card className="mb-6 border-l-4 border-l-orange-500">
@@ -451,7 +458,8 @@ export default function CashierDashboard() {
                 </div>
               ) : (
                 <div className="text-center py-6 text-muted-foreground">
-                  No orders being prepared
+                  🍳 No orders in kitchen right now
+                  <div className="text-xs mt-2">Send confirmed orders to kitchen first (Step 2 above)</div>
                 </div>
               )}
             </CardContent>
