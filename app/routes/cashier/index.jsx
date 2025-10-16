@@ -122,8 +122,8 @@ export default function CashierDashboard({loaderData,actionData}) {
   const {user}=useOutletContext();
 
   const pendingTransactions = transactions?.filter(t => t.status === 'PENDING') || [];
-  const pendingOrders = orders?.filter(o => ['AWAITING_PAYMENT', 'READY'].includes(o.status)) || [];
-console.log("cashier transactions...",loaderData);
+  const pendingOrders = orders?.filter(o => ['AWAITING_PAYMENT', 'READY','COMPLETED','PAYMENT_DISPUTED','PREPARING'].includes(o.status)) || [];
+console.log("cashier transactions...",orders);
 
   return (
     <div className="min-h-screen p-4">
@@ -197,9 +197,9 @@ console.log("cashier transactions...",loaderData);
         >
           <DollarSign className="size-4 mr-2" />
           Orders Awaiting Payment
-          {pendingOrders.length > 0 && (
+          {orders.length > 0 && (
             <Badge variant="destructive" className="ml-2">
-              {pendingOrders.length}
+              {orders.length}
             </Badge>
           )}
         </Button>
@@ -223,8 +223,8 @@ console.log("cashier transactions...",loaderData);
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {pendingOrders && pendingOrders.length > 0 ? (
-                pendingOrders.map((order) => (
+              {orders && orders.length > 0 ? (
+                orders.map((order) => (
                   <div key={order.id} className="p-4 rounded-lg border-4 bg-gray-200/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
                     <div className="flex items-start justify-between mb-3">
                       <div>

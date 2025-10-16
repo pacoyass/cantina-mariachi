@@ -860,6 +860,7 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
         ...(statuses ? { status: { in: statuses } } : {})
       },
       include: {
+        cashTransaction:true,
         orderItems: {
           include: {
             menuItem: true
