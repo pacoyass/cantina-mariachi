@@ -238,7 +238,7 @@ export const getUsers = async (req, res) => {
         name: 'Maria Garcia',
         email: 'maria@cantina.com',
         phone: '+1234567891',
-        role: 'COOK',
+        role: 'CASHIER',
         isActive: true,
         createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
         lastLogin: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()

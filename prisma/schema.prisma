@@ -547,8 +547,6 @@ enum UserRole {
   CUSTOMER
   OWNER
   ADMIN
-  COOK
-  WAITER
   CASHIER
   DRIVER
 }

@@ -35,26 +35,26 @@ router.get('/token', authMiddleware, getToken);
 router.get(
   '/sessions',
   authMiddleware,
-  requireRole('CUSTOMER', 'DRIVER', 'COOK', 'WAITER', 'CASHIER', 'ADMIN', 'OWNER'),
+  requireRole('CUSTOMER', 'DRIVER', 'CASHIER', 'ADMIN', 'OWNER'),
   validateQuery(paginationQuerySchema),
   listSessions
 );
 router.post(
   '/logout-all',
   authMiddleware,
-  requireRole('CUSTOMER', 'DRIVER', 'COOK', 'WAITER', 'CASHIER', 'ADMIN', 'OWNER'),
+  requireRole('CUSTOMER', 'DRIVER', 'CASHIER', 'ADMIN', 'OWNER'),
   logoutAllSessions
 );
 router.post(
   '/logout-others',
   authMiddleware,
-  requireRole('CUSTOMER', 'DRIVER', 'COOK', 'WAITER', 'CASHIER', 'ADMIN', 'OWNER'),
+  requireRole('CUSTOMER', 'DRIVER', 'CASHIER', 'ADMIN', 'OWNER'),
   logoutOtherSessions
 );
 router.delete(
   '/sessions/:id',
   authMiddleware,
-  requireRole('CUSTOMER', 'DRIVER', 'COOK', 'WAITER', 'CASHIER', 'ADMIN', 'OWNER'),
+  requireRole('CUSTOMER', 'DRIVER', 'CASHIER', 'ADMIN', 'OWNER'),
   revokeSessionById
 );
 
@@ -84,9 +84,10 @@ export default router;
 // router.get('/token', authMiddleware, getToken);
 
 
-// router.get('/sessions', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), validateQuery(paginationQuerySchema), listSessions);
-// router.post('/logout-all', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), logoutAllSessions);
-// router.post('/logout-others', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), logoutOtherSessions);
-// router.delete('/sessions/:id', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), revokeSessionById);
+// Old session routes (commented out as reference)
+// router.get('/sessions', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), validateQuery(paginationQuerySchema), listSessions);
+// router.post('/logout-all', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), logoutAllSessions);
+// router.post('/logout-others', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), logoutOtherSessions);
+// router.delete('/sessions/:id', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), revokeSessionById);
 
 // export default router;

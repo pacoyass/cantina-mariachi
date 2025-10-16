@@ -8,8 +8,8 @@ import { updateMeSchema, changePasswordSchema } from '../validations/user.valida
 const router = express.Router();
 
 // All user routes require authentication and a valid application role
-router.get('/me', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), getMe);
-router.put('/me', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), validate(updateMeSchema), updateMe);
-router.put('/me/password', authMiddleware, requireRole('CUSTOMER','DRIVER','COOK','WAITER','CASHIER','ADMIN','OWNER'), validate(changePasswordSchema), changePassword);
+router.get('/me', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), getMe);
+router.put('/me', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), validate(updateMeSchema), updateMe);
+router.put('/me/password', authMiddleware, requireRole('CUSTOMER','DRIVER','CASHIER','ADMIN','OWNER'), validate(changePasswordSchema), changePassword);
 
 export default router;

@@ -37,8 +37,6 @@ export const meta = () => [
 
 const userRoles = [
   { value: 'CUSTOMER', label: 'Customer', color: 'default' },
-  { value: 'WAITER', label: 'Waiter', color: 'secondary' },
-  { value: 'COOK', label: 'Cook', color: 'secondary' },
   { value: 'CASHIER', label: 'Cashier', color: 'secondary' },
   { value: 'DRIVER', label: 'Driver', color: 'secondary' },
   { value: 'ADMIN', label: 'Admin', color: 'destructive' },

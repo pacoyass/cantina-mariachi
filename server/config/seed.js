@@ -42,8 +42,6 @@ async function seed() {
     data: [
       { email: 'owner@example.com', name: 'Owner', role: UserRole.OWNER, password: hashedPassword, phone: '1234567890', isActive: true },
       { email: 'admin@example.com', name: 'Manager', role: UserRole.ADMIN, password: hashedPassword, phone: '1234567891', isActive: true },
-      { email: 'cook@example.com', name: 'Cook', role: UserRole.COOK, password: hashedPassword, phone: '1234567892', isActive: true },
-      { email: 'waiter@example.com', name: 'Waiter', role: UserRole.WAITER, password: hashedPassword, phone: '1234567893', isActive: true },
       { email: 'cashier@example.com', name: 'Cashier', role: UserRole.CASHIER, password: hashedPassword, phone: '1234567894', isActive: true },
       { email: 'customer1@example.com', name: 'Customer One', role: UserRole.CUSTOMER, password: hashedPassword, phone: '1234567895', isActive: true },
       { email: 'customer2@example.com', name: 'Customer Two', role: UserRole.CUSTOMER, password: hashedPassword, phone: '1234567896', isActive: true },
@@ -52,15 +50,15 @@ async function seed() {
   });
 
   // Fetch users
-  const [owner, admin, cook, customer1, customer2] = await Promise.all([
+  const [owner, admin, cashier, customer1, customer2] = await Promise.all([
     prisma.user.findUnique({ where: { email: 'owner@example.com' } }),
     prisma.user.findUnique({ where: { email: 'admin@example.com' } }),
-    prisma.user.findUnique({ where: { email: 'cook@example.com' } }),
+    prisma.user.findUnique({ where: { email: 'cashier@example.com' } }),
     prisma.user.findUnique({ where: { email: 'customer1@example.com' } }),
     prisma.user.findUnique({ where: { email: 'customer2@example.com' } }),
   ]);
 
-  if (!owner || !admin || !cook || !customer1 || !customer2) {
+  if (!owner || !admin || !cashier || !customer1 || !customer2) {
     throw new Error('Failed to create one or more users');
   }
 
@@ -313,10 +311,10 @@ async function seed() {
         createdAt: new Date('2025-07-29T13:00:00Z'),
       },
       {
-        userId: cook.id,
+        userId: cashier.id,
         action: 'ORDER_UPDATED',
         targetId: order2.id,
-        details: { status: OrderStatus.PREPARING, role: UserRole.COOK },
+        details: { status: OrderStatus.CONFIRMED, role: UserRole.CASHIER },
         createdAt: new Date('2025-07-30T09:05:00Z'),
       },
     ],
