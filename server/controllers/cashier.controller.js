@@ -232,7 +232,7 @@ export const endShiftReport = async (req, res) => {
 
 // ===== NEW CASHIER COORDINATOR FUNCTIONS =====
 
-// Confirm order (PENDING → CONFIRMED)
+// Confirm order (PENDING → CONFIRMED → PREPARING)
 export const confirmOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -256,10 +256,11 @@ export const confirmOrder = async (req, res) => {
       );
     }
 
-    // Update order status to CONFIRMED and assign cashier
+    // Update order status to CONFIRMED, then auto-transition to PREPARING
+    // This represents: cashier confirmed → handed to kitchen → kitchen is now preparing
     const updatedOrder = await databaseService.updateOrderStatus(
       orderId,
-      "CONFIRMED",
+      "PREPARING",  // Go directly to PREPARING (cashier handed to kitchen)
       {
         cashierId: req.user?.userId,
       }
@@ -268,7 +269,7 @@ export const confirmOrder = async (req, res) => {
     LoggerService.logActivity(
       req.user?.userId,
       "ORDER_CONFIRMED",
-      `Confirmed order ${orderId}`,
+      `Confirmed order ${orderId} and handed to kitchen`,
       {
         orderId,
         cashierId: req.user?.userId,
@@ -278,7 +279,7 @@ export const confirmOrder = async (req, res) => {
     return createResponse(
       res,
       200,
-      "Order confirmed successfully",
+      "Order confirmed and sent to kitchen",
       updatedOrder
     );
   } catch (error) {
