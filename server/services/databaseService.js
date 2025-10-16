@@ -438,6 +438,19 @@ async logout(accessToken, refreshToken, tx) {
     return await db.driver.findUnique({ where: { id } });
   },
 
+  async getAllDrivers(tx) {
+    const db = withTx(tx);
+    return await db.driver.findMany({
+      where: { active: true },
+      orderBy: { name: 'asc' },
+      include: {
+        user: {
+          select: { id: true, name: true, phone: true, email: true }
+        }
+      }
+    });
+  },
+
   async getUsersByRole(role, tx) {
     const db = withTx(tx);
     return await db.user.findMany({ where: { role, isActive: true } });

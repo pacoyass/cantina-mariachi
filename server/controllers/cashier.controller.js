@@ -229,3 +229,280 @@ export const endShiftReport = async (req, res) => {
     return createError(res, 500, "Failed to generate report", "SERVER_ERROR");
   }
 };
+
+// ===== NEW CASHIER COORDINATOR FUNCTIONS =====
+
+// Confirm order (PENDING → CONFIRMED)
+export const confirmOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      return createError(res, 400, "Order ID is required", "VALIDATION_ERROR");
+    }
+
+    const order = await databaseService.getOrderById(orderId);
+
+    if (!order) {
+      return createError(res, 404, "Order not found", "NOT_FOUND");
+    }
+
+    if (order.status !== "PENDING") {
+      return createError(
+        res,
+        400,
+        `Order cannot be confirmed from ${order.status} status`,
+        "INVALID_STATUS"
+      );
+    }
+
+    // Update order status to CONFIRMED and assign cashier
+    const updatedOrder = await databaseService.updateOrderStatus(
+      orderId,
+      "CONFIRMED",
+      {
+        cashierId: req.user?.userId,
+      }
+    );
+
+    LoggerService.logActivity(
+      req.user?.userId,
+      "ORDER_CONFIRMED",
+      `Confirmed order ${orderId}`,
+      {
+        orderId,
+        cashierId: req.user?.userId,
+      }
+    );
+
+    return createResponse(
+      res,
+      200,
+      "Order confirmed successfully",
+      updatedOrder
+    );
+  } catch (error) {
+    LoggerService.logError("Failed to confirm order", error.stack, {
+      userId: req.user?.userId,
+      orderId: req.params.orderId,
+    });
+    return createError(res, 500, "Failed to confirm order", "SERVER_ERROR");
+  }
+};
+
+// Mark order ready (CONFIRMED → READY)
+export const markOrderReady = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      return createError(res, 400, "Order ID is required", "VALIDATION_ERROR");
+    }
+
+    const order = await databaseService.getOrderById(orderId);
+
+    if (!order) {
+      return createError(res, 404, "Order not found", "NOT_FOUND");
+    }
+
+    if (order.status !== "CONFIRMED" && order.status !== "PREPARING") {
+      return createError(
+        res,
+        400,
+        `Order cannot be marked ready from ${order.status} status`,
+        "INVALID_STATUS"
+      );
+    }
+
+    // Update order status to READY
+    const updatedOrder = await databaseService.updateOrderStatus(
+      orderId,
+      "READY"
+    );
+
+    LoggerService.logActivity(
+      req.user?.userId,
+      "ORDER_READY",
+      `Marked order ${orderId} as ready`,
+      {
+        orderId,
+        cashierId: req.user?.userId,
+      }
+    );
+
+    return createResponse(
+      res,
+      200,
+      "Order marked as ready successfully",
+      updatedOrder
+    );
+  } catch (error) {
+    LoggerService.logError("Failed to mark order ready", error.stack, {
+      userId: req.user?.userId,
+      orderId: req.params.orderId,
+    });
+    return createError(res, 500, "Failed to mark order ready", "SERVER_ERROR");
+  }
+};
+
+// Assign driver to order (READY → OUT_FOR_DELIVERY)
+export const assignDriver = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { driverId } = req.body;
+
+    if (!orderId || !driverId) {
+      return createError(
+        res,
+        400,
+        "Order ID and Driver ID are required",
+        "VALIDATION_ERROR"
+      );
+    }
+
+    const order = await databaseService.getOrderById(orderId);
+
+    if (!order) {
+      return createError(res, 404, "Order not found", "NOT_FOUND");
+    }
+
+    if (order.status !== "READY") {
+      return createError(
+        res,
+        400,
+        `Order must be READY to assign driver. Current status: ${order.status}`,
+        "INVALID_STATUS"
+      );
+    }
+
+    // Check if driver exists
+    const driver = await databaseService.getDriverById(driverId);
+    if (!driver) {
+      return createError(res, 404, "Driver not found", "NOT_FOUND");
+    }
+
+    // Update order with driver and change status to OUT_FOR_DELIVERY
+    const updatedOrder = await databaseService.updateOrder(orderId, {
+      driverId,
+      status: "OUT_FOR_DELIVERY",
+    });
+
+    LoggerService.logActivity(
+      req.user?.userId,
+      "DRIVER_ASSIGNED",
+      `Assigned driver ${driver.name} to order ${orderId}`,
+      {
+        orderId,
+        driverId,
+        driverName: driver.name,
+        cashierId: req.user?.userId,
+      }
+    );
+
+    return createResponse(
+      res,
+      200,
+      "Driver assigned successfully",
+      updatedOrder
+    );
+  } catch (error) {
+    LoggerService.logError("Failed to assign driver", error.stack, {
+      userId: req.user?.userId,
+      orderId: req.params.orderId,
+      driverId: req.body.driverId,
+    });
+    return createError(res, 500, "Failed to assign driver", "SERVER_ERROR");
+  }
+};
+
+// Get all drivers (for assignment dropdown)
+export const getAllDrivers = async (req, res) => {
+  try {
+    const drivers = await databaseService.getAllDrivers();
+
+    const driversWithStats = await Promise.all(
+      drivers.map(async (driver) => {
+        const activeDeliveries = await databaseService.getOrdersByDriverAndStatus(
+          driver.id,
+          ["OUT_FOR_DELIVERY"]
+        );
+        
+        return {
+          ...driver,
+          activeDeliveries: activeDeliveries.length,
+        };
+      })
+    );
+
+    return createResponse(
+      res,
+      200,
+      "Drivers retrieved successfully",
+      driversWithStats
+    );
+  } catch (error) {
+    LoggerService.logError("Failed to get drivers", error.stack, {
+      userId: req.user?.userId,
+    });
+    return createError(res, 500, "Failed to fetch drivers", "SERVER_ERROR");
+  }
+};
+
+// Reject order (PENDING → CANCELLED)
+export const rejectOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+
+    if (!orderId) {
+      return createError(res, 400, "Order ID is required", "VALIDATION_ERROR");
+    }
+
+    const order = await databaseService.getOrderById(orderId);
+
+    if (!order) {
+      return createError(res, 404, "Order not found", "NOT_FOUND");
+    }
+
+    if (order.status !== "PENDING") {
+      return createError(
+        res,
+        400,
+        `Only PENDING orders can be rejected. Current status: ${order.status}`,
+        "INVALID_STATUS"
+      );
+    }
+
+    // Update order status to CANCELLED with notes
+    const updatedOrder = await databaseService.updateOrder(orderId, {
+      status: "CANCELLED",
+      notes: order.notes
+        ? `${order.notes}\n[REJECTED by cashier: ${reason || "No reason provided"}]`
+        : `[REJECTED by cashier: ${reason || "No reason provided"}]`,
+    });
+
+    LoggerService.logActivity(
+      req.user?.userId,
+      "ORDER_REJECTED",
+      `Rejected order ${orderId}`,
+      {
+        orderId,
+        reason,
+        cashierId: req.user?.userId,
+      }
+    );
+
+    return createResponse(
+      res,
+      200,
+      "Order rejected successfully",
+      updatedOrder
+    );
+  } catch (error) {
+    LoggerService.logError("Failed to reject order", error.stack, {
+      userId: req.user?.userId,
+      orderId: req.params.orderId,
+    });
+    return createError(res, 500, "Failed to reject order", "SERVER_ERROR");
+  }
+};

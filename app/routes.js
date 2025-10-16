@@ -30,8 +30,6 @@ export default [
     ]),
     
     // Role-specific dashboards
-    route("kitchen", "routes/kitchen/index.jsx"),  // COOK
-    route("waiter", "routes/waiter/index.jsx"),    // WAITER
     route("cashier", "routes/cashier/index.jsx"),  // CASHIER
     route("driver", "routes/driver/index.jsx"),    // DRIVER
     

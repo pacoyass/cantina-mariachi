@@ -31,12 +31,6 @@ export async function loader({ request }) {
       case 'ADMIN':
         throw redirect('/admin');
       
-      case 'COOK':
-        throw redirect('/kitchen');
-      
-      case 'WAITER':
-        throw redirect('/waiter');
-      
       case 'CASHIER':
         throw redirect('/cashier');
       

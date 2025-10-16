@@ -1,4 +1,4 @@
-import { useLoaderData, Form, redirect, useOutletContext } from "react-router";
+import { useLoaderData, Form, redirect, useOutletContext, useSubmit } from "react-router";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -14,6 +14,10 @@ import {
   Receipt,
   Bell,
   Plus,
+  XCircle,
+  Truck,
+  ChefHat,
+  Package,
 } from "../../lib/lucide-shim.js";
 
 export const meta = () => [
@@ -25,34 +29,42 @@ export async function loader({ request }) {
   const cookie = request.headers.get("cookie") || "";
   
   try {
+    // Get all delivery orders grouped by status
+    const [transactionsRes, driversRes] = await Promise.all([
+      fetch(`${url.origin}/api/cashier/transactions`, {
+        headers: { cookie }
+      }),
+      fetch(`${url.origin}/api/cashier/drivers`, {
+        headers: { cookie }
+      })
+    ]);
 
-    // Get cashier data
-    const cashRes = await fetch(`${url.origin}/api/cashier/transactions`, {
-      headers: { cookie }
-    });
-    if (!cashRes.ok) {
-      // Fallback
-  return {
-    transactions: [],
-    orders: [],
-    stats: { todayTotal: 0, transactionCount: 0, cashTotal: 0, cardTotal: 0, avgTransaction: 0 }
-  }; 
-    }
-      const data = await cashRes.json();
-      console.log("cashier res...",data);
-      
-      return { 
-        transactions: data.data?.transactions || [],
-        orders: data.data?.orders || [],
-        stats: data.data?.stats || {}
-      };
-   
+    const transactionsData = transactionsRes.ok ? await transactionsRes.json() : null;
+    const driversData = driversRes.ok ? await driversRes.json() : null;
+
+    // Group orders by status
+    const orders = transactionsData?.data?.orders || [];
     
-     
-   
+    const pendingOrders = orders.filter(o => o.status === 'PENDING');
+    const confirmedOrders = orders.filter(o => o.status === 'CONFIRMED' || o.status === 'PREPARING');
+    const readyOrders = orders.filter(o => o.status === 'READY');
+    const outForDeliveryOrders = orders.filter(o => o.status === 'OUT_FOR_DELIVERY');
+    const deliveredOrders = orders.filter(o => o.status === 'DELIVERED');
+
+    return { 
+      transactions: transactionsData?.data?.transactions || [],
+      orders: transactionsData?.data?.orders || [],
+      stats: transactionsData?.data?.stats || {},
+      drivers: driversData?.data || [],
+      pendingOrders,
+      confirmedOrders,
+      readyOrders,
+      outForDeliveryOrders,
+      deliveredOrders,
+    };
   } catch (error) {
-    if (error instanceof Response) throw error;
     console.error('Cashier loader error:', error);
+    if (error instanceof Response) throw error;
     throw redirect("/login?redirect=/cashier");
   }
 }
@@ -64,12 +76,72 @@ export async function action({ request }) {
   const action = formData.get("action");
   
   try {
-    if (action === "process-payment") {
+    // Confirm order
+    if (action === "confirm-order") {
       const orderId = formData.get("orderId");
-      const paymentMethod = formData.get("paymentMethod");
-      const amount = formData.get("amount");
-      const notes = formData.get("notes");
+      const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/confirm`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+      if (res.ok) {
+        return { success: true, message: "Order confirmed" };
+      }
+      return { success: false, message: "Failed to confirm order" };
+    }
 
+    // Reject order
+    if (action === "reject-order") {
+      const orderId = formData.get("orderId");
+      const reason = formData.get("reason") || "Out of stock / Kitchen closed";
+      const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/reject`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          cookie 
+        },
+        body: JSON.stringify({ reason })
+      });
+      if (res.ok) {
+        return { success: true, message: "Order rejected" };
+      }
+      return { success: false, message: "Failed to reject order" };
+    }
+
+    // Mark order ready
+    if (action === "mark-ready") {
+      const orderId = formData.get("orderId");
+      const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/ready`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+      if (res.ok) {
+        return { success: true, message: "Order marked ready" };
+      }
+      return { success: false, message: "Failed to mark order ready" };
+    }
+
+    // Assign driver
+    if (action === "assign-driver") {
+      const orderId = formData.get("orderId");
+      const driverId = formData.get("driverId");
+      const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/assign-driver`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          cookie 
+        },
+        body: JSON.stringify({ driverId })
+      });
+      if (res.ok) {
+        return { success: true, message: "Driver assigned" };
+      }
+      return { success: false, message: "Failed to assign driver" };
+    }
+
+    // Verify cash
+    if (action === "verify-cash") {
+      const orderId = formData.get("orderId");
+      const amount = formData.get("amount");
       const res = await fetch(`${url.origin}/api/cashier/payments`, {
         method: 'POST',
         headers: { 
@@ -78,30 +150,15 @@ export async function action({ request }) {
         },
         body: JSON.stringify({
           orderId,
-          paymentMethod,
+          paymentMethod: "CASH",
           amount: parseFloat(amount),
-          notes
+          notes: "Cash verified by cashier"
         })
       });
-
       if (res.ok) {
-        return { success: true, message: "Payment processed successfully" };
+        return { success: true, message: "Cash verified" };
       }
-      const error = await res.json();
-      return { success: false, message: error.error?.message || "Failed to process payment" };
-    }
-    
-    if (action === "end-shift") {
-      const res = await fetch(`${url.origin}/api/cashier/shift/end`, {
-        method: 'POST',
-        headers: { cookie }
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        return { success: true, message: "Shift ended successfully", report: data.data };
-      }
-      return { success: false, message: "Failed to end shift" };
+      return { success: false, message: "Failed to verify cash" };
     }
     
     return { success: false, message: "Unknown action" };
@@ -111,22 +168,32 @@ export async function action({ request }) {
   }
 }
 
-const getPaymentIcon = (method) => {
-  return method === 'CARD' ? <CreditCard className="size-4" /> : <DollarSign className="size-4" />;
-};
+export default function CashierDashboard() {
+  const loaderData = useLoaderData();
+  const { user } = useOutletContext();
+  const submit = useSubmit();
+  const { 
+    stats, 
+    drivers,
+    pendingOrders,
+    confirmedOrders,
+    readyOrders,
+    outForDeliveryOrders,
+    deliveredOrders
+  } = loaderData;
 
-export default function CashierDashboard({loaderData,actionData}) {
-  const { transactions, stats, orders } = loaderData;
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [activeTab, setActiveTab] = useState('orders');
-  const {user}=useOutletContext();
+  const [selectedDriver, setSelectedDriver] = useState({});
 
-  const pendingTransactions = transactions?.filter(t => t.status === 'PENDING') || [];
-  const pendingOrders = orders?.filter(o => ['AWAITING_PAYMENT', 'READY','COMPLETED','PAYMENT_DISPUTED','PREPARING'].includes(o.status)) || [];
-console.log("cashier transactions...",orders);
+  const handleDriverAssign = (orderId, driverId) => {
+    const formData = new FormData();
+    formData.append("action", "assign-driver");
+    formData.append("orderId", orderId);
+    formData.append("driverId", driverId);
+    submit(formData, { method: "post" });
+  };
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen p-4 bg-gray-50">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
@@ -136,14 +203,17 @@ console.log("cashier transactions...",orders);
             </div>
             <div>
               <h1 className="text-3xl font-bold">Cashier Dashboard</h1>
-              <p className="text-gray-600">Welcome, {user?.name}!</p>
+              <p className="text-gray-600">Central Order Coordinator - {user?.name}</p>
             </div>
           </div>
           
-          <Button variant="outline">
-            <Receipt className="size-4 mr-2" />
-            End Shift Report
-          </Button>
+          <Form method="post">
+            <input type="hidden" name="action" value="end-shift" />
+            <Button variant="outline">
+              <Receipt className="size-4 mr-2" />
+              End Shift Report
+            </Button>
+          </Form>
         </div>
       </div>
 
@@ -154,210 +224,280 @@ console.log("cashier transactions...",orders);
             <div className="text-sm text-gray-600">Today's Total</div>
             <div className="text-2xl font-bold text-green-600">${stats.todayTotal?.toFixed(2) || '0.00'}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              {stats.transactionCount || 0} transactions
+              {stats.transactionCount || 0} orders
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Cash</div>
+            <div className="text-sm text-gray-600">Cash Collected</div>
             <div className="text-2xl font-bold">${stats.cashTotal?.toFixed(2) || '0.00'}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              {stats.todayTotal > 0 ? Math.round((stats.cashTotal / stats.todayTotal) * 100) : 0}% of total
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Card Payments</div>
-            <div className="text-2xl font-bold">${stats.cardTotal?.toFixed(2) || '0.00'}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {stats.todayTotal > 0 ? Math.round((stats.cardTotal / stats.todayTotal) * 100) : 0}% of total
+              COD deliveries
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Avg Transaction</div>
-            <div className="text-2xl font-bold">${stats.avgTransaction?.toFixed(2) || '0.00'}</div>
+            <div className="text-sm text-gray-600">Active Orders</div>
+            <div className="text-2xl font-bold">{(pendingOrders?.length || 0) + (confirmedOrders?.length || 0) + (readyOrders?.length || 0)}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              per order
+              Need attention
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
+          <CardContent className="pt-6">
+            <div className="text-sm text-gray-600">Out for Delivery</div>
+            <div className="text-2xl font-bold">{outForDeliveryOrders?.length || 0}</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              In progress
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Tabs for Orders vs Transactions */}
-      <div className="flex gap-2 mb-6">
-        <Button 
-          variant={activeTab === 'orders' ? 'default' : 'outline'}
-          onClick={() => setActiveTab('orders')}
-        >
-          <DollarSign className="size-4 mr-2" />
-          Orders Awaiting Payment
-          {orders.length > 0 && (
-            <Badge variant="destructive" className="ml-2">
-              {orders.length}
-            </Badge>
-          )}
-        </Button>
-        <Button 
-          variant={activeTab === 'transactions' ? 'default' : 'outline'}
-          onClick={() => setActiveTab('transactions')}
-        >
-          <Receipt className="size-4 mr-2" />
-          Transactions History
-        </Button>
-      </div>
-
-      {/* Orders Section */}
-      {activeTab === 'orders' && (
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="size-5" />
-              Orders Awaiting Payment
+      {/* 🔔 NEW ORDERS - Need Confirmation */}
+      {pendingOrders && pendingOrders.length > 0 && (
+        <Card className="border-4 bg-yellow-50 border-yellow-300 mb-6">
+          <CardHeader className="bg-yellow-100">
+            <CardTitle className="flex items-center gap-2 text-yellow-800">
+              <Bell className="size-5 animate-pulse" />
+              🔔 NEW ORDERS - Need Confirmation ({pendingOrders.length})
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             <div className="space-y-3">
-              {orders && orders.length > 0 ? (
-                orders.map((order) => (
-                  <div key={order.id} className="p-4 rounded-lg border-4 bg-gray-200/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="font-bold text-lg">Order #{order.orderNumber}</div>
-                        <div className="text-sm text-muted-foreground">{order.customerName}</div>
-                        <div className="text-xs text-muted-foreground flex items-center gap-2 mt-1">
-                          <Badge variant="outline" className="text-xs">{order.type}</Badge>
-                          {order.tableNumber && <span>Table {order.tableNumber}</span>}
+              {pendingOrders.map((order) => (
+                <div key={order.id} className="p-4 rounded-lg border-2 border-yellow-300 bg-white">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <div className="font-bold text-lg">Order #{order.orderNumber}</div>
+                      <div className="text-sm text-muted-foreground">{order.customerName} - {order.customerPhone}</div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {order.deliveryAddress}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-green-600">${order.total?.toFixed(2)}</div>
+                      <Badge variant="outline" className="mt-1">{order.type}</Badge>
+                    </div>
+                  </div>
+
+                  {/* Order Items */}
+                  {order.orderItems && order.orderItems.length > 0 && (
+                    <div className="mb-3 space-y-1 bg-gray-50 p-2 rounded text-sm">
+                      {order.orderItems.map((item) => (
+                        <div key={item.id} className="flex justify-between">
+                          <span>{item.quantity}x {item.menuItem?.name}</span>
+                          <span>${(item.price * item.quantity).toFixed(2)}</span>
                         </div>
-                      </div>
-                      <Badge className={order.status === 'AWAITING_PAYMENT' ? 'bg-orange-100 text-orange-800' : 'bg-green-100 text-green-800'}>
-                        {order.status}
-                      </Badge>
+                      ))}
                     </div>
+                  )}
 
-                    {/* Order Items */}
-                    {order.orderItems && order.orderItems.length > 0 && (
-                      <div className="mb-3 space-y-1 bg-white/50 p-2 rounded">
-                        {order.orderItems.map((item) => (
-                          <div key={item.id} className="text-sm flex justify-between">
-                            <span>{item.quantity}x {item.menuItem?.name}</span>
-                            <span>${(item.price * item.quantity).toFixed(2)}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex items-center justify-between pt-3 border-t">
-                      <div>
-                        <div className="text-sm text-muted-foreground">Total Amount</div>
-                        <div className="text-2xl font-bold text-green-600">${order.total?.toFixed(2)}</div>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Form method="post">
-                          <input type="hidden" name="action" value="process-payment" />
-                          <input type="hidden" name="orderId" value={order.id} />
-                          <input type="hidden" name="paymentMethod" value="CASH" />
-                          <input type="hidden" name="amount" value={order.total} />
-                          <Button size="sm" variant="outline">
-                            <DollarSign className="size-4 mr-1" />
-                            Cash
-                          </Button>
-                        </Form>
-                        <Form method="post">
-                          <input type="hidden" name="action" value="process-payment" />
-                          <input type="hidden" name="orderId" value={order.id} />
-                          <input type="hidden" name="paymentMethod" value="CARD" />
-                          <input type="hidden" name="amount" value={order.total} />
-                          <Button size="sm">
-                            <CreditCard className="size-4 mr-1" />
-                            Card
-                          </Button>
-                        </Form>
-                      </div>
-                    </div>
+                  <div className="flex gap-2 mt-3">
+                    <Form method="post" className="flex-1">
+                      <input type="hidden" name="action" value="confirm-order" />
+                      <input type="hidden" name="orderId" value={order.id} />
+                      <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                        <CheckCircle className="size-4 mr-2" />
+                        Confirm Order
+                      </Button>
+                    </Form>
+                    <Form method="post">
+                      <input type="hidden" name="action" value="reject-order" />
+                      <input type="hidden" name="orderId" value={order.id} />
+                      <Button type="submit" variant="destructive">
+                        <XCircle className="size-4 mr-2" />
+                        Reject
+                      </Button>
+                    </Form>
                   </div>
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="bg-green-600 dark:bg-green-100 p-3 rounded-lg">
-                    <CheckCircle className="size-8 text-green-100 dark:text-green-600" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-2">All Caught Up!</h3>
-                  <p className="text-muted-foreground max-w-sm">
-                    No orders waiting for payment at the moment.
-                  </p>
                 </div>
-              )}
+              ))}
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Recent Transactions */}
-      {activeTab === 'transactions' && (
-        <Card className="border-4 h-full min-h-max bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Receipt className="size-5" />
-              Recent Transactions
+      {/* ⏳ CONFIRMED - Kitchen is Cooking */}
+      <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ChefHat className="size-5" />
+            ⏳ CONFIRMED - Kitchen is Cooking ({confirmedOrders?.length || 0})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {confirmedOrders && confirmedOrders.length > 0 ? (
+            <div className="space-y-3">
+              {confirmedOrders.map((order) => (
+                <div key={order.id} className="p-4 rounded-lg border-2 bg-white">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-bold">Order #{order.orderNumber}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {order.orderItems?.length || 0} items - ${order.total?.toFixed(2)}
+                      </div>
+                    </div>
+                    <Form method="post">
+                      <input type="hidden" name="action" value="mark-ready" />
+                      <input type="hidden" name="orderId" value={order.id} />
+                      <Button type="submit" size="sm">
+                        <Package className="size-4 mr-2" />
+                        Mark Ready
+                      </Button>
+                    </Form>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              No orders being prepared
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ✅ READY - Assign Driver */}
+      <Card className="border-4 bg-green-50 border-green-300 mb-6">
+        <CardHeader className="bg-green-100">
+          <CardTitle className="flex items-center gap-2 text-green-800">
+            <Package className="size-5" />
+            ✅ READY - Assign Driver ({readyOrders?.length || 0})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          {readyOrders && readyOrders.length > 0 ? (
+            <div className="space-y-3">
+              {readyOrders.map((order) => (
+                <div key={order.id} className="p-4 rounded-lg border-2 border-green-300 bg-white">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="font-bold">Order #{order.orderNumber}</div>
+                      <div className="text-sm text-muted-foreground">{order.deliveryAddress}</div>
+                      <div className="text-lg font-bold text-green-600 mt-1">
+                        Collect: ${order.total?.toFixed(2)} CASH
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 items-center">
+                    <select 
+                      className="flex-1 border rounded px-3 py-2"
+                      value={selectedDriver[order.id] || ''}
+                      onChange={(e) => setSelectedDriver({...selectedDriver, [order.id]: e.target.value})}
+                    >
+                      <option value="">Select Driver</option>
+                      {drivers && drivers.map((driver) => (
+                        <option key={driver.id} value={driver.id}>
+                          {driver.name} ({driver.activeDeliveries || 0} active)
+                        </option>
+                      ))}
+                    </select>
+                    <Button 
+                      onClick={() => handleDriverAssign(order.id, selectedDriver[order.id])}
+                      disabled={!selectedDriver[order.id]}
+                    >
+                      <Truck className="size-4 mr-2" />
+                      Assign
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              No orders ready for pickup
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 🚗 OUT FOR DELIVERY - Active */}
+      <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Truck className="size-5" />
+            🚗 OUT FOR DELIVERY - Active ({outForDeliveryOrders?.length || 0})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {outForDeliveryOrders && outForDeliveryOrders.length > 0 ? (
+            <div className="space-y-3">
+              {outForDeliveryOrders.map((order) => (
+                <div key={order.id} className="p-4 rounded-lg border-2 bg-white">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-bold">Order #{order.orderNumber}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Driver: {order.driver?.name || 'Unassigned'}
+                      </div>
+                      <div className="text-sm font-semibold text-green-600 mt-1">
+                        Collect: ${order.total?.toFixed(2)} cash
+                      </div>
+                    </div>
+                    <Badge className="bg-blue-600">OUT FOR DELIVERY</Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              No active deliveries
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 💰 VERIFY CASH - Driver Returned */}
+      {deliveredOrders && deliveredOrders.length > 0 && (
+        <Card className="border-4 bg-orange-50 border-orange-300 mb-6">
+          <CardHeader className="bg-orange-100">
+            <CardTitle className="flex items-center gap-2 text-orange-800">
+              <DollarSign className="size-5" />
+              💰 VERIFY CASH - Driver Returned ({deliveredOrders.length})
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             <div className="space-y-3">
-              {transactions && transactions.length > 0 ? (
-                transactions.map((txn) => (
-                  <div key={txn.id} className="flex items-center  justify-between p-3 rounded-lg border-4 bg-gray-200/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-                    <div className="flex items-center gap-3">
-                      {getPaymentIcon(txn.paymentMethod)}
-                      <div>
-                        <div className="font-medium">{txn.orderId}</div>
-                        <div className="text-sm text-muted-foreground">{txn.customer}</div>
+              {deliveredOrders.map((order) => (
+                <div key={order.id} className="p-4 rounded-lg border-2 border-orange-300 bg-white">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="font-bold">Order #{order.orderNumber}</div>
+                      <div className="text-sm text-muted-foreground">
+                        Driver: {order.driver?.name}
+                      </div>
+                      <div className="text-lg font-bold text-green-600 mt-1">
+                        Expected: ${order.total?.toFixed(2)}
                       </div>
                     </div>
-                    
-                    <div className="text-right">
-                      <div className="font-semibold">${txn.amount}</div>
-                      <div className="flex items-center gap-2">
-                        <Badge 
-                          variant={txn.status === 'COMPLETED' ? 'default' : 'secondary'}
-                          className="text-xs"
-                        >
-                          {txn.status}
-                        </Badge>
-                      </div>
-                    </div>
+                  </div>
 
-                    {txn.status === 'PENDING' && (
-                      <Form method="post">
-                        <input type="hidden" name="action" value="process-payment" />
-                        <input type="hidden" name="transactionId" value={txn.id} />
-                        <Button size="sm">Process Payment</Button>
-                      </Form>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="bg-green-600 dark:bg-green-100 p-3 rounded-lg">
-                    <Receipt className="size-8 text-green-100 dark:text-green-600" />
-                  </div>
-                 
-                  <h3 className="font-semibold text-lg mb-2">No transactions yet</h3>
-                  <p className="text-muted-foreground max-w-sm mb-6">
-                    Your recent transactions will appear here once you start processing payments.
-                  </p>
-                  <Button>
-                    <Plus className="size-4 mr-2" />
-                    Create Transaction
-                  </Button>
+                  <Form method="post" className="flex gap-2 items-center">
+                    <input type="hidden" name="action" value="verify-cash" />
+                    <input type="hidden" name="orderId" value={order.id} />
+                    <Input 
+                      type="number" 
+                      name="amount" 
+                      placeholder="Count cash" 
+                      step="0.01"
+                      defaultValue={order.total}
+                      className="flex-1"
+                    />
+                    <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                      <CheckCircle className="size-4 mr-2" />
+                      Verify & Complete
+                    </Button>
+                  </Form>
                 </div>
-              )}
+              ))}
             </div>
           </CardContent>
         </Card>

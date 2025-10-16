@@ -458,14 +458,8 @@ model Order {
   deliveryTimeEstimate DateTime?
   driverId             String?
 
-  // Dine-in specific fields (for waiters)
-  tableNumber String? // Table assignment for DINE_IN orders
-  guestCount  Int? // Party size for dine-in
-
   // Staff assignments (for tracking and accountability)
-  cookId    String? // Assigned cook
-  waiterId  String? // Assigned waiter
-  cashierId String? // Who processed payment
+  cashierId String? // Who processed payment (cashier verifies COD)
 
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
@@ -483,9 +477,8 @@ model Order {
   @@index([userId])
   @@index([createdAt])
   @@index([customerEmail])
-  @@index([tableNumber, status]) // For waiter queries
-  @@index([cookId, status]) // For cook queries
   @@index([type, status]) // For filtering by order type
+  @@index([cashierId, status]) // For cashier queries
   @@map("public.orders")
 }
 
