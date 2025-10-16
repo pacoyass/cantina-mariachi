@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/ca
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
+import { Sidebar } from "../../components/cashier/Sidebar";
 import { 
   DollarSign, 
   CreditCard,
@@ -18,6 +19,7 @@ import {
   Truck,
   ChefHat,
   Package,
+  ArrowRight,
 } from "../../lib/lucide-shim.js";
 
 export const meta = () => [
@@ -46,7 +48,7 @@ export async function loader({ request }) {
     const orders = transactionsData?.data?.orders || [];
     
     const pendingOrders = orders.filter(o => o.status === 'PENDING');
-    const confirmedOrders = orders.filter(o => o.status === 'CONFIRMED' || o.status === 'PREPARING');
+    const preparingOrders = orders.filter(o => o.status === 'PREPARING');
     const readyOrders = orders.filter(o => o.status === 'READY');
     const outForDeliveryOrders = orders.filter(o => o.status === 'OUT_FOR_DELIVERY');
     const deliveredOrders = orders.filter(o => o.status === 'DELIVERED');
@@ -57,7 +59,7 @@ export async function loader({ request }) {
       stats: transactionsData?.data?.stats || {},
       drivers: driversData?.data || [],
       pendingOrders,
-      confirmedOrders,
+      preparingOrders,
       readyOrders,
       outForDeliveryOrders,
       deliveredOrders,
@@ -76,7 +78,7 @@ export async function action({ request }) {
   const action = formData.get("action");
   
   try {
-    // Confirm order
+    // Confirm order (PENDING → PREPARING)
     if (action === "confirm-order") {
       const orderId = formData.get("orderId");
       const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/confirm`, {
@@ -84,7 +86,7 @@ export async function action({ request }) {
         headers: { cookie }
       });
       if (res.ok) {
-        return { success: true, message: "Order confirmed" };
+        return { success: true, message: "Order confirmed and sent to kitchen" };
       }
       return { success: false, message: "Failed to confirm order" };
     }
@@ -107,7 +109,7 @@ export async function action({ request }) {
       return { success: false, message: "Failed to reject order" };
     }
 
-    // Mark order ready
+    // Mark order ready (PREPARING → READY)
     if (action === "mark-ready") {
       const orderId = formData.get("orderId");
       const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/ready`, {
@@ -115,12 +117,12 @@ export async function action({ request }) {
         headers: { cookie }
       });
       if (res.ok) {
-        return { success: true, message: "Order marked ready" };
+        return { success: true, message: "Order marked ready for pickup" };
       }
       return { success: false, message: "Failed to mark order ready" };
     }
 
-    // Assign driver
+    // Assign driver (READY → OUT_FOR_DELIVERY)
     if (action === "assign-driver") {
       const orderId = formData.get("orderId");
       const driverId = formData.get("driverId");
@@ -138,7 +140,7 @@ export async function action({ request }) {
       return { success: false, message: "Failed to assign driver" };
     }
 
-    // Verify cash
+    // Verify cash (DELIVERED → COMPLETED)
     if (action === "verify-cash") {
       const orderId = formData.get("orderId");
       const amount = formData.get("amount");
@@ -152,11 +154,11 @@ export async function action({ request }) {
           orderId,
           paymentMethod: "CASH",
           amount: parseFloat(amount),
-          notes: "Cash verified by cashier"
+          notes: "COD verified by cashier"
         })
       });
       if (res.ok) {
-        return { success: true, message: "Cash verified" };
+        return { success: true, message: "Cash verified, order completed" };
       }
       return { success: false, message: "Failed to verify cash" };
     }
@@ -176,7 +178,7 @@ export default function CashierDashboard() {
     stats, 
     drivers,
     pendingOrders,
-    confirmedOrders,
+    preparingOrders,
     readyOrders,
     outForDeliveryOrders,
     deliveredOrders
@@ -193,315 +195,350 @@ export default function CashierDashboard() {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-gray-50">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-green-600 dark:bg-green-100 p-3 rounded-lg">
-              <DollarSign className="size-8 text-green-100 dark:text-green-600" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">Cashier Dashboard</h1>
-              <p className="text-gray-600">Central Order Coordinator - {user?.name}</p>
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar user={user} />
+
+      {/* Main Content */}
+      <div className="flex-1 ml-64 overflow-y-auto">
+        <div className="p-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold">Order Coordinator Dashboard</h1>
+            <p className="text-gray-600">Complete order workflow management - {user?.name}</p>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-4 mb-6">
+            <Card className="border-l-4 border-l-green-500">
+              <CardContent className="pt-6">
+                <div className="text-sm text-gray-600">Today's Revenue</div>
+                <div className="text-2xl font-bold text-green-600">${stats.todayTotal?.toFixed(2) || '0.00'}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {stats.transactionCount || 0} completed orders
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-yellow-500">
+              <CardContent className="pt-6">
+                <div className="text-sm text-gray-600">Pending</div>
+                <div className="text-2xl font-bold text-yellow-600">{pendingOrders?.length || 0}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Need confirmation
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-blue-500">
+              <CardContent className="pt-6">
+                <div className="text-sm text-gray-600">In Progress</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {(preparingOrders?.length || 0) + (readyOrders?.length || 0)}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Preparing + Ready
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-purple-500">
+              <CardContent className="pt-6">
+                <div className="text-sm text-gray-600">Out for Delivery</div>
+                <div className="text-2xl font-bold text-purple-600">{outForDeliveryOrders?.length || 0}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Active deliveries
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Workflow Progress Bar */}
+          <div className="mb-6 bg-white p-4 rounded-lg border">
+            <h3 className="font-semibold mb-3">Order Workflow</h3>
+            <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 rounded">
+                <Bell className="size-4" />
+                <span>1. Confirm</span>
+              </div>
+              <ArrowRight className="size-4 text-gray-400" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-800 rounded">
+                <ChefHat className="size-4" />
+                <span>2. Kitchen</span>
+              </div>
+              <ArrowRight className="size-4 text-gray-400" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded">
+                <Package className="size-4" />
+                <span>3. Ready</span>
+              </div>
+              <ArrowRight className="size-4 text-gray-400" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded">
+                <Truck className="size-4" />
+                <span>4. Assign Driver</span>
+              </div>
+              <ArrowRight className="size-4 text-gray-400" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-800 rounded">
+                <DollarSign className="size-4" />
+                <span>5. Verify Cash</span>
+              </div>
+              <ArrowRight className="size-4 text-gray-400" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-gray-800 text-white rounded">
+                <CheckCircle className="size-4" />
+                <span>6. Complete</span>
+              </div>
             </div>
           </div>
-          
-          <Form method="post">
-            <input type="hidden" name="action" value="end-shift" />
-            <Button variant="outline">
-              <Receipt className="size-4 mr-2" />
-              End Shift Report
-            </Button>
-          </Form>
+
+          {/* STEP 1: NEW ORDERS - Need Confirmation */}
+          {pendingOrders && pendingOrders.length > 0 && (
+            <Card className="mb-6 border-l-4 border-l-yellow-500">
+              <CardHeader className="bg-yellow-50">
+                <CardTitle className="flex items-center gap-2 text-yellow-800">
+                  <Bell className="size-5 animate-pulse" />
+                  STEP 1: New Orders ({pendingOrders.length})
+                  <Badge variant="destructive" className="ml-2">{pendingOrders.length} PENDING</Badge>
+                </CardTitle>
+                <p className="text-sm text-yellow-700">Review and confirm to send to kitchen</p>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="space-y-3">
+                  {pendingOrders.map((order) => (
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-yellow-300 bg-white">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <div className="font-bold text-lg">Order #{order.orderNumber}</div>
+                          <div className="text-sm text-muted-foreground">{order.customerName} - {order.customerPhone}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{order.deliveryAddress}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-green-600">${order.total?.toFixed(2)}</div>
+                          <Badge variant="outline" className="mt-1">COD</Badge>
+                        </div>
+                      </div>
+
+                      {order.orderItems && order.orderItems.length > 0 && (
+                        <div className="mb-3 space-y-1 bg-gray-50 p-2 rounded text-sm">
+                          {order.orderItems.map((item) => (
+                            <div key={item.id} className="flex justify-between">
+                              <span>{item.quantity}x {item.menuItem?.name}</span>
+                              <span>${(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex gap-2 mt-3">
+                        <Form method="post" className="flex-1">
+                          <input type="hidden" name="action" value="confirm-order" />
+                          <input type="hidden" name="orderId" value={order.id} />
+                          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                            <CheckCircle className="size-4 mr-2" />
+                            Confirm & Send to Kitchen
+                          </Button>
+                        </Form>
+                        <Form method="post">
+                          <input type="hidden" name="action" value="reject-order" />
+                          <input type="hidden" name="orderId" value={order.id} />
+                          <Button type="submit" variant="destructive">
+                            <XCircle className="size-4 mr-2" />
+                            Reject
+                          </Button>
+                        </Form>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* STEP 2: Kitchen is Preparing */}
+          <Card className="mb-6 border-l-4 border-l-orange-500">
+            <CardHeader className="bg-orange-50">
+              <CardTitle className="flex items-center gap-2 text-orange-800">
+                <ChefHat className="size-5" />
+                STEP 2: Kitchen Preparing ({preparingOrders?.length || 0})
+              </CardTitle>
+              <p className="text-sm text-orange-700">Mark as ready when kitchen finishes</p>
+            </CardHeader>
+            <CardContent className="pt-4">
+              {preparingOrders && preparingOrders.length > 0 ? (
+                <div className="space-y-3">
+                  {preparingOrders.map((order) => (
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-orange-200 bg-white flex items-center justify-between">
+                      <div>
+                        <div className="font-bold">Order #{order.orderNumber}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {order.orderItems?.length || 0} items - ${order.total?.toFixed(2)} COD
+                        </div>
+                      </div>
+                      <Form method="post">
+                        <input type="hidden" name="action" value="mark-ready" />
+                        <input type="hidden" name="orderId" value={order.id} />
+                        <Button type="submit" size="sm" className="bg-green-600">
+                          <Package className="size-4 mr-2" />
+                          Mark Ready
+                        </Button>
+                      </Form>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-muted-foreground">
+                  No orders being prepared
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* STEP 3: Ready - Assign Driver */}
+          <Card className="mb-6 border-l-4 border-l-green-500">
+            <CardHeader className="bg-green-50">
+              <CardTitle className="flex items-center gap-2 text-green-800">
+                <Package className="size-5" />
+                STEP 3: Ready for Pickup ({readyOrders?.length || 0})
+              </CardTitle>
+              <p className="text-sm text-green-700">Assign driver for delivery</p>
+            </CardHeader>
+            <CardContent className="pt-4">
+              {readyOrders && readyOrders.length > 0 ? (
+                <div className="space-y-3">
+                  {readyOrders.map((order) => (
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-green-300 bg-white">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="font-bold">Order #{order.orderNumber}</div>
+                          <div className="text-sm text-muted-foreground">{order.deliveryAddress}</div>
+                          <div className="text-lg font-bold text-green-600 mt-1">
+                            Collect: ${order.total?.toFixed(2)} CASH
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 items-center">
+                        <select 
+                          className="flex-1 border rounded px-3 py-2"
+                          value={selectedDriver[order.id] || ''}
+                          onChange={(e) => setSelectedDriver({...selectedDriver, [order.id]: e.target.value})}
+                        >
+                          <option value="">Select Driver</option>
+                          {drivers && drivers.map((driver) => (
+                            <option key={driver.id} value={driver.id}>
+                              {driver.name} ({driver.activeDeliveries || 0} active)
+                            </option>
+                          ))}
+                        </select>
+                        <Button 
+                          onClick={() => handleDriverAssign(order.id, selectedDriver[order.id])}
+                          disabled={!selectedDriver[order.id]}
+                          className="bg-blue-600"
+                        >
+                          <Truck className="size-4 mr-2" />
+                          Assign
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-muted-foreground">
+                  No orders ready for pickup
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* STEP 4: Out for Delivery - Waiting for Driver Confirmation */}
+          <Card className="mb-6 border-l-4 border-l-blue-500">
+            <CardHeader className="bg-blue-50">
+              <CardTitle className="flex items-center gap-2 text-blue-800">
+                <Truck className="size-5" />
+                STEP 4: Out for Delivery ({outForDeliveryOrders?.length || 0})
+              </CardTitle>
+              <p className="text-sm text-blue-700">Waiting for driver to confirm delivery</p>
+            </CardHeader>
+            <CardContent className="pt-4">
+              {outForDeliveryOrders && outForDeliveryOrders.length > 0 ? (
+                <div className="space-y-3">
+                  {outForDeliveryOrders.map((order) => (
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-blue-200 bg-white">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="font-bold">Order #{order.orderNumber}</div>
+                          <div className="text-sm text-muted-foreground">
+                            Driver: {order.driver?.name || 'Unassigned'}
+                          </div>
+                          <div className="text-sm font-semibold text-green-600 mt-1">
+                            To Collect: ${order.total?.toFixed(2)} cash
+                          </div>
+                        </div>
+                        <Badge className="bg-blue-600">OUT FOR DELIVERY</Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-muted-foreground">
+                  No active deliveries
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* STEP 5: Verify Cash - Driver Returned */}
+          {deliveredOrders && deliveredOrders.length > 0 && (
+            <Card className="mb-6 border-l-4 border-l-purple-500">
+              <CardHeader className="bg-purple-50">
+                <CardTitle className="flex items-center gap-2 text-purple-800">
+                  <DollarSign className="size-5" />
+                  STEP 5: Verify Cash ({deliveredOrders.length})
+                  <Badge variant="destructive" className="ml-2">{deliveredOrders.length} NEED VERIFICATION</Badge>
+                </CardTitle>
+                <p className="text-sm text-purple-700">Driver delivered and returned - count and verify cash</p>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="space-y-3">
+                  {deliveredOrders.map((order) => (
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-purple-300 bg-white">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="font-bold">Order #{order.orderNumber}</div>
+                          <div className="text-sm text-muted-foreground">
+                            Driver: {order.driver?.name}
+                          </div>
+                          <div className="text-lg font-bold text-green-600 mt-1">
+                            Expected: ${order.total?.toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+
+                      <Form method="post" className="flex gap-2 items-center">
+                        <input type="hidden" name="action" value="verify-cash" />
+                        <input type="hidden" name="orderId" value={order.id} />
+                        <div className="flex-1">
+                          <label className="text-sm text-gray-600">Count Cash:</label>
+                          <Input 
+                            type="number" 
+                            name="amount" 
+                            placeholder="Enter amount received" 
+                            step="0.01"
+                            defaultValue={order.total}
+                            className="mt-1"
+                          />
+                        </div>
+                        <Button type="submit" className="bg-green-600 hover:bg-green-700 mt-6">
+                          <CheckCircle className="size-4 mr-2" />
+                          Verify & Complete
+                        </Button>
+                      </Form>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
-
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4 mb-6">
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Today's Total</div>
-            <div className="text-2xl font-bold text-green-600">${stats.todayTotal?.toFixed(2) || '0.00'}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {stats.transactionCount || 0} orders
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Cash Collected</div>
-            <div className="text-2xl font-bold">${stats.cashTotal?.toFixed(2) || '0.00'}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              COD deliveries
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Active Orders</div>
-            <div className="text-2xl font-bold">{(pendingOrders?.length || 0) + (confirmedOrders?.length || 0) + (readyOrders?.length || 0)}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              Need attention
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
-          <CardContent className="pt-6">
-            <div className="text-sm text-gray-600">Out for Delivery</div>
-            <div className="text-2xl font-bold">{outForDeliveryOrders?.length || 0}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              In progress
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* 🔔 NEW ORDERS - Need Confirmation */}
-      {pendingOrders && pendingOrders.length > 0 && (
-        <Card className="border-4 bg-yellow-50 border-yellow-300 mb-6">
-          <CardHeader className="bg-yellow-100">
-            <CardTitle className="flex items-center gap-2 text-yellow-800">
-              <Bell className="size-5 animate-pulse" />
-              🔔 NEW ORDERS - Need Confirmation ({pendingOrders.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <div className="space-y-3">
-              {pendingOrders.map((order) => (
-                <div key={order.id} className="p-4 rounded-lg border-2 border-yellow-300 bg-white">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <div className="font-bold text-lg">Order #{order.orderNumber}</div>
-                      <div className="text-sm text-muted-foreground">{order.customerName} - {order.customerPhone}</div>
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {order.deliveryAddress}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-green-600">${order.total?.toFixed(2)}</div>
-                      <Badge variant="outline" className="mt-1">{order.type}</Badge>
-                    </div>
-                  </div>
-
-                  {/* Order Items */}
-                  {order.orderItems && order.orderItems.length > 0 && (
-                    <div className="mb-3 space-y-1 bg-gray-50 p-2 rounded text-sm">
-                      {order.orderItems.map((item) => (
-                        <div key={item.id} className="flex justify-between">
-                          <span>{item.quantity}x {item.menuItem?.name}</span>
-                          <span>${(item.price * item.quantity).toFixed(2)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex gap-2 mt-3">
-                    <Form method="post" className="flex-1">
-                      <input type="hidden" name="action" value="confirm-order" />
-                      <input type="hidden" name="orderId" value={order.id} />
-                      <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                        <CheckCircle className="size-4 mr-2" />
-                        Confirm Order
-                      </Button>
-                    </Form>
-                    <Form method="post">
-                      <input type="hidden" name="action" value="reject-order" />
-                      <input type="hidden" name="orderId" value={order.id} />
-                      <Button type="submit" variant="destructive">
-                        <XCircle className="size-4 mr-2" />
-                        Reject
-                      </Button>
-                    </Form>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ⏳ CONFIRMED - Kitchen is Cooking */}
-      <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ChefHat className="size-5" />
-            ⏳ CONFIRMED - Kitchen is Cooking ({confirmedOrders?.length || 0})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {confirmedOrders && confirmedOrders.length > 0 ? (
-            <div className="space-y-3">
-              {confirmedOrders.map((order) => (
-                <div key={order.id} className="p-4 rounded-lg border-2 bg-white">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="font-bold">Order #{order.orderNumber}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {order.orderItems?.length || 0} items - ${order.total?.toFixed(2)}
-                      </div>
-                    </div>
-                    <Form method="post">
-                      <input type="hidden" name="action" value="mark-ready" />
-                      <input type="hidden" name="orderId" value={order.id} />
-                      <Button type="submit" size="sm">
-                        <Package className="size-4 mr-2" />
-                        Mark Ready
-                      </Button>
-                    </Form>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              No orders being prepared
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* ✅ READY - Assign Driver */}
-      <Card className="border-4 bg-green-50 border-green-300 mb-6">
-        <CardHeader className="bg-green-100">
-          <CardTitle className="flex items-center gap-2 text-green-800">
-            <Package className="size-5" />
-            ✅ READY - Assign Driver ({readyOrders?.length || 0})
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-4">
-          {readyOrders && readyOrders.length > 0 ? (
-            <div className="space-y-3">
-              {readyOrders.map((order) => (
-                <div key={order.id} className="p-4 rounded-lg border-2 border-green-300 bg-white">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <div className="font-bold">Order #{order.orderNumber}</div>
-                      <div className="text-sm text-muted-foreground">{order.deliveryAddress}</div>
-                      <div className="text-lg font-bold text-green-600 mt-1">
-                        Collect: ${order.total?.toFixed(2)} CASH
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 items-center">
-                    <select 
-                      className="flex-1 border rounded px-3 py-2"
-                      value={selectedDriver[order.id] || ''}
-                      onChange={(e) => setSelectedDriver({...selectedDriver, [order.id]: e.target.value})}
-                    >
-                      <option value="">Select Driver</option>
-                      {drivers && drivers.map((driver) => (
-                        <option key={driver.id} value={driver.id}>
-                          {driver.name} ({driver.activeDeliveries || 0} active)
-                        </option>
-                      ))}
-                    </select>
-                    <Button 
-                      onClick={() => handleDriverAssign(order.id, selectedDriver[order.id])}
-                      disabled={!selectedDriver[order.id]}
-                    >
-                      <Truck className="size-4 mr-2" />
-                      Assign
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              No orders ready for pickup
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 🚗 OUT FOR DELIVERY - Active */}
-      <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Truck className="size-5" />
-            🚗 OUT FOR DELIVERY - Active ({outForDeliveryOrders?.length || 0})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {outForDeliveryOrders && outForDeliveryOrders.length > 0 ? (
-            <div className="space-y-3">
-              {outForDeliveryOrders.map((order) => (
-                <div key={order.id} className="p-4 rounded-lg border-2 bg-white">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="font-bold">Order #{order.orderNumber}</div>
-                      <div className="text-sm text-muted-foreground">
-                        Driver: {order.driver?.name || 'Unassigned'}
-                      </div>
-                      <div className="text-sm font-semibold text-green-600 mt-1">
-                        Collect: ${order.total?.toFixed(2)} cash
-                      </div>
-                    </div>
-                    <Badge className="bg-blue-600">OUT FOR DELIVERY</Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-6 text-muted-foreground">
-              No active deliveries
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 💰 VERIFY CASH - Driver Returned */}
-      {deliveredOrders && deliveredOrders.length > 0 && (
-        <Card className="border-4 bg-orange-50 border-orange-300 mb-6">
-          <CardHeader className="bg-orange-100">
-            <CardTitle className="flex items-center gap-2 text-orange-800">
-              <DollarSign className="size-5" />
-              💰 VERIFY CASH - Driver Returned ({deliveredOrders.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <div className="space-y-3">
-              {deliveredOrders.map((order) => (
-                <div key={order.id} className="p-4 rounded-lg border-2 border-orange-300 bg-white">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <div className="font-bold">Order #{order.orderNumber}</div>
-                      <div className="text-sm text-muted-foreground">
-                        Driver: {order.driver?.name}
-                      </div>
-                      <div className="text-lg font-bold text-green-600 mt-1">
-                        Expected: ${order.total?.toFixed(2)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <Form method="post" className="flex gap-2 items-center">
-                    <input type="hidden" name="action" value="verify-cash" />
-                    <input type="hidden" name="orderId" value={order.id} />
-                    <Input 
-                      type="number" 
-                      name="amount" 
-                      placeholder="Count cash" 
-                      step="0.01"
-                      defaultValue={order.total}
-                      className="flex-1"
-                    />
-                    <Button type="submit" className="bg-green-600 hover:bg-green-700">
-                      <CheckCircle className="size-4 mr-2" />
-                      Verify & Complete
-                    </Button>
-                  </Form>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
