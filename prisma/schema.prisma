@@ -523,16 +523,16 @@ enum OrderType {
 }
 
 enum OrderStatus {
-  PENDING
-  CONFIRMED
-  PREPARING
-  READY
-  OUT_FOR_DELIVERY
-  AWAITING_PAYMENT
-  PAYMENT_DISPUTED
-  DELIVERED
-  COMPLETED
-  CANCELLED
+  PENDING         // Client places order
+  CONFIRMED       // Cashier confirms order
+  PREPARING       // Kitchen is preparing
+  READY           // Kitchen finished, ready for pickup
+  OUT_FOR_DELIVERY // Driver picked up, on the way
+  DELIVERED       // Driver confirmed delivery
+  COMPLETED       // Cashier verified cash/payment
+  CANCELLED       // Order cancelled
+  AWAITING_PAYMENT // (Legacy - kept for compatibility)
+  PAYMENT_DISPUTED // (Legacy - kept for compatibility)
 }
 
 enum ReservationStatus {

@@ -9,6 +9,7 @@ import {
   getDailySummary,
   endShiftReport,
   confirmOrder,
+  sendToKitchen,
   markOrderReady,
   assignDriver,
   getAllDrivers,
@@ -25,10 +26,11 @@ router.use(authMiddleware);
 router.use(requireRole('CASHIER'));
 
 // Order management (coordinator functions)
-router.post('/orders/:orderId/confirm', rlModerate, confirmOrder);
-router.post('/orders/:orderId/reject', rlModerate, rejectOrder);
-router.post('/orders/:orderId/ready', rlModerate, markOrderReady);
-router.post('/orders/:orderId/assign-driver', rlModerate, assignDriver);
+router.post('/orders/:orderId/confirm', rlModerate, confirmOrder); // PENDING → CONFIRMED
+router.post('/orders/:orderId/send-to-kitchen', rlModerate, sendToKitchen); // CONFIRMED → PREPARING
+router.post('/orders/:orderId/ready', rlModerate, markOrderReady); // PREPARING → READY
+router.post('/orders/:orderId/assign-driver', rlModerate, assignDriver); // READY → OUT_FOR_DELIVERY
+router.post('/orders/:orderId/reject', rlModerate, rejectOrder); // PENDING → CANCELLED
 
 // Orders and payments
 router.get('/orders', rlModerate, getOrdersAwaitingPayment);

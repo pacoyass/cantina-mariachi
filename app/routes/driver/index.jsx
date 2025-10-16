@@ -11,7 +11,8 @@ import {
   CheckCircle,
   Navigation,
   Package,
-  AlertCircle
+  AlertCircle,
+  DollarSign
 } from "../../lib/lucide-shim.js";
 
 export const meta = () => [
@@ -91,24 +92,54 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
   const formData = await request.formData();
   const action = formData.get("action");
+  const orderId = formData.get("orderId");
   
-  if (action === "start-delivery") {
-    return { success: true, message: "Delivery started" };
+  try {
+    if (action === "start-delivery") {
+      const res = await fetch(`${url.origin}/api/driver/deliveries/${orderId}/start`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+      if (res.ok) {
+        return { success: true, message: "Delivery started" };
+      }
+      return { success: false, message: "Failed to start delivery" };
+    }
+    
+    if (action === "complete-delivery") {
+      const cashCollected = formData.get("cashCollected");
+      const res = await fetch(`${url.origin}/api/driver/deliveries/${orderId}/complete`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          cookie 
+        },
+        body: JSON.stringify({
+          cashCollected: cashCollected ? parseFloat(cashCollected) : 0,
+          notes: "Delivered successfully"
+        })
+      });
+      if (res.ok) {
+        return { success: true, message: "Delivery completed and marked as DELIVERED" };
+      }
+      return { success: false, message: "Failed to complete delivery" };
+    }
+    
+    return { success: false };
+  } catch (error) {
+    console.error('Driver action error:', error);
+    return { success: false, message: "Action failed" };
   }
-  
-  if (action === "complete-delivery") {
-    return { success: true, message: "Delivery completed" };
-  }
-  
-  return { success: false };
 }
 
 const getStatusColor = (status) => {
   switch (status) {
-    case 'ASSIGNED': return 'bg-blue-100 text-blue-800';
-    case 'IN_TRANSIT': return 'bg-orange-100 text-orange-800';
+    case 'READY': return 'bg-blue-100 text-blue-800';
+    case 'OUT_FOR_DELIVERY': return 'bg-orange-100 text-orange-800';
     case 'DELIVERED': return 'bg-green-100 text-green-800';
     default: return 'bg-gray-100 text-gray-800';
   }
@@ -131,9 +162,10 @@ export default function DriverDashboard() {
     return delivery.status === 'DELIVERED';
   });
 
-  const assignedCount = deliveries.filter(d => d.status === 'ASSIGNED').length;
-  const inTransitCount = deliveries.filter(d => d.status === 'IN_TRANSIT').length;
+  const assignedCount = deliveries.filter(d => d.status === 'READY').length;
+  const inTransitCount = deliveries.filter(d => d.status === 'OUT_FOR_DELIVERY').length;
   const completedToday = deliveries.filter(d => d.status === 'DELIVERED').length;
+  const totalRevenue = deliveries.filter(d => d.status === 'DELIVERED').reduce((sum, d) => sum + (d.total || 0), 0);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -199,8 +231,8 @@ export default function DriverDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold">${stats.todayTotal}</div>
-                <div className="text-sm text-gray-600">Today's Deliveries</div>
+                <div className="text-2xl font-bold">${totalRevenue.toFixed(2)}</div>
+                <div className="text-sm text-gray-600">Today's Revenue</div>
               </div>
               <DollarSign className="size-8 text-green-600" />
             </div>
@@ -294,8 +326,9 @@ export default function DriverDashboard() {
               {/* Actions */}
               <div className="flex gap-2">
                 <Form method="post" className="flex-1">
-                  <input type="hidden" name="deliveryId" value={delivery.id} />
-                  {delivery.status === 'ASSIGNED' && (
+                  <input type="hidden" name="orderId" value={delivery.id} />
+                  <input type="hidden" name="cashCollected" value={delivery.total} />
+                  {delivery.status === 'READY' && (
                     <Button 
                       type="submit" 
                       name="action" 
@@ -306,7 +339,7 @@ export default function DriverDashboard() {
                       Start Delivery
                     </Button>
                   )}
-                  {delivery.status === 'IN_TRANSIT' && (
+                  {delivery.status === 'OUT_FOR_DELIVERY' && (
                     <Button 
                       type="submit" 
                       name="action" 
@@ -320,7 +353,7 @@ export default function DriverDashboard() {
                 </Form>
                 
                 <Button variant="outline" asChild>
-                  <a href={`https://maps.google.com/?q=${encodeURIComponent(delivery.address)}`} target="_blank">
+                  <a href={`https://maps.google.com/?q=${encodeURIComponent(delivery.address)}`} target="_blank" rel="noopener noreferrer">
                     <MapPin className="size-4 mr-2" />
                     Navigate
                   </a>

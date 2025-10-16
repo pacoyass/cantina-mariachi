@@ -44,10 +44,11 @@ export async function loader({ request }) {
     const transactionsData = transactionsRes.ok ? await transactionsRes.json() : null;
     const driversData = driversRes.ok ? await driversRes.json() : null;
 
-    // Group orders by status
+    // Group orders by status for the 6-step workflow
     const orders = transactionsData?.data?.orders || [];
     
     const pendingOrders = orders.filter(o => o.status === 'PENDING');
+    const confirmedOrders = orders.filter(o => o.status === 'CONFIRMED');
     const preparingOrders = orders.filter(o => o.status === 'PREPARING');
     const readyOrders = orders.filter(o => o.status === 'READY');
     const outForDeliveryOrders = orders.filter(o => o.status === 'OUT_FOR_DELIVERY');
@@ -59,6 +60,7 @@ export async function loader({ request }) {
       stats: transactionsData?.data?.stats || {},
       drivers: driversData?.data || [],
       pendingOrders,
+      confirmedOrders,
       preparingOrders,
       readyOrders,
       outForDeliveryOrders,
@@ -78,7 +80,7 @@ export async function action({ request }) {
   const action = formData.get("action");
   
   try {
-    // Confirm order (PENDING → PREPARING)
+    // Confirm order (PENDING → CONFIRMED)
     if (action === "confirm-order") {
       const orderId = formData.get("orderId");
       const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/confirm`, {
@@ -86,9 +88,22 @@ export async function action({ request }) {
         headers: { cookie }
       });
       if (res.ok) {
-        return { success: true, message: "Order confirmed and sent to kitchen" };
+        return { success: true, message: "Order confirmed successfully" };
       }
       return { success: false, message: "Failed to confirm order" };
+    }
+
+    // Send to kitchen (CONFIRMED → PREPARING)
+    if (action === "send-to-kitchen") {
+      const orderId = formData.get("orderId");
+      const res = await fetch(`${url.origin}/api/cashier/orders/${orderId}/send-to-kitchen`, {
+        method: 'POST',
+        headers: { cookie }
+      });
+      if (res.ok) {
+        return { success: true, message: "Order sent to kitchen" };
+      }
+      return { success: false, message: "Failed to send to kitchen" };
     }
 
     // Reject order
@@ -178,6 +193,7 @@ export default function CashierDashboard() {
     stats, 
     drivers,
     pendingOrders,
+    confirmedOrders,
     preparingOrders,
     readyOrders,
     outForDeliveryOrders,
@@ -234,10 +250,10 @@ export default function CashierDashboard() {
               <CardContent className="pt-6">
                 <div className="text-sm text-gray-600">In Progress</div>
                 <div className="text-2xl font-bold text-blue-600">
-                  {(preparingOrders?.length || 0) + (readyOrders?.length || 0)}
+                  {(confirmedOrders?.length || 0) + (preparingOrders?.length || 0) + (readyOrders?.length || 0)}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  Preparing + Ready
+                  Confirmed + Kitchen + Ready
                 </div>
               </CardContent>
             </Card>
@@ -253,38 +269,38 @@ export default function CashierDashboard() {
             </Card>
           </div>
 
-          {/* Workflow Progress Bar */}
+          {/* Workflow Progress Bar - 6 Steps */}
           <div className="mb-6 bg-white p-4 rounded-lg border">
-            <h3 className="font-semibold mb-3">Order Workflow</h3>
-            <div className="flex items-center gap-2 text-sm">
-              <div className="flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 rounded">
+            <h3 className="font-semibold mb-3">Complete Order Workflow (6 Steps)</h3>
+            <div className="flex items-center gap-2 text-xs overflow-x-auto">
+              <div className="flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 rounded whitespace-nowrap">
                 <Bell className="size-4" />
-                <span>1. Confirm</span>
+                <span>1. Confirm Order</span>
               </div>
-              <ArrowRight className="size-4 text-gray-400" />
-              <div className="flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-800 rounded">
+              <ArrowRight className="size-4 text-gray-400 flex-shrink-0" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-indigo-100 text-indigo-800 rounded whitespace-nowrap">
+                <Plus className="size-4" />
+                <span>2. Send to Kitchen</span>
+              </div>
+              <ArrowRight className="size-4 text-gray-400 flex-shrink-0" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-800 rounded whitespace-nowrap">
                 <ChefHat className="size-4" />
-                <span>2. Kitchen</span>
+                <span>3. Kitchen Ready</span>
               </div>
-              <ArrowRight className="size-4 text-gray-400" />
-              <div className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded">
-                <Package className="size-4" />
-                <span>3. Ready</span>
-              </div>
-              <ArrowRight className="size-4 text-gray-400" />
-              <div className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded">
+              <ArrowRight className="size-4 text-gray-400 flex-shrink-0" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded whitespace-nowrap">
                 <Truck className="size-4" />
                 <span>4. Assign Driver</span>
               </div>
-              <ArrowRight className="size-4 text-gray-400" />
-              <div className="flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-800 rounded">
-                <DollarSign className="size-4" />
-                <span>5. Verify Cash</span>
+              <ArrowRight className="size-4 text-gray-400 flex-shrink-0" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded whitespace-nowrap">
+                <Package className="size-4" />
+                <span>5. Driver Delivers</span>
               </div>
-              <ArrowRight className="size-4 text-gray-400" />
-              <div className="flex items-center gap-1 px-3 py-1 bg-gray-800 text-white rounded">
+              <ArrowRight className="size-4 text-gray-400 flex-shrink-0" />
+              <div className="flex items-center gap-1 px-3 py-1 bg-gray-800 text-white rounded whitespace-nowrap">
                 <CheckCircle className="size-4" />
-                <span>6. Complete</span>
+                <span>6. Verify & Complete</span>
               </div>
             </div>
           </div>
@@ -296,9 +312,9 @@ export default function CashierDashboard() {
                 <CardTitle className="flex items-center gap-2 text-yellow-800">
                   <Bell className="size-5 animate-pulse" />
                   STEP 1: New Orders ({pendingOrders.length})
-                  <Badge variant="destructive" className="ml-2">{pendingOrders.length} PENDING</Badge>
+                  <Badge variant="destructive" className="ml-2">{pendingOrders.length} NEED REVIEW</Badge>
                 </CardTitle>
-                <p className="text-sm text-yellow-700">Review and confirm to send to kitchen</p>
+                <p className="text-sm text-yellow-700">Review client orders and confirm</p>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="space-y-3">
@@ -333,7 +349,7 @@ export default function CashierDashboard() {
                           <input type="hidden" name="orderId" value={order.id} />
                           <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
                             <CheckCircle className="size-4 mr-2" />
-                            Confirm & Send to Kitchen
+                            Confirm Order
                           </Button>
                         </Form>
                         <Form method="post">
@@ -352,12 +368,62 @@ export default function CashierDashboard() {
             </Card>
           )}
 
-          {/* STEP 2: Kitchen is Preparing */}
+          {/* STEP 2: CONFIRMED - Send to Kitchen */}
+          {confirmedOrders && confirmedOrders.length > 0 && (
+            <Card className="mb-6 border-l-4 border-l-indigo-500">
+              <CardHeader className="bg-indigo-50">
+                <CardTitle className="flex items-center gap-2 text-indigo-800">
+                  <Plus className="size-5" />
+                  STEP 2: Confirmed Orders ({confirmedOrders.length})
+                  <Badge className="ml-2 bg-indigo-600">{confirmedOrders.length} TO KITCHEN</Badge>
+                </CardTitle>
+                <p className="text-sm text-indigo-700">Physically hand order to kitchen</p>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="space-y-3">
+                  {confirmedOrders.map((order) => (
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-indigo-300 bg-white">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="font-bold text-lg">Order #{order.orderNumber}</div>
+                          <div className="text-sm text-muted-foreground">{order.customerName}</div>
+                          <div className="text-sm font-semibold text-green-600 mt-1">
+                            ${order.total?.toFixed(2)} COD
+                          </div>
+                        </div>
+                      </div>
+
+                      {order.orderItems && order.orderItems.length > 0 && (
+                        <div className="mb-3 space-y-1 bg-gray-50 p-2 rounded text-sm">
+                          {order.orderItems.map((item) => (
+                            <div key={item.id} className="flex justify-between">
+                              <span>{item.quantity}x {item.menuItem?.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <Form method="post">
+                        <input type="hidden" name="action" value="send-to-kitchen" />
+                        <input type="hidden" name="orderId" value={order.id} />
+                        <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
+                          <ChefHat className="size-4 mr-2" />
+                          Hand to Kitchen
+                        </Button>
+                      </Form>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* STEP 3: Kitchen is Preparing */}
           <Card className="mb-6 border-l-4 border-l-orange-500">
             <CardHeader className="bg-orange-50">
               <CardTitle className="flex items-center gap-2 text-orange-800">
                 <ChefHat className="size-5" />
-                STEP 2: Kitchen Preparing ({preparingOrders?.length || 0})
+                STEP 3: Kitchen Preparing ({preparingOrders?.length || 0})
               </CardTitle>
               <p className="text-sm text-orange-700">Mark as ready when kitchen finishes</p>
             </CardHeader>
@@ -391,14 +457,14 @@ export default function CashierDashboard() {
             </CardContent>
           </Card>
 
-          {/* STEP 3: Ready - Assign Driver */}
-          <Card className="mb-6 border-l-4 border-l-green-500">
-            <CardHeader className="bg-green-50">
-              <CardTitle className="flex items-center gap-2 text-green-800">
-                <Package className="size-5" />
-                STEP 3: Ready for Pickup ({readyOrders?.length || 0})
+          {/* STEP 4: Ready - Assign Driver */}
+          <Card className="mb-6 border-l-4 border-l-blue-500">
+            <CardHeader className="bg-blue-50">
+              <CardTitle className="flex items-center gap-2 text-blue-800">
+                <Truck className="size-5" />
+                STEP 4: Ready - Assign Driver ({readyOrders?.length || 0})
               </CardTitle>
-              <p className="text-sm text-green-700">Assign driver for delivery</p>
+              <p className="text-sm text-blue-700">Assign driver for delivery</p>
             </CardHeader>
             <CardContent className="pt-4">
               {readyOrders && readyOrders.length > 0 ? (
@@ -431,10 +497,10 @@ export default function CashierDashboard() {
                         <Button 
                           onClick={() => handleDriverAssign(order.id, selectedDriver[order.id])}
                           disabled={!selectedDriver[order.id]}
-                          className="bg-blue-600"
+                          className="bg-blue-600 hover:bg-blue-700"
                         >
                           <Truck className="size-4 mr-2" />
-                          Assign
+                          Assign Driver
                         </Button>
                       </div>
                     </div>
@@ -448,20 +514,20 @@ export default function CashierDashboard() {
             </CardContent>
           </Card>
 
-          {/* STEP 4: Out for Delivery - Waiting for Driver Confirmation */}
-          <Card className="mb-6 border-l-4 border-l-blue-500">
-            <CardHeader className="bg-blue-50">
-              <CardTitle className="flex items-center gap-2 text-blue-800">
-                <Truck className="size-5" />
-                STEP 4: Out for Delivery ({outForDeliveryOrders?.length || 0})
+          {/* STEP 5: Out for Delivery - Waiting for Driver Confirmation */}
+          <Card className="mb-6 border-l-4 border-l-green-500">
+            <CardHeader className="bg-green-50">
+              <CardTitle className="flex items-center gap-2 text-green-800">
+                <Package className="size-5" />
+                STEP 5: Out for Delivery ({outForDeliveryOrders?.length || 0})
               </CardTitle>
-              <p className="text-sm text-blue-700">Waiting for driver to confirm delivery</p>
+              <p className="text-sm text-green-700">Waiting for driver to confirm delivery</p>
             </CardHeader>
             <CardContent className="pt-4">
               {outForDeliveryOrders && outForDeliveryOrders.length > 0 ? (
                 <div className="space-y-3">
                   {outForDeliveryOrders.map((order) => (
-                    <div key={order.id} className="p-4 rounded-lg border-2 border-blue-200 bg-white">
+                    <div key={order.id} className="p-4 rounded-lg border-2 border-green-200 bg-white">
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="font-bold">Order #{order.orderNumber}</div>
@@ -472,7 +538,7 @@ export default function CashierDashboard() {
                             To Collect: ${order.total?.toFixed(2)} cash
                           </div>
                         </div>
-                        <Badge className="bg-blue-600">OUT FOR DELIVERY</Badge>
+                        <Badge className="bg-green-600">OUT FOR DELIVERY</Badge>
                       </div>
                     </div>
                   ))}
@@ -485,16 +551,16 @@ export default function CashierDashboard() {
             </CardContent>
           </Card>
 
-          {/* STEP 5: Verify Cash - Driver Returned */}
+          {/* STEP 6: Verify Cash & Complete - Driver Returned */}
           {deliveredOrders && deliveredOrders.length > 0 && (
-            <Card className="mb-6 border-l-4 border-l-purple-500">
-              <CardHeader className="bg-purple-50">
-                <CardTitle className="flex items-center gap-2 text-purple-800">
-                  <DollarSign className="size-5" />
-                  STEP 5: Verify Cash ({deliveredOrders.length})
+            <Card className="mb-6 border-l-4 border-l-gray-800">
+              <CardHeader className="bg-gray-50">
+                <CardTitle className="flex items-center gap-2 text-gray-800">
+                  <CheckCircle className="size-5" />
+                  STEP 6: Verify Cash & Complete ({deliveredOrders.length})
                   <Badge variant="destructive" className="ml-2">{deliveredOrders.length} NEED VERIFICATION</Badge>
                 </CardTitle>
-                <p className="text-sm text-purple-700">Driver delivered and returned - count and verify cash</p>
+                <p className="text-sm text-gray-700">Driver confirmed delivery - count cash and complete order</p>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="space-y-3">

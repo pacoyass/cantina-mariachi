@@ -232,7 +232,7 @@ export const endShiftReport = async (req, res) => {
 
 // ===== NEW CASHIER COORDINATOR FUNCTIONS =====
 
-// Confirm order (PENDING → CONFIRMED → PREPARING)
+// Confirm order (PENDING → CONFIRMED)
 export const confirmOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -256,11 +256,11 @@ export const confirmOrder = async (req, res) => {
       );
     }
 
-    // Update order status to CONFIRMED, then auto-transition to PREPARING
-    // This represents: cashier confirmed → handed to kitchen → kitchen is now preparing
+    // Update order status to CONFIRMED
+    // Cashier has reviewed and confirmed the order
     const updatedOrder = await databaseService.updateOrderStatus(
       orderId,
-      "PREPARING",  // Go directly to PREPARING (cashier handed to kitchen)
+      "CONFIRMED",
       {
         cashierId: req.user?.userId,
       }
@@ -269,7 +269,7 @@ export const confirmOrder = async (req, res) => {
     LoggerService.logActivity(
       req.user?.userId,
       "ORDER_CONFIRMED",
-      `Confirmed order ${orderId} and handed to kitchen`,
+      `Confirmed order ${orderId}`,
       {
         orderId,
         cashierId: req.user?.userId,
@@ -279,7 +279,7 @@ export const confirmOrder = async (req, res) => {
     return createResponse(
       res,
       200,
-      "Order confirmed and sent to kitchen",
+      "Order confirmed successfully",
       updatedOrder
     );
   } catch (error) {
@@ -291,7 +291,63 @@ export const confirmOrder = async (req, res) => {
   }
 };
 
-// Mark order ready (CONFIRMED → READY)
+// Send to kitchen (CONFIRMED → PREPARING)
+export const sendToKitchen = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      return createError(res, 400, "Order ID is required", "VALIDATION_ERROR");
+    }
+
+    const order = await databaseService.getOrderById(orderId);
+
+    if (!order) {
+      return createError(res, 404, "Order not found", "NOT_FOUND");
+    }
+
+    if (order.status !== "CONFIRMED") {
+      return createError(
+        res,
+        400,
+        `Order cannot be sent to kitchen from ${order.status} status`,
+        "INVALID_STATUS"
+      );
+    }
+
+    // Update order status to PREPARING
+    // Cashier physically handed the order to kitchen
+    const updatedOrder = await databaseService.updateOrderStatus(
+      orderId,
+      "PREPARING"
+    );
+
+    LoggerService.logActivity(
+      req.user?.userId,
+      "ORDER_SENT_TO_KITCHEN",
+      `Sent order ${orderId} to kitchen`,
+      {
+        orderId,
+        cashierId: req.user?.userId,
+      }
+    );
+
+    return createResponse(
+      res,
+      200,
+      "Order sent to kitchen successfully",
+      updatedOrder
+    );
+  } catch (error) {
+    LoggerService.logError("Failed to send order to kitchen", error.stack, {
+      userId: req.user?.userId,
+      orderId: req.params.orderId,
+    });
+    return createError(res, 500, "Failed to send to kitchen", "SERVER_ERROR");
+  }
+};
+
+// Mark order ready (PREPARING → READY)
 export const markOrderReady = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -306,7 +362,7 @@ export const markOrderReady = async (req, res) => {
       return createError(res, 404, "Order not found", "NOT_FOUND");
     }
 
-    if (order.status !== "CONFIRMED" && order.status !== "PREPARING") {
+    if (order.status !== "PREPARING") {
       return createError(
         res,
         400,
@@ -316,6 +372,7 @@ export const markOrderReady = async (req, res) => {
     }
 
     // Update order status to READY
+    // Kitchen has finished preparing
     const updatedOrder = await databaseService.updateOrderStatus(
       orderId,
       "READY"
