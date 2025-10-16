@@ -405,6 +405,11 @@ CREATE TABLE "public.orders" (
     "deliveryInstructions" TEXT,
     "deliveryTimeEstimate" TIMESTAMP(3),
     "driverId" TEXT,
+    "tableNumber" TEXT,
+    "guestCount" INTEGER,
+    "cookId" TEXT,
+    "waiterId" TEXT,
+    "cashierId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "trackingCode" TEXT,
@@ -568,6 +573,15 @@ CREATE INDEX "public.orders_createdAt_idx" ON "public.orders"("createdAt");
 
 -- CreateIndex
 CREATE INDEX "public.orders_customerEmail_idx" ON "public.orders"("customerEmail");
+
+-- CreateIndex
+CREATE INDEX "public.orders_tableNumber_status_idx" ON "public.orders"("tableNumber", "status");
+
+-- CreateIndex
+CREATE INDEX "public.orders_cookId_status_idx" ON "public.orders"("cookId", "status");
+
+-- CreateIndex
+CREATE INDEX "public.orders_type_status_idx" ON "public.orders"("type", "status");
 
 -- CreateIndex
 CREATE INDEX "public.reservations_date_time_status_idx" ON "public.reservations"("date", "time", "status");
