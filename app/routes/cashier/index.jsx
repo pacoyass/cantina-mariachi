@@ -211,12 +211,12 @@ export default function CashierDashboard() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-3.5rem)] bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
       <Sidebar user={user} />
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 overflow-y-auto">
+      <div className="flex-1 ml-64 overflow-y-auto pt-14">
         <div className="p-6">
           {/* Header */}
           <div className="mb-6">
