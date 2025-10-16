@@ -25,45 +25,31 @@ export async function loader({ request }) {
   const cookie = request.headers.get("cookie") || "";
   
   try {
-    const authRes = await fetch(`${url.origin}/api/users/me`, {
-      headers: { cookie }
-    });
-    
-    if (!authRes.ok) {
-      throw redirect("/login?redirect=/cashier");
-    }
-    
-    const authData = await authRes.json();
-    const user = authData.data?.user;
-    
-    if (!user || user.role !== 'CASHIER') {
-      throw redirect("/");
-    }
 
     // Get cashier data
     const cashRes = await fetch(`${url.origin}/api/cashier/transactions`, {
       headers: { cookie }
     });
- 
-    if (cashRes.ok) {
+    if (!cashRes.ok) {
+      // Fallback
+  return {
+    transactions: [],
+    orders: [],
+    stats: { todayTotal: 0, transactionCount: 0, cashTotal: 0, cardTotal: 0, avgTransaction: 0 }
+  }; 
+    }
       const data = await cashRes.json();
       console.log("cashier res...",data);
       
       return { 
-        user,
         transactions: data.data?.transactions || [],
         orders: data.data?.orders || [],
         stats: data.data?.stats || {}
       };
-    }
+   
     
-    // Fallback
-    return {
-      user,
-      transactions: [],
-      orders: [],
-      stats: { todayTotal: 0, transactionCount: 0, cashTotal: 0, cardTotal: 0, avgTransaction: 0 }
-    };
+     
+   
   } catch (error) {
     if (error instanceof Response) throw error;
     console.error('Cashier loader error:', error);
@@ -130,9 +116,10 @@ const getPaymentIcon = (method) => {
 };
 
 export default function CashierDashboard({loaderData,actionData}) {
-  const { user, transactions, stats, orders } = loaderData;
+  const { transactions, stats, orders } = loaderData;
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [activeTab, setActiveTab] = useState('orders');
+  const {user}=useOutletContext();
 
   const pendingTransactions = transactions?.filter(t => t.status === 'PENDING') || [];
   const pendingOrders = orders?.filter(o => ['AWAITING_PAYMENT', 'READY'].includes(o.status)) || [];
@@ -180,7 +167,6 @@ export default function CashierDashboard({loaderData,actionData}) {
             </div>
           </CardContent>
         </Card>
-
         <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardContent className="pt-6">
             <div className="text-sm text-gray-600">Card Payments</div>
