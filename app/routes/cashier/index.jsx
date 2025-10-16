@@ -123,6 +123,7 @@ export default function CashierDashboard({loaderData,actionData}) {
 
   const pendingTransactions = transactions?.filter(t => t.status === 'PENDING') || [];
   const pendingOrders = orders?.filter(o => ['AWAITING_PAYMENT', 'READY'].includes(o.status)) || [];
+console.log("cashier transactions...",loaderData);
 
   return (
     <div className="min-h-screen p-4">
@@ -284,8 +285,8 @@ export default function CashierDashboard({loaderData,actionData}) {
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="rounded-full bg-green-100 p-4 mb-4">
-                    <CheckCircle className="size-8 text-green-600" />
+                  <div className="bg-green-600 dark:bg-green-100 p-3 rounded-lg">
+                    <CheckCircle className="size-8 text-green-100 dark:text-green-600" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2">All Caught Up!</h3>
                   <p className="text-muted-foreground max-w-sm">
@@ -300,7 +301,7 @@ export default function CashierDashboard({loaderData,actionData}) {
 
       {/* Recent Transactions */}
       {activeTab === 'transactions' && (
-        <Card className="border-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
+        <Card className="border-4 h-full min-h-max bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Receipt className="size-5" />
@@ -311,7 +312,7 @@ export default function CashierDashboard({loaderData,actionData}) {
             <div className="space-y-3">
               {transactions && transactions.length > 0 ? (
                 transactions.map((txn) => (
-                  <div key={txn.id} className="flex items-center justify-between p-3 rounded-lg border-4 bg-gray-200/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
+                  <div key={txn.id} className="flex items-center  justify-between p-3 rounded-lg border-4 bg-gray-200/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
                     <div className="flex items-center gap-3">
                       {getPaymentIcon(txn.paymentMethod)}
                       <div>
@@ -343,9 +344,10 @@ export default function CashierDashboard({loaderData,actionData}) {
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="rounded-full bg-muted p-4 mb-4">
-                    <Receipt className="size-8 text-muted-foreground" />
+                  <div className="bg-green-600 dark:bg-green-100 p-3 rounded-lg">
+                    <Receipt className="size-8 text-green-100 dark:text-green-600" />
                   </div>
+                 
                   <h3 className="font-semibold text-lg mb-2">No transactions yet</h3>
                   <p className="text-muted-foreground max-w-sm mb-6">
                     Your recent transactions will appear here once you start processing payments.
