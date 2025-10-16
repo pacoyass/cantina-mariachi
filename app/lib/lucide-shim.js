@@ -72,4 +72,5 @@ export { default as Plus } from 'lucide-react/dist/esm/icons/plus.js'
 // Role-specific dashboard icons
 export { default as Receipt } from 'lucide-react/dist/esm/icons/receipt.js'
 export { default as Navigation } from 'lucide-react/dist/esm/icons/navigation.js'
+export { default as XCircle } from 'lucide-react/dist/esm/icons/x-circle.js'
 
