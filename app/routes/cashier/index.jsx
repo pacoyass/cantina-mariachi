@@ -211,7 +211,7 @@ export default function CashierDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex min-h-[calc(100vh-3.5rem)] bg-gray-50">
       {/* Sidebar */}
       <Sidebar user={user} />
 
@@ -305,18 +305,20 @@ export default function CashierDashboard() {
             </div>
           </div>
 
-          {/* STEP 1: NEW ORDERS - Need Confirmation */}
-          {pendingOrders && pendingOrders.length > 0 && (
-            <Card className="mb-6 border-l-4 border-l-yellow-500">
-              <CardHeader className="bg-yellow-50">
-                <CardTitle className="flex items-center gap-2 text-yellow-800">
-                  <Bell className="size-5 animate-pulse" />
-                  STEP 1: New Orders ({pendingOrders.length})
+          {/* STEP 1: NEW ORDERS - Need Confirmation (ALWAYS VISIBLE) */}
+          <Card className="mb-6 border-l-4 border-l-yellow-500">
+            <CardHeader className="bg-yellow-50">
+              <CardTitle className="flex items-center gap-2 text-yellow-800">
+                <Bell className={`size-5 ${pendingOrders && pendingOrders.length > 0 ? 'animate-pulse' : ''}`} />
+                STEP 1: New Orders ({pendingOrders?.length || 0})
+                {pendingOrders && pendingOrders.length > 0 && (
                   <Badge variant="destructive" className="ml-2">{pendingOrders.length} NEED REVIEW</Badge>
-                </CardTitle>
-                <p className="text-sm text-yellow-700">Review client orders and confirm</p>
-              </CardHeader>
-              <CardContent className="pt-4">
+                )}
+              </CardTitle>
+              <p className="text-sm text-yellow-700">Review client orders and confirm</p>
+            </CardHeader>
+            <CardContent className="pt-4">
+              {pendingOrders && pendingOrders.length > 0 ? (
                 <div className="space-y-3">
                   {pendingOrders.map((order) => (
                     <div key={order.id} className="p-4 rounded-lg border-2 border-yellow-300 bg-white">
@@ -364,9 +366,14 @@ export default function CashierDashboard() {
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              ) : (
+                <div className="text-center py-6 text-muted-foreground">
+                  ✅ No new orders right now
+                  <div className="text-xs mt-2">New client orders will appear here</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* STEP 2: CONFIRMED - Send to Kitchen (ALWAYS VISIBLE) */}
           <Card className="mb-6 border-l-4 border-l-indigo-500">
