@@ -211,12 +211,12 @@ export default function CashierDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <>
       {/* Sidebar */}
       <Sidebar user={user} />
 
-      {/* Main Content */}
-      <div className="flex-1 ml-64 overflow-y-auto pt-14">
+      {/* Main Content - with proper layout to avoid footer overlap */}
+      <div className="min-h-screen bg-gray-50 ml-64 pt-14">
         <div className="p-6">
           {/* Header */}
           <div className="mb-6">
@@ -620,6 +620,6 @@ export default function CashierDashboard() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
