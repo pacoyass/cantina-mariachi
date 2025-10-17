@@ -31,9 +31,9 @@ export async function loader({ request }) {
     const authData = await authRes.json();
     const user = authData.data?.user;
     
-    // Check if user has admin role
+    // Only ADMIN and OWNER roles can access
     if (!user || !['ADMIN', 'OWNER'].includes(user.role)) {
-      throw redirect("/");
+      throw redirect("/dashboard"); // Redirect to smart dashboard router
     }
     
     // Get dashboard stats

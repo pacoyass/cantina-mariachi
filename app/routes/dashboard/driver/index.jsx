@@ -35,8 +35,9 @@ export async function loader({ request }) {
     const authData = await authRes.json();
     const user = authData.data?.user;
     
+    // Only DRIVER role can access
     if (!user || user.role !== 'DRIVER') {
-      throw redirect("/");
+      throw redirect("/dashboard"); // Redirect to smart dashboard router
     }
     
     // Get driver's deliveries

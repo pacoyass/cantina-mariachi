@@ -31,6 +31,23 @@ export async function loader({ request }) {
   const cookie = request.headers.get("cookie") || "";
   
   try {
+    // Check authentication and role
+    const authRes = await fetch(`${url.origin}/api/users/me`, {
+      headers: { cookie }
+    });
+    
+    if (!authRes.ok) {
+      throw redirect("/login?redirect=/cashier");
+    }
+    
+    const authData = await authRes.json();
+    const user = authData.data?.user;
+    
+    // Only CASHIER role can access
+    if (!user || user.role !== 'CASHIER') {
+      throw redirect("/dashboard"); // Redirect to smart dashboard router
+    }
+    
     // Get all delivery orders grouped by status
     const [transactionsRes, driversRes] = await Promise.all([
       fetch(`${url.origin}/api/cashier/transactions`, {
