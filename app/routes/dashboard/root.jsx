@@ -1,50 +1,54 @@
-import { redirect, useOutletContext, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { redirect } from "react-router";
 
 export const meta = () => [
   { title: "Dashboard - Cantina" },
 ];
 
-export default function DashboardRoot() {
-  const { user } = useOutletContext() || {};
-  const navigate = useNavigate();
+// Simple server-side redirect - ONE API call only
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
   
-  useEffect(() => {
-    // Client-side redirect based on user role
-    if (!user) {
-      navigate("/login?redirect=/dashboard", { replace: true });
-      return;
+  try {
+    // Single API call to check user role
+    const authRes = await fetch(`${url.origin}/api/users/me`, {
+      headers: { cookie }
+    });
+    
+    if (!authRes.ok) {
+      throw redirect("/login?redirect=/dashboard");
     }
     
-    // Role-based redirect
+    const authData = await authRes.json();
+    const user = authData.data?.user;
+    
+    if (!user) {
+      throw redirect("/login");
+    }
+    
+    // Immediate server-side redirect based on role
     switch (user.role) {
       case 'OWNER':
       case 'ADMIN':
-        navigate('/admin', { replace: true });
-        break;
+        throw redirect('/admin');
       
       case 'CASHIER':
-        navigate('/cashier', { replace: true });
-        break;
+        throw redirect('/cashier');
       
       case 'DRIVER':
-        navigate('/driver', { replace: true });
-        break;
+        throw redirect('/driver');
       
       case 'CUSTOMER':
       default:
-        navigate('/account', { replace: true });
-        break;
+        throw redirect('/account');
     }
-  }, [user, navigate]);
-  
-  // Show loading state while redirecting
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-        <p className="text-gray-600">Redirecting to your dashboard...</p>
-      </div>
-    </div>
-  );
+  } catch (error) {
+    if (error instanceof Response) throw error;
+    throw redirect("/login");
+  }
+}
+
+// This should never render
+export default function DashboardRoot() {
+  return null;
 }
