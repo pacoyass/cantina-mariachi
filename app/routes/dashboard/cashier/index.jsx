@@ -185,9 +185,10 @@ export async function action({ request }) {
   }
 }
 
-export default function CashierDashboard() {
-  const loaderData = useLoaderData();
-  const { user } = useOutletContext();
+export default function CashierDashboard({loaderData}) {
+  const {user}=useOutletContext() || {}
+  console.log("user from cashier...",user);
+  
   const submit = useSubmit();
   const { 
     stats, 
