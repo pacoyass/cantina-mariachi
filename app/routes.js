@@ -16,22 +16,25 @@ export default [
     route("account", "routes/account.jsx"),
     
     // Smart role-based redirect
-    route("dashboard", "routes/dashboard.jsx"),
-    
-    // Admin routes (OWNER, ADMIN)
-    route("admin", "routes/admin/layout.jsx", [
-      index("routes/admin/index.jsx"),
-      route("orders", "routes/admin/orders.jsx"),
-      route("menu", "routes/admin/menu.jsx"),
-      route("users", "routes/admin/users.jsx"),
-      route("reservations", "routes/admin/reservations.jsx"),
-      route("analytics", "routes/admin/analytics.jsx"),
-      route("settings", "routes/admin/settings.jsx"),
+    layout("./routes/dashboard/root.jsx", [
+      // Role-specific dashboards
+    route("cashier", "routes/dashboard/cashier/index.jsx"),  // CASHIER
+    route("driver", "routes/dashboard/driver/index.jsx"),    // DRIVER
+ // Admin routes (OWNER, ADMIN)
+    route("admin", "routes/dashboard/admin/layout.jsx", [
+      index("routes/dashboard/admin/index.jsx"),
+      route("orders", "routes/dashboard/admin/orders.jsx"),
+      route("menu", "routes/dashboard/admin/menu.jsx"),
+      route("users", "routes/dashboard/admin/users.jsx"),
+      route("reservations", "routes/dashboard/admin/reservations.jsx"),
+      route("analytics", "routes/dashboard/admin/analytics.jsx"),
+      route("settings", "routes/dashboard/admin/settings.jsx"),
+    ]),
     ]),
     
-    // Role-specific dashboards
-    route("cashier", "routes/cashier/index.jsx"),  // CASHIER
-    route("driver", "routes/driver/index.jsx"),    // DRIVER
+   
+    
+    
     
   ]),
 

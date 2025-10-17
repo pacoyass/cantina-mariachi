@@ -1,13 +1,13 @@
 import { useLoaderData, Outlet, redirect } from "react-router";
 import { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Sidebar } from "../../components/admin/Sidebar";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
+import { Sidebar } from "../../../components/admin/Sidebar";
 import { useTranslation } from 'react-i18next';
 import { 
   Bell,
   Menu
-} from "../../lib/lucide-shim.js";
+} from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Admin Dashboard - Cantina" },

@@ -1,16 +1,16 @@
 import { useLoaderData, Form, useSearchParams, Link } from "react-router";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Input } from "../../components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
+import { Input } from "../../../components/ui/input";
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
+} from "../../../components/ui/select";
 import { useTranslation } from 'react-i18next';
 import { 
   Search,
@@ -23,8 +23,8 @@ import {
   AlertCircle,
   Truck,
   MapPin
-} from "../../lib/lucide-shim.js";
-import { formatCurrency } from '../../lib/utils';
+} from "../../../lib/lucide-shim.js";
+import { formatCurrency } from '../../../lib/utils';
 
 export const meta = () => [
   { title: "Orders Management - Admin - Cantina" },

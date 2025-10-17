@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 import { 
   TrendingUp, 
   DollarSign, 
@@ -10,7 +10,7 @@ import {
   Calendar,
   BarChart3,
   Download
-} from "../../lib/lucide-shim.js";
+} from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Analytics - Admin - Cantina" },

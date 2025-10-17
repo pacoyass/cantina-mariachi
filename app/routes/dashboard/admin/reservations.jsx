@@ -1,8 +1,8 @@
 import { useLoaderData } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import { Calendar, Users, Clock, MapPin } from "../../lib/lucide-shim.js";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import { Calendar, Users, Clock, MapPin } from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Reservations Management - Admin - Cantina" },

@@ -1,8 +1,8 @@
 import { useLoaderData, Form, redirect } from "react-router";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
 import { 
   Truck, 
   MapPin,
@@ -13,7 +13,7 @@ import {
   Package,
   AlertCircle,
   DollarSign
-} from "../../lib/lucide-shim.js";
+} from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Driver Dashboard - Cantina" },

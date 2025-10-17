@@ -1,11 +1,11 @@
 import { useLoaderData, Form } from "react-router";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Separator } from "../../components/ui/separator";
-import { Badge } from "../../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import { Separator } from "../../../components/ui/separator";
+import { Badge } from "../../../components/ui/badge";
 import { 
   Settings, 
   Bell, 
@@ -17,7 +17,7 @@ import {
   Clock,
   DollarSign,
   CheckCircle
-} from "../../lib/lucide-shim.js";
+} from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Settings - Admin - Cantina" },

@@ -1,4 +1,4 @@
-import { redirect } from "react-router";
+import { Outlet, redirect } from "react-router";
 
 export const meta = () => [
   { title: "Dashboard - Cantina" },
@@ -47,7 +47,7 @@ export async function loader({ request }) {
   }
 }
 
-export default function Dashboard() {
+export default function DashboardLayout() {
   // This should never render due to redirects
-  return null;
+  return <Outlet/>;
 }
