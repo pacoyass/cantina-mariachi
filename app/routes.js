@@ -16,7 +16,7 @@ export default [
     route("account", "routes/account.jsx"),
     
     // Smart role-based redirect
-    layout("./routes/dashboard/root.jsx", [
+    layout("routes/dashboard/root.jsx", [
       // Role-specific dashboards
     route("cashier", "routes/dashboard/cashier/index.jsx"),  // CASHIER
     route("driver", "routes/dashboard/driver/index.jsx"),    // DRIVER
