@@ -1,4 +1,4 @@
-import { useLoaderData, Outlet, redirect } from "react-router";
+import { useLoaderData, Outlet, redirect, useOutletContext } from "react-router";
 import { useState } from "react";
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
@@ -19,29 +19,20 @@ export async function loader({ request }) {
   const cookie = request.headers.get("cookie") || "";
   
   try {
-    // Check if user is authenticated and has admin privileges
-    const authRes = await fetch(`${url.origin}/api/users/me`, {
-      headers: { cookie }
-    });
-    
-    if (!authRes.ok) {
-      throw redirect("/login?redirect=/admin");
-    }
-    
-    const authData = await authRes.json();
-    const user = authData.data?.user;
-    
-    // Only ADMIN and OWNER roles can access
-    if (!user || !['ADMIN', 'OWNER'].includes(user.role)) {
-      throw redirect("/dashboard"); // Redirect to smart dashboard router
-    }
-    
     // Get dashboard stats
+    // The API endpoints already check authentication and ADMIN/OWNER role
     const [ordersRes, usersRes, menuRes] = await Promise.all([
       fetch(`${url.origin}/api/admin/stats/orders`, { headers: { cookie } }),
       fetch(`${url.origin}/api/admin/stats/users`, { headers: { cookie } }),
       fetch(`${url.origin}/api/admin/stats/menu`, { headers: { cookie } })
     ]);
+    
+    // If any API returns 401/403, redirect to login
+    if ((!ordersRes.ok && (ordersRes.status === 401 || ordersRes.status === 403)) ||
+        (!usersRes.ok && (usersRes.status === 401 || usersRes.status === 403)) ||
+        (!menuRes.ok && (menuRes.status === 401 || menuRes.status === 403))) {
+      throw redirect("/login?redirect=/admin");
+    }
     
     const stats = {
       orders: ordersRes.ok ? (await ordersRes.json()).data : { total: 0, pending: 0, today: 0 },
@@ -49,7 +40,7 @@ export async function loader({ request }) {
       menu: menuRes.ok ? (await menuRes.json()).data : { total: 0, available: 0 }
     };
     
-    return { user, stats };
+    return { stats };
   } catch (error) {
     if (error instanceof Response) throw error;
     console.error('Admin loader error:', error);
@@ -58,7 +49,8 @@ export async function loader({ request }) {
 }
 
 export default function AdminLayout() {
-  const { user, stats } = useLoaderData();
+  const { stats } = useLoaderData();
+  const { user } = useOutletContext() || {};
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (

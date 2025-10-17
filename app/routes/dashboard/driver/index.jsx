@@ -24,31 +24,20 @@ export async function loader({ request }) {
   const cookie = request.headers.get("cookie") || "";
   
   try {
-    const authRes = await fetch(`${url.origin}/api/users/me`, {
-      headers: { cookie }
-    });
-    
-    if (!authRes.ok) {
-      throw redirect("/login?redirect=/driver");
-    }
-    
-    const authData = await authRes.json();
-    const user = authData.data?.user;
-    
-    // Only DRIVER role can access
-    if (!user || user.role !== 'DRIVER') {
-      throw redirect("/dashboard"); // Redirect to smart dashboard router
-    }
-    
     // Get driver's deliveries
+    // The API endpoint already checks authentication and DRIVER role
     const deliveriesRes = await fetch(`${url.origin}/api/driver/deliveries`, {
       headers: { cookie }
     });
     
+    // If API returns 401/403, redirect to login
+    if (!deliveriesRes.ok && (deliveriesRes.status === 401 || deliveriesRes.status === 403)) {
+      throw redirect("/login?redirect=/driver");
+    }
+    
     if (deliveriesRes.ok) {
       const data = await deliveriesRes.json();
       return { 
-        user,
         deliveries: data.data?.deliveries || []
       };
     }
@@ -153,7 +142,8 @@ const getTimeSince = (timeString) => {
 };
 
 export default function DriverDashboard() {
-  const { user, deliveries } = useLoaderData();
+  const { deliveries } = useLoaderData();
+  const { user } = useOutletContext() || {};
   const [filter, setFilter] = useState('active');
 
   const filteredDeliveries = deliveries.filter(delivery => {

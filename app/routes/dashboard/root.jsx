@@ -1,55 +1,50 @@
-import { Outlet, redirect, useOutletContext } from "react-router";
+import { redirect, useOutletContext, useNavigate } from "react-router";
+import { useEffect } from "react";
 
 export const meta = () => [
   { title: "Dashboard - Cantina" },
 ];
 
-// Smart redirect based on user role
-export async function loader({ request }) {
-  const url = new URL(request.url);
-  const cookie = request.headers.get("cookie") || "";
+export default function DashboardRoot() {
+  const { user } = useOutletContext() || {};
+  const navigate = useNavigate();
   
-  try {
-    const authRes = await fetch(`${url.origin}/api/users/me`, {
-      headers: { cookie }
-    });
-    
-    if (!authRes.ok) {
-      throw redirect("/login?redirect=/dashboard");
-    }
-    
-    const authData = await authRes.json();
-    const user = authData.data?.user;
-    
+  useEffect(() => {
+    // Client-side redirect based on user role
     if (!user) {
-      throw redirect("/login");
+      navigate("/login?redirect=/dashboard", { replace: true });
+      return;
     }
     
     // Role-based redirect
     switch (user.role) {
       case 'OWNER':
       case 'ADMIN':
-        throw redirect('/admin');
+        navigate('/admin', { replace: true });
+        break;
       
       case 'CASHIER':
-        throw redirect('/cashier');
+        navigate('/cashier', { replace: true });
+        break;
       
       case 'DRIVER':
-        throw redirect('/driver');
+        navigate('/driver', { replace: true });
+        break;
       
       case 'CUSTOMER':
       default:
-        throw redirect('/account');
+        navigate('/account', { replace: true });
+        break;
     }
-  } catch (error) {
-    if (error instanceof Response) throw error;
-    throw redirect("/login");
-  }
-}
-
-export default function DashboardLayout() {
-  const { user } = useOutletContext() || {};
+  }, [user, navigate]);
   
-  // This should never render due to redirects in loader
-  return <Outlet context={{user}} />;
+  // Show loading state while redirecting
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+        <p className="text-gray-600">Redirecting to your dashboard...</p>
+      </div>
+    </div>
+  );
 }
