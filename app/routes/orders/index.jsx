@@ -2,7 +2,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from ".
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from "react-router";
+import { useLoaderData, redirect, Form } from "react-router";
 
 export const meta = () => [
 	{ title: "My Orders - Cantina" },

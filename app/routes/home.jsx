@@ -34,116 +34,332 @@ function JsonLd({ items }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }} />
 }
 
-// export async function loader({ request, context }) {
-//   const url = new URL(request.url);
-//   const cookie = request.headers.get("cookie") || "";
-//   const headers = { cookie };
-//   const urlLng = url.searchParams.get('lng');
-//   const cookieLng = (() => { try { return (cookie.match(/(?:^|; )i18next=([^;]+)/) || [])[1] && decodeURIComponent((cookie.match(/(?:^|; )i18next=([^;]+)/) || [])[1]); } catch { return null; } })();
-//   const lng = context?.lng || urlLng || cookieLng || 'en';
+export async function loader({ request, context }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
+  const headers = { cookie };
+  const urlLng = url.searchParams.get('lng');
+  const cookieLng = (() => { try { return (cookie.match(/(?:^|; )i18next=([^;]+)/) || [])[1] && decodeURIComponent((cookie.match(/(?:^|; )i18next=([^;]+)/) || [])[1]); } catch { return null; } })();
+  const lng = context?.lng || urlLng || cookieLng || 'en';
 
-
-
-//   const itemsPromise = (async () => {
-//     try {
-//       const res = await fetch(`${url.origin}/api/menu/items`, { headers });
-//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//       const data = await res.json();
-//       const items = Array.isArray(data?.data?.items) ? data.data.items.slice(0, 6) : [];
-//       return items;
-//     } catch {
-//       return [];
-//     }
-//   })();
-//   const offersPromise = (async () => {
-//     try {
-//       const res = await fetch(`${url.origin}/api/home/offers`, { headers });
-//     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//       const data = await res.json();
-//       return Array.isArray(data?.data?.offers) ? data.data.offers : [];
-//     } catch {
-//       return [];
-//     }
-//   })();
-//   const testimonialsPromise = (async () => {
-//     try {
-//       const res = await fetch(`${url.origin}/api/home/testimonials`, { headers });
-//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//       const data = await res.json();
-//       return Array.isArray(data?.data?.testimonials) ? data.data.testimonials : [];
-//     } catch {
-//       return [];
-//     }
-//   })();
-//   const drinksPromise = (async () => {
-//     try {
-//       const catRes = await fetch(`${url.origin}/api/menu/categories`, { headers });
-//       if (!catRes.ok) throw new Error(`HTTP ${catRes.status}`);
-//       const catJson = await catRes.json();
-//       const categories = Array.isArray(catJson?.data?.categories) ? catJson.data.categories : [];
-//       const drinksCat = categories.find(c => c.name.toLowerCase() === 'drinks');
-//       if (!drinksCat?.id) return [];
-//       const itemsRes = await fetch(`${url.origin}/api/menu/items?categoryId=${encodeURIComponent(drinksCat.id)}&available=true`, { headers });
-//       if (!itemsRes.ok) throw new Error(`HTTP ${itemsRes.status}`);
-//       const itemsJson = await itemsRes.json();
-//       return Array.isArray(itemsJson?.data?.items) ? itemsJson.data.items.slice(0, 6) : [];
-//     } catch {
-//       return [];
-//     }
-//   })();
-//   const configPromise = (async () => {
-//     try {
-//       const res = await fetch(`${url.origin}/api/config/public`, { headers });
-//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//       const data = await res.json();
-//       return data?.data || {};
-//     } catch {
-//       return {};
-//     }
-//   })();
-//   const cmsPromise = (async () => {
-//     try {
-//       const res = await fetch(`${url.origin}/api/cms/home?locale=${encodeURIComponent(lng)}`, { headers });
-//       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-//       const data = await res.json();
-//       return data?.data?.page?.data || {};
-//     } catch {
-//       // Return minimal defaults so UI doesn't skeleton forever
-//       // These will be translated by the t() function in the component
-//       return {
-//         hero: {
-//           badge: 'New',
-//           title: 'Authentic Mexican. <primary>Delivered fast.</primary>',
-//           desc: 'Order in seconds, reserve instantly, track live.'
-//         },
-//         cta: {
-//           limited: 'Limited-time offer',
-//           title: '🔥 FREE DELIVERY on $25+ Orders',
-//           desc: 'Order in seconds or reserve instantly.',
-//           socialProof: 'Join 2,847+ customers who saved today',
-//           start: 'Start an Order',
-//           reserve: 'Reserve Now'
-//         }
-//       };
-//     }
-//   })();
-//   return {
-//     items: itemsPromise,
-//     offers: offersPromise,
-//     testimonials: testimonialsPromise,
-//     drinks: drinksPromise,
-//     config: configPromise,
-//     cms: cmsPromise,
-//   };
-// }
+  const itemsPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/menu/items`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const items = Array.isArray(data?.data?.items) ? data.data.items.slice(0, 6) : [];
+      return items;
+    } catch {
+      return [];
+    }
+  })();
+  
+  const offersPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/home/offers`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return Array.isArray(data?.data?.offers) ? data.data.offers : [];
+    } catch {
+      return [];
+    }
+  })();
+  
+  const testimonialsPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/home/testimonials`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return Array.isArray(data?.data?.testimonials) ? data.data.testimonials : [];
+    } catch {
+      return [];
+    }
+  })();
+  
+  const drinksPromise = (async () => {
+    try {
+      const catRes = await fetch(`${url.origin}/api/menu/categories`, { headers });
+      if (!catRes.ok) throw new Error(`HTTP ${catRes.status}`);
+      const catJson = await catRes.json();
+      const categories = Array.isArray(catJson?.data?.categories) ? catJson.data.categories : [];
+      const drinksCat = categories.find(c => c.name.toLowerCase() === 'drinks');
+      if (!drinksCat?.id) return [];
+      const itemsRes = await fetch(`${url.origin}/api/menu/items?categoryId=${encodeURIComponent(drinksCat.id)}&available=true`, { headers });
+      if (!itemsRes.ok) throw new Error(`HTTP ${itemsRes.status}`);
+      const itemsJson = await itemsRes.json();
+      return Array.isArray(itemsJson?.data?.items) ? itemsJson.data.items.slice(0, 6) : [];
+    } catch {
+      return [];
+    }
+  })();
+  
+  const configPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/config/public`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data?.data || {};
+    } catch {
+      return {};
+    }
+  })();
+  
+  const cmsPromise = (async () => {
+    try {
+      const res = await fetch(`${url.origin}/api/cms/home?locale=${encodeURIComponent(lng)}`, { headers });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data?.data?.page?.data || {};
+    } catch {
+      // Return minimal defaults so UI doesn't skeleton forever
+      // These will be translated by the t() function in the component
+      return {
+        hero: {
+          badge: 'New',
+          title: 'Authentic Mexican. <primary>Delivered fast.</primary>',
+          desc: 'Order in seconds, reserve instantly, track live.'
+        },
+        cta: {
+          limited: 'Limited-time offer',
+          title: '🔥 FREE DELIVERY on $25+ Orders',
+          desc: 'Order in seconds or reserve instantly.',
+          socialProof: 'Join 2,847+ customers who saved today',
+          start: 'Start an Order',
+          reserve: 'Reserve Now'
+        }
+      };
+    }
+  })();
+  
+  return {
+    items: itemsPromise,
+    offers: offersPromise,
+    testimonials: testimonialsPromise,
+    drinks: drinksPromise,
+    config: configPromise,
+    cms: cmsPromise,
+  };
+}
 
 const LazyFAQ = lazy(() => import("../components/home/FAQ.jsx"));
 const LazyTestimonials = lazy(() => import("../components/home/Testimonials.jsx"));
 const LazyOffers = lazy(() => import("../components/home/Offers.jsx"));
+
 export default function Home() {
-  return(
-    <div>homepage</div>
-  )
+  const { items, offers, testimonials, drinks, config, cms } = useLoaderData();
+  const { t, i18n } = useTranslation(['home','popular']);
+  const safeCms = cms || {};
+
+  return (
+    <main className="space-y-0">
+      <Suspense>
+        <Await resolve={items}>{(resolved) => <JsonLd items={resolved} />}</Await>
+      </Suspense>
+      
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="container mx-auto px-6 pt-16 pb-12 grid gap-12 md:grid-cols-2 md:items-center">
+          <div className="space-y-6">
+            <div className="w-fit bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm">
+              {safeCms.hero?.badge ?? t('hero.badge')}
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+              {safeCms.hero?.title ? (
+                <span dangerouslySetInnerHTML={{ __html: safeCms.hero.title }} />
+              ) : (
+                <Trans i18nKey="hero.title" ns="home" components={{ primary: <span key="primary" className="text-primary" /> }} />
+              )}
+            </h1>
+            <p className="text-muted-foreground max-w-prose">
+              {safeCms.hero?.desc || t('hero.desc')}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button className="px-6" aria-label={t('hero.orderNow')}>
+                {t('hero.orderNow')}
+              </Button>
+              <Button variant="secondary" className="px-6" aria-label={t('hero.reserve')}>
+                {t('hero.reserve')}
+              </Button>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="aspect-[4/3] rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+              <img 
+                src="/hero.jpg" 
+                alt={safeCms.hero?.imageAlt || t('hero.imageAlt')} 
+                loading="eager" 
+                width="1200" 
+                height="900" 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why choose us */}
+      <section className="container mx-auto px-6 py-14">
+        <h2 className="text-2xl font-semibold tracking-tight mb-4">{t('why.heading')}</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <FeatureCard icon={<Clock className="size-5" />} title={t('why.faster.title')}>
+            {t('why.faster.desc')}
+          </FeatureCard>
+          <FeatureCard icon={<ShieldCheck className="size-5" />} title={t('why.fees.title')}>
+            {t('why.fees.desc')}
+          </FeatureCard>
+          <FeatureCard icon={<Smartphone className="size-5" />} title={t('why.oneTap.title')}>
+            {t('why.oneTap.desc')}
+          </FeatureCard>
+          <FeatureCard icon={<Truck className="size-5" />} title={t('why.tracking.title')}>
+            {t('why.tracking.desc')}
+          </FeatureCard>
+          <FeatureCard icon={<UtensilsCrossed className="size-5" />} title={t('why.chef.title')}>
+            {t('why.chef.desc')}
+          </FeatureCard>
+          <FeatureCard icon={<Sparkles className="size-5" />} title={t('why.rewards.title')}>
+            {t('why.rewards.desc')}
+          </FeatureCard>
+        </div>
+      </section>
+
+      {/* Popular items */}
+      <section className="container mx-auto px-6 py-14">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-semibold tracking-tight">{cms?.popular?.heading ?? t('popular.heading')}</h2>
+          <Link className="text-sm underline" to="/menu">
+            {cms?.popular?.seeMenu ?? t('popular.seeMenu')}
+          </Link>
+        </div>
+        <Suspense fallback={<MenuItemsSkeleton count={3} />}>
+          <Await resolve={items} errorElement={<MenuItemsError message={t('popular.coming')} />}>
+            {(resolvedItems) => (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {resolvedItems && resolvedItems.length > 0 ? (
+                  resolvedItems.slice(0,3).map((item, idx) => (
+                    <PopularItemCard key={item.id} item={item} idx={idx} t={t} locale={i18n.language} />
+                  ))
+                ) : (
+                  [...Array(3)].map((_, i) => (
+                    <Card key={i} className="overflow-hidden">
+                      <CardHeader>
+                        <CardTitle>{t('popular.chefSpecial', { num: i + 1 })}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 gap-3">
+                          <div className="rounded-md overflow-hidden border bg-muted">
+                            <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" />
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{t('popular.coming')}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">$12.{i}0</span>
+                            <Button size="sm">{t('popular.notify')}</Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+          </Await>
+        </Suspense>
+      </section>
+
+      <ScrollRestoration />
+    </main>
+  );
+}
+
+function FeatureCard({ icon, title, children }) {
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-primary">{icon}</span>
+          <CardTitle className="text-base">{title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="text-sm text-muted-foreground">{children}</CardContent>
+    </Card>
+  );
+}
+
+function PopularItemCard({ item, idx, t, locale }) {
+  const tags = [item.isVegetarian ? t('popular.filters.vegetarian') : null, item.isVegan ? t('popular.filters.vegan') : null].filter(Boolean)
+  const keyFromName = (name) => (name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((w, i) => (i === 0 ? w : (w.charAt(0).toUpperCase() + w.slice(1))))
+    .join('');
+  const itemKey = keyFromName(item.name);
+  const translatedName = t(`menu:items.${itemKey}.name`, { defaultValue: item.name });
+  const translatedDesc = t(`menu:items.${itemKey}.description`, { defaultValue: item.description });
+  return (
+    <Card key={item.id} className="overflow-hidden">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="flex items-center gap-2">
+            <span>{translatedName}</span>
+            <div className="flex gap-1">
+              {idx === 0 && <Badge variant="secondary">{t('popular.numberOne')}</Badge>}
+              {Number(item.orderCount ?? item.popularity ?? 0) > 50 && <Badge variant="secondary">{t('popular.trending')}</Badge>}
+              {tags.map(tag => (<Badge key={tag} variant="outline">{tag}</Badge>))}
+            </div>
+          </CardTitle>
+          {item.available === false && (
+            <Badge variant="outline">{t('popular.unavailable')}</Badge>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 gap-3">
+          <div className="rounded-md overflow-hidden border bg-muted">
+            {item.imageUrl ? (
+              <img src={item.imageUrl} alt={`${translatedName} dish`} loading="lazy" width="640" height="360" className="w-full h-full object-cover aspect-video" />
+            ) : (
+              <div className="w-full aspect-video bg-gradient-to-br from-muted to-muted-foreground/10" aria-hidden="true" />)}
+          </div>
+          <div className="text-xs text-muted-foreground" aria-live="polite">
+            {t('popular.rating', { rating: (item.rating ?? 4.9).toFixed(1), reviews: item.reviews ?? 127 })}
+          </div>
+          <p className="text-sm text-muted-foreground line-clamp-2">{translatedDesc}</p>
+          <div className="flex items-center justify-between">
+            <span className="font-medium">{formatCurrency(item.price, locale)}</span>
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-orange-600">
+                {t('popular.onlyLeftToday', { count: Math.max(2, 10 - (item.orderCount ?? 3)) })}
+              </div>
+              <Button size="sm">{t('popular.orderNowDelivery', { mins: 25 })}</Button>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function MenuItemsSkeleton({ count = 3 }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: count }).map((_, i) => (
+        <Card key={i} className="overflow-hidden">
+          <CardContent>
+            <div className="animate-pulse space-y-3">
+              <div className="w-full aspect-video bg-muted rounded" />
+              <div className="h-4 bg-muted rounded w-2/3" />
+              <div className="h-3 bg-muted rounded w-1/2" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function MenuItemsError({ message }) {
+  return <div className="text-sm text-destructive">{message}</div>;
 }
 // export default function Home() {
 //   const { items, offers, testimonials, drinks, config, cms } = useLoaderData();
