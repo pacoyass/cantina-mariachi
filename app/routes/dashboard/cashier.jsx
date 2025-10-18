@@ -1,10 +1,10 @@
 import { useLoaderData, Form, redirect, useOutletContext, useSubmit } from "react-router";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
-import { Input } from "../../../components/ui/input";
-import { Sidebar } from "../../../components/cashier/Sidebar";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { Input } from "../../components/ui/input";
+import { Sidebar } from "../../components/cashier/Sidebar";
 import { 
   DollarSign, 
   CreditCard,
@@ -20,7 +20,7 @@ import {
   ChefHat,
   Package,
   ArrowRight,
-} from "../../../lib/lucide-shim.js";
+} from "../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Cashier Dashboard - Cantina" },

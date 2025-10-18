@@ -140,21 +140,21 @@ export default function AdminDashboard() {
   const { t, i18n } = useTranslation(['admin', 'ui']);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 ">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+      <div className="tracking-wide">
+        <h1 className="text-3xl font-bold ">
           {t('dashboard.title', { defaultValue: 'Dashboard' })}
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className="font-light mt-1">
           {t('dashboard.subtitle', { defaultValue: 'Welcome back! Here\'s what\'s happening today.' })}
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 ">
         {/* Orders */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.stats.orders', { defaultValue: 'Total Orders' })}
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Revenue */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30" >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.stats.revenue', { defaultValue: 'Monthly Revenue' })}
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Menu Items */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30" >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.stats.menu', { defaultValue: 'Menu Items' })}
@@ -206,7 +206,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Users */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30" >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {t('dashboard.stats.users', { defaultValue: 'Total Users' })}
@@ -226,7 +226,7 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* Pending Orders */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               {t('dashboard.pendingOrders', { defaultValue: 'Pending Orders' })}
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Today's Revenue */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30">
           <CardHeader>
             <CardTitle>
               {t('dashboard.todayRevenue', { defaultValue: 'Today\'s Revenue' })}
@@ -268,7 +268,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Quick Add */}
-        <Card>
+        <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30" >
           <CardHeader>
             <CardTitle>
               {t('dashboard.quickActions', { defaultValue: 'Quick Actions' })}
@@ -292,7 +292,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders */}
-      <Card>
+      <Card className="border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30" >
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             {t('dashboard.recentOrders', { defaultValue: 'Recent Orders' })}

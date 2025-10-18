@@ -54,7 +54,7 @@ export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen  flex">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
@@ -74,7 +74,7 @@ export default function AdminLayout() {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <div className="sticky top-0 z-30 flex h-16 bg-white border-b shadow-sm">
+        <div className="sticky top-0 z-30 flex h-16 border-b-4 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 shadow-sm">
           <Button
             variant="ghost"
             size="icon"
@@ -102,7 +102,7 @@ export default function AdminLayout() {
         </div>
 
         {/* Page content - no extra padding/margin at top */}
-        <main className="flex-1 bg-gray-50">
+        <main className="flex-1 ">
           <Outlet context={{ user }} />
         </main>
       </div>
