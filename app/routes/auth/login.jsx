@@ -436,7 +436,7 @@
 
 
 
-import Login from "../../pages/login";
+import Login from "../../pages/auth/login";
 import { useEffect } from "react";
 import { useRouteError, isRouteErrorResponse, data, useNavigate, redirect } from "react-router";
 

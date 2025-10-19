@@ -1,4 +1,4 @@
-import Register from "../../pages/register";
+import Register from "../../pages/auth/register";
 import { useEffect } from "react";
 import { useRouteError, isRouteErrorResponse, data, useNavigate, useNavigation, redirect } from "react-router";
 
