@@ -70,8 +70,8 @@ export async function loader( { request, context } )
       "CUSTOMER": "/account"
     };
 
-    const userDashboard = roleDashboard[user.role] || "/account";
-
+    const userDashboard =  "/account";
+    // roleDashboard[user.role] ||
     // If user is on base /dashboard path, redirect to their dashboard
     if (urlPathname === "/dashboard") {
       return redirect(userDashboard + `?lng=${lng}`, { replace: true });
@@ -184,7 +184,7 @@ console.log("root loader",loaderData?.result);
           suppressHydrationWarning
         >
           <div className="bg-mexican-pattern min-h-screen">
-            <Navbar initialStatus={initialStatus} user={loaderData?.result?.user}  />
+            <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} lang={lang} />
             {children}
             <Footer />
           </div>
@@ -209,7 +209,6 @@ console.log("root loader",loaderData?.result);
 export default function App()
 {
   const {result,lng}=useLoaderData() || {}; 
- console.log("portugal paco",{result,lng:lng});
  
   return <Outlet context={{ user:result?.user,lng }} />;
 }

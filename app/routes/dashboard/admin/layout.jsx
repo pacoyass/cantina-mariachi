@@ -14,9 +14,10 @@ export const meta = () => [
   { name: "robots", content: "noindex, nofollow" },
 ];
 
-export async function loader({ request }) {
+export async function loader({ request,context }) {
   const url = new URL(request.url);
   const cookie = request.headers.get("cookie") || "";
+  const lang =context.lng;
   
   try {
     // Get dashboard stats
@@ -40,7 +41,7 @@ export async function loader({ request }) {
       menu: menuRes.ok ? (await menuRes.json()).data : { total: 0, available: 0 }
     };
     
-    return { stats };
+    return { stats,lang };
   } catch (error) {
     if (error instanceof Response) throw error;
     console.error('Admin loader error:', error);
@@ -48,8 +49,8 @@ export async function loader({ request }) {
   }
 }
 
-export default function AdminLayout() {
-  const { stats } = useLoaderData();
+export default function AdminLayout({loaderData}) {
+  const { stats,lang } = loaderData;
   const { user } = useOutletContext() || {};
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -69,6 +70,7 @@ export default function AdminLayout() {
         stats={stats} 
         sidebarOpen={sidebarOpen} 
         setSidebarOpen={setSidebarOpen} 
+        lang={lang}
       />
 
       {/* Main content */}

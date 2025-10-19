@@ -10,7 +10,7 @@ import { LangToggle } from '../components/LangToggle'
 import { track } from '../lib/utils'
 import { checkAuthToken } from "@/utils/auth/authUtils"
 
-export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
+export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user,lang}) {
 
   console.log("from nav",user);
   const submit = useSubmit();
@@ -41,28 +41,28 @@ export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
               </SheetTrigger>
               <SheetContent>
                 <div className="flex flex-col gap-3">
-                  <NavLink to="/menu">{t('navigation.menu')}</NavLink>
-                  <NavLink to="/orders">{t('navigation.orders')}</NavLink>
-                  <NavLink to="/reservations">{t('navigation.reservations')}</NavLink>
-                  <NavLink to="/account">{t('navigation.account')}</NavLink>
+                  <NavLink to={`/menu?lng=${lang}`}>{t('navigation.menu')}</NavLink>
+                  <NavLink to={`/orders?lng=${lang}`}>{t('navigation.orders')}</NavLink>
+                  <NavLink to={`/reservations?lng=${lang}`}>{t('navigation.reservations')}</NavLink>
+                  <NavLink to={`/account?lng=${lang}`}>{t('navigation.account')}</NavLink>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
           <div className="hidden md:flex items-center gap-4 text-sm">
-            <NavLink to="/menu">{t('navigation.menu')}</NavLink>
-            <NavLink to="/orders">{t('navigation.orders')}</NavLink>
+            <NavLink to={`/menu?lng=${lang}`}>{t('navigation.menu')}</NavLink>
+            <NavLink to={`/orders?lng=${lang}`}>{t('navigation.orders')}</NavLink>
           </div>
         </div>
 
         <div className="flex items-center justify-center">
-          <NavLink to="/" className="text-lg font-semibold">{t('brand')}</NavLink>
+          <NavLink to={`/?lng=${lang}`} className="text-lg font-semibold">{t('brand')}</NavLink>
         </div>
 
         <div className="flex items-center justify-end gap-2">
           <div className="hidden md:flex items-center gap-4 text-sm mr-2">
-            <NavLink to="/reservations">{t('navigation.reservations')}</NavLink>
-            <NavLink to="/account">{t('navigation.account')}</NavLink>
+            <NavLink to={`/reservations?lng=${lang}`}>{t('navigation.reservations')}</NavLink>
+            <NavLink to={`/account?lng=${lang}`}>{t('navigation.account')}</NavLink>
           </div>
           <ModeToggle />
           <LangToggle />
@@ -75,9 +75,9 @@ export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild><NavLink to="/account">{t('navigation.account')}</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to="/login">{t('buttons.login')}</NavLink></DropdownMenuItem>
-              <DropdownMenuItem asChild><NavLink to="/register">{t('buttons.signup')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to={`/account?lng=${lang}`}>{t('navigation.account')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to={`/login?lng=${lang}`}>{t('buttons.login')}</NavLink></DropdownMenuItem>
+              <DropdownMenuItem asChild><NavLink to={`/register?lng=${lang}`}>{t('buttons.signup')}</NavLink></DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Button variant="ghost" onClick={handleLogout}>
                   {t('buttons.logout')}
@@ -89,12 +89,12 @@ export function Navbar( {initialStatus = { isOpen: true, etaMins: 25 } ,user}) {
         </div>
       </nav>
       <div className="mex-divider" />
-      <DesktopOrderBar isOpen={status.isOpen} eta={status.etaMins} />
+      <DesktopOrderBar isOpen={status.isOpen} eta={status.etaMins} lang={lang} />
     </header>
   )
 }
 
-function DesktopOrderBar({ isOpen, eta }) {
+function DesktopOrderBar({ isOpen, eta ,lang}) {
   const { t } = useTranslation('ui')
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -179,7 +179,7 @@ function DesktopOrderBar({ isOpen, eta }) {
           </div>
           <div className="flex items-center justify-end gap-3">
             <div className="text-muted-foreground hidden md:block whitespace-nowrap">{t('topbar.noSignup')}</div>
-            <NavLink to="/menu" className="underline whitespace-nowrap">{t('topbar.browse')}</NavLink>
+            <NavLink to={`/menu?lng=${lang}`} className="underline whitespace-nowrap">{t('topbar.browse')}</NavLink>
           </div>
         </div>
       </div>

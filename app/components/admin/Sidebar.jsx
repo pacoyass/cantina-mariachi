@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link, NavLink, useFetcher, useLocation } from "react-router";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { 
@@ -54,9 +54,9 @@ const navigation = [
   }
 ];
 
-export function Sidebar({ user, stats, sidebarOpen, setSidebarOpen }) {
+export function Sidebar({ user, stats, sidebarOpen, setSidebarOpen,lang }) {
   const location = useLocation();
-
+  
   const isActive = (item) => {
     if (item.exact) {
       return location.pathname === item.href;
@@ -98,14 +98,14 @@ export function Sidebar({ user, stats, sidebarOpen, setSidebarOpen }) {
             const badgeValue = item.badge ? getBadgeValue(item.badge) : null;
             
             return (
-              <Link
+              <NavLink
                 key={item.name}
-                replace={true}
-                to={item.href}
+                to={`${item.href}?lng=${lang}`}
+                relative="path"
                 className={`group flex  items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActive(item)
                     ? 'bg-primary text-primary-foreground'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    : ' hover:bg-gray-50 hover:text-gray-900'
                 }`}
                 onClick={() => setSidebarOpen(false)}
               >
@@ -116,7 +116,7 @@ export function Sidebar({ user, stats, sidebarOpen, setSidebarOpen }) {
                     {badgeValue}
                   </Badge>
                 )}
-              </Link>
+              </NavLink>
             );
           })}
         </div>
