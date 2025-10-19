@@ -1,17 +1,20 @@
-import { useLoaderData, Form, redirect } from "react-router";
+import { useLoaderData, Form, redirect, useOutletContext } from "react-router";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
+} from "../../../components/ui/select";
+import { Alert, AlertDescription } from "../../../components/ui/alert";
+import { UserSessionManagement } from "../../../components/shared/UserSessionManagement";
 import { useTranslation } from 'react-i18next';
 import { 
   Plus,
@@ -23,8 +26,10 @@ import {
   Shield,
   User,
   Mail,
-  Phone
-} from "../../lib/lucide-shim.js";
+  Phone,
+  AlertCircle,
+  CheckCircle
+} from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Users Management - Admin - Cantina" },
@@ -32,8 +37,6 @@ export const meta = () => [
 
 const userRoles = [
   { value: 'CUSTOMER', label: 'Customer', color: 'default' },
-  { value: 'WAITER', label: 'Waiter', color: 'secondary' },
-  { value: 'COOK', label: 'Cook', color: 'secondary' },
   { value: 'CASHIER', label: 'Cashier', color: 'secondary' },
   { value: 'DRIVER', label: 'Driver', color: 'secondary' },
   { value: 'ADMIN', label: 'Admin', color: 'destructive' },
@@ -48,18 +51,27 @@ export async function loader({ request }) {
   const status = url.searchParams.get("status") || "";
   
   try {
-    const usersRes = await fetch(`${url.origin}/api/admin/users?${new URLSearchParams({
-      role,
-      search,
-      status
-    })}`, {
-      headers: { cookie }
-    });
+    // Fetch both users and sessions data
+    const [usersRes, sessionsRes] = await Promise.all([
+      fetch(`${url.origin}/api/admin/users?${new URLSearchParams({
+        role,
+        search,
+        status
+      })}`, {
+        headers: { cookie }
+      }),
+      fetch(`${url.origin}/api/admin/users/sessions`, {
+        headers: { cookie }
+      })
+    ]);
     
     if (usersRes.ok) {
       const usersData = await usersRes.json();
+      const sessionsData = sessionsRes.ok ? await sessionsRes.json() : { data: [] };
+      
       return {
         users: usersData.data?.users || [],
+        usersWithSessions: sessionsData.data || [],
         filters: { role, search, status }
       };
     }
@@ -113,6 +125,7 @@ export async function loader({ request }) {
   
   return {
     users: mockUsers,
+    usersWithSessions: [],
     filters: { role, search, status }
   };
 }
@@ -209,10 +222,12 @@ const getRoleBadgeVariant = (role) => {
 };
 
 export default function UsersManagement() {
-  const { users, filters } = useLoaderData();
+  const { users, usersWithSessions, filters } = useLoaderData();
+  const { user: currentUser } = useOutletContext() || {};
   const { t } = useTranslation(['admin', 'ui']);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('users');
 
   const filteredUsers = users.filter(user => {
     const matchesRole = !filters.role || user.role === filters.role;
@@ -238,11 +253,29 @@ export default function UsersManagement() {
             {t('users.subtitle', { defaultValue: 'Manage staff and customer accounts' })}
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
-          <Plus className="size-4 mr-2" />
-          {t('users.addUser', { defaultValue: 'Add User' })}
-        </Button>
+        {activeTab === 'users' && (
+          <Button onClick={() => setShowCreateForm(true)}>
+            <Plus className="size-4 mr-2" />
+            {t('users.addUser', { defaultValue: 'Add User' })}
+          </Button>
+        )}
       </div>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="users">
+            <User className="size-4 mr-2" />
+            Users
+          </TabsTrigger>
+          <TabsTrigger value="sessions">
+            <Shield className="size-4 mr-2" />
+            Sessions
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Users Tab */}
+        <TabsContent value="users" className="space-y-6 mt-6">
 
       {/* Filters */}
       <Card>
@@ -479,6 +512,39 @@ export default function UsersManagement() {
           </Card>
         </div>
       )}
+        </TabsContent>
+
+        {/* Sessions Tab */}
+        <TabsContent value="sessions" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="size-5" />
+                User Session Management
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                View and manage active sessions for all users. Revoke suspicious or unused sessions to enhance security.
+              </p>
+            </CardHeader>
+            <CardContent>
+              {usersWithSessions && usersWithSessions.length > 0 ? (
+                <UserSessionManagement 
+                  usersData={usersWithSessions} 
+                  currentUser={currentUser}
+                />
+              ) : (
+                <div className="text-center py-12">
+                  <Shield className="size-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No Session Data Available</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Unable to load user sessions. Please check your connection or try again later.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

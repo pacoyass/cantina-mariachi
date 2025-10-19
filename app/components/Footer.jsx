@@ -1,4 +1,4 @@
-import { NavLink } from "react-router"
+import { NavLink, useLocation } from "react-router"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { Separator } from "./ui/separator"
@@ -8,8 +8,13 @@ import { useTranslation } from 'react-i18next'
 export function Footer() {
   const year = new Date().getFullYear()
   const { t } = useTranslation('ui')
+  const location = useLocation()
+  
+  // Check if we're on a page with a sidebar (cashier)
+  const hasSidebar = location.pathname.startsWith('/cashier')
+  
   return (
-    <footer className="border-t bg-background">
+    <footer className={`border-t bg-background relative z-20 ${hasSidebar ? 'ml-64' : ''}`}>
       <div className="container mx-auto px-6 py-10 grid gap-8 md:grid-cols-4">
         <div className="space-y-2">
           <div className="text-lg font-semibold">{t('brand')}</div>

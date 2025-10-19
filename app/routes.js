@@ -14,8 +14,28 @@ export default [
     route("orders/track", "routes/orders/track.jsx"),
     route("reservations", "routes/reservations.jsx"),
     route("account", "routes/account.jsx"),
-    route("admin", "routes/admin.jsx"),
-
+    
+    // Smart role-based redirect (only for /dashboard route)
+    route("dashboard", "routes/dashboard/root.jsx",[
+// Admin routes (OWNER, ADMIN)
+route("admin", "routes/dashboard/admin/layout.jsx", [
+  index("routes/dashboard/admin/index.jsx"),
+  route("orders", "routes/dashboard/admin/orders.jsx"),
+  route("menu", "routes/dashboard/admin/menu.jsx"),
+  route("users", "routes/dashboard/admin/users.jsx"),
+  route("reservations", "routes/dashboard/admin/reservations.jsx"),
+  route("analytics", "routes/dashboard/admin/analytics.jsx"),
+  route("settings", "routes/dashboard/admin/settings.jsx"),
+]),
+// Role-specific dashboards (NOT nested - to avoid redirect loop)
+route("cashier", "routes/dashboard/cashier.jsx"),  // /dashboard/cashier
+    route("driver", "routes/dashboard/driver.jsx"),
+    ]),
+    
+    
+   
+    
+    
     
   ]),
 

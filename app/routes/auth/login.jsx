@@ -436,7 +436,7 @@
 
 
 
-import Login from "../../pages/login";
+import Login from "../../pages/auth/login";
 import { useEffect } from "react";
 import { useRouteError, isRouteErrorResponse, data, useNavigate, redirect } from "react-router";
 
@@ -624,8 +624,9 @@ export async function action({ request, context }) {
             requestHeaders['x-csrf-token'] = csrfToken;
         }
         
-        console.log('📤 Request headers:', requestHeaders);
-        
+        console.log('📤 Request headers:', request);
+        const userAgent = request.headers.get("user-agent");
+
         // Add ?lng= so server detector prioritizes it over header/cookie
         const apiEndpoint = `${apiUrl}/api/auth/login?lng=${encodeURIComponent(currentLng)}`;
         const response = await fetch(apiEndpoint, {
@@ -635,6 +636,7 @@ export async function action({ request, context }) {
                 "Content-Type": "application/json",
                 'X-CSRF-Token': csrfToken, // Include the CSRF token in the headers
                 cookie: request.headers.get( 'cookie' ),
+                "User-Agent": userAgent || "unknown",
             },
             credentials: 'include',
             body: JSON.stringify({ email: finalEmail, password: finalPassword, remember: !!finalRemember }),

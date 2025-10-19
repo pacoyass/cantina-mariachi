@@ -51,15 +51,49 @@ export async function loader( { request, context } )
   // SSR fetch of public config to avoid hydration flicker in Navbar status
   let status = { isOpen: true, etaMins: 25 };
   const user=result?.user ?? null;
-  console.log("testing paco",result);
-  if (user && (urlPathname === "/login" || urlPathname === "/register")) {
+  if (user && (urlPathname === "/login" || urlPathname === "/register" )) {
    
     return redirect(`${redirectTo}?lng=${lng}`, { replace: true });
   }
   
-    if (!user && (urlPathname === "/menu" || urlPathname === "/account")) {
+    if (!user && (urlPathname === "/dashboard" || urlPathname === "/account" || urlPathname.startsWith("/dashboard"))) {
+    
       return redirect(`/login?redirect=${encodeURIComponent( urlPathname )}`,{replace:true});
     }
+     // NEW: Dashboard role-based redirect logic
+  if (user && urlPathname.startsWith("/dashboard")) {
+    const roleDashboard = {
+      "OWNER": "/dashboard/admin",
+      "ADMIN": "/dashboard/admin",
+      "CASHIER": "/dashboard/cashier",
+      "DRIVER": "/dashboard/driver", 
+      "CUSTOMER": "/account"
+    };
+
+    const userDashboard = roleDashboard[user.role] || "/account";
+
+    // If user is on base /dashboard path, redirect to their dashboard
+    if (urlPathname === "/dashboard") {
+      return redirect(userDashboard + `?lng=${lng}`, { replace: true });
+    }
+
+    // If user is trying to access wrong dashboard, redirect them
+    const allowedRoutes = {
+      "OWNER": ["/dashboard/admin"],
+      "ADMIN": ["/dashboard/admin"],
+      "CASHIER": ["/dashboard/cashier"],
+      "DRIVER": ["/dashboard/driver"]
+    };
+
+    const userAllowedRoutes = allowedRoutes[user.role] || [];
+    const isOnCorrectDashboard = userAllowedRoutes.some(route => 
+      urlPathname.startsWith(route)
+    );
+
+    if (!isOnCorrectDashboard) {
+      return redirect(userDashboard + `?lng=${lng}`, { replace: true });
+    }
+  }
   try {
     const url = new URL(request.url);
     const cookie = request.headers.get("cookie") || "";

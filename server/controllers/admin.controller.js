@@ -238,7 +238,7 @@ export const getUsers = async (req, res) => {
         name: 'Maria Garcia',
         email: 'maria@cantina.com',
         phone: '+1234567891',
-        role: 'COOK',
+        role: 'CASHIER',
         isActive: true,
         createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
         lastLogin: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString()
@@ -318,6 +318,95 @@ export const updateUserRole = async (req, res) => {
   }
 };
 
+// Session Management
+export const getAllUsersWithSessions = async (req, res) => {
+  try {
+    console.log('🔵 getAllUsersWithSessions called by user:', req.user?.id, 'role:', req.user?.role);
+    
+    const { databaseService } = await import('../services/databaseService.js');
+    
+    // Get all users
+    const users = await databaseService.getAllUsers();
+    console.log('📊 Found users:', users.length);
+    
+    // Get sessions for each user
+    const usersWithSessions = await Promise.all(
+      users.map(async (user) => {
+        const sessions = await databaseService.listRefreshTokensByUser(user.id, { page: 1, pageSize: 100 });
+        console.log(`  User ${user.email} has ${sessions.length} sessions`);
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          isActive: user.isActive,
+          sessions: sessions.map(s => ({
+            id: s.id,
+            expiresAt: s.expiresAt,
+            lastUsedAt: s.lastUsedAt,
+            userAgent: s.userAgent,
+            ip: s.ip,
+            createdAt: s.createdAt
+          }))
+        };
+      })
+    );
+    
+    console.log('✅ Returning', usersWithSessions.length, 'users with sessions');
+    
+    LoggerService.logActivity(req.user?.id, 'ADMIN_VIEW', 'Viewed all users with sessions', {
+      userId: req.user?.id,
+      totalUsers: usersWithSessions.length
+    });
+    
+    return createResponse(res, 200, 'Users with sessions retrieved successfully', usersWithSessions);
+  } catch (error) {
+    console.error('❌ Error in getAllUsersWithSessions:', error);
+    LoggerService.logError('Failed to get users with sessions', error.stack, {
+      path: req.path,
+      userId: req.user?.id
+    });
+    return createError(res, 500, 'internalError', 'USERS_SESSIONS_ERROR');
+  }
+};
+
+export const revokeUserSession = async (req, res) => {
+  try {
+    const { userId, sessionId } = req.params;
+    
+    if (!userId || !sessionId) {
+      return createError(res, 400, 'validationError', 'MISSING_PARAMETERS');
+    }
+    
+    const { databaseService } = await import('../services/databaseService.js');
+    
+    // Verify the session belongs to the user
+    const session = await databaseService.getRefreshTokenById(sessionId);
+    if (!session || session.userId !== userId) {
+      return createError(res, 404, 'Session not found or does not belong to user', 'SESSION_NOT_FOUND');
+    }
+    
+    // Delete the session
+    await databaseService.deleteRefreshToken(sessionId);
+    
+    LoggerService.logActivity(req.user?.id, 'ADMIN_ACTION', `Revoked session ${sessionId} for user ${userId}`, {
+      adminId: req.user?.id,
+      targetUserId: userId,
+      sessionId
+    });
+    
+    return createResponse(res, 200, 'Session revoked successfully', { userId, sessionId });
+  } catch (error) {
+    LoggerService.logError('Failed to revoke user session', error.stack, {
+      path: req.path,
+      userId: req.user?.id,
+      targetUserId: req.params.userId,
+      sessionId: req.params.sessionId
+    });
+    return createError(res, 500, 'internalError', 'SESSION_REVOKE_ERROR');
+  }
+};
+
 export default {
   // Stats
   getOrderStats,
@@ -333,5 +422,9 @@ export default {
   // Users
   getUsers,
   updateUserStatus,
-  updateUserRole
+  updateUserRole,
+  
+  // Sessions
+  getAllUsersWithSessions,
+  revokeUserSession
 };

@@ -1,6 +1,7 @@
 import express from 'express';
 import rateLimit from '../middleware/rateLimit.middleware.js';
 import authMiddleware from '../middleware/auth.middleware.js';
+import { createError } from '../utils/response.js';
 import { 
   getOrderStats,
   getRevenueStats,
@@ -11,7 +12,9 @@ import {
   updateOrderStatus,
   getUsers,
   updateUserStatus,
-  updateUserRole
+  updateUserRole,
+  getAllUsersWithSessions,
+  revokeUserSession
 } from '../controllers/admin.controller.js';
 
 const router = express.Router();
@@ -23,10 +26,16 @@ const rlStrict = rateLimit({ windowMs: 60_000, max: 30 });   // 30 requests per 
 // Middleware to check admin privileges
 const requireAdmin = (req, res, next) => {
   if (!req.user || !['ADMIN', 'OWNER'].includes(req.user.role)) {
-    return res.status(403).json({
-      success: false,
-      error: 'Insufficient privileges. Admin access required.'
-    });
+    return createError(
+      res,
+      403,
+      'Insufficient privileges. Admin access required.',
+      'FORBIDDEN',
+      { requiredRoles: ['ADMIN', 'OWNER'], userRole: req.user?.role },
+      req,
+      {},
+      'common'
+    );
   }
   next();
 };
@@ -50,6 +59,10 @@ router.put('/orders/:orderId/status', rlStrict, updateOrderStatus);
 router.get('/users', rlModerate, getUsers);
 router.put('/users/:userId', rlStrict, updateUserStatus);
 router.put('/users/:userId/role', rlStrict, updateUserRole);
+
+// Session Management Routes
+router.get('/users/sessions', rlModerate, getAllUsersWithSessions);
+router.delete('/users/:userId/sessions/:sessionId', rlStrict, revokeUserSession);
 
 // Menu Management Routes (extend existing menu routes for admin)
 // These could be added here or extend the existing menu.routes.js

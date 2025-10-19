@@ -1,4 +1,4 @@
-import Logout from "../../pages/logout";
+import Logout from "../../pages/auth/logout";
 import { useEffect } from "react";
 import { useRouteError, isRouteErrorResponse, data, useNavigate } from "react-router";
 

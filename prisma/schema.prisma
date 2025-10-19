@@ -41,14 +41,15 @@ model User {
 }
 
 model RefreshToken {
-  id        String   @id @default(uuid())
-  token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  expiresAt DateTime
-  userAgent String?
-  ip        String?
+  id         String   @id @default(uuid())
+  token      String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  lastUsedAt DateTime @default(now())
+  userAgent  String?
+  ip         String?
 
   @@index([userId])
   @@index([expiresAt])
@@ -190,9 +191,9 @@ model CashSummary {
 
   driver Driver? @relation(fields: [driverId], references: [id])
 
+  @@unique([driverId, date])
   @@index([driverId, date])
   @@index([date])
-  @@unique([driverId, date])
   @@map("public.cash_summary")
 }
 
@@ -342,35 +343,35 @@ model Localization {
 
 // DYNAMIC TRANSLATION MANAGEMENT
 model ContentSchema {
-  id          String   @id @default(cuid())
-  slug        String   // Page slug (e.g., 'home', 'about')
-  locale      String   @default("en")
-  fields      Json     // Field definitions and validation rules
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  slug      String // Page slug (e.g., 'home', 'about')
+  locale    String   @default("en")
+  fields    Json // Field definitions and validation rules
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([slug, locale])
   @@map("public.content_schemas")
 }
 
 model Language {
-  id          String   @id @default(cuid())
-  code        String   @unique // e.g., 'en', 'de-CH'
-  name        String   // e.g., 'English', 'Swiss German'
-  rtl         Boolean  @default(false)
-  fallback    String?  // e.g., 'de' for 'de-CH'
-  isActive    Boolean  @default(true)
-  priority    Int      @default(0) // For fallback ordering
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  code      String   @unique // e.g., 'en', 'de-CH'
+  name      String // e.g., 'English', 'Swiss German'
+  rtl       Boolean  @default(false)
+  fallback  String? // e.g., 'de' for 'de-CH'
+  isActive  Boolean  @default(true)
+  priority  Int      @default(0) // For fallback ordering
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("public.languages")
 }
 
 model Namespace {
   id          String   @id @default(cuid())
-  name        String   // e.g., 'common', 'home', 'menu'
+  name        String // e.g., 'common', 'home', 'menu'
   locale      String   @default("en")
   description String?
   isActive    Boolean  @default(true)
@@ -382,13 +383,13 @@ model Namespace {
 }
 
 model FallbackRule {
-  id            String   @id @default(cuid())
-  sourceLocale  String   // e.g., 'de-CH'
-  targetLocale  String   // e.g., 'de'
-  priority      Int      @default(0) // Lower number = higher priority
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  sourceLocale String // e.g., 'de-CH'
+  targetLocale String // e.g., 'de'
+  priority     Int      @default(0) // Lower number = higher priority
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@unique([sourceLocale, targetLocale])
   @@map("public.fallback_rules")
@@ -438,25 +439,31 @@ model MenuItem {
 }
 
 model Order {
-  id                   String      @id @default(cuid())
-  orderNumber          String      @unique
-  userId               String?
-  customerName         String
-  customerEmail        String
-  customerPhone        String
-  type                 OrderType
-  status               OrderStatus @default(PENDING)
-  subtotal             Float
-  tax                  Float
-  total                Float
-  notes                String?
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  userId        String?
+  customerName  String
+  customerEmail String
+  customerPhone String
+  type          OrderType
+  status        OrderStatus @default(PENDING)
+  subtotal      Float
+  tax           Float
+  total         Float
+  notes         String?
+
+  // Delivery-specific fields
   deliveryAddress      String?
   deliveryInstructions String?
   deliveryTimeEstimate DateTime?
   driverId             String?
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @updatedAt
-  trackingCode         String?
+
+  // Staff assignments (for tracking and accountability)
+  cashierId String? // Who processed payment (cashier verifies COD)
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  trackingCode          String?
   trackingCodeExpiresAt DateTime?
 
   user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -470,6 +477,8 @@ model Order {
   @@index([userId])
   @@index([createdAt])
   @@index([customerEmail])
+  @@index([type, status]) // For filtering by order type
+  @@index([cashierId, status]) // For cashier queries
   @@map("public.orders")
 }
 
@@ -514,16 +523,16 @@ enum OrderType {
 }
 
 enum OrderStatus {
-  PENDING
-  CONFIRMED
-  PREPARING
-  READY
-  OUT_FOR_DELIVERY
-  AWAITING_PAYMENT
-  PAYMENT_DISPUTED
-  DELIVERED
-  COMPLETED
-  CANCELLED
+  PENDING         // Client places order
+  CONFIRMED       // Cashier confirms order
+  PREPARING       // Kitchen is preparing
+  READY           // Kitchen finished, ready for pickup
+  OUT_FOR_DELIVERY // Driver picked up, on the way
+  DELIVERED       // Driver confirmed delivery
+  COMPLETED       // Cashier verified cash/payment
+  CANCELLED       // Order cancelled
+  AWAITING_PAYMENT // (Legacy - kept for compatibility)
+  PAYMENT_DISPUTED // (Legacy - kept for compatibility)
 }
 
 enum ReservationStatus {
@@ -538,8 +547,6 @@ enum UserRole {
   CUSTOMER
   OWNER
   ADMIN
-  COOK
-  WAITER
   CASHIER
   DRIVER
 }

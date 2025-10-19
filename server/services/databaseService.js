@@ -77,15 +77,23 @@ export const databaseService = {
 
   async getRefreshToken(userId, tx) {
     const db = withTx(tx);
-    return await db.refreshToken.findFirst({ where: { userId: userId } });
+    return await db.refreshToken.findMany({  where: { userId: userId },
+      select: { id: true, token: true,expiresAt:true ,lastUsedAt:true},});
   },
-
-  async cleanupExpiredTokens(userId,tx) {
+  async updateRefreshToken(userId, tx) {
     const db = withTx(tx);
-    const deleted =    await db.refreshToken.deleteMany({
-      where: { userId: userId },
+    return await db.refreshToken.findMany({  where: { userId: userId },
+      select: { id: true, token: true,expiresAt:true },});
+  },
+  async cleanupExpiredTokens(userId, refreshHash, tx) {
+    const db = withTx(tx);
+    const deleted = await db.refreshToken.deleteMany({
+      where: { userId, token: refreshHash },
     });
-    await LoggerService.logSystemEvent('DatabaseService', 'CLEANUP_EXPIRED_TOKENS', { count: deleted.count });
+    await LoggerService.logSystemEvent('DatabaseService', 'DELETE_REFRESH_TOKEN', {
+      userId,
+      count: deleted.count,
+    });
     return deleted.count;
   },
 
@@ -106,39 +114,97 @@ export const databaseService = {
   },
 
   // Logout current access token by blacklisting it
-async logout(accessToken, tx) {
+
+// async logout(accessToken, refreshToken, tx) {
+//   const db = withTx(tx);
+//   const { verifyToken, hashToken,compareHashedToken } = await import('./authService.js');
+
+//   let payload = null;
+//   let expiresAt;
+//   let verificationFailed = false;
+
+//   try {
+//     payload = await verifyToken(accessToken);
+//     expiresAt = new Date(payload.exp);
+//   } catch (error) {
+//     verificationFailed = true;
+//     expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback
+//   }
+
+//   const accessHash = await hashToken(accessToken);
+//   let refreshDeleted = 0;
+// if(payload?.userId){
+//   const userRefresh=await this.getRefreshToken(payload.userId);
+
+//   for (const rt of userRefresh) {
+//     const compare= await compareHashedToken(refreshToken,rt.token)
+//   console.log("refreshHash db....",compare);
+//   if ( compare === true) {
+//     refreshDeleted = await this.cleanupExpiredTokens(payload.userId, rt.token);
+//   }
+  
+//   }
+// };
+
+//   // ✅ Always blacklist the access token
+//   const record = await this.createBlacklistedToken({
+//     tokenHash: accessHash,
+//     expiresAt,
+//   });
+
+//   return {
+//     blacklisted: record,
+//     refreshDeleted,
+//     verified: !verificationFailed,
+//     userId: payload?.userId || null,
+//   };
+// },
+async logout(accessToken, refreshToken, tx) {
   const db = withTx(tx);
-  const { verifyToken, hashToken } = await import('./authService.js');
+  const { verifyToken, hashToken, compareHashedToken } = await import('./authService.js');
 
   let payload = null;
   let expiresAt;
   let verificationFailed = false;
 
   try {
-    // Try verifying the access token
     payload = await verifyToken(accessToken);
     expiresAt = new Date(payload.exp);
   } catch (error) {
-    // Token verification failed — expired, malformed, or invalid signature
     verificationFailed = true;
-    expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback 15 min window
+    expiresAt = new Date(Date.now() + 15 * 60 * 1000); // fallback
   }
 
-  const tokenHash = await hashToken(accessToken);
+  const accessHash = await hashToken(accessToken);
+  let refreshDeleted = 0;
 
-  // ✅ Only remove refresh tokens if we know which user it belongs to
-  let refreshRecord = null;
   if (payload?.userId) {
-    refreshRecord =await this.cleanupExpiredTokens(payload.userId)
-  
+    // get all refresh tokens for this user
+    const userRefreshTokens = await this.getRefreshToken(payload.userId);
+
+    for (const rt of userRefreshTokens) {
+      const match = await compareHashedToken(refreshToken, rt.token);
+
+      if (match) {
+         // ✅ delete the specific refresh token only
+         const deletedCount = await this.cleanupExpiredTokens(payload.userId, rt.token);
+
+         // ensure refreshDeleted reflects real deletion count
+         refreshDeleted += deletedCount;
+        break; // stop after deleting the matched one
+      }
+    }
   }
 
-  // ✅ Always blacklist the access token (even if invalid)
-  const record = await this.createBlacklistedToken({tokenHash,expiresAt});
+  // ✅ Always blacklist the access token
+  const record = await this.createBlacklistedToken({
+    tokenHash: accessHash,
+    expiresAt,
+  });
 
   return {
     blacklisted: record,
-    refreshDeleted: refreshRecord || 0,
+    refreshDeleted,
     verified: !verificationFailed,
     userId: payload?.userId || null,
   };
@@ -372,6 +438,19 @@ async logout(accessToken, tx) {
     return await db.driver.findUnique({ where: { id } });
   },
 
+  async getAllDrivers(tx) {
+    const db = withTx(tx);
+    return await db.driver.findMany({
+      where: { active: true },
+      orderBy: { name: 'asc' },
+      include: {
+        user: {
+          select: { id: true, name: true, phone: true, email: true }
+        }
+      }
+    });
+  },
+
   async getUsersByRole(role, tx) {
     const db = withTx(tx);
     return await db.user.findMany({ where: { role, isActive: true } });
@@ -471,7 +550,7 @@ async logout(accessToken, tx) {
     const skip = (page - 1) * pageSize;
     return await db.refreshToken.findMany({
       where: { userId },
-      select: { id: true, expiresAt: true, userAgent: true, ip: true },
+      select: { id: true, expiresAt: true, userAgent: true, ip: true,createdAt:true,lastUsedAt:true},
       orderBy: { expiresAt: 'desc' },
       skip,
       take: pageSize,
@@ -646,6 +725,259 @@ async getActivityLogs(type, startDate, endDate, optionsOrTx, maybeTx) {
   async updateReservationStatus(id, status, tx) {
     const db = withTx(tx);
     return await db.reservation.update({ where: { id }, data: { status } });
+  },
+
+  // Get all users (for admin)
+  async getAllUsers(tx) {
+    const db = withTx(tx);
+    return await db.user.findMany({
+      where: { deletedAt: null },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        phone: true,
+        isActive: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  },
+
+  // Get refresh token by ID
+  async getRefreshTokenById(tokenId, tx) {
+    const db = withTx(tx);
+    const token = await db.refreshToken.findUnique({
+      where: { id: tokenId },
+      select: {
+        id: true,
+        userId: true,
+        token: true,
+        expiresAt: true,
+        lastUsedAt: true,
+        userAgent: true,
+        ip: true,
+        createdAt: true,
+      },
+    });
+    return token;
+  },
+
+  // Delete a specific refresh token
+  async deleteRefreshToken(tokenId, tx) {
+    const db = withTx(tx);
+    const deleted = await db.refreshToken.delete({
+      where: { id: tokenId },
+    });
+    await LoggerService.logSystemEvent('DatabaseService', 'DELETE_REFRESH_TOKEN', {
+      tokenId,
+    });
+    return deleted;
+  },
+
+  // Get orders by type and status (for role-specific queries)
+  async getOrdersByTypeAndStatus(type, statuses, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        type,
+        status: { in: statuses }
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+  },
+
+  // Get orders by driver and status
+  async getOrdersByDriverAndStatus(driverId, statuses, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        driverId,
+        status: { in: statuses }
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+  },
+
+  // Get available deliveries (unassigned, READY)
+  async getAvailableDeliveries(tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        type: 'DELIVERY',
+        status: 'READY',
+        driverId: null
+      },
+      include: {
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+  },
+
+  // Get driver by user ID
+  async getDriverByUserId(userId, tx) {
+    const db = withTx(tx);
+    return await db.driver.findUnique({
+      where: { userId },
+      include: { user: true }
+    });
+  },
+
+  // Update driver
+  async updateDriver(driverId, data, tx) {
+    const db = withTx(tx);
+    return await db.driver.update({
+      where: { id: driverId },
+      data,
+    });
+  },
+
+  // Update order (flexible update)
+  async updateOrder(orderId, data, tx) {
+    const db = withTx(tx);
+    return await db.order.update({
+      where: { id: orderId },
+      data,
+    });
+  },
+
+  // Get orders by date range
+  async getOrdersByDateRange(startDate, endDate, statuses, tx) {
+    const db = withTx(tx);
+    return await db.order.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lt: endDate
+        },
+        ...(statuses ? { status: { in: statuses } } : {})
+      },
+      include: {
+        cashTransaction:true,
+        orderItems: {
+          include: {
+            menuItem: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  },
+
+  // Get cash transactions by date range
+  async getCashTransactionsByDateRange(startDate, endDate, tx) {
+    const db = withTx(tx);
+    return await db.cashTransaction.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lt: endDate
+        }
+      },
+      include: {
+        order: true,
+        driver: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  },
+
+  // Create cash transaction
+  async createCashTransaction(data, tx) {
+    const db = withTx(tx);
+    const transaction = await db.cashTransaction.create({
+      data
+    });
+    await LoggerService.logSystemEvent('DatabaseService', 'CREATE_CASH_TRANSACTION', {
+      transactionId: transaction.id,
+      orderId: data.orderId
+    });
+    return transaction;
+  },
+
+  // Get cash summary by date
+  async getCashSummaryByDate(date, tx) {
+    const db = withTx(tx);
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return await db.cashSummary.findFirst({
+      where: {
+        date: {
+          gte: startOfDay,
+          lte: endOfDay
+        }
+      }
+    });
+  },
+
+  // Get cash summary by driver and date
+  async getCashSummaryByDriverAndDate(driverId, date, tx) {
+    const db = withTx(tx);
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return await db.cashSummary.findFirst({
+      where: {
+        driverId,
+        date: {
+          gte: startOfDay,
+          lte: endOfDay
+        }
+      }
+    });
+  },
+
+  // Get menu item by ID
+  async getMenuItemById(id, tx) {
+    const db = withTx(tx);
+    return await db.menuItem.findUnique({
+      where: { id },
+      include: {
+        category: true
+      }
+    });
+  },
+
+  // Get reservations by date range
+  async getReservationsByDateRange(startDate, endDate, tx) {
+    const db = withTx(tx);
+    return await db.reservation.findMany({
+      where: {
+        date: {
+          gte: startDate,
+          lt: endDate
+        }
+      },
+      orderBy: [
+        { date: 'asc' },
+        { time: 'asc' }
+      ]
+    });
   },
 
 };

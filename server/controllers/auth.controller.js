@@ -251,55 +251,272 @@ export const register = async (req, res) => {
   }
 };
 // POST /api/auth/login - User login
+// export const login = async (req, res) => {
+//   const { email, password } = req.body || {};
+//   // const userAgent = req.get("User-Agent") || null;
+//   // const ip = req.ip || null;
+//   const userAgent = req.headers['user-agent'] || 'Unknown';
+
+  
+//   if (!email || !password) {
+//     await LoggerService.logLogin(null, "LOGIN_FAILURE", ip, userAgent);
+//     return createError(
+//       res,
+//       400,
+//       "badRequest",
+//       "BAD_REQUEST",
+//       {},
+//       req,
+//       {},
+//       "auth"
+//     );
+//   }
+
+//   // Check rate-limiting
+//   let attempts = 0;
+//   try {
+//     attempts = (await cacheService.get(`login-attempts:${email}`)) || 0;
+//     if (attempts >= 5) {
+//       await LoggerService.logLogin(null, "FAILURE", ip, userAgent);
+//       return createError(
+//         res,
+//         429,
+//         "Too many login attempts",
+//         "RATE_LIMIT_EXCEEDED",
+//         {
+//           suggestion: "Try again in a minute",
+//         }
+//       );
+//     }
+//   } catch (cacheErr) {
+//     await LoggerService.logError(
+//       "Cache error during login attempt tracking",
+//       cacheErr.stack,
+//       { email, error: cacheErr.message }
+//     );
+//     await LoggerService.logSystemEvent(
+//       "auth.controller",
+//       "CACHE_SERVICE_UNAVAILABLE",
+//       {
+//         method: "refreshToken",
+//         message: "Cache service unavailable, skipping rate-limiting",
+//       }
+//     );
+//   }
+
+//   // Fetch user
+//   let user;
+//   try {
+//     user = await databaseService.getUserByEmail(email, { isActive: true });
+//   } catch (err) {
+//     await cacheService.increment(`login-attempts:${email}`, { EX: 60 });
+//     await LoggerService.logLogin(null, "FAILURE", ip, userAgent);
+//     return createError(res, 401, "Invalid email or password", "UNAUTHORIZED", {
+//       message:
+//         err.message === "User not found" ? "User not found" : "Database error",
+//       suggestion: "Check your credentials or register",
+//     });
+//   }
+
+//   // Verify password
+//   const match = await bcrypt.compare(password, user.password);
+//   if (!match) {
+//     await cacheService.increment(`login-attempts:${email}`, { EX: 60 });
+//     await LoggerService.logLogin(null, "FAILURE", ip, userAgent);
+//     return createError(res, 401, "Invalid email or password", "UNAUTHORIZED", {
+//       suggestion: "Check your credentials or register",
+//     });
+//   }
+
+//   // Generate tokens
+//   let accessToken, refreshToken, refreshExp;
+//   try {
+//     const payload = {
+//       userId: user.id,
+//       email: user.email,
+//       role: user.role,
+//       name: user.name,
+//       active: user.isActive,
+//       phone: user.phone,
+//     };
+//     ({ token: accessToken } = await generateToken(
+//       payload,
+//       process.env.TOKEN_EXPIRATION || "1m"
+//     ));
+//     ({ token: refreshToken, exp: refreshExp } = await generateToken(
+//       payload,
+//       process.env.REFRESH_TOKEN_EXPIRATION || "10m"
+//     ));
+//     const hashedRefreshToken = await hashToken(refreshToken);
+//     await databaseService.refreshUserTokens(
+//       user.id,
+//       hashedRefreshToken,
+//       new Date(refreshExp),
+//       undefined,
+//       { userAgent, ip }
+//     );
+//   } catch (authErr) {
+//     await LoggerService.logError(
+//       "Token generation/storage failed",
+//       authErr.stack,
+//       { email, error: authErr.message }
+//     );
+//     return createError(
+//       res,
+//       500,
+//       "Failed to generate tokens",
+//       "AUTH_ERROR",
+//       {},
+//       req,
+//       {},
+//       "auth"
+//     );
+//   }
+
+//   // Set cookies
+//   const isProduction = process.env.NODE_ENV === "production";
+//   res.cookie("accessToken", accessToken, {
+//     httpOnly: true,
+//     secure: isProduction,
+//     sameSite: isProduction ? "strict" : "lax",
+//     maxAge: 10 * 60 * 1000,
+//     path: "/",
+//   });
+//   res.cookie("refreshToken", refreshToken, {
+//     httpOnly: true,
+//     secure: isProduction,
+//     sameSite: isProduction ? "strict" : "lax",
+//     maxAge: 10 * 60 * 1000,
+//     path: "/",
+//   });
+
+//   // Sanitize name for response
+//   const sanitizedName = user.name ? user.name.replace(/[<>]/g, "") : null;
+
+//   // Generate dynamic welcome message (translated)
+//   const getGreetingMessage = (name) => {
+//     const hour = new Date().getHours();
+//     const firstName = name
+//       ? name.split(" ")[0].charAt(0).toUpperCase() +
+//         name.split(" ")[0].slice(1).toLowerCase()
+//       : "User";
+//     const timeOfDayKey =
+//       hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
+//     const candidates = [
+//       `greeting.${timeOfDayKey}`,
+//       "greeting.welcomeBackName",
+//       "greeting.helloName",
+//       "greeting.accessGranted",
+//       "greeting.authSuccess",
+//       "greeting.ready",
+//     ];
+//     let lastIndex = -1;
+//     return () => {
+//       let idx;
+//       do {
+//         idx = Math.floor(Math.random() * candidates.length);
+//       } while (idx === lastIndex);
+//       lastIndex = idx;
+//       const key = candidates[idx];
+//       try {
+//         if (req && typeof req.t === "function") {
+//           const translated = req.t(key, { ns: "auth", name: firstName });
+//           if (
+//             translated &&
+//             typeof translated === "string" &&
+//             translated !== key
+//           )
+//             return translated;
+//         }
+//       } catch {}
+//       // Fallback to English format if translation not available
+//       if (key.includes("morning")) return `Good morning, ${firstName}! 🌟`;
+//       if (key.includes("afternoon")) return `Good afternoon, ${firstName}! 🌟`;
+//       if (key.includes("evening")) return `Good evening, ${firstName}! 🌟`;
+//       if (key.includes("welcomeBackName"))
+//         return `Welcome back, ${firstName}! 🌟`;
+//       if (key.includes("helloName")) return `Hello, ${firstName}! Let's go! 🚀`;
+//       if (key.includes("accessGranted")) return "Access granted! 🎉";
+//       if (key.includes("authSuccess")) return "Authentication successful! 🥳";
+//       return "Ready to roll! 🌟";
+//     };
+//   };
+
+//   const generateLoginMessage = getGreetingMessage(sanitizedName);
+
+//   // Log success and reset attempts
+//   await cacheService.set(`login-attempts:${email}`, 0);
+//   await LoggerService.logLogin(user.id, "SUCCESS", ip, userAgent);
+//   await LoggerService.logAudit(user.id, "USER_LOGIN", user.id, {
+//     email,
+//     role: user.role,
+//     phone: user.phone,
+//     userAgent,
+//     ip
+//   });
+//   await LoggerService.logNotification(
+//     user.id,
+//     "WEBHOOK",
+//     "user_login",
+//     `User ${email} logged in`,
+//     "SENT"
+//   );
+//   await sendWebhook("USER_LOGIN", {
+//     userId: user.id,
+//     email,
+//     role: user.role,
+//     phone: user.phone,
+//     loginTime: new Date().toISOString(),
+//   });
+
+//   return createResponse(
+//     res,
+//     200,
+//     "loginSuccess",
+//     {
+//       greeting: generateLoginMessage(),
+//       user: {
+//         id: user.id,
+//         email: user.email,
+//         role: user.role,
+//         name: sanitizedName,
+//         phone: user.phone,
+//       },
+//     },
+//     req,
+//     {},
+//     "auth"
+//   );
+// };
+// POST /api/auth/login - User login
 export const login = async (req, res) => {
   const { email, password } = req.body || {};
-  const userAgent = req.get("User-Agent") || null;
-  const ip = req.ip || null;
+  const userAgent = req.headers['user-agent'] || 'Unknown';
+  const ip =
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    null;
 
   if (!email || !password) {
     await LoggerService.logLogin(null, "LOGIN_FAILURE", ip, userAgent);
-    return createError(
-      res,
-      400,
-      "badRequest",
-      "BAD_REQUEST",
-      {},
-      req,
-      {},
-      "auth"
-    );
+    return createError(res, 400, "badRequest", "BAD_REQUEST", {}, req, {}, "auth");
   }
 
-  // Check rate-limiting
+  // Rate limiting check
   let attempts = 0;
   try {
     attempts = (await cacheService.get(`login-attempts:${email}`)) || 0;
     if (attempts >= 5) {
       await LoggerService.logLogin(null, "FAILURE", ip, userAgent);
-      return createError(
-        res,
-        429,
-        "Too many login attempts",
-        "RATE_LIMIT_EXCEEDED",
-        {
-          suggestion: "Try again in a minute",
-        }
-      );
+      return createError(res, 429, "Too many login attempts", "RATE_LIMIT_EXCEEDED", {
+        suggestion: "Try again in a minute",
+      });
     }
   } catch (cacheErr) {
-    await LoggerService.logError(
-      "Cache error during login attempt tracking",
-      cacheErr.stack,
-      { email, error: cacheErr.message }
-    );
-    await LoggerService.logSystemEvent(
-      "auth.controller",
-      "CACHE_SERVICE_UNAVAILABLE",
-      {
-        method: "refreshToken",
-        message: "Cache service unavailable, skipping rate-limiting",
-      }
-    );
+    await LoggerService.logError("Cache error during login attempt tracking", cacheErr.stack, {
+      email,
+      error: cacheErr.message,
+    });
   }
 
   // Fetch user
@@ -310,8 +527,7 @@ export const login = async (req, res) => {
     await cacheService.increment(`login-attempts:${email}`, { EX: 60 });
     await LoggerService.logLogin(null, "FAILURE", ip, userAgent);
     return createError(res, 401, "Invalid email or password", "UNAUTHORIZED", {
-      message:
-        err.message === "User not found" ? "User not found" : "Database error",
+      message: err.message === "User not found" ? "User not found" : "Database error",
       suggestion: "Check your credentials or register",
     });
   }
@@ -326,6 +542,31 @@ export const login = async (req, res) => {
     });
   }
 
+  // ✅ Refresh token logic before generating new tokens
+  const latestToken = await databaseService.findLatestRefreshForUser(user.id);
+
+  if (latestToken) {
+    const now = new Date();
+
+    if (new Date(latestToken.expiresAt) > now) {
+      // Token still valid
+      await LoggerService.logSystemEvent("AuthController", "REFRESH_TOKEN_REUSE_ATTEMPT", {
+        userId: user.id,
+        userAgent,
+        ip,
+      });
+
+      // Optional: either allow reuse OR cleanup for new login
+      await databaseService.deleteAllRefreshTokensForUser(user.id);
+    } else {
+      // Token expired → clean it up
+      await databaseService.cleanupExpiredTokens(user.id);
+      await LoggerService.logSystemEvent("AuthController", "EXPIRED_REFRESH_TOKEN_CLEANED", {
+        userId: user.id,
+      });
+    }
+  }
+
   // Generate tokens
   let accessToken, refreshToken, refreshExp;
   try {
@@ -337,41 +578,25 @@ export const login = async (req, res) => {
       active: user.isActive,
       phone: user.phone,
     };
-    ({ token: accessToken } = await generateToken(
-      payload,
-      process.env.TOKEN_EXPIRATION || "1m"
-    ));
-    ({ token: refreshToken, exp: refreshExp } = await generateToken(
-      payload,
-      process.env.REFRESH_TOKEN_EXPIRATION || "10m"
-    ));
+
+    ({ token: accessToken } = await generateToken(payload, process.env.TOKEN_EXPIRATION || "1m"));
+    ({ token: refreshToken, exp: refreshExp } = await generateToken(payload, process.env.REFRESH_TOKEN_EXPIRATION || "2m"));
+
     const hashedRefreshToken = await hashToken(refreshToken);
-    await databaseService.refreshUserTokens(
-      user.id,
-      hashedRefreshToken,
-      new Date(refreshExp),
-      undefined,
-      { userAgent, ip }
-    );
+
+    await databaseService.refreshUserTokens(user.id, hashedRefreshToken, new Date(refreshExp), undefined, {
+      userAgent,
+      ip,
+    });
   } catch (authErr) {
-    await LoggerService.logError(
-      "Token generation/storage failed",
-      authErr.stack,
-      { email, error: authErr.message }
-    );
-    return createError(
-      res,
-      500,
-      "Failed to generate tokens",
-      "AUTH_ERROR",
-      {},
-      req,
-      {},
-      "auth"
-    );
+    await LoggerService.logError("Token generation/storage failed", authErr.stack, {
+      email,
+      error: authErr.message,
+    });
+    return createError(res, 500, "Failed to generate tokens", "AUTH_ERROR", {}, req, {}, "auth");
   }
 
-  // Set cookies
+  // Cookies
   const isProduction = process.env.NODE_ENV === "production";
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
@@ -388,77 +613,11 @@ export const login = async (req, res) => {
     path: "/",
   });
 
-  // Sanitize name for response
-  const sanitizedName = user.name ? user.name.replace(/[<>]/g, "") : null;
-
-  // Generate dynamic welcome message (translated)
-  const getGreetingMessage = (name) => {
-    const hour = new Date().getHours();
-    const firstName = name
-      ? name.split(" ")[0].charAt(0).toUpperCase() +
-        name.split(" ")[0].slice(1).toLowerCase()
-      : "User";
-    const timeOfDayKey =
-      hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
-    const candidates = [
-      `greeting.${timeOfDayKey}`,
-      "greeting.welcomeBackName",
-      "greeting.helloName",
-      "greeting.accessGranted",
-      "greeting.authSuccess",
-      "greeting.ready",
-    ];
-    let lastIndex = -1;
-    return () => {
-      let idx;
-      do {
-        idx = Math.floor(Math.random() * candidates.length);
-      } while (idx === lastIndex);
-      lastIndex = idx;
-      const key = candidates[idx];
-      try {
-        if (req && typeof req.t === "function") {
-          const translated = req.t(key, { ns: "auth", name: firstName });
-          if (
-            translated &&
-            typeof translated === "string" &&
-            translated !== key
-          )
-            return translated;
-        }
-      } catch {}
-      // Fallback to English format if translation not available
-      if (key.includes("morning")) return `Good morning, ${firstName}! 🌟`;
-      if (key.includes("afternoon")) return `Good afternoon, ${firstName}! 🌟`;
-      if (key.includes("evening")) return `Good evening, ${firstName}! 🌟`;
-      if (key.includes("welcomeBackName"))
-        return `Welcome back, ${firstName}! 🌟`;
-      if (key.includes("helloName")) return `Hello, ${firstName}! Let's go! 🚀`;
-      if (key.includes("accessGranted")) return "Access granted! 🎉";
-      if (key.includes("authSuccess")) return "Authentication successful! 🥳";
-      return "Ready to roll! 🌟";
-    };
-  };
-
-  const generateLoginMessage = getGreetingMessage(sanitizedName);
-
-  // Log success and reset attempts
+  // Reset login attempts
   await cacheService.set(`login-attempts:${email}`, 0);
+
   await LoggerService.logLogin(user.id, "SUCCESS", ip, userAgent);
-  await LoggerService.logAudit(user.id, "USER_LOGIN", user.id, {
-    email,
-    role: user.role,
-    phone: user.phone,
-    userAgent,
-    ip
-  });
-  await LoggerService.logNotification(
-    user.id,
-    "WEBHOOK",
-    "user_login",
-    `User ${email} logged in`,
-    "SENT"
-  );
+  await LoggerService.logAudit(user.id, "USER_LOGIN", user.id, { email, role: user.role, phone: user.phone, userAgent, ip });
   await sendWebhook("USER_LOGIN", {
     userId: user.id,
     email,
@@ -472,12 +631,12 @@ export const login = async (req, res) => {
     200,
     "loginSuccess",
     {
-      greeting: generateLoginMessage(),
+      message: `Welcome back, ${user.name || "User"}!`,
       user: {
         id: user.id,
         email: user.email,
         role: user.role,
-        name: sanitizedName,
+        name: user.name,
         phone: user.phone,
       },
     },
@@ -488,6 +647,284 @@ export const login = async (req, res) => {
 };
 
 // POST /api/auth/refresh - Refresh access token
+// export const refreshToken = async (req, res) => {
+//   const userAgent = req.get("User-Agent") || null;
+//   const ip = req.ip || null;
+//   try {
+//     console.log("starting backend refresh ...", req.cookies);
+
+//     const rotate =
+//       (process.env.REFRESH_ROTATION || "true").toLowerCase() === "true";
+//     const providedRefreshToken = req.cookies.refreshToken;
+//     // console.log("provided token and payload ...",providedRefreshToken,rotate);
+
+//     if (!providedRefreshToken) {
+//       await LoggerService.logAudit(null, "TOKEN_REFRESH_FAILED", null, {
+//         reason: "No refresh token provided",
+//         ip,
+//         userAgent,
+//       });
+//       return createError(
+//         res,
+//         401,
+//         "Session expired. Please log in again no refresh",
+//         "UNAUTHORIZED",
+//         { suggestion: "Navigate to the login page" }
+//       );
+//     }
+
+//     // Verify provided refresh token
+//     const payload = await verifyToken(providedRefreshToken);
+//     console.log(
+//       "provided token and payload ...",
+//       providedRefreshToken,
+//       payload
+//     );
+//     if (!payload) {
+//       await LoggerService.logAudit(null, "TOKEN_REFRESH_FAILED", null, {
+//         reason: "No payload provided",
+//         ip,
+//         userAgent,
+//       });
+//       return createError(
+//         res,
+//         401,
+//         "Session expired. Please log in again no payload",
+//         "UNAUTHORIZED",
+//         { suggestion: "Navigate to the login page" }
+//       );
+//     }
+//     if (!rotate) {
+//       const accessPayload = {
+//         userId: payload.userId,
+//         email: payload.email,
+//         role: payload.role,
+//         name: payload.name,
+//         active: payload.active,
+//         phone: payload.phone,
+//       };
+//       const { token: accessToken, exp: accessExp } = await generateToken(
+//         accessPayload,
+//         process.env.TOKEN_EXPIRATION || "1m"
+//       );
+//       const isProduction = process.env.NODE_ENV === "production";
+//       res.cookie("accessToken", accessToken, {
+//         httpOnly: true,
+//         secure: isProduction,
+//         sameSite: isProduction ? "strict" : "lax",
+//         maxAge: 15 * 60 * 1000,
+//         path: "/",
+//       });
+//       return createResponse(
+//         res,
+//         200,
+//         "loginSuccess",
+//         { accessToken },
+//         req,
+//         {},
+//         "auth"
+//       );
+//     }
+
+//     console.log("payload refresh...", payload);
+
+//     // Ensure stored hash exists (rotate only if valid current token)
+
+//     const stored = await databaseService.getRefreshToken(payload?.userId);
+//     console.log("providedtokenhash and stored...", stored);
+
+//     if (!stored || stored.length === 0) {
+//       await LoggerService.logAudit(
+//         null,
+//         "TOKEN_REFRESH_FAILED",
+//         payload.userId,
+//         { reason: "Refresh token not recognized or expired", ip, userAgent }
+//       );
+//       return createError(
+//         res,
+//         401,
+//         "Session invalid. Please log in again no stored",
+//         "UNAUTHORIZED",
+//         {},
+//         req,
+//         {},
+//         "auth"
+//       );
+//     }
+
+
+
+//      // Find the matching refresh token
+//      let matchedToken = null;
+//      for (const tokenRecord of stored) {
+//        const isValid = await compareHashedToken(providedRefreshToken, tokenRecord.token);
+//        if (isValid) {
+//          matchedToken = tokenRecord;
+//          break;
+//        }
+//      }
+ 
+//      if (!matchedToken) {
+//       return createError(
+//         res,
+//         403,
+//         "Invalid refresh token at isvalid",
+//         "UNAUTHORIZED",
+//         {},
+//         req,
+//         {},
+//         "auth"
+//       );
+//      }
+ 
+//      // Check expiration
+//      if ( matchedToken.expiresAt.toISOString() < new Date()) {
+//       await LoggerService.logAudit(
+//         null,
+//         "TOKEN_REFRESH_FAILED",
+//         payload.userId,
+//         { reason: "Refresh token not recognized or expired", ip, userAgent }
+//       );
+//       return createError(
+//         res,
+//         401,
+//         "Session invalid. Please log in again no stored",
+//         "UNAUTHORIZED",
+//         {},
+//         req,
+//         {},
+//         "auth"
+//       );
+//      }
+//     // Fetch user
+//     const user = await databaseService.getUserById(payload.userId, {
+//       id: true,
+//       email: true,
+//       role: true,
+//       name: true,
+//       phone: true,
+//       isActive: true,
+//     });
+//     if (!user) {
+//       await LoggerService.logAudit(
+//         null,
+//         "TOKEN_REFRESH_FAILED",
+//         payload.userId,
+//         { reason: "User not found", ip, userAgent }
+//       );
+//       return createError(
+//         res,
+//         401,
+//         "Session invalid. Please log in again at user ",
+//         "UNAUTHORIZED",
+//         {},
+//         req,
+//         {},
+//         "auth"
+//       );
+//     }
+
+//     // Issue new tokens (rotate refresh)
+//     const accessPayload = {
+//       userId: user.id,
+//       email: user.email,
+//       role: user.role,
+//       name: user.name,
+//       active: user.isActive,
+//       phone: user.phone,
+//     };
+//     const { token: newaccessToken, exp: accessExp } = await generateToken(
+//       accessPayload,
+//       process.env.TOKEN_EXPIRATION || "1m"
+//     );
+//     const refreshExp = matchedToken.expiresAt;
+
+//     const isProduction = process.env.NODE_ENV === "production";
+//     const accessTokenMaxAge = Math.floor(
+//       (accessExp.getTime() - Date.now()) / 1000
+//     ); // Convert to seconds
+//     const refreshTokenMaxAge = Math.floor(
+//       (refreshExp.getTime() - Date.now()) / 1000
+//     ); // Convert to seconds
+//     console.log("🔹 Access Token maxAge:", accessTokenMaxAge);
+//     console.log("🔹 Refresh Token maxAge:", refreshTokenMaxAge);
+//     if (accessTokenMaxAge <= 0 || refreshTokenMaxAge <= 0) {
+//       throw new Error("Token expiration time is in the past");
+//     }
+//     res.cookie("accessToken", newaccessToken, {
+//       httpOnly: true,
+//       secure: isProduction,
+//       sameSite: isProduction ? "strict" : "lax",
+//       maxAge: accessTokenMaxAge * 1000,
+//       path: "/",
+//     });
+//     res.cookie("refreshToken", providedRefreshToken, {
+//       httpOnly: true,
+//       secure: isProduction,
+//       sameSite: isProduction ? "strict" : "lax",
+//       maxAge: refreshTokenMaxAge * 1000,
+//       path: "/",
+//     });
+
+//     await LoggerService.logAudit(user.id, "TOKEN_REFRESH_SUCCESS", user.id, {
+//       email: user.email,
+//       phone: user.phone,
+//       ip,
+//       userAgent,
+//     });
+//     await LoggerService.logNotification(
+//       user.id,
+//       "WEBHOOK",
+//       "token_refreshed",
+//       `Token refreshed for ${user.email}`,
+//       "SENT"
+//     );
+//     await sendWebhook("TOKEN_REFRESHED", {
+//       userId: user.id,
+//       email: user.email,
+//       phone: user.phone,
+//     });
+//     return createResponse(
+//       res,
+//       200,
+//       "loginSuccess",
+//       {
+//         accessToken: newaccessToken,
+//         refreshExpire: refreshExp.toISOString(),
+//         user: {
+//           userId: user.id,
+//           email: user.email,
+//           role: user.role,
+//           name: user.name,
+//           active: user.isActive,
+//           phone: user.phone,
+//           exp: accessExp.toISOString(),
+//           iat: new Date().toISOString(),
+//         },
+//       },
+//       req,
+//       {},
+//       "auth"
+//     );
+//   } catch (error) {
+//     await LoggerService.logError("Token refresh failed", error.stack, {
+//       userId: req.user?.id,
+//     });
+//     await LoggerService.logAudit(null, "TOKEN_REFRESH_FAILED", null, {
+//       reason: error.message,
+//       ip,
+//       userAgent,
+//     });
+//     return createError(
+//       res,
+//       401,
+//       "Session invalid. Please log in again",
+//       "UNAUTHORIZED",
+//       { suggestion: "Navigate to the login page" }
+//     );
+//   }
+// };
+// POST /api/auth/refresh - Refresh access token
 export const refreshToken = async (req, res) => {
   const userAgent = req.get("User-Agent") || null;
   const ip = req.ip || null;
@@ -497,7 +934,6 @@ export const refreshToken = async (req, res) => {
     const rotate =
       (process.env.REFRESH_ROTATION || "true").toLowerCase() === "true";
     const providedRefreshToken = req.cookies.refreshToken;
-    // console.log("provided token and payload ...",providedRefreshToken,rotate);
 
     if (!providedRefreshToken) {
       await LoggerService.logAudit(null, "TOKEN_REFRESH_FAILED", null, {
@@ -569,22 +1005,22 @@ export const refreshToken = async (req, res) => {
 
     console.log("payload refresh...", payload);
 
-    // Ensure stored hash exists (rotate only if valid current token)
+    // Get stored tokens (now returns array)
+    const storedTokens = await databaseService.getRefreshToken(payload?.userId);
+    console.log("providedtokenhash and stored tokens array...", storedTokens);
 
-    const stored = await databaseService.getRefreshToken(payload?.userId);
-    console.log("providedtokenhash and stored...", stored, stored.token);
-
-    if (!stored || stored.expiresAt.toISOString() < new Date()) {
+    // Handle case where no tokens found
+    if (!storedTokens || storedTokens.length === 0) {
       await LoggerService.logAudit(
         null,
         "TOKEN_REFRESH_FAILED",
         payload.userId,
-        { reason: "Refresh token not recognized or expired", ip, userAgent }
+        { reason: "No refresh tokens found for user", ip, userAgent }
       );
       return createError(
         res,
         401,
-        "Session invalid. Please log in again no stored",
+        "Session invalid. Please log in again no stored tokens",
         "UNAUTHORIZED",
         {},
         req,
@@ -593,18 +1029,27 @@ export const refreshToken = async (req, res) => {
       );
     }
 
-    // Validate stored refresh token
-    const isValid = await compareHashedToken(
-      providedRefreshToken,
-      stored.token
-    );
-    console.log("isvalid log...", isValid);
+    // Find the matching refresh token from the array
+    let matchedToken = null;
+    for (const tokenRecord of storedTokens) {
+      const isValid = await compareHashedToken(providedRefreshToken, tokenRecord.token);
+      if (isValid) {
+        matchedToken = tokenRecord;
+        break;
+      }
+    }
 
-    if (!isValid) {
+    if (!matchedToken) {
+      await LoggerService.logAudit(
+        null,
+        "TOKEN_REFRESH_FAILED",
+        payload.userId,
+        { reason: "No matching refresh token found", ip, userAgent }
+      );
       return createError(
         res,
         403,
-        "Invalid refresh token at isvalid",
+        "Invalid refresh token - no match found",
         "UNAUTHORIZED",
         {},
         req,
@@ -612,6 +1057,33 @@ export const refreshToken = async (req, res) => {
         "auth"
       );
     }
+    if (matchedToken) {
+      // Update lastUsedAt timestamp
+      await prisma.refreshToken.update({
+        where: { id: matchedToken.id },
+        data: { lastUsedAt: new Date() }
+      });
+    }
+    // Check expiration of the matched token
+    if (matchedToken.expiresAt.toISOString() < new Date().toISOString()) {
+      await LoggerService.logAudit(
+        null,
+        "TOKEN_REFRESH_FAILED",
+        payload.userId,
+        { reason: "Matched refresh token expired", ip, userAgent }
+      );
+      return createError(
+        res,
+        401,
+        "Session expired. Please log in again",
+        "UNAUTHORIZED",
+        {},
+        req,
+        {},
+        "auth"
+      );
+    }
+
     // Fetch user
     const user = await databaseService.getUserById(payload.userId, {
       id: true,
@@ -631,7 +1103,7 @@ export const refreshToken = async (req, res) => {
       return createError(
         res,
         401,
-        "Session invalid. Please log in again at user ",
+        "Session invalid. Please log in again at user",
         "UNAUTHORIZED",
         {},
         req,
@@ -653,7 +1125,7 @@ export const refreshToken = async (req, res) => {
       accessPayload,
       process.env.TOKEN_EXPIRATION || "1m"
     );
-    const refreshExp = stored.expiresAt;
+    const refreshExp = matchedToken.expiresAt;
 
     const isProduction = process.env.NODE_ENV === "production";
     const accessTokenMaxAge = Math.floor(
@@ -744,9 +1216,12 @@ export const refreshToken = async (req, res) => {
 // POST /api/auth/logout - User logout
 export const logout = async (req, res) => {
   try {
-    const accessToken =
-      req.headers.authorization?.split(" ")[1] || req.cookies.accessToken;
-
+    const accessToken =req.headers.authorization?.split(" ")[1] || req.cookies.accessToken;
+    const refreshToken = req.headers["x-refresh-token"] || req.headers["X-Refresh-Token"] || req.cookies.refreshToken;
+   
+   console.log("logout backend accesstoken start...",accessToken);
+   console.log("logout backend refreshtoken start...",refreshToken);
+   
     if (!accessToken) {
       await LoggerService.logAudit(null, "USER_LOGOUT_FAILED", null, {
         reason: "Missing access token",
@@ -762,9 +1237,25 @@ export const logout = async (req, res) => {
         { userMessage: "You need to log in before performing this action." }
       );
     }
+    if (!refreshToken) {
+      await LoggerService.logAudit(null, "USER_LOGOUT_FAILED", null, {
+        reason: "Missing access token",
+        ip: req.ip,
+        userAgent: req.get("User-Agent"),
+      });
 
+      return createError(
+        res,
+        401,
+        "Session invalid. Please log in again",
+        "UNAUTHORIZED",
+        { userMessage: "You need to log in before performing this action." }
+      );
+    }
     // 🔥 Call the logout service
-    const result = await databaseService.logout(accessToken);
+    const result = await databaseService.logout(accessToken,refreshToken);
+   console.log("logout backend result...",result);
+
     const { verified, userId, refreshDeleted } = result;
 
     // ✅ Clear tokens (even if verification failed)
@@ -962,6 +1453,8 @@ export const getToken = async (req, res) => {
 };
 // List current user's refresh tokens (sessions)
 export const listSessions = async (req, res) => {
+  // console.log("req user listsession...",req);
+  
   try {
     if (!req.user?.userId) {
       return createError(
@@ -984,6 +1477,8 @@ export const listSessions = async (req, res) => {
       req.user.userId,
       { page, pageSize }
     );
+    console.log("tokens listsessions",tokens);
+    
     const hasMore = tokens.length === pageSize;
     return createResponse(
       res,
@@ -993,8 +1488,10 @@ export const listSessions = async (req, res) => {
         sessions: tokens.map((t) => ({
           id: t.id,
           expiresAt: t.expiresAt,
+          lastUsedAt:t.lastUsedAt,
           userAgent: t.userAgent,
           ip: t.ip,
+          createdAt:t.createdAt
         })),
         page,
         pageSize,
