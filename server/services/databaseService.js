@@ -306,7 +306,7 @@ async logout(accessToken, refreshToken, tx) {
 
   async getOrderByNumber(orderNumber, tx) {
     const db = withTx(tx);
-    return await db.order.findUnique({ where: { orderNumber }, include: { orderItems: true } });
+    return await db.order.findUnique({ where: { orderNumber }, include: { orderItems: {include:{menuItem:true}} } });
   },
 
   async createOrderWithItems(payload, tx) {

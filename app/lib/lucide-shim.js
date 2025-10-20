@@ -73,4 +73,6 @@ export { default as Plus } from 'lucide-react/dist/esm/icons/plus.js'
 export { default as Receipt } from 'lucide-react/dist/esm/icons/receipt.js'
 export { default as Navigation } from 'lucide-react/dist/esm/icons/navigation.js'
 export { default as XCircle } from 'lucide-react/dist/esm/icons/x-circle.js'
+export { default as Minus} from 'lucide-react/dist/esm/icons/minus.js'
+export { default as ShoppingCart} from 'lucide-react/dist/esm/icons/shopping-cart.js'
 
