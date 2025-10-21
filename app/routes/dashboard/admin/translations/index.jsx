@@ -3,8 +3,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import
   {
     AlertCircle,
@@ -308,64 +310,89 @@ export default function TranslationsIndexPage({ loaderData }) {
             </div>
           ) : (
             <>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Key</TableHead>
-                    <TableHead>Namespace</TableHead>
-                    <TableHead>Locale</TableHead>
-                    <TableHead>Value</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {translations?.map((translation) => (
-                    <TableRow key={translation.id}>
-                      <TableCell className="font-mono text-sm">
-                        {translation.key}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{translation.namespace}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{translation.locale}</Badge>
-                      </TableCell>
-                      <TableCell className="max-w-md truncate">
-                        {translation.value}
-                      </TableCell>
-                      <TableCell>
-                        {translation.isActive ? (
-                          <Badge variant="success">Active</Badge>
-                        ) : (
-                          <Badge variant="destructive">Inactive</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Link to={`/dashboard/admin/translations/${translation.id}`}>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </Link>
-                          <Link to={`/dashboard/admin/translations/${translation.id}/edit`}>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </Link>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => handleDelete(translation.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
-                      </TableCell>
+              <ScrollArea className="h-[600px] w-full rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Key</TableHead>
+                      <TableHead>Namespace</TableHead>
+                      <TableHead>Locale</TableHead>
+                      <TableHead>Value</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {translations?.map((translation) => (
+                      <TableRow key={translation.id}>
+                        <TableCell className="font-mono text-sm">
+                          {translation.key}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{translation.namespace}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">{translation.locale}</Badge>
+                        </TableCell>
+                        <TableCell className="max-w-md truncate">
+                          {translation.value}
+                        </TableCell>
+                        <TableCell>
+                          {translation.isActive ? (
+                            <Badge variant="success">Active</Badge>
+                          ) : (
+                            <Badge variant="destructive">Inactive</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link to={`/dashboard/admin/translations/${translation.id}`}>
+                                  <Button variant="ghost" size="sm">
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                </Link>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom" sideOffset={10}>
+                                <p>View</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link to={`/dashboard/admin/translations/${translation.id}/edit`}>
+                                  <Button variant="ghost" size="sm">
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                </Link>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom" sideOffset={10}>
+                                <p>Edit</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => handleDelete(translation.id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom" sideOffset={10}>
+                                <p>Delete</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </ScrollArea>
 
               {pagination.totalPages > 1 && (
                 <div className="flex justify-between items-center mt-4 pt-4 border-t">
