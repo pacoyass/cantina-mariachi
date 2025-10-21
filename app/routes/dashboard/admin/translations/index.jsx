@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -20,7 +20,7 @@ import
     Upload
   } from '@/lib/lucide-shim';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useFetcher } from 'react-router';
+import { Link, useFetcher, useNavigate } from 'react-router';
 
 export const meta = () => [
   { title: 'Translations - Cantina' }
@@ -310,7 +310,7 @@ export default function TranslationsIndexPage({ loaderData }) {
             </div>
           ) : (
             <>
-              <ScrollArea className="h-[600px] w-full rounded-md border">
+              <ScrollArea className="h-[300px] w-full rounded-md border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -392,6 +392,7 @@ export default function TranslationsIndexPage({ loaderData }) {
                     ))}
                   </TableBody>
                 </Table>
+                <ScrollBar orientation="horizontal" />
               </ScrollArea>
 
               {pagination.totalPages > 1 && (
