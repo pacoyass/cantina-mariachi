@@ -137,9 +137,14 @@ export default function TranslationsIndexPage({ loaderData }) {
       return;
     }
     
+    // Only search if 3+ characters OR empty (to clear)
+    if (searchInput.length > 0 && searchInput.length < 3) {
+      return;
+    }
+    
     const timer = setTimeout(() => {
       updateFilters({ ...initialFilters, search: searchInput, page: 1 });
-    }, 500); // Wait 500ms after user stops typing
+    }, 800); // Wait 800ms after user stops typing
     
     return () => clearTimeout(timer);
   }, [searchInput, initialFilters.search]); // Only depend on search values
@@ -258,7 +263,7 @@ export default function TranslationsIndexPage({ loaderData }) {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search key or value..."
+                placeholder="Search key or value (min 3 chars)..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="pl-10"
