@@ -17,7 +17,6 @@ import
     Trash2,
     Upload
   } from '@/lib/lucide-shim';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useFetcher } from 'react-router';
 
@@ -224,15 +223,15 @@ export default function TranslationsIndexPage({ loaderData }) {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search key or value..."
-                value={filters.search}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+                value={initialFilters.search}
+                onChange={(e) => updateFilters({ ...initialFilters, search: e.target.value, page: 1 })}
                 className="pl-10"
               />
             </div>
             
             <Select 
-              value={filters.locale} 
-              onValueChange={(value) => setFilters({ ...filters, locale: value, page: 1 })}
+              value={initialFilters.locale} 
+              onValueChange={(value) => updateFilters({ ...initialFilters, locale: value, page: 1 })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All Locales" />
@@ -250,8 +249,8 @@ export default function TranslationsIndexPage({ loaderData }) {
             </Select>
 
             <Select 
-              value={filters.namespace} 
-              onValueChange={(value) => setFilters({ ...filters, namespace: value, page: 1 })}
+              value={initialFilters.namespace} 
+              onValueChange={(value) => updateFilters({ ...initialFilters, namespace: value, page: 1 })}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All Namespaces" />
@@ -367,25 +366,25 @@ export default function TranslationsIndexPage({ loaderData }) {
                 </TableBody>
               </Table>
 
-              {translations.pagination?.totalPages > 1 && (
+              {pagination.totalPages > 1 && (
                 <div className="flex justify-between items-center mt-4 pt-4 border-t">
                   <div className="text-sm text-muted-foreground">
-                    Page {translations.pagination?.page} of {translations.pagination?.totalPages}
+                    Page {pagination.page} of {pagination.totalPages}
                   </div>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={translations.pagination?.page === 1}
-                      onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
+                      disabled={pagination.page === 1}
+                      onClick={() => updateFilters({ ...initialFilters, page: pagination.page - 1 })}
                     >
                       Previous
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={translations.pagination?.page === translations.pagination?.totalPages}
-                      onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
+                      disabled={pagination.page === pagination.totalPages}
+                      onClick={() => updateFilters({ ...initialFilters, page: pagination.page + 1 })}
                     >
                       Next
                     </Button>
