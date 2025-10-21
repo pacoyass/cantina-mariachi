@@ -21,7 +21,7 @@ import
   } from '@/lib/lucide-shim';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useFetcher, useNavigate } from 'react-router';
+import { Link, useFetcher, useSearchParams } from 'react-router';
 
 export const meta = () => [
   { title: 'Translations - Cantina' }
@@ -116,7 +116,7 @@ export async function loader({ request, context }) {
 
 export default function TranslationsIndexPage({ loaderData }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const fetcher = useFetcher();
   const { data, metadata, error, filters: initialFilters } = loaderData;
   const { translations, pagination } = data;
@@ -154,16 +154,47 @@ export default function TranslationsIndexPage({ loaderData }) {
     return () => clearTimeout(timer);
   }, [searchInput, initialFilters.search]);
   
-  // Update filters by navigating with new query params
+  // Update filters using React Router's useSearchParams
   const updateFilters = (newFilters) => {
-    const params = new URLSearchParams();
-    if (newFilters.locale) params.set('locale', newFilters.locale);
-    if (newFilters.namespace) params.set('namespace', newFilters.namespace);
-    if (newFilters.search) params.set('search', newFilters.search);
-    if (newFilters.page && newFilters.page !== 1) params.set('page', newFilters.page.toString());
-    if (newFilters.limit && newFilters.limit !== 50) params.set('limit', newFilters.limit.toString());
-    
-    navigate(`/dashboard/admin/translations?${params.toString()}`, { replace: true });
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        
+        // Update or delete each param
+        if (newFilters.locale) {
+          params.set('locale', newFilters.locale);
+        } else {
+          params.delete('locale');
+        }
+        
+        if (newFilters.namespace) {
+          params.set('namespace', newFilters.namespace);
+        } else {
+          params.delete('namespace');
+        }
+        
+        if (newFilters.search) {
+          params.set('search', newFilters.search);
+        } else {
+          params.delete('search');
+        }
+        
+        if (newFilters.page && newFilters.page !== 1) {
+          params.set('page', newFilters.page.toString());
+        } else {
+          params.delete('page');
+        }
+        
+        if (newFilters.limit && newFilters.limit !== 50) {
+          params.set('limit', newFilters.limit.toString());
+        } else {
+          params.delete('limit');
+        }
+        
+        return params;
+      },
+      { replace: true }
+    );
   };
 
   const handleDelete = (id) => {
