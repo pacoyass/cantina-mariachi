@@ -19,6 +19,7 @@ import
     Trash2,
     Upload
   } from '@/lib/lucide-shim';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useFetcher, useNavigate } from 'react-router';
 
@@ -120,6 +121,28 @@ export default function TranslationsIndexPage({ loaderData }) {
   const { data, metadata, error, filters: initialFilters } = loaderData;
   const { translations, pagination } = data;
   const { locales = [], namespaces = [] } = metadata || {};
+  
+  // Local state for search input (instant typing)
+  const [searchInput, setSearchInput] = useState(initialFilters.search || '');
+  
+  // Sync searchInput when URL changes (e.g., clear filters button)
+  useEffect(() => {
+    setSearchInput(initialFilters.search || '');
+  }, [initialFilters.search]);
+  
+  // Debounce search: Update URL after user stops typing
+  useEffect(() => {
+    // Don't trigger on initial render or if search hasn't changed
+    if (searchInput === initialFilters.search) {
+      return;
+    }
+    
+    const timer = setTimeout(() => {
+      updateFilters({ ...initialFilters, search: searchInput, page: 1 });
+    }, 500); // Wait 500ms after user stops typing
+    
+    return () => clearTimeout(timer);
+  }, [searchInput, initialFilters.search]); // Only depend on search values
   
   // Update filters by navigating with new query params
   const updateFilters = (newFilters) => {
@@ -236,8 +259,8 @@ export default function TranslationsIndexPage({ loaderData }) {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search key or value..."
-                value={initialFilters.search}
-                onChange={(e) => updateFilters({ ...initialFilters, search: e.target.value, page: 1 })}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -278,13 +301,16 @@ export default function TranslationsIndexPage({ loaderData }) {
 
             <Button 
               variant="outline" 
-              onClick={() => updateFilters({
-                locale: '',
-                namespace: '',
-                search: '',
-                page: 1,
-                limit: 50
-              })}
+              onClick={() => {
+                setSearchInput('');
+                updateFilters({
+                  locale: '',
+                  namespace: '',
+                  search: '',
+                  page: 1,
+                  limit: 50
+                });
+              }}
             >
               Clear Filters
             </Button>
