@@ -132,22 +132,27 @@ export default function TranslationsIndexPage({ loaderData }) {
   
   // Debounce search: Update URL after user stops typing
   useEffect(() => {
-    // Don't trigger on initial render or if search hasn't changed
+    // Don't trigger if search hasn't changed
     if (searchInput === initialFilters.search) {
       return;
     }
     
-    // Only search if 3+ characters OR empty (to clear)
+    // If less than 3 characters and not empty, don't search yet
     if (searchInput.length > 0 && searchInput.length < 3) {
-      return;
+      return; // No setTimeout at all for 1-2 characters!
     }
+    
+    // Smart delay: shorter for longer searches (user is committed)
+    // 3-4 chars = 600ms (still typing word)
+    // 5+ chars = 400ms (likely finished word)
+    const delay = searchInput.length >= 5 ? 400 : 600;
     
     const timer = setTimeout(() => {
       updateFilters({ ...initialFilters, search: searchInput, page: 1 });
-    }, 800); // Wait 800ms after user stops typing
+    }, delay);
     
     return () => clearTimeout(timer);
-  }, [searchInput, initialFilters.search]); // Only depend on search values
+  }, [searchInput, initialFilters.search]);
   
   // Update filters by navigating with new query params
   const updateFilters = (newFilters) => {
