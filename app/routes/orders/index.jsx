@@ -194,18 +194,39 @@ export default function OrdersIndexPage() {
               <div className="col-span-2"><strong>{t('notes')}:</strong> {selectedOrder.notes || t('none')}</div>
             </div>
           )}
-          <Link variant="outline" to={`/orders/${selectedOrder?.orderNumber}`} className="text-sm mt-4">
-          <Button variant="outline" className="in-focus-within:text-amber-200" >
-           VIEW DETAILS 
-          </Button>
-          
-          </Link>
-          <Link variant="outline" to={`/orders/track`} className="text-sm mt-4">
-          <Button variant="outline" className="in-focus-within:text-amber-200" >
+          <div className="flex gap-2 justify-center items-center mt-2 w-full flex-col sm:flex-row ">
+          <Link to={`/orders/${selectedOrder?.orderNumber}`}>
+  <Button
+    variant="outline"
+    className="
+      w-full sm:w-auto mt-4 text-sm sm:text-base text-center
+      cursor-pointer font-light tracking-wide
+      text-muted-foreground
+      items-center justify-center
+      transition-all duration-200
+      hover:text-primary hover:bg-accent hover:border-primary hover:shadow hover:shadow-primary/20 hover:font-semibold hover:animate-none
+    "
+  >
+    VIEW DETAILS
+  </Button>
+</Link>
+
+          <Link  to={`/orders/track`} >
+          <Button variant="outline"   className="
+      w-full sm:w-auto mt-4 text-sm sm:text-base text-center
+      cursor-pointer  font-light tracking-wide
+      text-muted-foreground
+      items-center justify-center
+      transition-all duration-200
+      hover:text-primary hover:bg-accent hover:border-primary hover:shadow hover:shadow-primary/20 hover:font-semibold hover:animate-none
+    ">
            TRACK ORDER
           </Button>
           
           </Link>
+
+          </div>
+         
         </DialogContent>
       </Dialog>
     </>

@@ -1,25 +1,22 @@
-import
-{
-  isRouteErrorResponse,
-  Meta,
-  Outlet,
-  Links,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-  NavLink,
-  useOutletContext,
-  redirect,
-  data,
-} from "react-router";
-import stylesheet from "./app.css?url";
-import { ThemeProvider } from "./components/ThemeProvider";
-import { supportedLngs, rtlLngs } from '../i18n.config.js';
 import { useTranslation } from 'react-i18next';
-import { Navbar } from "./pages/Navbar";
+import
+  {
+    data,
+    isRouteErrorResponse,
+    Links,
+    Meta,
+    Outlet,
+    redirect,
+    Scripts,
+    ScrollRestoration,
+    useLoaderData
+  } from "react-router";
+import { rtlLngs, supportedLngs } from '../i18n.config.js';
+import stylesheet from "./app.css?url";
 import { Footer } from "./components/Footer";
+import { ThemeProvider } from "./components/ThemeProvider";
+import { Navbar } from "./pages/Navbar";
 import { checkAuthToken } from "./utils/auth/authUtils";
-import { useCallback } from "react";
 import { useTokenTimer } from "./utils/auth/timerCheck";
 async function timingMiddleware({ context }, next) {
   const start = performance.now();
@@ -56,7 +53,7 @@ export async function loader( { request, context } )
     return redirect(`${redirectTo}?lng=${lng}`, { replace: true });
   }
   
-    if (!user && (urlPathname === "/dashboard" || urlPathname === "/account" || urlPathname.startsWith("/dashboard"))) {
+    if (!user && (urlPathname === "/dashboard" || urlPathname === "/account" || urlPathname.startsWith("/admin") || urlPathname.startsWith("/orders") || urlPathname.startsWith("/dashboard"))) {
     
       return redirect(`/login?redirect=${encodeURIComponent( urlPathname )}`,{replace:true});
     }

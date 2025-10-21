@@ -125,7 +125,7 @@ export default function OrderDetailPage() {
   };
 
   return (
-    <div className="p-6 space-y-8">
+    <div className=" space-y-8">
       {/* ===== Header ===== */}
       <Card className="border border-muted bg-background/60 backdrop-blur-sm shadow-sm rounded-2xl">
         <CardContent className="p-6 space-y-3">
