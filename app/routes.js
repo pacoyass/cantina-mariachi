@@ -30,6 +30,12 @@ export default [
         route("reservations", "routes/dashboard/admin/reservations.jsx"),
         route("analytics", "routes/dashboard/admin/analytics.jsx"),
         route("settings", "routes/dashboard/admin/settings.jsx"),
+        // Translation management routes
+        route("translations", "routes/dashboard/admin/translations/index.jsx"),
+        route("translations/new", "routes/dashboard/admin/translations/new.jsx"),
+        route("translations/import", "routes/dashboard/admin/translations/import.jsx"),
+        route("translations/missing", "routes/dashboard/admin/translations/missing.jsx"),
+        route("translations/:id/edit", "routes/dashboard/admin/translations/$id.edit.jsx"),
       ]),
       // Role-specific dashboards (NOT nested - to avoid redirect loop)
       route("cashier", "routes/dashboard/cashier.jsx"), // /dashboard/cashier
