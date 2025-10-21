@@ -19,7 +19,7 @@ import
   } from '@/lib/lucide-shim';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 export const meta = () => [
   { title: 'Translations - Cantina' }
@@ -28,34 +28,69 @@ export const meta = () => [
 export async function loader({ request, context }) {
   const url = new URL(request.url);
   const cookie = request.headers.get("cookie") || "";
-  const lang =context.lng;
+  const lang = context.lng;
+  
+  // Get query params for filtering
+  const locale = url.searchParams.get('locale') || '';
+  const namespace = url.searchParams.get('namespace') || '';
+  const search = url.searchParams.get('search') || '';
+  const page = url.searchParams.get('page') || '1';
+  const limit = url.searchParams.get('limit') || '50';
   
   try {
-    const translations = await fetch(`${url.origin}/api/translations/admin/translations`, { headers: { cookie } });
-    if (!translations.ok) {
+    // Build API URL with query params
+    const apiParams = new URLSearchParams();
+    if (locale) apiParams.set('locale', locale);
+    if (namespace) apiParams.set('namespace', namespace);
+    if (search) apiParams.set('search', search);
+    apiParams.set('page', page);
+    apiParams.set('limit', limit);
+    
+    const response = await fetch(`${url.origin}/api/translations/admin/translations?${apiParams}`, { 
+      headers: { cookie } 
+    });
+    
+    if (!response.ok) {
       throw new Error('Failed to fetch translations');
     }
-    const data = await translations.json();
-    return { translations: data.data || [],error: data.error || null };
+    
+    const data = await response.json();
+    
+    return { 
+      data: data.data || { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
+      error: null,
+      filters: { locale, namespace, search, page, limit }
+    };
   } catch (error) {
     console.error('Translations loader error:', error);
-    throw createResponse(400, 'error', 'Failed to fetch translations');
+    return { 
+      data: { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
+      error: error.message,
+      filters: { locale, namespace, search, page, limit }
+    };
   }
 }
 
 
 export default function TranslationsIndexPage({ loaderData }) {
   const { t } = useTranslation();
-  const { translations, error } = loaderData;
-  const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({
-    locale: '',
-    namespace: '',
-    search: '',
-    page: 1,
-    limit: 20
-  });
-console.log("translations ....", translations);
+  const navigate = useNavigate();
+  const { data, error, filters: initialFilters } = loaderData;
+  const { translations, pagination } = data;
+  
+  const [deleteError, setDeleteError] = useState(null);
+  
+  // Update filters by navigating with new query params
+  const updateFilters = (newFilters) => {
+    const params = new URLSearchParams();
+    if (newFilters.locale) params.set('locale', newFilters.locale);
+    if (newFilters.namespace) params.set('namespace', newFilters.namespace);
+    if (newFilters.search) params.set('search', newFilters.search);
+    if (newFilters.page && newFilters.page !== 1) params.set('page', newFilters.page.toString());
+    if (newFilters.limit && newFilters.limit !== 50) params.set('limit', newFilters.limit.toString());
+    
+    navigate(`/dashboard/admin/translations?${params.toString()}`, { replace: true });
+  };
 
 
 
@@ -73,20 +108,21 @@ console.log("translations ....", translations);
       const data = await response.json();
 
       if (data.success) {
-        fetchTranslations();
+        // Reload the page to refresh data
+        navigate(0);
       } else {
-        setError(data.error || 'Failed to delete translation');
+        setDeleteError(data.error || 'Failed to delete translation');
       }
     } catch (err) {
-      setError(err.message);
+      setDeleteError(err.message);
     }
   };
 
   const handleExport = async () => {
     try {
       const params = new URLSearchParams();
-      if (filters.locale) params.set('locale', filters.locale);
-      if (filters.namespace) params.set('namespace', filters.namespace);
+      if (initialFilters.locale) params.set('locale', initialFilters.locale);
+      if (initialFilters.namespace) params.set('namespace', initialFilters.namespace);
       params.set('format', 'nested');
 
       const response = await fetch(`/api/translations/admin/translations/bulk-export?${params}`, {
@@ -103,10 +139,10 @@ console.log("translations ....", translations);
         window.URL.revokeObjectURL(url);
       } else {
         const data = await response.json();
-        setError(data.error || 'Failed to export translations');
+        setDeleteError(data.error || 'Failed to export translations');
       }
     } catch (err) {
-      setError(err.message);
+      setDeleteError(err.message);
     }
   };
 
@@ -145,10 +181,10 @@ console.log("translations ....", translations);
         </div>
       </div>
 
-      {error && (
+      {(error || deleteError) && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error || deleteError}</AlertDescription>
         </Alert>
       )}
 
@@ -232,16 +268,14 @@ console.log("translations ....", translations);
       <Card>
         <CardHeader>
           <CardTitle>
-            Translations ({translations.pagination?.total || 0  })
+            Translations ({pagination.total || 0})
           </CardTitle>
           <CardDescription>
-            Showing {translations.translations?.length || 0} of {translations.pagination?.total || 0} translations
+            Showing {translations.length || 0} of {pagination.total || 0} translations
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="text-center py-8">Loading...</div>
-          ) : translations.translations?.length === 0 ? (
+          {translations.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <FileText className="mx-auto h-12 w-12 mb-4 opacity-50" />
               <p>No translations found</p>
