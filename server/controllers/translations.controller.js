@@ -510,10 +510,10 @@ export const getMetadata = async (req, res) => {
       })
     ]);
 
-    return createResponse(res, 200, 'success', 'Metadata retrieved successfully', {
+    return createResponse(res, 200, 'success', {
       locales: locales.map(l => l.locale),
       namespaces: namespaces.map(n => n.namespace)
-    });
+    }, req);
   } catch (error) {
     await LoggerService.logError('Get metadata failed', error.stack, {
       error: error.message
