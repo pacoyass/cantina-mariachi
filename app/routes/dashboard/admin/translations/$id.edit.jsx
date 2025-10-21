@@ -7,96 +7,87 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, ArrowLeft, History, Save } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, Form, redirect } from 'react-router';
 
-export default function EditTranslation() {
-  const { id } = useParams();
+export const meta = () => [
+  { title: 'Edit Translation - Cantina' }
+];
+
+export async function loader({ params, request }) {
+  const { id } = params;
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
+  
+  try {
+    const response = await fetch(`${url.origin}/api/translations/admin/translations/${id}`, {
+      headers: { cookie }
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      return { translation: data.data.translation, error: null };
+    } else {
+      return { translation: null, error: data.error || 'Failed to fetch translation' };
+    }
+  } catch (error) {
+    return { translation: null, error: error.message };
+  }
+}
+
+export async function action({ request, params }) {
+  const { id } = params;
+  const formData = await request.formData();
+  const cookie = request.headers.get("cookie") || "";
+  const url = new URL(request.url);
+  
+  const value = formData.get('value');
+  const description = formData.get('description');
+  const isActive = formData.get('isActive') === 'true';
+  const reason = formData.get('reason');
+  
+  try {
+    const response = await fetch(`${url.origin}/api/translations/admin/translations/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': cookie
+      },
+      body: JSON.stringify({ value, description, isActive, reason })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      return redirect('/dashboard/admin/translations');
+    } else {
+      return { success: false, error: data.error || 'Failed to update translation' };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export default function EditTranslation({ loaderData, actionData }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [translation, setTranslation] = useState(null);
+  const { translation, error: loaderError } = loaderData;
+  
   const [formData, setFormData] = useState({
-    value: '',
-    description: '',
-    isActive: true,
+    value: translation?.value || '',
+    description: translation?.description || '',
+    isActive: translation?.isActive ?? true,
     reason: ''
   });
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchTranslation();
-  }, [id]);
-
-  const fetchTranslation = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/translations/admin/translations/${id}`, {
-        credentials: 'include'
-      });
-      const data = await response.json();
-
-      if (data.success) {
-        setTranslation(data.data.translation);
-        setFormData({
-          value: data.data.translation.value,
-          description: data.data.translation.description || '',
-          isActive: data.data.translation.isActive,
-          reason: ''
-        });
-      } else {
-        setError(data.error || 'Failed to fetch translation');
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/translations/admin/translations/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        navigate('/dashboard/admin/translations');
-      } else {
-        setError(data.error || 'Failed to update translation');
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (loading) {
-    return <div className="container mx-auto p-6">Loading...</div>;
-  }
 
   if (!translation) {
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>Translation not found</AlertDescription>
+          <AlertDescription>{loaderError || 'Translation not found'}</AlertDescription>
         </Alert>
       </div>
     );
@@ -119,16 +110,16 @@ export default function EditTranslation() {
         </p>
       </div>
 
-      {error && (
+      {(loaderError || actionData?.error) && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{loaderError || actionData?.error}</AlertDescription>
         </Alert>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <form onSubmit={handleSubmit}>
+          <Form method="post">
             <Card>
               <CardHeader>
                 <CardTitle>Translation Details</CardTitle>
@@ -154,6 +145,7 @@ export default function EditTranslation() {
                   <Label htmlFor="value">Value *</Label>
                   <Textarea
                     id="value"
+                    name="value"
                     value={formData.value}
                     onChange={(e) => setFormData({ ...formData, value: e.target.value })}
                     rows={4}
@@ -165,6 +157,7 @@ export default function EditTranslation() {
                   <Label htmlFor="description">Description (optional)</Label>
                   <Textarea
                     id="description"
+                    name="description"
                     placeholder="Context for translators"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -176,6 +169,7 @@ export default function EditTranslation() {
                   <Label htmlFor="reason">Reason for change (optional)</Label>
                   <Input
                     id="reason"
+                    name="reason"
                     placeholder="Why are you making this change?"
                     value={formData.reason}
                     onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
@@ -185,9 +179,11 @@ export default function EditTranslation() {
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="isActive"
+                    name="isActive"
                     checked={formData.isActive}
                     onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
                   />
+                  <input type="hidden" name="isActive" value={formData.isActive.toString()} />
                   <Label htmlFor="isActive">Active</Label>
                 </div>
               </CardContent>
@@ -201,12 +197,12 @@ export default function EditTranslation() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving}>
+              <Button type="submit">
                 <Save className="mr-2 h-4 w-4" />
-                {saving ? 'Saving...' : 'Save Changes'}
+                Save Changes
               </Button>
             </div>
-          </form>
+          </Form>
         </div>
 
         <div>

@@ -19,11 +19,42 @@ import
   } from '@/lib/lucide-shim';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useFetcher } from 'react-router';
 
 export const meta = () => [
   { title: 'Translations - Cantina' }
 ];
+
+// Action for delete operations
+export async function action({ request }) {
+  const formData = await request.formData();
+  const intent = formData.get('intent');
+  const cookie = request.headers.get("cookie") || "";
+  const url = new URL(request.url);
+  
+  if (intent === 'delete') {
+    const id = formData.get('id');
+    try {
+      const response = await fetch(`${url.origin}/api/translations/admin/translations/${id}`, {
+        method: 'DELETE',
+        headers: { cookie },
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        return { success: true, message: 'Translation deleted successfully' };
+      } else {
+        return { success: false, error: data.error || 'Failed to delete translation' };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+  
+  return { success: false, error: 'Invalid action' };
+}
 
 export async function loader({ request, context }) {
   const url = new URL(request.url);
@@ -75,10 +106,9 @@ export async function loader({ request, context }) {
 export default function TranslationsIndexPage({ loaderData }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const fetcher = useFetcher();
   const { data, error, filters: initialFilters } = loaderData;
   const { translations, pagination } = data;
-  
-  const [deleteError, setDeleteError] = useState(null);
   
   // Update filters by navigating with new query params
   const updateFilters = (newFilters) => {
@@ -92,30 +122,16 @@ export default function TranslationsIndexPage({ loaderData }) {
     navigate(`/dashboard/admin/translations?${params.toString()}`, { replace: true });
   };
 
-
-
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (!confirm('Are you sure you want to delete this translation?')) {
       return;
     }
-
-    try {
-      const response = await fetch(`/api/translations/admin/translations/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Reload the page to refresh data
-        navigate(0);
-      } else {
-        setDeleteError(data.error || 'Failed to delete translation');
-      }
-    } catch (err) {
-      setDeleteError(err.message);
-    }
+    
+    // Use fetcher to submit delete action
+    fetcher.submit(
+      { intent: 'delete', id },
+      { method: 'post' }
+    );
   };
 
   const handleExport = async () => {
@@ -139,10 +155,12 @@ export default function TranslationsIndexPage({ loaderData }) {
         window.URL.revokeObjectURL(url);
       } else {
         const data = await response.json();
-        setDeleteError(data.error || 'Failed to export translations');
+        console.error('Export failed:', data.error);
+        alert('Failed to export translations: ' + (data.error || 'Unknown error'));
       }
     } catch (err) {
-      setDeleteError(err.message);
+      console.error('Export error:', err);
+      alert('Failed to export translations: ' + err.message);
     }
   };
 
@@ -181,10 +199,17 @@ export default function TranslationsIndexPage({ loaderData }) {
         </div>
       </div>
 
-      {(error || deleteError) && (
+      {(error || fetcher.data?.error) && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error || deleteError}</AlertDescription>
+          <AlertDescription>{error || fetcher.data?.error}</AlertDescription>
+        </Alert>
+      )}
+      
+      {fetcher.data?.success && (
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{fetcher.data.message}</AlertDescription>
         </Alert>
       )}
 
@@ -251,7 +276,7 @@ export default function TranslationsIndexPage({ loaderData }) {
 
             <Button 
               variant="outline" 
-              onClick={() => setFilters({
+              onClick={() => updateFilters({
                 locale: '',
                 namespace: '',
                 search: '',

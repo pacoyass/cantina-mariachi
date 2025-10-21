@@ -8,9 +8,46 @@ import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, ArrowLeft, Save } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate, Form, redirect } from 'react-router';
 
-export default function NewTranslation() {
+export const meta = () => [
+  { title: 'New Translation - Cantina' }
+];
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const cookie = request.headers.get("cookie") || "";
+  const url = new URL(request.url);
+  
+  const key = formData.get('key');
+  const namespace = formData.get('namespace');
+  const locale = formData.get('locale');
+  const value = formData.get('value');
+  const description = formData.get('description');
+  
+  try {
+    const response = await fetch(`${url.origin}/api/translations/admin/translations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': cookie
+      },
+      body: JSON.stringify({ key, namespace, locale, value, description })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      return redirect('/dashboard/admin/translations');
+    } else {
+      return { success: false, error: data.error || 'Failed to create translation' };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export default function NewTranslation({ actionData }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -20,37 +57,6 @@ export default function NewTranslation() {
     value: '',
     description: ''
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/translations/admin/translations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        navigate('/dashboard/admin/translations');
-      } else {
-        setError(data.error || 'Failed to create translation');
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">
@@ -69,14 +75,14 @@ export default function NewTranslation() {
         </p>
       </div>
 
-      {error && (
+      {actionData?.error && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{actionData.error}</AlertDescription>
         </Alert>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <Form method="post">
         <Card>
           <CardHeader>
             <CardTitle>Translation Details</CardTitle>
@@ -87,6 +93,7 @@ export default function NewTranslation() {
               <Label htmlFor="key">Key *</Label>
               <Input
                 id="key"
+                name="key"
                 placeholder="e.g., hero.title or success"
                 value={formData.key}
                 onChange={(e) => setFormData({ ...formData, key: e.target.value })}
@@ -100,6 +107,7 @@ export default function NewTranslation() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="namespace">Namespace *</Label>
+                <input type="hidden" name="namespace" value={formData.namespace} />
                 <Select 
                   value={formData.namespace}
                   onValueChange={(value) => setFormData({ ...formData, namespace: value })}
@@ -127,6 +135,7 @@ export default function NewTranslation() {
 
               <div className="space-y-2">
                 <Label htmlFor="locale">Locale *</Label>
+                <input type="hidden" name="locale" value={formData.locale} />
                 <Select 
                   value={formData.locale}
                   onValueChange={(value) => setFormData({ ...formData, locale: value })}
@@ -151,6 +160,7 @@ export default function NewTranslation() {
               <Label htmlFor="value">Value *</Label>
               <Textarea
                 id="value"
+                name="value"
                 placeholder="Enter the translated text"
                 value={formData.value}
                 onChange={(e) => setFormData({ ...formData, value: e.target.value })}
@@ -163,6 +173,7 @@ export default function NewTranslation() {
               <Label htmlFor="description">Description (optional)</Label>
               <Textarea
                 id="description"
+                name="description"
                 placeholder="Context for translators"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -183,12 +194,12 @@ export default function NewTranslation() {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit">
             <Save className="mr-2 h-4 w-4" />
-            {loading ? 'Creating...' : 'Create Translation'}
+            Create Translation
           </Button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

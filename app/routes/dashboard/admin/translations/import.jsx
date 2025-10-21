@@ -1,6 +1,7 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -8,9 +9,57 @@ import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, ArrowLeft, FileJson, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate, Form } from 'react-router';
 
-export default function ImportTranslations() {
+export const meta = () => [
+  { title: 'Import Translations - Cantina' }
+];
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const cookie = request.headers.get("cookie") || "";
+  const url = new URL(request.url);
+  
+  const namespace = formData.get('namespace');
+  const locale = formData.get('locale');
+  const translations = formData.get('translations');
+  const overwrite = formData.get('overwrite') === 'true';
+  
+  try {
+    // Parse JSON to validate
+    const translationsObj = JSON.parse(translations);
+    
+    const response = await fetch(`${url.origin}/api/translations/admin/translations/bulk-import`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': cookie
+      },
+      body: JSON.stringify({
+        namespace,
+        locale,
+        translations: translationsObj,
+        overwrite
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      return { 
+        success: true, 
+        stats: data.data.stats,
+        message: `Import completed: ${data.data.stats.imported} imported, ${data.data.stats.updated} updated, ${data.data.stats.skipped} skipped`
+      };
+    } else {
+      return { success: false, error: data.error || 'Failed to import translations' };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export default function ImportTranslations({ actionData }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -19,9 +68,6 @@ export default function ImportTranslations() {
     translations: '',
     overwrite: false
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [result, setResult] = useState(null);
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
@@ -32,44 +78,6 @@ export default function ImportTranslations() {
       setFormData({ ...formData, translations: event.target?.result });
     };
     reader.readAsText(file);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      // Parse JSON to validate
-      const translationsObj = JSON.parse(formData.translations);
-
-      const response = await fetch('/api/translations/admin/translations/bulk-import', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          namespace: formData.namespace,
-          locale: formData.locale,
-          translations: translationsObj,
-          overwrite: formData.overwrite
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setResult(data.data.stats);
-      } else {
-        setError(data.error || 'Failed to import translations');
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -89,23 +97,23 @@ export default function ImportTranslations() {
         </p>
       </div>
 
-      {error && (
+      {actionData?.error && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{actionData.error}</AlertDescription>
         </Alert>
       )}
 
-      {result && (
+      {actionData?.success && (
         <Alert className="mb-6">
           <FileJson className="h-4 w-4" />
           <AlertDescription>
-            Import completed: {result.imported} imported, {result.updated} updated, {result.skipped} skipped
+            {actionData.message}
           </AlertDescription>
         </Alert>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <Form method="post" className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Import Settings</CardTitle>
@@ -115,6 +123,7 @@ export default function ImportTranslations() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="namespace">Namespace *</Label>
+                <input type="hidden" name="namespace" value={formData.namespace} />
                 <Select 
                   value={formData.namespace}
                   onValueChange={(value) => setFormData({ ...formData, namespace: value })}
@@ -142,6 +151,7 @@ export default function ImportTranslations() {
 
               <div className="space-y-2">
                 <Label htmlFor="locale">Locale *</Label>
+                <input type="hidden" name="locale" value={formData.locale} />
                 <Select 
                   value={formData.locale}
                   onValueChange={(value) => setFormData({ ...formData, locale: value })}
@@ -168,6 +178,7 @@ export default function ImportTranslations() {
                 checked={formData.overwrite}
                 onCheckedChange={(checked) => setFormData({ ...formData, overwrite: checked })}
               />
+              <input type="hidden" name="overwrite" value={formData.overwrite.toString()} />
               <Label htmlFor="overwrite">Overwrite existing translations</Label>
             </div>
           </CardContent>
@@ -193,6 +204,7 @@ export default function ImportTranslations() {
               <Label htmlFor="translations">Or paste JSON content *</Label>
               <Textarea
                 id="translations"
+                name="translations"
                 value={formData.translations}
                 onChange={(e) => setFormData({ ...formData, translations: e.target.value })}
                 placeholder={`{
@@ -221,12 +233,12 @@ export default function ImportTranslations() {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit">
             <Upload className="mr-2 h-4 w-4" />
-            {loading ? 'Importing...' : 'Import Translations'}
+            Import Translations
           </Button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

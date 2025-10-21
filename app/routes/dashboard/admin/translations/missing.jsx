@@ -4,42 +4,38 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, ArrowLeft, Download, FileWarning } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
-export default function MissingTranslations() {
+export const meta = () => [
+  { title: 'Missing Translations - Cantina' }
+];
+
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
+  
+  try {
+    const response = await fetch(`${url.origin}/api/translations/admin/translations/missing`, {
+      headers: { cookie }
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      return { missing: data.data.missing || [], error: null };
+    } else {
+      return { missing: [], error: data.error || 'Failed to fetch missing translations' };
+    }
+  } catch (error) {
+    return { missing: [], error: error.message };
+  }
+}
+
+export default function MissingTranslations({ loaderData }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [missing, setMissing] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchMissing();
-  }, []);
-
-  const fetchMissing = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/translations/admin/translations/missing', {
-        credentials: 'include'
-      });
-      const data = await response.json();
-
-      if (data.success) {
-        setMissing(data.data.missing);
-      } else {
-        setError(data.error || 'Failed to fetch missing translations');
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { missing, error } = loaderData;
 
   const exportMissing = () => {
     const exportData = {};
@@ -96,9 +92,7 @@ export default function MissingTranslations() {
         </Alert>
       )}
 
-      {loading ? (
-        <div className="text-center py-8">Loading...</div>
-      ) : missing.length === 0 ? (
+      {missing.length === 0 ? (
         <Alert>
           <FileWarning className="h-4 w-4" />
           <AlertDescription>
