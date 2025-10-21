@@ -1,75 +1,63 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import
+  {
+    AlertCircle,
+    Download,
+    Edit,
+    Eye,
+    FileText,
+    Plus,
+    Search,
+    Trash2,
+    Upload
+  } from '@/lib/lucide-shim';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
-import { Alert, AlertDescription } from '~/components/ui/alert';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
-import { Badge } from '~/components/ui/badge';
-import { 
-  Search, 
-  Plus, 
-  Download, 
-  Upload, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  AlertCircle,
-  FileText 
-} from 'lucide-react';
+import { Link } from 'react-router';
 
-export default function TranslationsIndex() {
+export const meta = () => [
+  { title: 'Translations - Cantina' }
+];
+
+export async function loader({ request, context }) {
+  const url = new URL(request.url);
+  const cookie = request.headers.get("cookie") || "";
+  const lang =context.lng;
+  
+  try {
+    const translations = await fetch(`${url.origin}/api/translations/admin/translations`, { headers: { cookie } });
+    if (!translations.ok) {
+      throw new Error('Failed to fetch translations');
+    }
+    const data = await translations.json();
+    return { translations: data.data || [],error: data.error || null };
+  } catch (error) {
+    console.error('Translations loader error:', error);
+    throw createResponse(400, 'error', 'Failed to fetch translations');
+  }
+}
+
+
+export default function TranslationsIndexPage({ loaderData }) {
   const { t } = useTranslation();
-  const [translations, setTranslations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { translations, error } = loaderData;
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     locale: '',
     namespace: '',
     search: '',
     page: 1,
-    limit: 50
+    limit: 20
   });
-  const [pagination, setPagination] = useState({
-    page: 1,
-    totalPages: 1,
-    total: 0
-  });
+console.log("translations ....", translations);
 
-  // Fetch translations
-  const fetchTranslations = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const params = new URLSearchParams();
-      if (filters.locale) params.set('locale', filters.locale);
-      if (filters.namespace) params.set('namespace', filters.namespace);
-      if (filters.search) params.set('search', filters.search);
-      params.set('page', filters.page);
-      params.set('limit', filters.limit);
 
-      const response = await fetch(`/api/translations/admin/translations?${params}`);
-      const data = await response.json();
-
-      if (data.success) {
-        setTranslations(data.data.translations);
-        setPagination(data.data.pagination);
-      } else {
-        setError(data.error || 'Failed to fetch translations');
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTranslations();
-  }, [filters]);
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this translation?')) {
@@ -244,16 +232,16 @@ export default function TranslationsIndex() {
       <Card>
         <CardHeader>
           <CardTitle>
-            Translations ({pagination.total})
+            Translations ({translations.pagination?.total || 0  })
           </CardTitle>
           <CardDescription>
-            Showing {translations.length} of {pagination.total} translations
+            Showing {translations.translations?.length || 0} of {translations.pagination?.total || 0} translations
           </CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-8">Loading...</div>
-          ) : translations.length === 0 ? (
+          ) : translations.translations?.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <FileText className="mx-auto h-12 w-12 mb-4 opacity-50" />
               <p>No translations found</p>
@@ -273,7 +261,7 @@ export default function TranslationsIndex() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {translations.map((translation) => (
+                  {translations.translations?.map((translation) => (
                     <TableRow key={translation.id}>
                       <TableCell className="font-mono text-sm">
                         {translation.key}
@@ -320,16 +308,16 @@ export default function TranslationsIndex() {
                 </TableBody>
               </Table>
 
-              {pagination.totalPages > 1 && (
+              {translations.pagination?.totalPages > 1 && (
                 <div className="flex justify-between items-center mt-4 pt-4 border-t">
                   <div className="text-sm text-muted-foreground">
-                    Page {pagination.page} of {pagination.totalPages}
+                    Page {translations.pagination?.page} of {translations.pagination?.totalPages}
                   </div>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={pagination.page === 1}
+                      disabled={translations.pagination?.page === 1}
                       onClick={() => setFilters({ ...filters, page: filters.page - 1 })}
                     >
                       Previous
@@ -337,7 +325,7 @@ export default function TranslationsIndex() {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={pagination.page === pagination.totalPages}
+                      disabled={translations.pagination?.page === translations.pagination?.totalPages}
                       onClick={() => setFilters({ ...filters, page: filters.page + 1 })}
                     >
                       Next

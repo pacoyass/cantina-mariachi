@@ -1,14 +1,14 @@
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { AlertCircle, ArrowLeft, FileJson, Upload } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/components/ui/button';
-import { Label } from '~/components/ui/label';
-import { Textarea } from '~/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
-import { Alert, AlertDescription } from '~/components/ui/alert';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
-import { Switch } from '~/components/ui/switch';
-import { AlertCircle, ArrowLeft, Upload, FileJson } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 export default function ImportTranslations() {
   const { t } = useTranslation();

@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { useTranslation } from 'react-i18next';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Textarea } from '~/components/ui/textarea';
-import { Label } from '~/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
-import { Alert, AlertDescription } from '~/components/ui/alert';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, ArrowLeft, Save } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
 export default function NewTranslation() {
   const { t } = useTranslation();
@@ -57,7 +57,7 @@ export default function NewTranslation() {
       <div className="mb-6">
         <Button 
           variant="ghost" 
-          onClick={() => navigate('/dashboard/admin/translations')}
+          onClick={() => navigate('/dashboard/admin/translations', { replace: true })}
           className="mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
