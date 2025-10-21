@@ -13,6 +13,7 @@ import {
   updateTranslation,
   deleteTranslation,
   getMissingTranslations,
+  getMetadata,
   bulkImport,
   bulkExport
 } from '../controllers/translations.controller.js';
@@ -30,6 +31,7 @@ const rlStrict = rateLimit({ windowMs: 60_000, max: 60 });
 
 router.get('/admin/translations', authMiddleware, requireRole('ADMIN', 'OWNER'), rlStrict, getTranslations);
 router.get('/admin/translations/missing', authMiddleware, requireRole('ADMIN', 'OWNER'), rlStrict, getMissingTranslations);
+router.get('/admin/translations/metadata', authMiddleware, requireRole('ADMIN', 'OWNER'), rlStrict, getMetadata);
 router.get('/admin/translations/bulk-export', authMiddleware, requireRole('ADMIN', 'OWNER'), rlStrict, bulkExport);
 router.post('/admin/translations/bulk-import', authMiddleware, requireRole('ADMIN', 'OWNER'), rlStrict, bulkImport);
 router.get('/admin/translations/:id', authMiddleware, requireRole('ADMIN', 'OWNER'), rlStrict, getTranslation);

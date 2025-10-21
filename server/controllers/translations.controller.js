@@ -491,6 +491,38 @@ export const bulkExport = async (req, res) => {
 };
 
 /**
+ * Get metadata (unique locales and namespaces)
+ * GET /api/translations/admin/translations/metadata
+ */
+export const getMetadata = async (req, res) => {
+  try {
+    // Get distinct locales and namespaces from database
+    const [locales, namespaces] = await Promise.all([
+      prisma.translation.findMany({
+        select: { locale: true },
+        distinct: ['locale'],
+        orderBy: { locale: 'asc' }
+      }),
+      prisma.translation.findMany({
+        select: { namespace: true },
+        distinct: ['namespace'],
+        orderBy: { namespace: 'asc' }
+      })
+    ]);
+
+    return createResponse(res, 200, 'success', 'Metadata retrieved successfully', {
+      locales: locales.map(l => l.locale),
+      namespaces: namespaces.map(n => n.namespace)
+    });
+  } catch (error) {
+    await LoggerService.logError('Get metadata failed', error.stack, {
+      error: error.message
+    });
+    return createError(res, 500, 'internalError', 'SERVER_ERROR', {}, req);
+  }
+};
+
+/**
  * Helper: Flatten nested object into dot-notation
  */
 function flattenObject(obj, prefix = '') {
@@ -531,6 +563,7 @@ export default {
   updateTranslation,
   deleteTranslation,
   getMissingTranslations,
+  getMetadata,
   bulkImport,
   bulkExport
 };

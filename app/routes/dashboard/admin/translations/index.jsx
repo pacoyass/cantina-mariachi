@@ -76,18 +76,26 @@ export async function loader({ request, context }) {
     apiParams.set('page', page);
     apiParams.set('limit', limit);
     
-    const response = await fetch(`${url.origin}/api/translations/admin/translations?${apiParams}`, { 
-      headers: { cookie } 
-    });
+    // Fetch translations and metadata in parallel
+    const [translationsResponse, metadataResponse] = await Promise.all([
+      fetch(`${url.origin}/api/translations/admin/translations?${apiParams}`, { 
+        headers: { cookie } 
+      }),
+      fetch(`${url.origin}/api/translations/admin/translations/metadata`, { 
+        headers: { cookie } 
+      })
+    ]);
     
-    if (!response.ok) {
+    if (!translationsResponse.ok) {
       throw new Error('Failed to fetch translations');
     }
     
-    const data = await response.json();
+    const data = await translationsResponse.json();
+    const metadata = metadataResponse.ok ? await metadataResponse.json() : { data: { locales: [], namespaces: [] } };
     
     return { 
       data: data.data || { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
+      metadata: metadata.data || { locales: [], namespaces: [] },
       error: null,
       filters: { locale, namespace, search, page, limit }
     };
@@ -95,6 +103,7 @@ export async function loader({ request, context }) {
     console.error('Translations loader error:', error);
     return { 
       data: { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
+      metadata: { locales: [], namespaces: [] },
       error: error.message,
       filters: { locale, namespace, search, page, limit }
     };
@@ -106,8 +115,9 @@ export default function TranslationsIndexPage({ loaderData }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const fetcher = useFetcher();
-  const { data, error, filters: initialFilters } = loaderData;
+  const { data, metadata, error, filters: initialFilters } = loaderData;
   const { translations, pagination } = data;
+  const { locales = [], namespaces = [] } = metadata || {};
   
   // Update filters by navigating with new query params
   const updateFilters = (newFilters) => {
@@ -238,13 +248,11 @@ export default function TranslationsIndexPage({ loaderData }) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">All Locales</SelectItem>
-                <SelectItem value="en">English (en)</SelectItem>
-                <SelectItem value="es">Spanish (es)</SelectItem>
-                <SelectItem value="fr">French (fr)</SelectItem>
-                <SelectItem value="de">German (de)</SelectItem>
-                <SelectItem value="it">Italian (it)</SelectItem>
-                <SelectItem value="pt">Portuguese (pt)</SelectItem>
-                <SelectItem value="ar">Arabic (ar)</SelectItem>
+                {locales.map((locale) => (
+                  <SelectItem key={locale} value={locale}>
+                    {locale.toUpperCase()}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -257,19 +265,11 @@ export default function TranslationsIndexPage({ loaderData }) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="">All Namespaces</SelectItem>
-                <SelectItem value="common">Common</SelectItem>
-                <SelectItem value="home">Home</SelectItem>
-                <SelectItem value="auth">Auth</SelectItem>
-                <SelectItem value="menu">Menu</SelectItem>
-                <SelectItem value="orders">Orders</SelectItem>
-                <SelectItem value="account">Account</SelectItem>
-                <SelectItem value="reservations">Reservations</SelectItem>
-                <SelectItem value="ui">UI</SelectItem>
-                <SelectItem value="api">API</SelectItem>
-                <SelectItem value="validation">Validation</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="business">Business</SelectItem>
-                <SelectItem value="popular">Popular</SelectItem>
+                {namespaces.map((ns) => (
+                  <SelectItem key={ns} value={ns}>
+                    {ns.charAt(0).toUpperCase() + ns.slice(1)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -319,7 +319,7 @@ export default function TranslationsIndexPage({ loaderData }) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {translations.translations?.map((translation) => (
+                  {translations?.map((translation) => (
                     <TableRow key={translation.id}>
                       <TableCell className="font-mono text-sm">
                         {translation.key}
