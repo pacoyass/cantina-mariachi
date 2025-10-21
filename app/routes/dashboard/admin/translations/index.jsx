@@ -174,7 +174,8 @@ export default function TranslationsIndexPage({ loaderData }) {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <TooltipProvider>
+      <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Translations</h1>
@@ -396,5 +397,6 @@ export default function TranslationsIndexPage({ loaderData }) {
         </CardContent>
       </Card>
     </div>
+    </TooltipProvider>
   );
 }
