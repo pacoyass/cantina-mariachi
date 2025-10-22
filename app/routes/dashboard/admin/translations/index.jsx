@@ -148,7 +148,9 @@ export default function TranslationsIndexPage({ loaderData }) {
     const delay = searchInput.length >= 5 ? 400 : 600;
     
     const timer = setTimeout(() => {
-      updateFilters({ ...initialFilters, search: searchInput, page: 1 });
+      // Only reset to page 1 if we're ADDING a search term, not clearing it
+      const newPage = searchInput.length >= 3 ? 1 : initialFilters.page;
+      updateFilters({ ...initialFilters, search: searchInput, page: newPage });
     }, delay);
     
     return () => clearTimeout(timer);
@@ -464,24 +466,6 @@ export default function TranslationsIndexPage({ loaderData }) {
                     </Button>
                     <Button
                       variant="outline"
-                      size="sm"
-                      disabled={pagination.page === pagination.totalPages}
-                      onClick={() => updateFilters({ ...initialFilters, page: pagination.page + 1 })}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-    </TooltipProvider>
-  );
-}
-    variant="outline"
                       size="sm"
                       disabled={pagination.page === pagination.totalPages}
                       onClick={() => updateFilters({ ...initialFilters, page: pagination.page + 1 })}
