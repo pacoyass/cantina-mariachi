@@ -272,50 +272,58 @@ export default function TranslationsIndexPage() {
               </div>
 
               {/* Locale */}
-              <Select
-                name="locale"
-                defaultValue={filters.locale}
-                onValueChange={(value) => {
-                  const form = document.getElementById("filters-form");
-                  form.locale.value = value;
-                  fetcher.submit(form, { method: "get" });
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Locales" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Locales</SelectItem>
-                  {locales.map((locale) => (
-                    <SelectItem key={locale} value={locale}>
-                      {locale.toUpperCase()}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div>
+                <input type="hidden" name="locale" value={filters.locale} />
+                <Select
+                  value={filters.locale}
+                  onValueChange={(value) => {
+                    const form = document.getElementById("filters-form");
+                    const formData = new FormData(form);
+                    formData.set("locale", value);
+                    formData.set("page", "1"); // Reset to page 1 on filter change
+                    fetcher.submit(formData, { method: "get" });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Locales" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Locales</SelectItem>
+                    {locales.map((locale) => (
+                      <SelectItem key={locale} value={locale}>
+                        {locale.toUpperCase()}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Namespace */}
-              <Select
-                name="namespace"
-                defaultValue={filters.namespace}
-                onValueChange={(value) => {
-                  const form = document.getElementById("filters-form");
-                  form.namespace.value = value;
-                  fetcher.submit(form, { method: "get" });
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Namespaces" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Namespaces</SelectItem>
-                  {namespaces.map((ns) => (
-                    <SelectItem key={ns} value={ns}>
-                      {ns.charAt(0).toUpperCase() + ns.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div>
+                <input type="hidden" name="namespace" value={filters.namespace} />
+                <Select
+                  value={filters.namespace}
+                  onValueChange={(value) => {
+                    const form = document.getElementById("filters-form");
+                    const formData = new FormData(form);
+                    formData.set("namespace", value);
+                    formData.set("page", "1"); // Reset to page 1 on filter change
+                    fetcher.submit(formData, { method: "get" });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="All Namespaces" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">All Namespaces</SelectItem>
+                    {namespaces.map((ns) => (
+                      <SelectItem key={ns} value={ns}>
+                        {ns.charAt(0).toUpperCase() + ns.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               <Button
                 variant="outline"
