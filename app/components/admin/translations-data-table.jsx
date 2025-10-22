@@ -26,12 +26,13 @@ export function TranslationsDataTable({ data }) {
   const columns = [
     {
       accessorKey: "key",
+      enableSorting: true,
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
+            className="h-8 px-2 hover:bg-accent"
           >
             Key
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -44,12 +45,13 @@ export function TranslationsDataTable({ data }) {
     },
     {
       accessorKey: "namespace",
+      enableSorting: true,
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
+            className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Namespace
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -62,12 +64,13 @@ export function TranslationsDataTable({ data }) {
     },
     {
       accessorKey: "locale",
+      enableSorting: true,
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-8 px-2"
+            className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Locale
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -165,6 +168,7 @@ export function TranslationsDataTable({ data }) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
+    enableSortingRemoval: true,
     state: {
       sorting,
     },
