@@ -226,8 +226,8 @@ export default function TranslationsIndexPage() {
               className="grid grid-cols-1 md:grid-cols-4 gap-4"
             >
               {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="relative focus:text-muted-foreground text-foreground">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 " />
                 <Input
                   name="search"
                   placeholder="Search key or value..."
@@ -288,7 +288,8 @@ export default function TranslationsIndexPage() {
                     fetcher.submit(formData, { method: "get" });
                   }}
                 >
-                  <SelectTrigger>
+                
+                  <SelectTrigger   className="bg-transparent text-muted-foreground hover:text-foreground">
                     <SelectValue placeholder="All Locales" />
                   </SelectTrigger>
                   <SelectContent>
