@@ -153,6 +153,7 @@ export default function TranslationsIndexPage() {
   const { locales = [], namespaces = [] } = metadata || {};
 
   const [searchInput, setSearchInput] = useState(filters.search || "");
+  const [isSearching, setIsSearching] = useState(false);
 
   // keep local search input synced when data changes
   useEffect(() => {
@@ -247,8 +248,8 @@ export default function TranslationsIndexPage() {
                   className="pl-10 pr-10"
                 />
 
-                {/* Spinner */}
-                {fetcher.state === "loading" && (
+                {/* Spinner - only show when searching */}
+                {fetcher.state === "loading" && isSearching && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   </div>
