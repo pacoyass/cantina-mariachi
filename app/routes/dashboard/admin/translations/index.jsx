@@ -279,6 +279,11 @@ export default function TranslationsIndexPage({ loaderData }) {
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="pl-10"
               />
+              {fetcher.state === "loading" && searchInput.length >= 3 && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
             </div>
             
             <Select 
@@ -352,7 +357,13 @@ export default function TranslationsIndexPage({ loaderData }) {
             </div>
           ) : (
             <>
-              <ScrollArea className="h-[300px] w-full rounded-md border">
+              <ScrollArea 
+                className="h-[300px] w-full rounded-md border relative"
+                style={{
+                  opacity: fetcher.state === "loading" ? 0.6 : 1,
+                  transition: "opacity 150ms"
+                }}
+              >
                 <Table>
                   <TableHeader>
                     <TableRow>
