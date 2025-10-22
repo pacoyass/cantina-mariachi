@@ -118,7 +118,10 @@ export default function TranslationsIndexPage({ loaderData }) {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const fetcher = useFetcher();
-  const { data, metadata, error, filters: initialFilters } = loaderData;
+  
+  // ✅ Use fetcher data when available (live updates), fallback to loaderData (SSR)
+  const activeData = fetcher.data ?? loaderData;
+  const { data, metadata, error, filters: initialFilters } = activeData;
   const { translations, pagination } = data;
   const { locales = [], namespaces = [] } = metadata || {};
   
@@ -170,8 +173,8 @@ export default function TranslationsIndexPage({ loaderData }) {
     // ✅ Fetch data without navigation (instant!)
     fetcher.load(`/dashboard/admin/translations?${params.toString()}`);
     
-    // ✅ Keep URL in sync
-    setSearchParams(params, { replace: true });
+    // ✅ Update URL without triggering navigation
+    window.history.replaceState(null, '', `?${params.toString()}`);
   };
 
   const handleDelete = (id) => {
