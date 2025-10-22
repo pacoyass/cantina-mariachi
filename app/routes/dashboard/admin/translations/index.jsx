@@ -1,4 +1,5 @@
 // app/routes/dashboard/admin/translations.jsx
+import { TranslationsDataTable } from '@/components/admin/translations-data-table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,20 +7,14 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { TranslationsDataTable } from '@/components/admin/translations-data-table';
 
 import
   {
     AlertCircle,
-    Download,
-    Edit,
-    Eye,
-    FileText,
+    Download, FileText,
     Plus,
-    Search,
-    Trash2,
-    Upload,
-    X,
+    Search, Upload,
+    X
   } from "@/lib/lucide-shim";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -150,6 +145,7 @@ export default function TranslationsIndexPage() {
   const { data, metadata, error, filters } = activeData;
   const { translations, pagination } = data;
   const { locales = [], namespaces = [] } = metadata || {};
+  const [loadingButton, setLoadingButton] = useState(null); // "next" | "prev" | null
 
   const [searchInput, setSearchInput] = useState(filters.search || "");
   const [isSearching, setIsSearching] = useState(false);
@@ -158,7 +154,12 @@ export default function TranslationsIndexPage() {
   useEffect(() => {
     setSearchInput(filters.search || "");
   }, [filters.search]);
-
+// Reset when fetcher finishes
+useEffect(() => {
+  if (fetcher.state === "idle") {
+    setLoadingButton(null);
+  }
+}, [fetcher.state]);
   // --- Render ---
   return (
     <TooltipProvider>
@@ -370,41 +371,64 @@ export default function TranslationsIndexPage() {
 
                 {/* Pagination */}
                 {pagination.totalPages > 1 && (
-                  <div className="flex justify-between items-center mt-4 pt-4 border-t">
-                    <div className="text-sm text-muted-foreground">
-                      Page {pagination.page} of {pagination.totalPages}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={pagination.page === 1 || fetcher.state === "loading"}
-                        onClick={() => {
-                          const form = document.getElementById("filters-form");
-                          const formData = new FormData(form);
-                          formData.set("page", pagination.page - 1);
-                          fetcher.submit(formData, { method: "get" });
-                        }}
-                      >
-                        Previous
-                      </Button>
+  <div className="flex flex-col sm:flex-row justify-between items-center mt-4 pt-4 border-t w-full gap-4">
+    <div className="text-sm text-muted-foreground order-2 sm:order-1">
+      Page {pagination.page} of {pagination.totalPages}
+    </div>
 
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={pagination.page === pagination.totalPages || fetcher.state === "loading"}
-                        onClick={() => {
-                          const form = document.getElementById("filters-form");
-                          const formData = new FormData(form);
-                          formData.set("page", pagination.page + 1);
-                          fetcher.submit(formData, { method: "get" });
-                        }}
-                      >
-                        Next
-                      </Button>
-                    </div>
-                  </div>
-                )}
+    <div className="flex gap-2 w-full sm:w-auto order-1 sm:order-2">
+      {/* Previous Button */}
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={pagination.page === 1 || loadingButton === "prev"}
+        onClick={() => {
+          setLoadingButton("prev");
+          const form = document.getElementById("filters-form");
+          const formData = new FormData(form);
+          formData.set("page", pagination.page - 1);
+          fetcher.submit(formData, { method: "get" });
+        }}
+        className="relative min-w-[80px] justify-center"
+      >
+        {loadingButton === "prev" && fetcher.state === "loading" ? (
+        <div className='flex items-center justify-center gap-2'>
+       
+        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+         <span>Loading</span>
+      </div>
+        ) : (
+          "Previous"
+        )}
+      </Button>
+
+      {/* Next Button */}
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={pagination.page === pagination.totalPages || loadingButton === "next"}
+        onClick={() => {
+          setLoadingButton("next");
+          const form = document.getElementById("filters-form");
+          const formData = new FormData(form);
+          formData.set("page", pagination.page + 1);
+          fetcher.submit(formData, { method: "get" });
+        }}
+        className="relative min-w-[80px] justify-center"
+      >
+        {loadingButton === "next" && fetcher.state === "loading" ? (
+          <div className='flex items-center justify-center gap-2'>
+           
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+             <span>Loading</span>
+          </div>
+        ) : (
+          "Next"
+        )}
+      </Button>
+    </div>
+  </div>
+)}
               </>
             )}
           </CardContent>

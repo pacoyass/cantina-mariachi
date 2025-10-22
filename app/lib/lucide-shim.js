@@ -79,3 +79,7 @@ export { default as XCircle } from 'lucide-react/dist/esm/icons/x-circle.js'
 
 export { default as FileText } from 'lucide-react/dist/esm/icons/file-text.js'
 export { default as Upload } from 'lucide-react/dist/esm/icons/upload.js'
+
+export { default as ArrowUpDown } from 'lucide-react/dist/esm/icons/arrow-up-down.js'
+
+
