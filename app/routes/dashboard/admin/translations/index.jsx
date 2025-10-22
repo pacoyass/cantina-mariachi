@@ -154,47 +154,22 @@ export default function TranslationsIndexPage({ loaderData }) {
     return () => clearTimeout(timer);
   }, [searchInput, initialFilters.search]);
   
-  // Update filters using React Router's useSearchParams
+  // Update filters - uses fetcher for instant updates!
   const updateFilters = (newFilters) => {
-    setSearchParams(
-      (prev) => {
-        const params = new URLSearchParams(prev);
-        
-        // Update or delete each param
-        if (newFilters.locale) {
-          params.set('locale', newFilters.locale);
-        } else {
-          params.delete('locale');
-        }
-        
-        if (newFilters.namespace) {
-          params.set('namespace', newFilters.namespace);
-        } else {
-          params.delete('namespace');
-        }
-        
-        if (newFilters.search) {
-          params.set('search', newFilters.search);
-        } else {
-          params.delete('search');
-        }
-        
-        if (newFilters.page && newFilters.page !== 1) {
-          params.set('page', newFilters.page.toString());
-        } else {
-          params.delete('page');
-        }
-        
-        if (newFilters.limit && newFilters.limit !== 50) {
-          params.set('limit', newFilters.limit.toString());
-        } else {
-          params.delete('limit');
-        }
-        
-        return params;
-      },
-      { replace: true }
-    );
+    const params = new URLSearchParams();
+    
+    // Build params from newFilters
+    if (newFilters.locale) params.set('locale', newFilters.locale);
+    if (newFilters.namespace) params.set('namespace', newFilters.namespace);
+    if (newFilters.search) params.set('search', newFilters.search);
+    if (newFilters.page && newFilters.page !== 1) params.set('page', newFilters.page.toString());
+    if (newFilters.limit && newFilters.limit !== 50) params.set('limit', newFilters.limit.toString());
+    
+    // ✅ Fetch data without navigation (instant!)
+    fetcher.load(`/dashboard/admin/translations?${params.toString()}`);
+    
+    // ✅ Keep URL in sync
+    setSearchParams(params, { replace: true });
   };
 
   const handleDelete = (id) => {
@@ -478,6 +453,24 @@ export default function TranslationsIndexPage({ loaderData }) {
                     </Button>
                     <Button
                       variant="outline"
+                      size="sm"
+                      disabled={pagination.page === pagination.totalPages}
+                      onClick={() => updateFilters({ ...initialFilters, page: pagination.page + 1 })}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+    </TooltipProvider>
+  );
+}
+    variant="outline"
                       size="sm"
                       disabled={pagination.page === pagination.totalPages}
                       onClick={() => updateFilters({ ...initialFilters, page: pagination.page + 1 })}
