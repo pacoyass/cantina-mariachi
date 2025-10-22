@@ -1,13 +1,12 @@
 // app/routes/dashboard/admin/translations.jsx
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { TranslationsDataTable } from '@/components/admin/translations-data-table';
 
 import
   {
@@ -365,67 +364,8 @@ export default function TranslationsIndexPage() {
               </div>
             ) : (
               <>
-                <ScrollArea className="h-[300px] w-full rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Key</TableHead>
-                        <TableHead>Namespace</TableHead>
-                        <TableHead>Locale</TableHead>
-                        <TableHead>Value</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {translations.map((t) => (
-                        <TableRow key={t.id}>
-                          <TableCell className="font-mono text-sm">{t.key}</TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{t.namespace}</Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">{t.locale}</Badge>
-                          </TableCell>
-                          <TableCell className="max-w-md truncate">{t.value}</TableCell>
-                          <TableCell>
-                            {t.isActive ? (
-                              <Badge variant="success">Active</Badge>
-                            ) : (
-                              <Badge variant="destructive">Inactive</Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Link to={`/dashboard/admin/translations/${t.id}`}>
-                                <Button variant="ghost" size="sm">
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                              </Link>
-                              <Link to={`/dashboard/admin/translations/${t.id}/edit`}>
-                                <Button variant="ghost" size="sm">
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                              </Link>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  fetcher.submit(
-                                    { intent: "delete", id: t.id },
-                                    { method: "post" }
-                                  )
-                                }
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                  <ScrollBar orientation="horizontal" />
+                <ScrollArea className="h-[calc(100vh-400px)] w-full">
+                  <TranslationsDataTable data={translations} />
                 </ScrollArea>
 
                 {/* Pagination */}
