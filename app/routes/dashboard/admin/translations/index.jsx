@@ -234,12 +234,14 @@ export default function TranslationsIndexPage() {
                   onChange={(e) => {
                     const value = e.target.value;
                     setSearchInput(value);
+                    setIsSearching(true); // Mark as searching
                     clearTimeout(debounceRef.current);
                     debounceRef.current = setTimeout(() => {
                       const form = document.getElementById("filters-form");
                       const formData = new FormData(form);
                       formData.set("search", value);
                       fetcher.submit(formData, { method: "get" });
+                      setIsSearching(false); // Done searching
                     }, 500);
                   }}
                   className="pl-10 pr-10"
@@ -253,11 +255,12 @@ export default function TranslationsIndexPage() {
                 )}
 
                 {/* Clear Button */}
-                {searchInput.length > 0 && fetcher.state !== "loading" && (
+                {searchInput.length > 0 && !isSearching && (
                   <button
                     type="button"
                     onClick={() => {
                       setSearchInput("");
+                      setIsSearching(false);
                       const form = document.getElementById("filters-form");
                       const formData = new FormData(form);
                       formData.delete("search"); // ✅ Remove search param
