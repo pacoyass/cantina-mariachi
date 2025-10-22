@@ -1,19 +1,19 @@
 
-import "react-router";
 import { createRequestHandler } from "@react-router/express";
-import express from "express";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+import { doubleCsrf } from 'csrf-csrf';
+import dotenv from 'dotenv';
+import express from "express";
 import helmet from 'helmet';
-import apiRoutes from "./routes/index.routes.js";
+import crypto from 'node:crypto';
+import "react-router";
+import swaggerUi from 'swagger-ui-express';
+import i18nPromise, { middleware as i18nextMiddleware } from './config/i18n.js';
 import { registerCronJobs } from "./cron/index.js";
+import apiRoutes from "./routes/index.routes.js";
 import { LoggerService } from "./utils/logger.js";
 import { createError } from "./utils/response.js";
-import dotenv from 'dotenv';
-import crypto from 'node:crypto';
-import swaggerUi from 'swagger-ui-express';
-import { doubleCsrf } from 'csrf-csrf';
-import i18nPromise, { middleware as i18nextMiddleware } from './config/i18n.js';
 dotenv.config();
 
 export const app = express();
@@ -78,70 +78,115 @@ app.use((req, res, next) => {
 });
 
 // Helmet security headers
-app.use(helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-        "'strict-dynamic'",
-        process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
-      ].filter(Boolean),
-      styleSrc: ["'self'", "https://fonts.googleapis.com"],
-      styleSrcElem: [
-        "'self'",
-        "https://fonts.googleapis.com",
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-      ],
-      styleSrcAttr: ["'unsafe-inline'"], // <-- allow style="" attributes
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:"],
-      connectSrc: ["'self'", process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null].filter(Boolean),
-      frameAncestors: ["'none'"],
-      objectSrc: ["'none'"],
-      baseUri: ["'self'"],
-      formAction: ["'self'"],
-      upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? ["upgrade-insecure-requests"] : [],
-    },
-  },
-  frameguard: false,
-}))
-
+// app.use(helmet({
+//   contentSecurityPolicy: {
+//     useDefaults: true,
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       scriptSrc: [
+//         "'self'",
+//         (req, res) => `'nonce-${res.locals.nonce}'`,
+//         "'strict-dynamic'",
+//         process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+//       ].filter(Boolean),
+//       styleSrc: ["'self'", "https://fonts.googleapis.com"],
+//       styleSrcElem: [
+//         "'self'",
+//         "https://fonts.googleapis.com",
+//         (req, res) => `'nonce-${res.locals.nonce}'`,
+//       ],
+//       styleSrcAttr: ["'unsafe-inline'"], // <-- allow style="" attributes
+//       fontSrc: ["'self'", "https://fonts.gstatic.com"],
+//       imgSrc: ["'self'", "data:"],
+//       connectSrc: ["'self'", process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null,
+// 		process.env.NODE_ENV === 'production' ? 'http://localhost:3333' : null,
+// 	  ].filter(Boolean),
+//       frameAncestors: ["'none'"],
+//       objectSrc: ["'none'"],
+//       baseUri: ["'self'"],
+//       formAction: ["'self'"],
+//       upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? ["upgrade-insecure-requests"] : [],
+//     },
+//   },
+//   frameguard: false,
+// }))
+app.use(
+	helmet( {
+	  contentSecurityPolicy: {
+		useDefaults: true,
+		directives: {
+		  defaultSrc: ["'self'"],
+		  scriptSrc: [
+			"'self'",
+			( req, res ) => `'nonce-${res.locals.nonce}'`,
+			"'strict-dynamic'",
+			process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+		  ].filter( Boolean ),
+		  styleSrc: [
+			"'self'",
+			( req, res ) => `'nonce-${res.locals.nonce}'`,
+			"https://fonts.googleapis.com",
+			process.env.NODE_ENV !== 'production' ? "'unsafe-inline'" : null,
+		  ].filter( Boolean ),
+		  fontSrc: ["'self'", "https://fonts.gstatic.com"],
+		  imgSrc: ["'self'", "data:"],
+		  connectSrc: [
+			"'self'",
+			process.env.NODE_ENV !== 'production' ? 'ws://localhost:24678' : null,
+			process.env.NODE_ENV === 'production' ? 'https://your-api.com' : null,
+			// "ws://localhost:24678",
+			// "http://localhost:3333",
+			// "http://localhost:5173",
+			// "http://localhost:5174",
+			// "http://localhost:4173",
+		  ].filter( Boolean ),
+  
+  
+		  frameAncestors: ["'none'"], // No need for `frameguard: false`
+		  objectSrc: ["'none'"],
+		  baseUri: ["'self'"],
+		  formAction: ["'self'"],
+		  upgradeInsecureRequests:
+			process.env.NODE_ENV === "production" ? ["upgrade-insecure-requests"] : [],
+		},
+	  },
+	  frameguard: false, // No need for X-Frame-Options
+	} )
+  );
 app.use(helmet.hsts({
 	maxAge: 31536000,
 	includeSubDomains: true,
 	preload: true
 }));
 
-// app.use(cors({
-// 	origin: (origin, cb) => {
-// 		// Allow requests with no origin (like mobile apps or curl requests)
-// 		if (!origin) return cb(null, true);
+app.use(cors({
+	origin: (origin, cb) => {
+		// Allow requests with no origin (like mobile apps or curl requests)
+		if (!origin) return cb(null, true);
 		
-// 		// Allow localhost and your domain
-// 		const allowedOrigins = [
-// 			'http://localhost:3334',
-// 			'http://localhost:3333',
-// 			'http://localhost:5173',
-// 			'http://localhost:4173',
-// 			'http://127.0.0.1:3333',
-// 			'http://127.0.0.1:5173',
-// 			'http://127.0.0.1:4173'
-// 		];
+		// Allow localhost and your domain
+		const allowedOrigins = [
+			'http://localhost:3334',
+			'http://localhost:3333',
+			'http://localhost:5173',
+			'http://localhost:4173',
+			'http://127.0.0.1:3333',
+			'http://127.0.0.1:5173',
+			'http://127.0.0.1:4173',
+			'ws://localhost:24678'
+		];
 		
-// 		if (allowedOrigins.includes(origin)) {
-// 			return cb(null, true);
-// 		}
+		if (allowedOrigins.includes(origin)) {
+			return cb(null, true);
+		}
 		
-// 		cb(new Error('Not allowed by CORS'));
-// 	},
-// 	credentials: true
-// }));
+		cb(new Error('Not allowed by CORS'));
+	},
+	credentials: true
+}));
 
 app.use(express.json({ limit: '10mb' }));
-// app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser(process.env.COOKIE_SECRET || 'your-fallback-secret'));
 
 // Initialize i18n and add middleware
@@ -217,7 +262,7 @@ try {
 const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
 	getSecret: () => process.env.CSRF_SECRET || 'your-fallback-secret',
 	getSessionIdentifier: (req) => req.session?.id || req.signedCookies?.csrfSession || req.headers['x-session-id'] || req.ip,
-	cookieName: "_Host-csrf-token",
+	cookieName: "Host-csrf-token",
 	cookieOptions: {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",

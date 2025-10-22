@@ -9,18 +9,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-import {
-  AlertCircle,
-  Download,
-  Edit,
-  Eye,
-  FileText,
-  Plus,
-  Search,
-  Trash2,
-  Upload,
-  X,
-} from "@/lib/lucide-shim";
+import
+  {
+    AlertCircle,
+    Download,
+    Edit,
+    Eye,
+    FileText,
+    Plus,
+    Search,
+    Trash2,
+    Upload,
+    X,
+  } from "@/lib/lucide-shim";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,19 +31,27 @@ import { Link, useFetcher, useLoaderData } from "react-router";
 export const meta = () => [{ title: 'Translations - Cantina' }];
 
 // --- ACTION (delete) ---
-export async function action({ request }) {
+export async function action({ request ,context}) {
   const formData = await request.formData();
   const intent = formData.get('intent');
-  const cookie = request.headers.get('cookie') || '';
   const url = new URL(request.url);
+  const cookie = url.headers.get('cookie') || '';
+  const { csrfToken } = context || {};
+  const userAgent = url.headers.get("user-agent");
 
   if (intent === 'delete') {
     const id = formData.get('id');
     try {
       const response = await fetch(`${url.origin}/api/translations/admin/translations/${id}`, {
         method: 'DELETE',
-        headers: { cookie },
-        credentials: 'include'
+        signal: url.signal,
+        headers: {
+          "Content-Type": "application/json",
+          'X-CSRF-Token': csrfToken,
+          cookie: cookie,
+          "User-Agent": userAgent || "unknown",
+        },
+        credentials: 'include',
       });
       const data = await response.json();
 
@@ -269,7 +278,7 @@ export default function TranslationsIndexPage() {
                 onValueChange={(value) => {
                   const form = document.getElementById("filters-form");
                   form.locale.value = value;
-                  fetcher.submit(form);
+                  fetcher.submit(form, { method: "get" });
                 }}
               >
                 <SelectTrigger>
@@ -292,7 +301,7 @@ export default function TranslationsIndexPage() {
                 onValueChange={(value) => {
                   const form = document.getElementById("filters-form");
                   form.namespace.value = value;
-                  fetcher.submit(form);
+                  fetcher.submit(form, { method: "get" });
                 }}
               >
                 <SelectTrigger>
@@ -315,7 +324,7 @@ export default function TranslationsIndexPage() {
                   setSearchInput("");
                   const form = document.getElementById("filters-form");
                   form.reset();
-                  fetcher.submit(form);
+                  fetcher.submit(form, { method: "get" });
                 }}
               >
                 Clear Filters
