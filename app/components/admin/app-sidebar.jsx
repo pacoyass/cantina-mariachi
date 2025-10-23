@@ -93,7 +93,7 @@ export function AppSidebar({ user, stats, lang }) {
   };
 
   return (
-    <Sidebar collapsible="icon" className=" fixed inset-y-0 left-0 h-full border-r-8 border-amber-700  w-64 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+    <Sidebar collapsible="icon" className="sticky ">
       {/* Header */}
       <SidebarHeader>
         <SidebarMenu>
@@ -114,17 +114,17 @@ export function AppSidebar({ user, stats, lang }) {
       </SidebarHeader>
 
       {/* Navigation */}
-      <SidebarContent className=" bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 ">
+      <SidebarContent className="space-y-6 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 ">
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
+          <SidebarGroupContent >
+            <SidebarMenu className="space-y-4">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 const badgeValue = item.badge ? getBadgeValue(item.badge) : null;
                 
                 return (
-                  <SidebarMenuItem key={item.name}>
+                  <SidebarMenuItem key={item.name} >
                     <SidebarMenuButton asChild>
                       <NavLink
                         to={`${item.href}?lng=${lang}`}
@@ -157,7 +157,7 @@ export function AppSidebar({ user, stats, lang }) {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  className=" data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                     <User className="size-4" />
@@ -175,7 +175,7 @@ export function AppSidebar({ user, stats, lang }) {
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
                 side="bottom"
                 align="end"
-                sideOffset={4}
+                sideOffset={5}
               >
                 <DropdownMenuItem asChild>
                   <Link to="/account">
