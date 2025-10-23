@@ -209,30 +209,18 @@ export default function TranslationsIndexPage() {
   const { translations = [], pagination = {} } = data || {};
   const { locales = [], namespaces = [] } = metadata || {};
   const [loadingButton, setLoadingButton] = useState(null); // "next" | "prev" | null
-  
-  // Debug logging to see what's happening
-  useEffect(() => {
-    console.log('📊 Active Data:', { 
-      translations: translations?.length, 
-      pagination, 
-      filters,
-      sortBy: filters?.sortBy,
-      sortOrder: filters?.sortOrder,
-      rawData: data 
-    });
-  }, [activeData]);
 
   const [searchInput, setSearchInput] = useState(filters.search || "");
   const [isSearching, setIsSearching] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const exportMenuRef = useRef(null);
 
-  // keep local search input synced when data changes
+  // Keep local search input synced when data changes
   useEffect(() => {
     setSearchInput(filters.search || "");
   }, [filters.search]);
 
-  // Reset when fetcher finishes
+  // Reset loading button when fetcher finishes
   useEffect(() => {
     if (fetcher.state === "idle") {
       setLoadingButton(null);

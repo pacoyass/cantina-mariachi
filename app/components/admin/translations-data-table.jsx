@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link, useFetcher } from "react-router";
 import { Edit, Eye, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "@/lib/lucide-shim";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ScrollBar } from "@/components/ui/scroll-area";
 import { useState, useEffect } from "react";
 
 export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc', onSort }) {
@@ -26,17 +27,6 @@ export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc
   const [sorting, setSorting] = useState(
     sortBy ? [{ id: sortBy, desc: sortOrder === 'desc' }] : []
   );
-
-  // Debug data
-  useEffect(() => {
-    console.log('🎨 DataTable received:', { 
-      dataLength: data?.length, 
-      sortBy, 
-      sortOrder,
-      sorting,
-      firstItem: data?.[0]
-    });
-  }, [data, sortBy, sortOrder]);
 
   // Update local sorting state when props change
   useEffect(() => {
@@ -234,7 +224,6 @@ export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc
 
   // Safety check
   if (!Array.isArray(data)) {
-    console.error('⚠️ DataTable received invalid data:', data);
     return <div className="text-center py-8 text-destructive">Invalid data format</div>;
   }
 
@@ -281,6 +270,7 @@ export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc
             </TableRow>
           )}
         </TableBody>
+        <ScrollBar orientation="horizontal" />
       </Table>
     </div>
   );

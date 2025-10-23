@@ -58,8 +58,6 @@ export const getTranslations = async (req, res) => {
       ];
     }
 
-    console.log('🔍 Translation query params:', { sortBy, sortOrder, orderBy, where, skip, limitNum });
-
     // Get translations with pagination
     const [translations, total] = await Promise.all([
       prisma.translation.findMany({
@@ -70,13 +68,6 @@ export const getTranslations = async (req, res) => {
       }),
       prisma.translation.count({ where })
     ]);
-
-    console.log('📦 Translation results:', { 
-      count: translations?.length, 
-      total,
-      firstRecord: translations?.[0],
-      hasData: !!translations 
-    });
 
     return createResponse(res, 200, 'dataRetrieved', {
       translations,
