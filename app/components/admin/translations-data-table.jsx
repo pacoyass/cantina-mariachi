@@ -19,13 +19,24 @@ import { Edit, Eye, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "@/lib/lucide
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
 
-export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', onSort }) {
+export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc', onSort }) {
   const fetcher = useFetcher();
   
   // Convert server-side sorting to TanStack table format
   const [sorting, setSorting] = useState(
     sortBy ? [{ id: sortBy, desc: sortOrder === 'desc' }] : []
   );
+
+  // Debug data
+  useEffect(() => {
+    console.log('🎨 DataTable received:', { 
+      dataLength: data?.length, 
+      sortBy, 
+      sortOrder,
+      sorting,
+      firstItem: data?.[0]
+    });
+  }, [data, sortBy, sortOrder]);
 
   // Update local sorting state when props change
   useEffect(() => {
@@ -211,7 +222,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
   ];
 
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     // Disable client-side sorting since we're using server-side sorting
@@ -220,6 +231,12 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
       sorting,
     },
   });
+
+  // Safety check
+  if (!Array.isArray(data)) {
+    console.error('⚠️ DataTable received invalid data:', data);
+    return <div className="text-center py-8 text-destructive">Invalid data format</div>;
+  }
 
   return (
     <div className="rounded-md border">

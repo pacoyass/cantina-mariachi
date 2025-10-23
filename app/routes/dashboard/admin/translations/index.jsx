@@ -156,13 +156,28 @@ export async function loader({ request, context }) {
     ]);
 
     if (!translationsResponse.ok) {
-      throw new Error('Failed to fetch translations');
+      const errorData = await translationsResponse.json().catch(() => ({}));
+      console.error('❌ Translation API error:', {
+        status: translationsResponse.status,
+        statusText: translationsResponse.statusText,
+        errorData
+      });
+      throw new Error(`Failed to fetch translations: ${translationsResponse.statusText}`);
     }
 
     const data = await translationsResponse.json();
     const metadata = metadataResponse.ok
       ? await metadataResponse.json()
       : { data: { locales: [], namespaces: [] } };
+
+    console.log('✅ Loader success:', {
+      fullResponse: data,
+      translationsCount: data?.data?.translations?.length,
+      pagination: data?.data?.pagination,
+      sortBy,
+      sortOrder,
+      isArray: Array.isArray(data?.data?.translations)
+    });
 
     return {
       data: data.data || { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
@@ -171,7 +186,8 @@ export async function loader({ request, context }) {
       filters: { locale, namespace, search, page, limit, sortBy, sortOrder }
     };
   } catch (error) {
-    console.error('Translations loader error:', error);
+    console.error('❌ Translations loader error:', error);
+    console.error('Error stack:', error.stack);
     return {
       data: { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
       metadata: { locales: [], namespaces: [] },
@@ -190,9 +206,21 @@ export default function TranslationsIndexPage() {
 
   const activeData = fetcher.data ?? loaderData;
   const { data, metadata, error, filters } = activeData;
-  const { translations, pagination } = data;
+  const { translations = [], pagination = {} } = data || {};
   const { locales = [], namespaces = [] } = metadata || {};
   const [loadingButton, setLoadingButton] = useState(null); // "next" | "prev" | null
+  
+  // Debug logging to see what's happening
+  useEffect(() => {
+    console.log('📊 Active Data:', { 
+      translations: translations?.length, 
+      pagination, 
+      filters,
+      sortBy: filters?.sortBy,
+      sortOrder: filters?.sortOrder,
+      rawData: data 
+    });
+  }, [activeData]);
 
   const [searchInput, setSearchInput] = useState(filters.search || "");
   const [isSearching, setIsSearching] = useState(false);
