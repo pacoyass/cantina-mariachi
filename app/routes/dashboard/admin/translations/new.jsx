@@ -48,10 +48,15 @@ export async function action({ request, context }) {
     if (data.success) {
       return redirect('/dashboard/admin/translations?created=true');
     } else {
-      return { success: false, error: data.error || 'Failed to create translation' };
+      // Handle both string and object errors
+      const errorMessage = typeof data.error === 'string' 
+        ? data.error 
+        : data.error?.message || data.message || 'Failed to create translation';
+      
+      return { success: false, error: errorMessage };
     }
   } catch (error) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'An unexpected error occurred' };
   }
 }
 
@@ -129,14 +134,22 @@ export default function NewTranslation() {
       {actionData?.error && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{actionData.error}</AlertDescription>
+          <AlertDescription>
+            {typeof actionData.error === 'string' 
+              ? actionData.error 
+              : actionData.error?.message || JSON.stringify(actionData.error)}
+          </AlertDescription>
         </Alert>
       )}
 
       {loaderData?.error && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{loaderData.error}</AlertDescription>
+          <AlertDescription>
+            {typeof loaderData.error === 'string' 
+              ? loaderData.error 
+              : loaderData.error?.message || JSON.stringify(loaderData.error)}
+          </AlertDescription>
         </Alert>
       )}
 
