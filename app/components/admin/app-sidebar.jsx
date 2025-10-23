@@ -1,39 +1,41 @@
 // app/components/admin/app-sidebar.jsx
+import
+  {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu";
+import
+  {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuBadge,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarRail,
+  } from "@/components/ui/sidebar";
+import
+  {
+    BarChart3,
+    Calendar,
+    ChefHat,
+    ChevronUp,
+    Languages,
+    LayoutDashboard,
+    LogOut,
+    Settings,
+    ShoppingBag,
+    User,
+    Users,
+  } from "@/lib/lucide-shim";
 import { Link, NavLink } from "react-router";
-import { Badge } from "@/components/ui/badge";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuBadge,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  LayoutDashboard,
-  ShoppingBag,
-  Users,
-  ChefHat,
-  Calendar,
-  Settings,
-  BarChart3,
-  Languages,
-  LogOut,
-  User,
-  ChevronUp,
-} from "@/lib/lucide-shim";
 
 const navigation = [
   {
@@ -91,7 +93,7 @@ export function AppSidebar({ user, stats, lang }) {
   };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className=" fixed inset-y-0 left-0 h-full border-r-8 border-amber-700  w-64 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
       {/* Header */}
       <SidebarHeader>
         <SidebarMenu>
@@ -112,7 +114,7 @@ export function AppSidebar({ user, stats, lang }) {
       </SidebarHeader>
 
       {/* Navigation */}
-      <SidebarContent>
+      <SidebarContent className=" bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 ">
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>

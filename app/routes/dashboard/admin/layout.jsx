@@ -1,13 +1,13 @@
-import { useLoaderData, Outlet, redirect, useOutletContext } from "react-router";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
+import { Outlet, redirect, useOutletContext } from "react-router";
 import { AppSidebar } from "../../../components/admin/app-sidebar";
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-} from "../../../components/ui/sidebar";
-import { useTranslation } from "react-i18next";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import
+  {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+  } from "../../../components/ui/sidebar";
 import { Bell } from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
@@ -63,7 +63,7 @@ export default function AdminLayout({ loaderData }) {
   const { user } = useOutletContext() || {};
 
   return (
-    <SidebarProvider>
+    <SidebarProvider >
       <AppSidebar user={user} stats={stats} lang={lang} />
       <SidebarInset>
         {/* Top bar */}
