@@ -20,5 +20,25 @@
   "somethingWentWrong": "Something went wrong",
   "backToTranslations": "Back to Translations",
   "allLocales": "All Locales",
-  "allNamespaces": "All Namespaces"
+  "allNamespaces": "All Namespaces",
+  "newTranslation": {
+    "title": "Add New Translation",
+    "subtitle": "Create a new translation string",
+    "details": "Translation Details",
+    "detailsDesc": "Enter the translation information",
+    "keyLabel": "Key",
+    "keyPlaceholder": "e.g., hero.title or success",
+    "keyHint": "Use dot notation for nested keys (e.g., hero.title)",
+    "namespaceLabel": "Namespace",
+    "localeLabel": "Locale",
+    "valueLabel": "Value",
+    "valuePlaceholder": "Enter the translated text",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Context for translators",
+    "descriptionHint": "Help translators understand the context",
+    "cancel": "Cancel",
+    "create": "Create Translation",
+    "creating": "Creating...",
+    "success": "Translation created successfully"
+  }
 }

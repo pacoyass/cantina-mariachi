@@ -20,5 +20,25 @@
   "somethingWentWrong": "Algo salió mal",
   "backToTranslations": "Volver a traducciones",
   "allLocales": "Todos los idiomas",
-  "allNamespaces": "Todos los espacios de nombres"
+  "allNamespaces": "Todos los espacios de nombres",
+  "newTranslation": {
+    "title": "Agregar nueva traducción",
+    "subtitle": "Crear una nueva cadena de traducción",
+    "details": "Detalles de traducción",
+    "detailsDesc": "Ingrese la información de traducción",
+    "keyLabel": "Clave",
+    "keyPlaceholder": "ej., hero.title o success",
+    "keyHint": "Use notación de puntos para claves anidadas (ej., hero.title)",
+    "namespaceLabel": "Espacio de nombres",
+    "localeLabel": "Idioma",
+    "valueLabel": "Valor",
+    "valuePlaceholder": "Ingrese el texto traducido",
+    "descriptionLabel": "Descripción (opcional)",
+    "descriptionPlaceholder": "Contexto para traductores",
+    "descriptionHint": "Ayude a los traductores a entender el contexto",
+    "cancel": "Cancelar",
+    "create": "Crear traducción",
+    "creating": "Creando...",
+    "success": "Traducción creada exitosamente"
+  }
 }
