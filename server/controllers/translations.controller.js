@@ -21,7 +21,9 @@ export const getTranslations = async (req, res) => {
       search,
       isActive = 'true',
       page = '1',
-      limit = '50'
+      limit = '50',
+      sortBy,
+      sortOrder = 'asc'
     } = req.query;
 
     const pageNum = parseInt(page, 10);
@@ -42,17 +44,27 @@ export const getTranslations = async (req, res) => {
       ];
     }
 
+    // Build orderBy clause
+    let orderBy;
+    if (sortBy && ['key', 'namespace', 'locale', 'value', 'isActive'].includes(sortBy)) {
+      // User-specified sorting
+      orderBy = [{ [sortBy]: sortOrder.toLowerCase() === 'desc' ? 'desc' : 'asc' }];
+    } else {
+      // Default sorting
+      orderBy = [
+        { namespace: 'asc' },
+        { locale: 'asc' },
+        { key: 'asc' }
+      ];
+    }
+
     // Get translations with pagination
     const [translations, total] = await Promise.all([
       prisma.translation.findMany({
         where,
         skip,
         take: limitNum,
-        orderBy: [
-          { namespace: 'asc' },
-          { locale: 'asc' },
-          { key: 'asc' }
-        ]
+        orderBy
       }),
       prisma.translation.count({ where })
     ]);
