@@ -24,6 +24,7 @@ export { default as Users } from 'lucide-react/dist/esm/icons/users.js'
 export { default as Utensils } from 'lucide-react/dist/esm/icons/utensils.js'
 
 export { default as ChevronDown } from 'lucide-react/dist/esm/icons/chevron-down.js'
+export { default as ChevronUp } from 'lucide-react/dist/esm/icons/chevron-up.js'
 export { default as LayoutGrid } from 'lucide-react/dist/esm/icons/layout-grid.js'
 export { default as List } from 'lucide-react/dist/esm/icons/list.js'
 
@@ -83,10 +84,7 @@ export { default as Upload } from 'lucide-react/dist/esm/icons/upload.js'
 export { default as ArrowDown } from 'lucide-react/dist/esm/icons/arrow-down.js'
 export { default as ArrowUpDown } from 'lucide-react/dist/esm/icons/arrow-up-down.js'
 export { default as ArrowUp } from 'lucide-react/dist/esm/icons/arrow-up.js'
-
 export { default as ArrowLeft } from 'lucide-react/dist/esm/icons/arrow-left.js'
-export { default as ChevronUp } from 'lucide-react/dist/esm/icons/chevron-up.js'
 export { default as Save } from 'lucide-react/dist/esm/icons/save.js'
-
 
 
