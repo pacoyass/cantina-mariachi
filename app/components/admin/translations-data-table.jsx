@@ -17,25 +17,54 @@ import { Badge } from "@/components/ui/badge";
 import { Link, useFetcher } from "react-router";
 import { Edit, Eye, Trash2, ArrowUpDown } from "@/lib/lucide-shim";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export function TranslationsDataTable({ data }) {
+export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', onSort }) {
   const fetcher = useFetcher();
-  const [sorting, setSorting] = useState([]);
+  
+  // Convert server-side sorting to TanStack table format
+  const [sorting, setSorting] = useState(
+    sortBy ? [{ id: sortBy, desc: sortOrder === 'desc' }] : []
+  );
+
+  // Update local sorting state when props change
+  useEffect(() => {
+    if (sortBy) {
+      setSorting([{ id: sortBy, desc: sortOrder === 'desc' }]);
+    } else {
+      setSorting([]);
+    }
+  }, [sortBy, sortOrder]);
+
+  const handleSort = (columnId) => {
+    const currentSort = sorting.find(s => s.id === columnId);
+    let newOrder = 'asc';
+    
+    if (currentSort) {
+      // If already sorting by this column, toggle the order
+      newOrder = currentSort.desc ? 'asc' : 'desc';
+    }
+    
+    // Call parent's onSort handler for server-side sorting
+    if (onSort) {
+      onSort(columnId, newOrder);
+    }
+  };
 
   const columns = [
     {
       accessorKey: "key",
       enableSorting: true,
       header: ({ column }) => {
+        const isSorted = sorting.find(s => s.id === 'key');
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => handleSort('key')}
             className="h-8 px-2 hover:bg-accent"
           >
             Key
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },
@@ -47,14 +76,15 @@ export function TranslationsDataTable({ data }) {
       accessorKey: "namespace",
       enableSorting: true,
       header: ({ column }) => {
+        const isSorted = sorting.find(s => s.id === 'namespace');
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => handleSort('namespace')}
             className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Namespace
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },
@@ -66,14 +96,15 @@ export function TranslationsDataTable({ data }) {
       accessorKey: "locale",
       enableSorting: true,
       header: ({ column }) => {
+        const isSorted = sorting.find(s => s.id === 'locale');
         return (
           <Button
             variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            onClick={() => handleSort('locale')}
             className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Locale
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },
@@ -83,7 +114,20 @@ export function TranslationsDataTable({ data }) {
     },
     {
       accessorKey: "value",
-      header: "Value",
+      enableSorting: true,
+      header: ({ column }) => {
+        const isSorted = sorting.find(s => s.id === 'value');
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => handleSort('value')}
+            className="h-8 w-full justify-start px-2 hover:bg-accent"
+          >
+            Value
+            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
+          </Button>
+        );
+      },
       cell: ({ row }) => (
         <div className="max-w-md truncate">{row.getValue("value")}</div>
       ),
@@ -166,9 +210,8 @@ export function TranslationsDataTable({ data }) {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    enableSortingRemoval: true,
+    // Disable client-side sorting since we're using server-side sorting
+    manualSorting: true,
     state: {
       sorting,
     },

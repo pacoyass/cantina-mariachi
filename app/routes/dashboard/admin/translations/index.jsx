@@ -19,26 +19,26 @@ import
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useFetcher, useLoaderData } from "react-router";
+import { Link, useFetcher, useLoaderData, isRouteErrorResponse, useRouteError } from "react-router";
 
 // Meta
 export const meta = () => [{ title: 'Translations - Cantina' }];
 
-// --- ACTION (delete) ---
-export async function action({ request ,context}) {
+// --- ACTION (delete/export) ---
+export async function action({ request, context }) {
   const formData = await request.formData();
   const intent = formData.get('intent');
   const url = new URL(request.url);
-  const cookie = url.headers.get('cookie') || '';
+  const cookie = request.headers.get('cookie') || '';
   const { csrfToken } = context || {};
-  const userAgent = url.headers.get("user-agent");
+  const userAgent = request.headers.get("user-agent");
 
   if (intent === 'delete') {
     const id = formData.get('id');
     try {
       const response = await fetch(`${url.origin}/api/translations/admin/translations/${id}`, {
         method: 'DELETE',
-        signal: url.signal,
+        signal: request.signal,
         headers: {
           "Content-Type": "application/json",
           'X-CSRF-Token': csrfToken,
@@ -59,6 +59,49 @@ export async function action({ request ,context}) {
     }
   }
 
+  if (intent === 'export') {
+    const format = formData.get('format') || 'json';
+    const locale = formData.get('locale') || '';
+    const namespace = formData.get('namespace') || '';
+    const search = formData.get('search') || '';
+    
+    try {
+      const apiParams = new URLSearchParams();
+      if (locale) apiParams.set('locale', locale);
+      if (namespace) apiParams.set('namespace', namespace);
+      if (search) apiParams.set('search', search);
+      apiParams.set('format', format);
+      apiParams.set('limit', '10000'); // Export all matching records
+
+      const response = await fetch(`${url.origin}/api/translations/admin/translations/export?${apiParams}`, {
+        method: 'GET',
+        signal: request.signal,
+        headers: {
+          "Content-Type": "application/json",
+          'X-CSRF-Token': csrfToken,
+          cookie: cookie,
+          "User-Agent": userAgent || "unknown",
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        return new Response(blob, {
+          headers: {
+            'Content-Type': format === 'csv' ? 'text/csv' : 'application/json',
+            'Content-Disposition': `attachment; filename="translations-${Date.now()}.${format}"`,
+          },
+        });
+      } else {
+        const data = await response.json();
+        return { success: false, error: data.error || 'Failed to export translations' };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
   return { success: false, error: 'Invalid action' };
 }
 
@@ -73,6 +116,8 @@ export async function loader({ request, context }) {
   const search = url.searchParams.get('search') || '';
   const page = url.searchParams.get('page') || '1';
   const limit = url.searchParams.get('limit') || '50';
+  const sortBy = url.searchParams.get('sortBy') || '';
+  const sortOrder = url.searchParams.get('sortOrder') || 'asc';
   const { csrfToken } = context || {};
   
   try {
@@ -80,6 +125,8 @@ export async function loader({ request, context }) {
     if (locale) apiParams.set('locale', locale);
     if (namespace) apiParams.set('namespace', namespace);
     if (search) apiParams.set('search', search);
+    if (sortBy) apiParams.set('sortBy', sortBy);
+    if (sortOrder) apiParams.set('sortOrder', sortOrder);
     apiParams.set('page', page);
     apiParams.set('limit', limit);
 
@@ -121,7 +168,7 @@ export async function loader({ request, context }) {
       data: data.data || { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
       metadata: metadata.data || { locales: [], namespaces: [] },
       error: null,
-      filters: { locale, namespace, search, page, limit }
+      filters: { locale, namespace, search, page, limit, sortBy, sortOrder }
     };
   } catch (error) {
     console.error('Translations loader error:', error);
@@ -129,7 +176,7 @@ export async function loader({ request, context }) {
       data: { translations: [], pagination: { page: 1, total: 0, totalPages: 0 } },
       metadata: { locales: [], namespaces: [] },
       error: error.message,
-      filters: { locale, namespace, search, page, limit }
+      filters: { locale, namespace, search, page, limit, sortBy, sortOrder }
     };
   }
 }
@@ -149,17 +196,34 @@ export default function TranslationsIndexPage() {
 
   const [searchInput, setSearchInput] = useState(filters.search || "");
   const [isSearching, setIsSearching] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef(null);
 
   // keep local search input synced when data changes
   useEffect(() => {
     setSearchInput(filters.search || "");
   }, [filters.search]);
-// Reset when fetcher finishes
-useEffect(() => {
-  if (fetcher.state === "idle") {
-    setLoadingButton(null);
-  }
-}, [fetcher.state]);
+
+  // Reset when fetcher finishes
+  useEffect(() => {
+    if (fetcher.state === "idle") {
+      setLoadingButton(null);
+    }
+  }, [fetcher.state]);
+
+  // Close export menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target)) {
+        setShowExportMenu(false);
+      }
+    };
+
+    if (showExportMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showExportMenu]);
   // --- Render ---
   return (
     <TooltipProvider>
@@ -167,32 +231,67 @@ useEffect(() => {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Translations</h1>
+            <h1 className="text-3xl font-bold">{t('translations.title', 'Translations')}</h1>
             <p className="text-muted-foreground">
-              Manage translation strings for all languages
+              {t('translations.subtitle', 'Manage translation strings for all languages')}
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
+            <div className="relative" ref={exportMenuRef}>
+              <Button 
+                variant="outline"
+                onClick={() => setShowExportMenu(!showExportMenu)}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                {t('translations.export', 'Export')}
+              </Button>
+              {showExportMenu && (
+                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-background border z-50">
+                  <div className="py-1">
+                    <fetcher.Form method="post">
+                      <input type="hidden" name="intent" value="export" />
+                      <input type="hidden" name="locale" value={filters.locale} />
+                      <input type="hidden" name="namespace" value={filters.namespace} />
+                      <input type="hidden" name="search" value={filters.search} />
+                      <button
+                        type="submit"
+                        name="format"
+                        value="json"
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-accent"
+                        onClick={() => setShowExportMenu(false)}
+                      >
+                        {t('translations.exportJSON', 'Export as JSON')}
+                      </button>
+                      <button
+                        type="submit"
+                        name="format"
+                        value="csv"
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-accent"
+                        onClick={() => setShowExportMenu(false)}
+                      >
+                        {t('translations.exportCSV', 'Export as CSV')}
+                      </button>
+                    </fetcher.Form>
+                  </div>
+                </div>
+              )}
+            </div>
             <Link to="/dashboard/admin/translations/import">
               <Button variant="outline">
                 <Upload className="mr-2 h-4 w-4" />
-                Import
+                {t('translations.import', 'Import')}
               </Button>
             </Link>
             <Link to="/dashboard/admin/translations/missing">
               <Button variant="outline">
                 <AlertCircle className="mr-2 h-4 w-4" />
-                Find Missing
+                {t('translations.findMissing', 'Find Missing')}
               </Button>
             </Link>
             <Link to="/dashboard/admin/translations/new">
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Translation
+                {t('translations.addNew', 'Add Translation')}
               </Button>
             </Link>
           </div>
@@ -215,8 +314,8 @@ useEffect(() => {
         {/* --- Filters + Search --- */}
         <Card>
           <CardHeader>
-            <CardTitle>Filters</CardTitle>
-            <CardDescription>Search and filter translations</CardDescription>
+            <CardTitle>{t('translations.filters', 'Filters')}</CardTitle>
+            <CardDescription>{t('translations.filtersDesc', 'Search and filter translations')}</CardDescription>
           </CardHeader>
           <CardContent>
             <fetcher.Form
@@ -230,7 +329,7 @@ useEffect(() => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 " />
                 <Input
                   name="search"
-                  placeholder="Search key or value..."
+                  placeholder={t('translations.searchPlaceholder', 'Search key or value...')}
                   value={searchInput}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -340,7 +439,7 @@ useEffect(() => {
                   fetcher.submit(form, { method: "get" });
                 }}
               >
-                Clear Filters
+                {t('translations.clearFilters', 'Clear Filters')}
               </Button>
             </fetcher.Form>
           </CardContent>
@@ -349,24 +448,35 @@ useEffect(() => {
         {/* --- Table --- */}
         <Card>
           <CardHeader>
-            <CardTitle>Translations ({pagination.total || 0})</CardTitle>
+            <CardTitle>{t('translations.tableTitle', 'Translations')} ({pagination.total || 0})</CardTitle>
             <CardDescription>
-              Showing {translations.length || 0} of {pagination.total || 0} translations
+              {t('translations.showing', 'Showing {{count}} of {{total}} translations', { count: translations.length || 0, total: pagination.total || 0 })}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {translations.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <FileText className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                <p>No translations found</p>
+                <p>{t('translations.noResults', 'No translations found')}</p>
                 <p className="text-sm">
-                  Try adjusting your filters or create a new translation
+                  {t('translations.noResultsHint', 'Try adjusting your filters or create a new translation')}
                 </p>
               </div>
             ) : (
               <>
                 <ScrollArea className="h-[calc(100vh-400px)] w-full">
-                  <TranslationsDataTable data={translations} />
+                  <TranslationsDataTable 
+                    data={translations} 
+                    sortBy={filters.sortBy}
+                    sortOrder={filters.sortOrder}
+                    onSort={(columnId, order) => {
+                      const form = document.getElementById("filters-form");
+                      const formData = new FormData(form);
+                      formData.set("sortBy", columnId);
+                      formData.set("sortOrder", order);
+                      fetcher.submit(formData, { method: "get" });
+                    }}
+                  />
                 </ScrollArea>
 
                 {/* Pagination */}
@@ -435,5 +545,60 @@ useEffect(() => {
         </Card>
       </div>
     </TooltipProvider>
+  );
+}
+
+// --- ERROR BOUNDARY ---
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const { t } = useTranslation();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div className="container mx-auto p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <h2 className="text-lg font-semibold mb-2">
+              {error.status} {error.statusText}
+            </h2>
+            <p>{error.data?.message || t('translations.errorOccurred', 'An error occurred')}</p>
+          </AlertDescription>
+        </Alert>
+        <div className="mt-4">
+          <Link to="/dashboard/admin/translations">
+            <Button variant="outline">
+              {t('translations.backToTranslations', 'Back to Translations')}
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-6">
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          <h2 className="text-lg font-semibold mb-2">
+            {t('translations.unexpectedError', 'Unexpected Error')}
+          </h2>
+          <p className="mb-2">{error?.message || t('translations.somethingWentWrong', 'Something went wrong')}</p>
+          {process.env.NODE_ENV === 'development' && error?.stack && (
+            <pre className="mt-4 p-4 bg-muted rounded text-xs overflow-auto">
+              {error.stack}
+            </pre>
+          )}
+        </AlertDescription>
+      </Alert>
+      <div className="mt-4">
+        <Link to="/dashboard/admin/translations">
+          <Button variant="outline">
+            {t('translations.backToTranslations', 'Back to Translations')}
+          </Button>
+        </Link>
+      </div>
+    </div>
   );
 }
