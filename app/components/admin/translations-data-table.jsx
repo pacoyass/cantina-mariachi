@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Link, useFetcher } from "react-router";
-import { Edit, Eye, Trash2, ArrowUpDown } from "@/lib/lucide-shim";
+import { Edit, Eye, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "@/lib/lucide-shim";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
 
@@ -57,6 +57,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
       enableSorting: true,
       header: ({ column }) => {
         const isSorted = sorting.find(s => s.id === 'key');
+        const SortIcon = isSorted ? (isSorted.desc ? ArrowDown : ArrowUp) : ArrowUpDown;
         return (
           <Button
             variant="ghost"
@@ -64,7 +65,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
             className="h-8 px-2 hover:bg-accent"
           >
             Key
-            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
+            <SortIcon className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },
@@ -77,6 +78,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
       enableSorting: true,
       header: ({ column }) => {
         const isSorted = sorting.find(s => s.id === 'namespace');
+        const SortIcon = isSorted ? (isSorted.desc ? ArrowDown : ArrowUp) : ArrowUpDown;
         return (
           <Button
             variant="ghost"
@@ -84,7 +86,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
             className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Namespace
-            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
+            <SortIcon className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },
@@ -97,6 +99,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
       enableSorting: true,
       header: ({ column }) => {
         const isSorted = sorting.find(s => s.id === 'locale');
+        const SortIcon = isSorted ? (isSorted.desc ? ArrowDown : ArrowUp) : ArrowUpDown;
         return (
           <Button
             variant="ghost"
@@ -104,7 +107,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
             className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Locale
-            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
+            <SortIcon className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },
@@ -117,6 +120,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
       enableSorting: true,
       header: ({ column }) => {
         const isSorted = sorting.find(s => s.id === 'value');
+        const SortIcon = isSorted ? (isSorted.desc ? ArrowDown : ArrowUp) : ArrowUpDown;
         return (
           <Button
             variant="ghost"
@@ -124,7 +128,7 @@ export function TranslationsDataTable({ data, sortBy = '', sortOrder = 'asc', on
             className="h-8 w-full justify-start px-2 hover:bg-accent"
           >
             Value
-            <ArrowUpDown className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
+            <SortIcon className={`ml-2 h-4 w-4 ${isSorted ? 'text-primary' : ''}`} />
           </Button>
         );
       },

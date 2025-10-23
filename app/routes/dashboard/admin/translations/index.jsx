@@ -324,6 +324,10 @@ export default function TranslationsIndexPage() {
               action="/dashboard/admin/translations"
               className="grid grid-cols-1 md:grid-cols-4 gap-4"
             >
+              {/* Hidden inputs for sorting */}
+              <input type="hidden" name="sortBy" value={filters.sortBy || ''} />
+              <input type="hidden" name="sortOrder" value={filters.sortOrder || 'asc'} />
+              
               {/* Search */}
               <div className="relative focus:text-muted-foreground text-foreground">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 " />

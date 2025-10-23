@@ -81,5 +81,7 @@ export { default as FileText } from 'lucide-react/dist/esm/icons/file-text.js'
 export { default as Upload } from 'lucide-react/dist/esm/icons/upload.js'
 
 export { default as ArrowUpDown } from 'lucide-react/dist/esm/icons/arrow-up-down.js'
+export { default as ArrowUp } from 'lucide-react/dist/esm/icons/arrow-up.js'
+export { default as ArrowDown } from 'lucide-react/dist/esm/icons/arrow-down.js'
 
 
