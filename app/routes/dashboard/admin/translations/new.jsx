@@ -8,8 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, ArrowLeft, Save } from '@/lib/lucide-shim';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, redirect, Link, useActionData, useLoaderData, useNavigation, isRouteErrorResponse, useRouteError } from 'react-router';
+import { Form, isRouteErrorResponse, Link, redirect, useActionData, useLoaderData, useNavigation, useRouteError } from 'react-router';
 
 export const meta = () => [
   { title: 'New Translation - Cantina' }

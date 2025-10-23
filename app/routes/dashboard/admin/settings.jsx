@@ -1,23 +1,22 @@
-import { useLoaderData, Form } from "react-router";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Form, useLoaderData } from "react-router";
+import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Separator } from "../../../components/ui/separator";
-import { Badge } from "../../../components/ui/badge";
-import { 
-  Settings, 
-  Bell, 
-  Globe, 
-  Shield,
-  Mail,
-  Phone,
-  MapPin,
-  Clock,
-  DollarSign,
-  CheckCircle
-} from "../../../lib/lucide-shim.js";
+import
+  {
+    Bell,
+    Clock,
+    Globe,
+    Mail,
+    MapPin,
+    Phone,
+    Settings,
+    Shield
+  } from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
   { title: "Settings - Admin - Cantina" },
@@ -398,7 +397,7 @@ export default function SettingsPage() {
                     Manage user sessions and security policies
                   </p>
                   <Button variant="outline" asChild>
-                    <a href="/admin/users?tab=sessions">
+                    <a href="/dashboard/admin/users?tab=sessions">
                       Go to Session Management
                     </a>
                   </Button>

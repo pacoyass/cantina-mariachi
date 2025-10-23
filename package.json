@@ -55,7 +55,7 @@
     "i18next-http-middleware": "^3.8.0",
     "isbot": "^5.1.27",
     "libphonenumber-js": "^1.10.55",
-    "lucide-react": "^0.544.0",
+    "lucide-react": "^0.546.0",
     "morgan": "^1.10.1",
     "next-themes": "^0.4.6",
     "node-cron": "^4.2.1",
