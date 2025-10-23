@@ -110,6 +110,10 @@ export default function NewTranslation() {
   const { locales = [], namespaces = [] } = metadata || {};
   
   const isSubmitting = navigation.state === 'submitting';
+  
+  // Controlled state for Select components
+  const [selectedNamespace, setSelectedNamespace] = useState('common');
+  const [selectedLocale, setSelectedLocale] = useState('en');
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">
@@ -187,7 +191,12 @@ export default function NewTranslation() {
                 <Label htmlFor="namespace">
                   {t('translations.newTranslation.namespaceLabel', 'Namespace')} *
                 </Label>
-                <Select name="namespace" defaultValue="common" disabled={isSubmitting} required>
+                <input type="hidden" name="namespace" value={selectedNamespace} />
+                <Select 
+                  value={selectedNamespace} 
+                  onValueChange={setSelectedNamespace}
+                  disabled={isSubmitting}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -224,7 +233,12 @@ export default function NewTranslation() {
                 <Label htmlFor="locale">
                   {t('translations.newTranslation.localeLabel', 'Locale')} *
                 </Label>
-                <Select name="locale" defaultValue="en" disabled={isSubmitting} required>
+                <input type="hidden" name="locale" value={selectedLocale} />
+                <Select 
+                  value={selectedLocale}
+                  onValueChange={setSelectedLocale}
+                  disabled={isSubmitting}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
