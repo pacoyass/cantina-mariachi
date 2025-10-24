@@ -95,29 +95,7 @@ export function AppSidebar({ user, stats, lang }) {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r">
-      {/* Header - Simple Logo/Text */}
-      <SidebarHeader className="h-16 border-b">
-        <Link
-          to="/dashboard/admin"
-          className={cn(
-            "flex items-center gap-3 px-2 py-3 transition-all duration-200",
-            !open && "justify-center"
-          )}
-        >
-          <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg">
-            <LayoutDashboard className="size-5" />
-          </div>
-          {open && (
-            <div className="flex flex-col animate-in fade-in slide-in-from-left-2 duration-200">
-              <span className="font-bold text-base tracking-tight">
-                Admin Panel
-              </span>
-              <span className="text-xs text-muted-foreground">Cantina</span>
-            </div>
-          )}
-        </Link>
-      </SidebarHeader>
+    <Sidebar collapsible="icon" className="border-r top-16 h-[calc(100vh-4rem)]">
 
       {/* Navigation */}
       <SidebarContent>
