@@ -95,7 +95,7 @@ export function AppSidebar({ user, stats, lang }) {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r top-16 h-[calc(100vh-4rem)]">
+    <Sidebar collapsible="icon" className="border-r fixed top-16 left-0 h-[calc(100vh-4rem)] z-10">
 
       {/* Navigation */}
       <SidebarContent>
