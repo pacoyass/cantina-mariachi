@@ -63,10 +63,11 @@ export default function AdminLayout({ loaderData }) {
   const { user } = useOutletContext() || {};
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top Navbar */}
-      <SidebarProvider defaultOpen={true}>
-        <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+    <SidebarProvider defaultOpen={true}>
+      <AppSidebar user={user} stats={stats} lang={lang} />
+      <SidebarInset>
+        {/* Top bar */}
+        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
           <div className="flex items-center gap-3 px-4">
             <SidebarTrigger className="-ml-1 hover:bg-accent" />
             <div className="h-6 w-px bg-border" />
@@ -97,16 +98,13 @@ export default function AdminLayout({ loaderData }) {
           </div>
         </header>
 
-        {/* Sidebar + Content - Below navbar */}
-        <div className="flex flex-1 overflow-hidden">
-          <AppSidebar user={user} stats={stats} lang={lang} />
-          <main className="flex-1 overflow-auto bg-mexican-pattern">
-            <div className="container mx-auto p-4 md:p-6 lg:p-8">
-              <Outlet context={{ user }} />
-            </div>
-          </main>
-        </div>
-      </SidebarProvider>
-    </div>
+        {/* Page content with Mexican pattern background */}
+        <main className="flex-1 overflow-auto bg-mexican-pattern">
+          <div className="container mx-auto p-4 md:p-6 lg:p-8">
+            <Outlet context={{ user }} />
+          </div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
