@@ -25,6 +25,7 @@ export { default as Utensils } from 'lucide-react/dist/esm/icons/utensils.js'
 
 export { default as ChevronDown } from 'lucide-react/dist/esm/icons/chevron-down.js'
 export { default as ChevronUp } from 'lucide-react/dist/esm/icons/chevron-up.js'
+export { default as ChevronRight } from 'lucide-react/dist/esm/icons/chevron-right.js'
 export { default as LayoutGrid } from 'lucide-react/dist/esm/icons/layout-grid.js'
 export { default as List } from 'lucide-react/dist/esm/icons/list.js'
 

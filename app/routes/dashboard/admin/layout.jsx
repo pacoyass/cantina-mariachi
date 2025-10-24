@@ -1,13 +1,13 @@
-import { Outlet, redirect, useOutletContext } from "react-router";
-import { AppSidebar } from "../../../components/admin/app-sidebar";
-import { Badge } from "../../../components/ui/badge";
+import { useLoaderData, Outlet, redirect, useOutletContext } from "react-router";
 import { Button } from "../../../components/ui/button";
-import
-  {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
-  } from "../../../components/ui/sidebar";
+import { Badge } from "../../../components/ui/badge";
+import { AppSidebar } from "../../../components/admin/app-sidebar";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "../../../components/ui/sidebar";
+import { useTranslation } from "react-i18next";
 import { Bell } from "../../../lib/lucide-shim.js";
 
 export const meta = () => [
@@ -63,24 +63,33 @@ export default function AdminLayout({ loaderData }) {
   const { user } = useOutletContext() || {};
 
   return (
-    <SidebarProvider >
+    <SidebarProvider defaultOpen={true}>
       <AppSidebar user={user} stats={stats} lang={lang} />
       <SidebarInset>
         {/* Top bar */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <div className="h-4 w-px bg-border" />
+        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+          <div className="flex items-center gap-3 px-4">
+            <SidebarTrigger className="-ml-1 hover:bg-accent" />
+            <div className="h-6 w-px bg-border" />
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold tracking-tight">
+                Dashboard
+              </h2>
+            </div>
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-2 px-4">
             {/* Notifications */}
-            <Button variant="ghost" size="icon" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative hover:bg-accent"
+            >
               <Bell className="size-5" />
               {stats?.orders?.pending > 0 && (
                 <Badge
                   variant="destructive"
-                  className="absolute -top-1 -right-1 size-5 text-xs p-0 flex items-center justify-center"
+                  className="absolute -top-1 -right-1 size-5 text-xs p-0 flex items-center justify-center animate-in zoom-in duration-200"
                 >
                   {stats.orders.pending}
                 </Badge>
@@ -90,8 +99,10 @@ export default function AdminLayout({ loaderData }) {
         </header>
 
         {/* Page content */}
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-          <Outlet context={{ user }} />
+        <main className="flex-1 overflow-auto">
+          <div className="container mx-auto p-4 md:p-6 lg:p-8">
+            <Outlet context={{ user }} />
+          </div>
         </main>
       </SidebarInset>
     </SidebarProvider>

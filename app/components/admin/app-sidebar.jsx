@@ -1,40 +1,40 @@
 // app/components/admin/app-sidebar.jsx
-import
-  {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu";
-import
-  {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuBadge,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarRail,
-  } from "@/components/ui/sidebar";
-import
-  {
-    BarChart3,
-    Calendar,
-    ChefHat,
-    ChevronUp,
-    Languages,
-    LayoutDashboard,
-    LogOut,
-    Settings,
-    ShoppingBag,
-    User,
-    Users,
-  } from "@/lib/lucide-shim";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  BarChart3,
+  Calendar,
+  ChefHat,
+  ChevronUp,
+  Languages,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  ShoppingBag,
+  User,
+  Users,
+} from "@/lib/lucide-shim";
+import { cn } from "@/lib/utils";
 import { Link, NavLink } from "react-router";
 
 const navigation = [
@@ -83,6 +83,8 @@ const navigation = [
 ];
 
 export function AppSidebar({ user, stats, lang }) {
+  const { open } = useSidebar();
+  
   const getBadgeValue = (badgeType) => {
     switch (badgeType) {
       case "pending":
@@ -93,51 +95,65 @@ export function AppSidebar({ user, stats, lang }) {
   };
 
   return (
-    <Sidebar collapsible="icon" className="sticky ">
-      {/* Header */}
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link to="/dashboard/admin">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <LayoutDashboard className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Admin Panel</span>
-                  <span className="truncate text-xs">Cantina</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+    <Sidebar collapsible="icon" className="border-r">
+      {/* Header - Simple Logo/Text */}
+      <SidebarHeader className="h-16 border-b">
+        <Link
+          to="/dashboard/admin"
+          className={cn(
+            "flex items-center gap-3 px-2 py-3 transition-all duration-200",
+            !open && "justify-center"
+          )}
+        >
+          <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg">
+            <LayoutDashboard className="size-5" />
+          </div>
+          {open && (
+            <div className="flex flex-col animate-in fade-in slide-in-from-left-2 duration-200">
+              <span className="font-bold text-base tracking-tight">
+                Admin Panel
+              </span>
+              <span className="text-xs text-muted-foreground">Cantina</span>
+            </div>
+          )}
+        </Link>
       </SidebarHeader>
 
       {/* Navigation */}
-      <SidebarContent className="space-y-6 bg-gray-100/30 backdrop-blur-sm dark:supports-[backdrop-filter]:bg-background/30 ">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-          <SidebarGroupContent >
-            <SidebarMenu className="space-y-4">
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
-                const badgeValue = item.badge ? getBadgeValue(item.badge) : null;
-                
+                const badgeValue = item.badge
+                  ? getBadgeValue(item.badge)
+                  : null;
+
                 return (
-                  <SidebarMenuItem key={item.name} >
-                    <SidebarMenuButton asChild>
+                  <SidebarMenuItem key={item.name}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={!open ? item.name : undefined}
+                    >
                       <NavLink
                         to={`${item.href}?lng=${lang}`}
                         className={({ isActive }) =>
-                          isActive ? "bg-sidebar-accent" : ""
+                          cn(
+                            "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                            isActive
+                              ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+                              : "hover:bg-sidebar-accent/50"
+                          )
                         }
                       >
-                        <Icon />
-                        <span>{item.name}</span>
+                        <Icon className="size-4 shrink-0" />
+                        <span className="truncate">{item.name}</span>
                       </NavLink>
                     </SidebarMenuButton>
                     {badgeValue && badgeValue > 0 && (
-                      <SidebarMenuBadge>
+                      <SidebarMenuBadge className="animate-in fade-in zoom-in duration-200">
                         {badgeValue}
                       </SidebarMenuBadge>
                     )}
@@ -150,41 +166,62 @@ export function AppSidebar({ user, stats, lang }) {
       </SidebarContent>
 
       {/* Footer with user info */}
-      <SidebarFooter>
+      <SidebarFooter className="border-t">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className=" data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent/50"
+                  tooltip={!open ? user?.name || user?.email : undefined}
                 >
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-sm">
                     <User className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
-                      {user?.name || user?.email}
+                      {user?.name || user?.email || "User"}
                     </span>
-                    <span className="truncate text-xs">{user?.role}</span>
+                    <span className="truncate text-xs text-muted-foreground capitalize">
+                      {user?.role || "Admin"}
+                    </span>
                   </div>
-                  <ChevronUp className="ml-auto size-4" />
+                  <ChevronUp className="ml-auto size-4 transition-transform group-data-[state=open]:rotate-180" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="bottom"
+                className="w-56 rounded-lg"
+                side={open ? "bottom" : "right"}
                 align="end"
-                sideOffset={5}
+                sideOffset={8}
               >
+                <div className="flex items-center gap-2 p-2">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
+                    <User className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
+                      {user?.name || user?.email || "User"}
+                    </span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {user?.email}
+                    </span>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/account">
+                  <Link to="/account" className="cursor-pointer">
                     <User className="mr-2 size-4" />
-                    <span>Account</span>
+                    <span>Account Settings</span>
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/logout">
+                  <Link
+                    to="/logout"
+                    className="cursor-pointer text-destructive focus:text-destructive"
+                  >
                     <LogOut className="mr-2 size-4" />
                     <span>Log out</span>
                   </Link>
