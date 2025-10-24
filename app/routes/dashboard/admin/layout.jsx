@@ -63,48 +63,53 @@ export default function AdminLayout({ loaderData }) {
   const { user } = useOutletContext() || {};
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <AppSidebar user={user} stats={stats} lang={lang} />
-      <SidebarInset>
-        {/* Top bar */}
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
-          <div className="flex items-center gap-3 px-4">
-            <SidebarTrigger className="-ml-1 hover:bg-accent" />
-            <div className="h-6 w-px bg-border" />
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold tracking-tight">
-                Dashboard
-              </h2>
-            </div>
+    <div className="min-h-screen flex flex-col">
+      {/* Top Navbar - Above everything */}
+      <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+        <div className="flex items-center gap-3 px-4">
+          <SidebarTrigger className="-ml-1 hover:bg-accent" />
+          <div className="h-6 w-px bg-border" />
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-semibold tracking-tight">
+              Dashboard
+            </h2>
           </div>
+        </div>
 
-          <div className="flex flex-1 items-center justify-end gap-2 px-4">
-            {/* Notifications */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative hover:bg-accent"
-            >
-              <Bell className="size-5" />
-              {stats?.orders?.pending > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-1 -right-1 size-5 text-xs p-0 flex items-center justify-center animate-in zoom-in duration-200"
-                >
-                  {stats.orders.pending}
-                </Badge>
-              )}
-            </Button>
-          </div>
-        </header>
+        <div className="flex flex-1 items-center justify-end gap-2 px-4">
+          {/* Notifications */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative hover:bg-accent"
+          >
+            <Bell className="size-5" />
+            {stats?.orders?.pending > 0 && (
+              <Badge
+                variant="destructive"
+                className="absolute -top-1 -right-1 size-5 text-xs p-0 flex items-center justify-center animate-in zoom-in duration-200"
+              >
+                {stats.orders.pending}
+              </Badge>
+            )}
+          </Button>
+        </div>
+      </header>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-auto">
-          <div className="container mx-auto p-4 md:p-6 lg:p-8">
-            <Outlet context={{ user }} />
-          </div>
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+      {/* Sidebar + Content Area - Below navbar */}
+      <div className="flex flex-1 overflow-hidden">
+        <SidebarProvider defaultOpen={true}>
+          <AppSidebar user={user} stats={stats} lang={lang} />
+          <SidebarInset className="bg-mexican-pattern">
+            {/* Page content with Mexican pattern background */}
+            <main className="flex-1 overflow-auto">
+              <div className="container mx-auto p-4 md:p-6 lg:p-8">
+                <Outlet context={{ user }} />
+              </div>
+            </main>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
+    </div>
   );
 }
