@@ -9,6 +9,7 @@ import {
   Calendar,
   Settings,
   BarChart3,
+  Languages,
   X,
   LogOut,
   User
@@ -46,6 +47,11 @@ const navigation = [
     name: 'Analytics',
     href: '/dashboard/admin/analytics',
     icon: BarChart3
+  },
+  {
+    name: 'Translations',
+    href: '/dashboard/admin/translations',
+    icon: Languages
   },
   {
     name: 'Settings',

@@ -26,7 +26,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
- 
 
   --radius: 0.5rem;
 
@@ -53,7 +52,7 @@
   radial-gradient(circle at 75% 75%, rgba(250, 204, 21, 0.15) 2px, transparent 2px);
   background-color: oklch(0.18 0 0); /* slightly lighter than dark bg for contrast */
   background-size: 20px 20px;
-  
+
 }
 
 :root {

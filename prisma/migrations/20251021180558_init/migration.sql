@@ -2,13 +2,13 @@
 CREATE TYPE "OrderType" AS ENUM ('TAKEOUT', 'DELIVERY');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'AWAITING_PAYMENT', 'PAYMENT_DISPUTED', 'DELIVERED', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'DELIVERED', 'COMPLETED', 'CANCELLED', 'AWAITING_PAYMENT', 'PAYMENT_DISPUTED');
 
 -- CreateEnum
 CREATE TYPE "ReservationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'SEATED', 'COMPLETED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('CUSTOMER', 'OWNER', 'ADMIN', 'COOK', 'WAITER', 'CASHIER', 'DRIVER');
+CREATE TYPE "UserRole" AS ENUM ('CUSTOMER', 'OWNER', 'ADMIN', 'CASHIER', 'DRIVER');
 
 -- CreateTable
 CREATE TABLE "public.users" (
@@ -362,6 +362,37 @@ CREATE TABLE "public.page_contents" (
 );
 
 -- CreateTable
+CREATE TABLE "public.translations" (
+    "id" TEXT NOT NULL,
+    "key" TEXT NOT NULL,
+    "namespace" TEXT NOT NULL,
+    "locale" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "description" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdBy" TEXT,
+    "updatedBy" TEXT,
+
+    CONSTRAINT "public.translations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public.translation_history" (
+    "id" TEXT NOT NULL,
+    "translationId" TEXT NOT NULL,
+    "oldValue" TEXT NOT NULL,
+    "newValue" TEXT NOT NULL,
+    "changedBy" TEXT NOT NULL,
+    "changedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reason" TEXT,
+    "ipAddress" TEXT,
+
+    CONSTRAINT "public.translation_history_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public.categories" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -405,10 +436,6 @@ CREATE TABLE "public.orders" (
     "deliveryInstructions" TEXT,
     "deliveryTimeEstimate" TIMESTAMP(3),
     "driverId" TEXT,
-    "tableNumber" TEXT,
-    "guestCount" INTEGER,
-    "cookId" TEXT,
-    "waiterId" TEXT,
     "cashierId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -551,6 +578,30 @@ CREATE UNIQUE INDEX "public.fallback_rules_sourceLocale_targetLocale_key" ON "pu
 CREATE UNIQUE INDEX "public.page_contents_slug_locale_key" ON "public.page_contents"("slug", "locale");
 
 -- CreateIndex
+CREATE INDEX "public.translations_namespace_locale_idx" ON "public.translations"("namespace", "locale");
+
+-- CreateIndex
+CREATE INDEX "public.translations_locale_idx" ON "public.translations"("locale");
+
+-- CreateIndex
+CREATE INDEX "public.translations_key_idx" ON "public.translations"("key");
+
+-- CreateIndex
+CREATE INDEX "public.translations_isActive_idx" ON "public.translations"("isActive");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "public.translations_key_namespace_locale_key" ON "public.translations"("key", "namespace", "locale");
+
+-- CreateIndex
+CREATE INDEX "public.translation_history_translationId_idx" ON "public.translation_history"("translationId");
+
+-- CreateIndex
+CREATE INDEX "public.translation_history_changedAt_idx" ON "public.translation_history"("changedAt");
+
+-- CreateIndex
+CREATE INDEX "public.translation_history_changedBy_idx" ON "public.translation_history"("changedBy");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "public.categories_name_key" ON "public.categories"("name");
 
 -- CreateIndex
@@ -575,13 +626,10 @@ CREATE INDEX "public.orders_createdAt_idx" ON "public.orders"("createdAt");
 CREATE INDEX "public.orders_customerEmail_idx" ON "public.orders"("customerEmail");
 
 -- CreateIndex
-CREATE INDEX "public.orders_tableNumber_status_idx" ON "public.orders"("tableNumber", "status");
-
--- CreateIndex
-CREATE INDEX "public.orders_cookId_status_idx" ON "public.orders"("cookId", "status");
-
--- CreateIndex
 CREATE INDEX "public.orders_type_status_idx" ON "public.orders"("type", "status");
+
+-- CreateIndex
+CREATE INDEX "public.orders_cashierId_status_idx" ON "public.orders"("cashierId", "status");
 
 -- CreateIndex
 CREATE INDEX "public.reservations_date_time_status_idx" ON "public.reservations"("date", "time", "status");
@@ -624,6 +672,9 @@ ALTER TABLE "public.webhook_logs" ADD CONSTRAINT "public.webhook_logs_webhookId_
 
 -- AddForeignKey
 ALTER TABLE "public.user_preferences" ADD CONSTRAINT "public.user_preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public.users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public.translation_history" ADD CONSTRAINT "public.translation_history_translationId_fkey" FOREIGN KEY ("translationId") REFERENCES "public.translations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public.menu_items" ADD CONSTRAINT "public.menu_items_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "public.categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

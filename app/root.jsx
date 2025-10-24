@@ -67,8 +67,8 @@ export async function loader( { request, context } )
       "CUSTOMER": "/account"
     };
 
-    const userDashboard =  "/account";
-    // roleDashboard[user.role] ||
+    const userDashboard =roleDashboard[user.role] || "/account";
+    // r
     // If user is on base /dashboard path, redirect to their dashboard
     if (urlPathname === "/dashboard") {
       return redirect(userDashboard + `?lng=${lng}`, { replace: true });
