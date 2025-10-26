@@ -67,8 +67,8 @@ export async function loader( { request, context } )
       "CUSTOMER": "/account"
     };
 
-    const userDashboard =  "/account";
-    // roleDashboard[user.role] ||
+    const userDashboard =roleDashboard[user.role] || "/account";
+    // r
     // If user is on base /dashboard path, redirect to their dashboard
     if (urlPathname === "/dashboard") {
       return redirect(userDashboard + `?lng=${lng}`, { replace: true });
@@ -180,7 +180,7 @@ console.log("root loader",loaderData?.result);
           disableTransitionOnChange
           suppressHydrationWarning
         >
-          <div className="bg-mexican-pattern min-h-screen">
+          <div className="bg-mexican-pattern min-h-screen w-full">
             <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} lang={lang} />
             {children}
             <Footer />

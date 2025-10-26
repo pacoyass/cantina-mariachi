@@ -1,15 +1,15 @@
-import * as React from "react"
 import { cn } from "@/lib/utils"
 
-const Skeleton = React.forwardRef(function Skeleton({ className, ...props }, ref) {
+function Skeleton({
+  className,
+  ...props
+}) {
   return (
     <div
-      ref={ref}
-      className={cn("animate-pulse rounded-md bg-muted", className)}
-      {...props}
-    />
-  )
-})
+      data-slot="skeleton"
+      className={cn("bg-accent animate-pulse rounded-md", className)}
+      {...props} />
+  );
+}
 
 export { Skeleton }
-

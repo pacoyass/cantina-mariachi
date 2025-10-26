@@ -408,6 +408,47 @@ model PageContent {
   @@map("public.page_contents")
 }
 
+// TRANSLATION STRINGS (Database-driven translations)
+model Translation {
+  id          String   @id @default(cuid())
+  key         String // e.g., "success", "hero.title"
+  namespace   String // e.g., "common", "home"
+  locale      String // e.g., "en", "es", "de-CH"
+  value       String   @db.Text // Translation text (can be long)
+  description String? // Context/notes for translators
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String? // User ID who created this translation
+  updatedBy   String? // User ID who last updated this translation
+
+  history TranslationHistory[]
+
+  @@unique([key, namespace, locale])
+  @@index([namespace, locale])
+  @@index([locale])
+  @@index([key])
+  @@index([isActive])
+  @@map("public.translations")
+}
+
+model TranslationHistory {
+  id            String   @id @default(cuid())
+  translationId String
+  translation   Translation @relation(fields: [translationId], references: [id], onDelete: Cascade)
+  oldValue      String   @db.Text
+  newValue      String   @db.Text
+  changedBy     String // User ID who made the change
+  changedAt     DateTime @default(now())
+  reason        String? // Optional reason for the change
+  ipAddress     String? // IP address of the user who made the change
+
+  @@index([translationId])
+  @@index([changedAt])
+  @@index([changedBy])
+  @@map("public.translation_history")
+}
+
 // CATEGORY + MENU + ORDER + RESERVATION
 model Category {
   id          String  @id @default(cuid())
