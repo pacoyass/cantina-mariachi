@@ -1,138 +1,108 @@
-// app/components/admin/app-sidebar.jsx
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import {
-  BarChart3,
-  Calendar,
-  ChefHat,
-  ChevronUp,
-  Languages,
-  LayoutDashboard,
-  LogOut,
-  Settings,
-  ShoppingBag,
-  User,
-  Users,
-} from "@/lib/lucide-shim";
+
+import
+  {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuBadge,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarTrigger,
+    useSidebar,
+  } from "@/components/ui/sidebar";
+import
+  {
+    BarChart3,
+    Calendar,
+    ChefHat,
+    Languages,
+    LayoutDashboard,
+    LogOut,
+    Settings,
+    ShoppingBag,
+    User,
+    Users,
+  } from "@/lib/lucide-shim";
 import { cn } from "@/lib/utils";
 import { Link, NavLink } from "react-router";
 
 const navigation = [
-  {
-    name: "Dashboard",
-    href: "/dashboard/admin",
-    icon: LayoutDashboard,
-    exact: true,
-  },
-  {
-    name: "Orders",
-    href: "/dashboard/admin/orders",
-    icon: ShoppingBag,
-    badge: "pending",
-  },
-  {
-    name: "Menu",
-    href: "/dashboard/admin/menu",
-    icon: ChefHat,
-  },
-  {
-    name: "Users",
-    href: "/dashboard/admin/users",
-    icon: Users,
-  },
-  {
-    name: "Reservations",
-    href: "/dashboard/admin/reservations",
-    icon: Calendar,
-  },
-  {
-    name: "Analytics",
-    href: "/dashboard/admin/analytics",
-    icon: BarChart3,
-  },
-  {
-    name: "Translations",
-    href: "/dashboard/admin/translations",
-    icon: Languages,
-  },
-  {
-    name: "Settings",
-    href: "/dashboard/admin/settings",
-    icon: Settings,
-  },
+  { name: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
+  { name: "Orders", href: "/dashboard/admin/orders", icon: ShoppingBag, badge: "pending" },
+  { name: "Menu", href: "/dashboard/admin/menu", icon: ChefHat },
+  { name: "Users", href: "/dashboard/admin/users", icon: Users },
+  { name: "Reservations", href: "/dashboard/admin/reservations", icon: Calendar },
+  { name: "Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
+  { name: "Translations", href: "/dashboard/admin/translations", icon: Languages },
+  { name: "Settings", href: "/dashboard/admin/settings", icon: Settings },
 ];
 
 export function AppSidebar({ user, stats, lang }) {
-  const { open } = useSidebar();
-  
-  const getBadgeValue = (badgeType) => {
-    switch (badgeType) {
-      case "pending":
-        return stats?.orders?.pending || 0;
-      default:
-        return null;
-    }
-  };
+  const { open, toggleSidebar } = useSidebar();
+
+  const getBadgeValue = (type) => (type === "pending" ? stats?.orders?.pending || 0 : null);
 
   return (
-    <Sidebar collapsible="icon" className="border-r fixed top-16 left-0 h-[calc(100vh-4rem)] z-10">
+    <Sidebar
+      collapsible="icon"
+      className={cn(
+        "relative z-30 h-full shrink-0 border-r border-white/10 bg-linear-to-b",
+        "from-[#181818]/95 to-[#0f0f0f]/95 text-white backdrop-blur-xl shadow-2xl transition-all duration-300"
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between  px-4 py-3 border-b border-white/10 h-16 bg-background/60 backdrop-blur-md">
+        {open && (
+          <h1 className="text-lg font-bold bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            Cantina
+          </h1>
+        )}
+        <SidebarTrigger
+          onClick={toggleSidebar}
+          className="rounded-lg p-2 hover:bg-primary/20 transition-all"
+        />
+      </div>
 
       {/* Navigation */}
-      <SidebarContent>
+      <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          {open && (
+            <SidebarGroupLabel className="text-xs uppercase text-muted-foreground tracking-wide mb-2">
+              Navigation
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
-            <SidebarMenu className="gap-1">
+            <SidebarMenu className="gap-1 space-y-5">
               {navigation.map((item) => {
                 const Icon = item.icon;
-                const badgeValue = item.badge
-                  ? getBadgeValue(item.badge)
-                  : null;
+                const badge = item.badge ? getBadgeValue(item.badge) : null;
 
                 return (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton
-                      asChild
-                      tooltip={!open ? item.name : undefined}
-                    >
+                    <SidebarMenuButton asChild>
                       <NavLink
                         to={`${item.href}?lng=${lang}`}
                         className={({ isActive }) =>
                           cn(
-                            "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                            "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                            "hover:bg-primary/10 hover:text-primary",
                             isActive
-                              ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
-                              : "hover:bg-sidebar-accent/50"
+                              ? "bg-primary/15 text-primary shadow-inner"
+                              : "text-muted-foreground"
                           )
                         }
                       >
-                        <Icon className="size-4 shrink-0" />
-                        <span className="truncate">{item.name}</span>
+                        <Icon className="size-4" />
+                        {open && <span className="truncate">{item.name}</span>}
                       </NavLink>
                     </SidebarMenuButton>
-                    {badgeValue && badgeValue > 0 && (
-                      <SidebarMenuBadge className="animate-in fade-in zoom-in duration-200">
-                        {badgeValue}
+                    {badge > 0 && open && (
+                      <SidebarMenuBadge className="text-xs font-bold bg-primary/80 text-white rounded-full px-2 py-0.5">
+                        {badge}
                       </SidebarMenuBadge>
                     )}
                   </SidebarMenuItem>
@@ -143,75 +113,39 @@ export function AppSidebar({ user, stats, lang }) {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer with user info */}
-      <SidebarFooter className="border-t">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent/50"
-                  tooltip={!open ? user?.name || user?.email : undefined}
-                >
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-sm">
-                    <User className="size-4" />
-                  </div>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {user?.name || user?.email || "User"}
-                    </span>
-                    <span className="truncate text-xs text-muted-foreground capitalize">
-                      {user?.role || "Admin"}
-                    </span>
-                  </div>
-                  <ChevronUp className="ml-auto size-4 transition-transform group-data-[state=open]:rotate-180" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-56 rounded-lg"
-                side={open ? "bottom" : "right"}
-                align="end"
-                sideOffset={8}
-              >
-                <div className="flex items-center gap-2 p-2">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-                    <User className="size-4" />
-                  </div>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {user?.name || user?.email || "User"}
-                    </span>
-                    <span className="truncate text-xs text-muted-foreground">
-                      {user?.email}
-                    </span>
-                  </div>
+      {/* Footer */}
+      <SidebarFooter className="border-t border-white/10 p-3">
+        <div
+          className={cn(
+            "flex items-center justify-between rounded-xl p-3 bg-white/5 hover:bg-white/10 transition-all",
+            open ? "flex-row" : "justify-center"
+          )}
+        >
+          {open && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary/70 text-white">
+                <User className="size-4" />
+              </div>
+              <div className="text-sm leading-tight">
+                <div className="font-semibold">{user?.name || "Admin"}</div>
+                <div className="text-xs text-muted-foreground capitalize">
+                  {user?.role || "owner"}
                 </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/account" className="cursor-pointer">
-                    <User className="mr-2 size-4" />
-                    <span>Account Settings</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link
-                    to="/logout"
-                    className="cursor-pointer text-destructive focus:text-destructive"
-                  >
-                    <LogOut className="mr-2 size-4" />
-                    <span>Log out</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+              </div>
+            </div>
+          )}
 
-      {/* Rail for easy toggling */}
-      <SidebarRail />
+          <Link
+            to="/logout"
+            className={cn(
+              "text-muted-foreground hover:text-destructive transition-colors",
+              !open && "mx-auto"
+            )}
+          >
+            <LogOut className="size-4" />
+          </Link>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

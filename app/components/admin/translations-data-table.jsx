@@ -1,24 +1,24 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Link, useFetcher } from "react-router";
-import { Edit, Eye, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "@/lib/lucide-shim";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 import { ScrollBar } from "@/components/ui/scroll-area";
-import { useState, useEffect } from "react";
+import
+  {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowDown, ArrowUp, ArrowUpDown, Edit, Eye, Trash2 } from "@/lib/lucide-shim";
+import
+  {
+    flexRender,
+    getCoreRowModel, useReactTable
+  } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
+import { Link, useFetcher } from "react-router";
 
 export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc', onSort }) {
   const fetcher = useFetcher();
@@ -151,12 +151,12 @@ export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc
     },
     {
       id: "actions",
-      header: () => <div className="text-right">Actions</div>,
+      header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
         const translation = row.original;
 
         return (
-          <div className="flex justify-end gap-2">
+          <div className="flex items-center justify-end gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link to={`/dashboard/admin/translations/${translation.id}`}>
@@ -228,7 +228,7 @@ export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border w-full">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -256,7 +256,8 @@ export function TranslationsDataTable({ data = [], sortBy = '', sortOrder = 'asc
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+               
+                  <TableCell key={cell.id}  className="text-wrap text-xl">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

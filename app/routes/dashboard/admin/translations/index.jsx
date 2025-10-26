@@ -19,7 +19,7 @@ import
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useFetcher, useLoaderData, isRouteErrorResponse, useRouteError } from "react-router";
+import { isRouteErrorResponse, Link, useFetcher, useLoaderData, useRouteError } from "react-router";
 
 // Meta
 export const meta = () => [{ title: 'Translations - Cantina' }];
@@ -240,10 +240,10 @@ export default function TranslationsIndexPage() {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [showExportMenu]);
-  // --- Render ---
+  // --- Render --
   return (
     <TooltipProvider>
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto p-6 space-y-6 ">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -484,7 +484,7 @@ export default function TranslationsIndexPage() {
               </div>
             ) : (
               <>
-                <ScrollArea className="h-[calc(100vh-400px)] w-full">
+                <ScrollArea className="h-[calc(100vh-400px)] w-full ">
                   <TranslationsDataTable 
                     data={translations} 
                     sortBy={filters.sortBy}

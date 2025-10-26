@@ -180,7 +180,7 @@ console.log("root loader",loaderData?.result);
           disableTransitionOnChange
           suppressHydrationWarning
         >
-          <div className="bg-mexican-pattern min-h-screen">
+          <div className="bg-mexican-pattern min-h-screen w-full">
             <Navbar initialStatus={initialStatus} user={loaderData?.result?.user} lang={lang} />
             {children}
             <Footer />
